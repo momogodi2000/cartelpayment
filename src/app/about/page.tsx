@@ -5,6 +5,18 @@ import { Award, Heart, ShieldCheck, FileText, ChevronRight } from "lucide-react"
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { getServerTranslation } from "@/lib/serverTranslations";
 
+export async function generateMetadata() {
+  const { t } = await getServerTranslation();
+  return {
+    title: t("meta.about.title"),
+    description: t("meta.about.desc"),
+    openGraph: {
+      title: t("meta.about.title"),
+      description: t("meta.about.desc"),
+    },
+  };
+}
+
 export default async function AboutPage() {
   const { t, locale } = await getServerTranslation();
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
@@ -75,7 +87,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Nursery Standards */}
-      <section className="bg-white py-16 sm:py-20 border-y border-black/[0.04]">
+      <section className="bg-white dark:bg-white/[0.03] py-16 sm:py-20 border-y border-black/[0.04] dark:border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="order-2 lg:order-1 relative aspect-[4/3] w-full rounded-3xl overflow-hidden shadow-xl border border-black/[0.08] bg-bg-premium">
             <Image
@@ -143,9 +155,9 @@ export default async function AboutPage() {
               href={contactLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-white hover:bg-black/[0.01] text-text-premium font-bold px-6 py-3 rounded-xl border border-black/[0.08] shadow-sm transition-colors"
+              className="inline-flex items-center gap-2 bg-white hover:bg-black/[0.01] dark:bg-white/[0.06] dark:hover:bg-white/[0.10] text-text-premium font-bold px-6 py-3 rounded-xl border border-black/[0.08] dark:border-white/[0.1] shadow-sm transition-colors"
             >
-              {locale === "en" ? "Ask Breeder via WhatsApp" : "Demander à l'Éleveur par WhatsApp"}
+              {t("about.askWhatsApp")}
             </a>
           </div>
         </div>

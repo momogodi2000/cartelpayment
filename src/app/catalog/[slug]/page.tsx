@@ -5,7 +5,7 @@ import { MessageSquare, ArrowLeft, ShieldAlert, Check } from "lucide-react";
 import prisma from "@/lib/db";
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { getServerTranslation, getServerLocale } from "@/lib/serverTranslations";
-import { translateParrot } from "@/lib/translations";
+import { translateParrot, getTranslation } from "@/lib/translations";
 import DetailGallery from "./DetailGallery";
 import AddToCartButton from "@/components/common/AddToCartButton";
 
@@ -72,6 +72,7 @@ export default async function ParrotDetailPage({ params }: PageProps) {
   }
 
   const translated = translateParrot(parrot, locale);
+  const { t } = getTranslation(locale);
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
   
   // Custom pre-filled contact message templates
@@ -87,12 +88,12 @@ export default async function ParrotDetailPage({ params }: PageProps) {
   if (translated.status === "SOLD") schemaAvailability = "https://schema.org/OutOfStock";
 
   const specRows = [
-    { label: locale === "en" ? "Species (Scientific)" : "Espèce (Scientifique)", value: translated.species, highlight: true },
-    { label: locale === "en" ? "Sex (DNA Certified)" : "Sexe (Certifié ADN)", value: translated.sexLabel },
-    { label: locale === "en" ? "Age" : "Âge", value: translated.age },
-    { label: locale === "en" ? "Rarity Status" : "Statut de Rareté", value: translated.rarityLabel },
-    { label: locale === "en" ? "Bird Size" : "Taille de l'Oiseau", value: translated.sizeLabel },
-    { label: locale === "en" ? "Origin Sanctuary" : "Sanctuaire d'Origine", value: translated.origin },
+    { label: t("detail.species"), value: translated.species, highlight: true },
+    { label: t("detail.sex"), value: translated.sexLabel },
+    { label: t("detail.age"), value: translated.age },
+    { label: t("detail.rarity"), value: translated.rarityLabel },
+    { label: t("detail.size"), value: translated.sizeLabel },
+    { label: t("detail.origin"), value: translated.origin },
   ];
 
   return (
@@ -129,7 +130,7 @@ export default async function ParrotDetailPage({ params }: PageProps) {
           href="/catalog"
           className="inline-flex items-center gap-2 text-xs font-bold text-text-premium/60 hover:text-primary transition-colors duration-200"
         >
-          <ArrowLeft className="h-4 w-4" /> {locale === "en" ? "Back to Catalog" : "Retour au catalogue"}
+          <ArrowLeft className="h-4 w-4" /> {t("detail.backCatalog")}
         </Link>
       </div>
 
@@ -166,14 +167,12 @@ export default async function ParrotDetailPage({ params }: PageProps) {
           </p>
 
           {/* Primary & Secondary Conversion CTA Cards */}
-          <div className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm space-y-4">
+          <div className="p-6 rounded-3xl bg-white dark:bg-black/15 border border-black/[0.06] dark:border-white/[0.08] glass shadow-sm space-y-4">
             <h3 className="font-extrabold text-sm text-text-premium">
-              {locale === "en" ? "Adopt This Companion" : "Adopter ce compagnon"}
+              {t("detail.adoptTitle")}
             </h3>
             <p className="text-xs text-text-premium/65 leading-relaxed">
-              {locale === "en"
-                ? "We arrange secure international/domestic flights, veterinary testing clearances, and closed-ring CITES certifications. Direct inquiry via WhatsApp secures reservation discussions."
-                : "Nous organisons des vols sécurisés nationaux et internationaux, les examens vétérinaires et les permis CITES de bague fermée. Une demande directe sur WhatsApp permet de réserver."}
+              {t("detail.adoptDesc")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <AddToCartButton
@@ -194,16 +193,16 @@ export default async function ParrotDetailPage({ params }: PageProps) {
                 className="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition-all hover:scale-[1.01] active:scale-[0.99]"
               >
                 <MessageSquare className="h-4 w-4 fill-white text-emerald-600" />
-                {locale === "en" ? "Inquire on WhatsApp" : "S'enquérir sur WhatsApp"}
+                {t("detail.whatsappCta")}
               </a>
             </div>
           </div>
 
           {/* Spec Sheet Table */}
-          <div className="border border-black/[0.05] rounded-3xl overflow-hidden shadow-sm bg-white">
-            <div className="px-6 py-4 border-b border-black/[0.04]">
+          <div className="border border-black/[0.05] dark:border-white/[0.08] rounded-3xl overflow-hidden shadow-sm bg-white dark:bg-black/15 glass">
+            <div className="px-6 py-4 border-b border-black/[0.04] dark:border-white/[0.04]">
               <h3 className="font-extrabold text-sm text-text-premium">
-                {locale === "en" ? "Specifications" : "Spécifications"}
+                {t("detail.specifications")}
               </h3>
             </div>
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
@@ -228,47 +227,47 @@ export default async function ParrotDetailPage({ params }: PageProps) {
       </div>
 
       {/* Rearing, Behavior & Food Tabs */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-black/[0.05]">
-        <div className="space-y-3 bg-white p-6 rounded-3xl border border-black/[0.06]">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-black/[0.05] dark:border-white/[0.08]">
+        <div className="space-y-3 bg-white dark:bg-black/15 p-6 rounded-3xl border border-black/[0.06] dark:border-white/[0.08] glass">
           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <Check className="h-4 w-4" />
           </div>
           <h3 className="font-extrabold text-sm text-text-premium">
-            {locale === "en" ? "Behavior & Character" : "Comportement & Caractère"}
+            {t("detail.behaviorTitle")}
           </h3>
           <p className="text-xs text-text-premium/70 leading-relaxed">{translated.behavior}</p>
         </div>
 
-        <div className="space-y-3 bg-white p-6 rounded-3xl border border-black/[0.06]">
+        <div className="space-y-3 bg-white dark:bg-black/15 p-6 rounded-3xl border border-black/[0.06] dark:border-white/[0.08] glass">
           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <Check className="h-4 w-4" />
           </div>
           <h3 className="font-extrabold text-sm text-text-premium">
-            {locale === "en" ? "Nutrition & Feeding" : "Nutrition & Alimentation"}
+            {t("detail.feedingTitle")}
           </h3>
           <p className="text-xs text-text-premium/70 leading-relaxed">{translated.feeding}</p>
         </div>
 
-        <div className="space-y-3 bg-white p-6 rounded-3xl border border-black/[0.06]">
+        <div className="space-y-3 bg-white dark:bg-black/15 p-6 rounded-3xl border border-black/[0.06] dark:border-white/[0.08] glass">
           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <Check className="h-4 w-4" />
           </div>
           <h3 className="font-extrabold text-sm text-text-premium">
-            {locale === "en" ? "Taming & Nursery Details" : "Apprivoisement & Nurserie"}
+            {t("detail.tamingTitle")}
           </h3>
           <p className="text-xs text-text-premium/70 leading-relaxed">{translated.domestication}</p>
         </div>
       </section>
 
       {/* Safety Notice Warning Banner */}
-      <div className="p-5 rounded-2xl bg-amber-50/50 border border-amber-100 flex gap-3 text-left">
+      <div className="p-5 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 flex gap-3 text-left">
         <ShieldAlert className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
         <div>
-          <span className="font-extrabold text-xs text-amber-800 block">
-            {locale === "en" ? "Health & Legality Certification" : "Certification de Santé & Légalité"}
+          <span className="font-extrabold text-xs text-amber-800 dark:text-amber-400 block">
+            {t("detail.healthTitle")}
           </span>
-          <span className="text-xs text-amber-700 leading-relaxed block">
-            {translated.healthNotes}. {locale === "en" ? "AraHaven ensures complete legal clearance prior to export/transfer." : "AraHaven assure le dédouanement légal complet avant l'exportation ou le transfert."}
+          <span className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed block">
+            {translated.healthNotes}. {t("detail.healthSuffix")}
           </span>
         </div>
       </div>

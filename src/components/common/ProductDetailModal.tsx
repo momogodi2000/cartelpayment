@@ -18,7 +18,7 @@ import {
   BookOpen
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useApp } from "@/context/AppContext";
+import { AppParrotImage, useApp } from "@/context/AppContext";
 import { useCart } from "@/context/CartContext";
 import { translateParrot, useTranslation } from "@/lib/translations";
 import { getWhatsAppLink } from "@/lib/whatsapp";
@@ -33,10 +33,37 @@ export default function ProductDetailModal() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<TabType>("overview");
 
-  // Reset index when parrot changes
+  // Reset index and tab when parrot changes (intentional reset pattern)
   useEffect(() => {
-    setActiveImageIndex(0);
-    setActiveTab("overview");
+    if (selectedParrot) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveImageIndex(0);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveTab("overview");
+    }
+  }, [selectedParrot]);
+
+  useEffect(() => {
+    if (!selectedParrot) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedParrot(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedParrot, setSelectedParrot]);
+
+  // Lock body scroll while modal is open
+  useEffect(() => {
+    if (selectedParrot) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [selectedParrot]);
 
   if (!selectedParrot) return null;
@@ -64,19 +91,7 @@ export default function ProductDetailModal() {
     ? "Taille Moyenne"
     : "Petite Taille";
 
-  // Prevent scroll when modal is open
-  if (typeof window !== "undefined") {
-    if (selectedParrot) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-  }
-
   const handleClose = () => {
-    if (typeof window !== "undefined") {
-      document.body.style.overflow = "unset";
-    }
     setSelectedParrot(null);
   };
 
@@ -153,7 +168,7 @@ export default function ProductDetailModal() {
             {/* Thumbnail Strip */}
             {images.length > 1 && (
               <div className="p-4 flex gap-2 overflow-x-auto scrollbar-none bg-black/[0.01] dark:bg-white/[0.005] border-t border-black/[0.04] dark:border-white/[0.04]">
-                {images.map((img: any, idx: number) => (
+                {images.map((img: AppParrotImage, idx: number) => (
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
@@ -195,7 +210,7 @@ export default function ProductDetailModal() {
                       ${Number(translated.price).toLocaleString()}
                     </span>
                     <span className="text-[10px] text-text-premium/50 uppercase tracking-widest font-extrabold">
-                      Value (USD)
+                      {t("ui.priceText")}
                     </span>
                   </div>
                 </div>

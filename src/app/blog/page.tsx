@@ -6,7 +6,19 @@ import prisma from "@/lib/db";
 import { getServerTranslation } from "@/lib/serverTranslations";
 import { translateBlogPost } from "@/lib/translations";
 
-export const revalidate = 3600; // Cache blog listing for 1 hour
+export const revalidate = 3600;
+
+export async function generateMetadata() {
+  const { t } = await getServerTranslation();
+  return {
+    title: t("meta.blog.title"),
+    description: t("meta.blog.desc"),
+    openGraph: {
+      title: t("meta.blog.title"),
+      description: t("meta.blog.desc"),
+    },
+  };
+}
 
 async function getBlogPosts() {
   try {
@@ -40,18 +52,15 @@ export default async function BlogPage() {
 
       {/* Grid */}
       {posts.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-black/[0.06] shadow-sm">
+        <div className="text-center py-20 bg-white dark:bg-white/[0.04] rounded-3xl border border-black/[0.06] dark:border-white/[0.08] shadow-sm">
           <p className="text-text-premium/50 text-sm font-semibold">
-            {locale === "en" ? "No blog posts published yet." : "Aucun article de blog publié pour le moment."}
+            {t("blog.empty")}
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <article
-              key={post.id}
-              className="flex flex-col bg-white rounded-3xl overflow-hidden border border-black/[0.06] shadow-sm hover:shadow-md transition-all duration-300 group"
-            >
+            <article key={post.id} className="flex flex-col bg-white dark:bg-white/[0.04] rounded-3xl overflow-hidden border border-black/[0.06] dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 group">
               {/* Image */}
               <div className="relative aspect-[16/10] w-full bg-bg-premium overflow-hidden">
                 <Image
@@ -92,7 +101,7 @@ export default async function BlogPage() {
                     href={`/blog/${post.slug}`}
                     className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-hover transition-colors"
                   >
-                    {locale === "en" ? "Read Article" : "Lire l'article"} <ChevronRight className="h-4 w-4" />
+                  {t("blog.readArticle")} <ChevronRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>

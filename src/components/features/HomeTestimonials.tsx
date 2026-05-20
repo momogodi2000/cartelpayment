@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { useApp } from "@/context/AppContext";
@@ -21,7 +22,6 @@ interface HomeTestimonialsProps {
 
 export default function HomeTestimonials({ testimonials }: HomeTestimonialsProps) {
   const { language } = useApp();
-  const { t } = useTranslation(language);
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Auto-play every 8 seconds
@@ -75,17 +75,21 @@ export default function HomeTestimonials({ testimonials }: HomeTestimonialsProps
 
           {/* Testimonial Quote Text */}
           <p className="text-sm sm:text-base md:text-lg text-text-premium/80 font-medium italic leading-relaxed">
-            "{item.content}"
+            &ldquo;{item.content}&rdquo;
           </p>
 
           {/* Client Details */}
           <div className="flex items-center gap-4 pt-2 border-t border-black/[0.04] dark:border-white/[0.04]">
             {item.avatar ? (
-              <img
-                src={item.avatar}
-                alt={item.name}
-                className="h-12 w-12 rounded-full object-cover border border-black/[0.08]"
-              />
+              <div className="relative h-12 w-12 rounded-full overflow-hidden border border-black/[0.08]">
+                <Image
+                  src={item.avatar}
+                  alt={item.name}
+                  fill
+                  sizes="48px"
+                  className="object-cover"
+                />
+              </div>
             ) : (
               <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-black text-sm border border-black/[0.08]">
                 {item.name.charAt(0)}

@@ -24,7 +24,7 @@ export default function DetailGallery({ images, parrotName }: DetailGalleryProps
   return (
     <div className="space-y-4">
       {/* Active Big Image */}
-      <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-white border border-black/[0.06] shadow-sm group">
+      <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-white dark:bg-black/15 border border-black/[0.06] dark:border-white/[0.08] shadow-sm group">
         <Image
           src={activeImage}
           alt={`${parrotName} detail image ${activeIdx + 1}`}
@@ -42,7 +42,7 @@ export default function DetailGallery({ images, parrotName }: DetailGalleryProps
             <button
               key={img.id}
               onClick={() => setActiveIdx(idx)}
-              className={`relative h-20 w-20 rounded-xl overflow-hidden border-2 shrink-0 bg-white shadow-sm transition-all ${
+              className={`relative h-20 w-20 rounded-xl overflow-hidden border-2 shrink-0 bg-white dark:bg-black/15 shadow-sm transition-all ${
                 activeIdx === idx
                   ? "border-primary scale-102"
                   : "border-transparent opacity-70 hover:opacity-100"

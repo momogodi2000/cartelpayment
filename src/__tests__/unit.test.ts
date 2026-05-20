@@ -98,6 +98,31 @@ describe("Auth Utilities", () => {
     restoreEnv("JWT_SECRET", originalSecret);
     restoreEnv("NODE_ENV", originalNodeEnv);
   });
+
+  it("should throw error if secret is missing in production environment", async () => {
+    const originalSecret = process.env.JWT_SECRET;
+    const originalAuthSecret = process.env.AUTH_SECRET;
+    const originalSessionSecret = process.env.SESSION_SECRET;
+    const originalNodeEnv = process.env.NODE_ENV;
+    const originalVitest = process.env.VITEST;
+    
+    const env = process.env as unknown as Record<string, string | undefined>;
+    delete env.JWT_SECRET;
+    delete env.AUTH_SECRET;
+    delete env.SESSION_SECRET;
+    delete env.VITEST;
+    env.NODE_ENV = "production";
+
+    await expect(
+      signToken({ id: "admin-4", email: "missing@arahaven.com", role: "ADMIN" })
+    ).rejects.toThrow("Missing JWT_SECRET, AUTH_SECRET, or SESSION_SECRET");
+
+    restoreEnv("JWT_SECRET", originalSecret);
+    restoreEnv("AUTH_SECRET", originalAuthSecret);
+    restoreEnv("SESSION_SECRET", originalSessionSecret);
+    restoreEnv("NODE_ENV", originalNodeEnv);
+    restoreEnv("VITEST", originalVitest);
+  });
 });
 
 describe("Zod Validation Schemas", () => {

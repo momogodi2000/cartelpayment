@@ -57,12 +57,10 @@ export default function ContactPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Left Side: Contact Information Cards */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.06] shadow-sm space-y-6">
+          <div className="bg-white dark:bg-white/[0.04] rounded-3xl p-6 sm:p-8 border border-black/[0.06] dark:border-white/[0.08] shadow-sm space-y-6">
             <h2 className="text-xl font-extrabold text-text-premium">{t("contact.infoTitle")}</h2>
             <p className="text-xs sm:text-sm text-text-premium/70 leading-relaxed">
-              {language === "en"
-                ? "We respond promptly to inquiries. For immediate assistance regarding available birds, WhatsApp is the fastest method."
-                : "Nous répondons rapidement aux demandes. Pour une assistance immédiate sur les oiseaux disponibles, WhatsApp est la méthode la plus rapide."}
+              {t("contact.responseIntro")}
             </p>
 
             <div className="space-y-4">
@@ -76,8 +74,8 @@ export default function ContactPage() {
                   <MessageSquare className="h-5 w-5 fill-white text-emerald-600" />
                 </div>
                 <div>
-                  <span className="font-extrabold text-sm text-emerald-800 block">{language === "en" ? "WhatsApp Chat" : "Discussion WhatsApp"}</span>
-                  <span className="text-xs text-emerald-600">{language === "en" ? "Instant breeder response" : "Réponse instantanée"}</span>
+                  <span className="font-extrabold text-sm text-emerald-800 block">{t("contact.whatsappChat")}</span>
+                  <span className="text-xs text-emerald-600">{t("contact.instantResponse")}</span>
                 </div>
               </a>
 
@@ -97,36 +95,24 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <span className="font-extrabold text-sm text-text-premium block">nursery@arahaven.com</span>
-                  <span className="text-xs text-text-premium/60">{language === "en" ? "For files & documentation" : "Pour documents & dossiers"}</span>
+                  <span className="text-xs text-text-premium/60">{t("contact.files")}</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Business Hours & Certifications */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.06] shadow-sm space-y-4">
+          <div className="bg-white dark:bg-white/[0.04] rounded-3xl p-6 sm:p-8 border border-black/[0.06] dark:border-white/[0.08] shadow-sm space-y-4">
             <div className="flex items-center gap-3">
               <Clock className="h-5 w-5 text-primary" />
               <span className="font-extrabold text-sm text-text-premium">{t("contact.hours")}</span>
             </div>
             <p className="text-xs text-text-premium/70 pl-8 leading-relaxed">
-              {language === "en" ? (
-                <>
-                  Monday – Saturday: 8:00 AM – 6:00 PM (GMT-6)
-                  <br />
-                  Sunday: Emergency calls & reservations only.
-                </>
-              ) : (
-                <>
-                  Lundi – Samedi : 08h00 – 18h00 (GMT-6)
-                  <br />
-                  Dimanche : Appels d&apos;urgence et réservations uniquement.
-                </>
-              )}
+              {t("contact.hoursFull")}<br />{t("contact.sunday")}
             </p>
             <div className="pt-2 border-t border-black/[0.04] flex items-center gap-3">
               <Award className="h-5 w-5 text-accent" />
-              <span className="text-xs font-bold text-accent">CITES License: No. LA-882-EX</span>
+              <span className="text-xs font-bold text-accent">{t("contact.license")}</span>
             </div>
           </div>
         </div>
@@ -135,13 +121,11 @@ export default function ContactPage() {
         <div className="lg:col-span-7">
           <form
             onSubmit={handleSubmit}
-            className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.06] shadow-sm space-y-6"
+            className="bg-white dark:bg-white/[0.04] rounded-3xl p-6 sm:p-8 border border-black/[0.06] dark:border-white/[0.08] shadow-sm space-y-6"
           >
             <h2 className="text-xl font-extrabold text-text-premium">{t("contact.formHeader")}</h2>
             <p className="text-xs sm:text-sm text-text-premium/70">
-              {language === "en"
-                ? "Submit your questions, and our veterinary and transport support team will contact you."
-                : "Soumettez vos questions et notre équipe vétérinaire et logistique vous contactera."}
+              {t("contact.formIntro")}
             </p>
 
             {/* Anti-Spam Bot Honeypot */}
@@ -171,7 +155,7 @@ export default function ContactPage() {
                 type="text"
                 required
                 placeholder="John Doe"
-                className="w-full px-4 py-3 rounded-xl border border-black/[0.08] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm"
+                className="w-full px-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/[0.12] bg-white dark:bg-white/[0.06] text-text-premium focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm"
               />
               {state.errors?.name && (
                 <p className="text-xs text-red-600 font-bold">{state.errors.name[0]}</p>
@@ -190,7 +174,7 @@ export default function ContactPage() {
                   type="email"
                   required
                   placeholder="john@example.com"
-                  className="w-full px-4 py-3 rounded-xl border border-black/[0.08] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/[0.12] bg-white dark:bg-white/[0.06] text-text-premium focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm"
                 />
                 {state.errors?.email && (
                   <p className="text-xs text-red-600 font-bold">{state.errors.email[0]}</p>
@@ -207,7 +191,7 @@ export default function ContactPage() {
                   type="tel"
                   required
                   placeholder="+1 (555) 000-0000"
-                  className="w-full px-4 py-3 rounded-xl border border-black/[0.08] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/[0.12] bg-white dark:bg-white/[0.06] text-text-premium focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm"
                 />
                 {state.errors?.phone && (
                   <p className="text-xs text-red-600 font-bold">{state.errors.phone[0]}</p>
@@ -228,7 +212,7 @@ export default function ContactPage() {
                 name="parrotReference"
                 type="text"
                 placeholder={language === "en" ? "e.g. Scarlet Macaw Baby" : "ex. Bébé Ara Rouge"}
-                className="w-full px-4 py-3 rounded-xl border border-black/[0.08] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm"
+                className="w-full px-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/[0.12] bg-white dark:bg-white/[0.06] text-text-premium focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm"
               />
               {state.errors?.parrotReference && (
                 <p className="text-xs text-red-600 font-bold">{state.errors.parrotReference[0]}</p>
@@ -238,7 +222,7 @@ export default function ContactPage() {
             {/* Message */}
             <div className="space-y-1">
               <label htmlFor="message" className="block text-xs font-bold uppercase text-text-premium/70 tracking-wider">
-                {language === "en" ? "Your Message" : "Votre Message"} *
+                {t("contact.yourMessage")} *
               </label>
               <textarea
                 id="message"
@@ -246,7 +230,7 @@ export default function ContactPage() {
                 required
                 rows={4}
                 placeholder={t("contact.messagePlaceholder")}
-                className="w-full px-4 py-3 rounded-xl border border-black/[0.08] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/[0.12] bg-white dark:bg-white/[0.06] text-text-premium focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm resize-none"
               />
               {state.errors?.message && (
                 <p className="text-xs text-red-600 font-bold">{state.errors.message[0]}</p>

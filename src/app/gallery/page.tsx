@@ -3,6 +3,18 @@ import prisma from "@/lib/db";
 import GalleryClient from "./GalleryClient";
 import { getServerTranslation } from "@/lib/serverTranslations";
 
+export async function generateMetadata() {
+  const { t } = await getServerTranslation();
+  return {
+    title: t("meta.gallery.title"),
+    description: t("meta.gallery.desc"),
+    openGraph: {
+      title: t("meta.gallery.title"),
+      description: t("meta.gallery.desc"),
+    },
+  };
+}
+
 async function getGalleryItems() {
   try {
     return await prisma.galleryItem.findMany({

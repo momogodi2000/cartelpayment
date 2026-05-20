@@ -6,6 +6,7 @@ import FilterBar from "@/components/features/FilterBar";
 import ParrotCard from "@/components/features/ParrotCard";
 import { Filter, Trash2 } from "lucide-react";
 import { useApp } from "@/context/AppContext";
+import { useTranslation } from "@/lib/translations";
 
 interface Category {
   id: string;
@@ -57,6 +58,7 @@ const DEFAULT_FILTERS: FilterState = {
 
 export default function CatalogClient({ initialParrots, categories }: CatalogClientProps) {
   const { language } = useApp();
+  const { t } = useTranslation(language);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -163,43 +165,35 @@ export default function CatalogClient({ initialParrots, categories }: CatalogCli
 
       {/* Catalog Grid */}
       <div className="lg:col-span-3 space-y-6">
-        <div className="flex items-center justify-between bg-white px-6 py-4 rounded-2xl border border-black/[0.04] shadow-sm">
+        <div className="flex items-center justify-between bg-white dark:bg-white/[0.04] px-6 py-4 rounded-2xl border border-black/[0.04] dark:border-white/[0.06] shadow-sm">
           <p className="text-xs sm:text-sm text-text-premium/70 font-semibold">
-            {language === "en" ? (
-              <>
-                Showing <span className="text-primary font-extrabold">{filteredParrots.length}</span> premium birds
-              </>
-            ) : (
-              <>
-                Affichage de <span className="text-primary font-extrabold">{filteredParrots.length}</span> oiseaux premium
-              </>
-            )}
+            <span>{t("catalog.countPrefix")} </span>
+            <span className="text-primary font-extrabold">{filteredParrots.length}</span>
+            <span> {t("catalog.countSuffix")}</span>
           </p>
           {isPending && (
             <span className="text-xs text-primary font-bold animate-pulse">
-              {language === "en" ? "Syncing URL..." : "Synchronisation URL..."}
+              {t("catalog.syncing")}
             </span>
           )}
         </div>
 
         {filteredParrots.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-black/[0.06] shadow-sm space-y-4">
+          <div className="text-center py-20 bg-white dark:bg-white/[0.04] rounded-3xl border border-black/[0.06] dark:border-white/[0.08] shadow-sm space-y-4">
             <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto">
               <Filter className="h-6 w-6" />
             </div>
             <h3 className="font-extrabold text-lg text-text-premium">
-              {language === "en" ? "No Parrots Match Your Search" : "Aucun perroquet ne correspond"}
+              {t("catalog.emptyTitle")}
             </h3>
             <p className="text-xs sm:text-sm text-text-premium/60 max-w-sm mx-auto leading-relaxed">
-              {language === "en"
-                ? "Try adjusting your search keywords, species grouping, or status options to find suitable available birds."
-                : "Essayez d'ajuster vos mots-clés, votre groupe d'espèces ou vos options de statut pour trouver des oiseaux correspondants."}
+              {t("catalog.emptyBody")}
             </p>
             <button
               onClick={handleReset}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-sm transition-colors"
             >
-              <Trash2 className="h-4 w-4" /> {language === "en" ? "Reset Filters" : "Réinitialiser les filtres"}
+              <Trash2 className="h-4 w-4" /> {t("catalog.resetFilters")}
             </button>
           </div>
         ) : (

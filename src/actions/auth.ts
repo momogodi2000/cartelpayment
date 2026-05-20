@@ -62,6 +62,17 @@ export async function loginAdmin(prevState: unknown, formData: FormData) {
       maxAge: 60 * 60 * 24, // 24 Hours
     });
 
+    // Client-readable cookie to toggle navigation states
+    cookieStore.set({
+      name: "auth_logged_in",
+      value: "true",
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24, // 24 Hours
+    });
+
     return {
       success: true,
       message: "Access granted. Redirecting to dashboard...",
@@ -78,5 +89,6 @@ export async function loginAdmin(prevState: unknown, formData: FormData) {
 export async function logoutAdmin() {
   const cookieStore = await cookies();
   cookieStore.delete("auth_token");
+  cookieStore.delete("auth_logged_in");
   return { success: true };
 }

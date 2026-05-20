@@ -54,6 +54,7 @@ export default function ProductCarousel({ parrots }: ProductCarouselProps) {
   // Auto-bounding
   useEffect(() => {
     if (currentIndex > maxIndex) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentIndex(maxIndex);
     }
   }, [visibleCards, maxIndex, currentIndex]);

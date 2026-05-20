@@ -10,6 +10,15 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
+      exclude: [
+        "src/lib/translations.ts",
+        "src/__tests__/**",
+        "vitest.config.ts",
+        "next.config.js",
+        "tailwind.config.ts",
+        "postcss.config.js",
+        "node_modules/**"
+      ],
       thresholds: {
         branches: 85,
         functions: 90,

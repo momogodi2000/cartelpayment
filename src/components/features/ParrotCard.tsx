@@ -1,21 +1,15 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { MessageSquare, MapPin, Sparkles, ShoppingBag } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/whatsapp";
-import { useApp } from "@/context/AppContext";
+import { AppParrot, useApp } from "@/context/AppContext";
 import { translateParrot, useTranslation } from "@/lib/translations";
 import { useCart } from "@/context/CartContext";
 
-interface ParrotImage {
-  url: string;
-  alt: string;
-}
-
 interface ParrotCardProps {
-  parrot: any;
+  parrot: AppParrot;
 }
 
 export default function ParrotCard({ parrot }: ParrotCardProps) {
@@ -126,7 +120,7 @@ export default function ParrotCard({ parrot }: ParrotCardProps) {
             onClick={() => setSelectedParrot(parrot)}
             className="flex-grow text-center py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.1] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] text-xs font-bold text-text-premium transition-colors cursor-pointer"
           >
-            {language === "en" ? "Details" : "Détails"}
+            {t("card.details")}
           </button>
 
           {isAvailable && (
@@ -161,7 +155,7 @@ export default function ParrotCard({ parrot }: ParrotCardProps) {
             className="flex-grow inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-sm transition-colors cursor-pointer"
           >
             <MessageSquare className="h-3.5 w-3.5" />
-            {language === "en" ? "Inquire" : "S'enquérir"}
+            {t("card.inquire")}
           </a>
         </div>
       </div>

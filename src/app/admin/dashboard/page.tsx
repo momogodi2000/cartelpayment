@@ -10,11 +10,13 @@ import {
   LogOut,
   MailWarning,
   Send,
-  Settings
+  Settings,
+  TrendingUp,
+  ArrowRight,
 } from "lucide-react";
 import prisma from "@/lib/db";
 
-export const revalidate = 0; // Always fetch live counts
+export const revalidate = 0;
 
 async function getDashboardMetrics() {
   try {
@@ -49,167 +51,235 @@ async function getDashboardMetrics() {
 export default async function AdminDashboardPage() {
   const metrics = await getDashboardMetrics();
 
-  // Define Server Action inline or pass it to form action
   const handleLogout = async () => {
     "use server";
     const cookieStore = await cookies();
     cookieStore.delete("auth_token");
+    cookieStore.delete("auth_logged_in");
     redirect("/admin/login");
   };
+
+  const statCards = [
+    {
+      label: "Available Parrots",
+      labelFr: "Perroquets Disponibles",
+      value: metrics.availableParrots,
+      sub: `Total listings: ${metrics.totalParrots}`,
+      subFr: `Total annonces : ${metrics.totalParrots}`,
+      color: "text-emerald-600",
+      bg: "bg-emerald-500/8",
+      border: "border-emerald-200/60 dark:border-emerald-800/30",
+    },
+    {
+      label: "Reserved Birds",
+      labelFr: "Oiseaux Réservés",
+      value: metrics.reservedParrots,
+      sub: "Pending transport details",
+      subFr: "Détails transport en attente",
+      color: "text-amber-600",
+      bg: "bg-amber-500/8",
+      border: "border-amber-200/60 dark:border-amber-800/30",
+    },
+    {
+      label: "Sold Birds",
+      labelFr: "Oiseaux Vendus",
+      value: metrics.soldParrots,
+      sub: "Successful transitions",
+      subFr: "Transitions réussies",
+      color: "text-blue-600",
+      bg: "bg-blue-500/8",
+      border: "border-blue-200/60 dark:border-blue-800/30",
+    },
+    {
+      label: "Unread Inquiries",
+      labelFr: "Demandes Non Lues",
+      value: metrics.unreadMessages,
+      sub: "Requires attention",
+      subFr: "Nécessite attention",
+      color: metrics.unreadMessages > 0 ? "text-amber-600" : "text-text-premium/40",
+      bg: "bg-slate-500/5",
+      border: "border-slate-200/60 dark:border-slate-700/30",
+      hasAlert: metrics.unreadMessages > 0,
+    },
+  ];
 
   const navItems = [
     {
       href: "/admin/dashboard/parrots",
       title: "Parrots Directory",
-      description: "Create, view, modify specifications, prices, and update bird statuses (Available, Reserved, Sold).",
+      titleFr: "Annuaire des Perroquets",
+      description:
+        "Create, view, modify specifications, prices, and update bird statuses (Available, Reserved, Sold).",
+      descFr: "Créer, voir, modifier les spécifications, prix et statuts des oiseaux.",
       icon: Bird,
-      color: "text-emerald-600 bg-emerald-50 border-emerald-100",
+      accent: "emerald",
     },
     {
       href: "/admin/dashboard/blog",
       title: "Blog Management",
-      description: "Write SEO articles, manage care guidelines, define excerpt details, and publish/unpublish posts.",
+      titleFr: "Gestion du Blog",
+      description:
+        "Write SEO articles, manage care guidelines, define excerpt details, and publish/unpublish posts.",
+      descFr: "Rédiger des articles SEO, gérer les guides de soins et publier/dépublier.",
       icon: FileText,
-      color: "text-blue-600 bg-blue-50 border-blue-100",
+      accent: "blue",
     },
     {
       href: "/admin/dashboard/gallery",
       title: "Gallery Items",
-      description: "Manage farm photography, nursery videos, categorize items, and arrange sorting orders.",
+      titleFr: "Galerie Médias",
+      description:
+        "Manage farm photography, nursery videos, categorize items, and arrange sorting orders.",
+      descFr: "Gérer les photos, vidéos de la nurserie et organiser les tris.",
       icon: ImageIcon,
-      color: "text-violet-600 bg-violet-50 border-violet-100",
+      accent: "violet",
     },
     {
       href: "/admin/dashboard/messages",
       title: "Inquiry Messages",
-      description: `Review client contact details, read email submissions, check phone numbers, and mark messages as read.`,
+      titleFr: "Messages de Contact",
+      description: `Review client contact details, read email submissions, and mark messages as read.`,
+      descFr: "Consulter les coordonnées clients et marquer les messages comme lus.",
       icon: MessageSquare,
-      color: "text-amber-600 bg-amber-50 border-amber-100",
+      accent: "amber",
       badge: metrics.unreadMessages,
     },
     {
       href: "/admin/dashboard/newsletter",
       title: "Newsletter & Campaigns",
-      description: "Manage subscriber list, design email template updates, and broadcast marketing/nursery campaigns.",
+      titleFr: "Newsletter & Campagnes",
+      description:
+        "Manage subscriber list, design email template updates, and broadcast marketing campaigns.",
+      descFr: "Gérer les abonnés et diffuser des campagnes marketing.",
       icon: Send,
-      color: "text-sky-600 bg-sky-50 border-sky-100",
+      accent: "sky",
     },
     {
       href: "/admin/dashboard/settings",
       title: "Settings & Audit Logs",
-      description: "Configure system properties like contact email or WhatsApp, and inspect secure administrative audit trails.",
+      titleFr: "Paramètres & Journaux",
+      description:
+        "Configure system properties like contact email or WhatsApp, and inspect administrative audit trails.",
+      descFr: "Configurer les propriétés système et inspecter les journaux d'audit.",
       icon: Settings,
-      color: "text-slate-600 bg-slate-50 border-slate-100",
+      accent: "slate",
     },
   ];
 
+  const accentMap: Record<string, string> = {
+    emerald: "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/25 border border-emerald-100 dark:border-emerald-800/30 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30",
+    blue: "text-blue-600 bg-blue-50 dark:bg-blue-950/25 border border-blue-100 dark:border-blue-800/30 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30",
+    violet: "text-violet-600 bg-violet-50 dark:bg-violet-950/25 border border-violet-100 dark:border-violet-800/30 group-hover:bg-violet-100 dark:group-hover:bg-violet-900/30",
+    amber: "text-amber-600 bg-amber-50 dark:bg-amber-950/25 border border-amber-100 dark:border-amber-800/30 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/30",
+    sky: "text-sky-600 bg-sky-50 dark:bg-sky-950/25 border border-sky-100 dark:border-sky-800/30 group-hover:bg-sky-100 dark:group-hover:bg-sky-900/30",
+    slate: "text-slate-600 bg-slate-50 dark:bg-slate-800/25 border border-slate-100 dark:border-slate-700/30 group-hover:bg-slate-100 dark:group-hover:bg-slate-700/30",
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-black/[0.04] pb-6 gap-4">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
+      {/* ── Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-black/[0.06] dark:border-white/[0.08] pb-6 gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-text-premium tracking-tight">
-            Breeder Dashboard
-          </h1>
-          <p className="text-sm text-text-premium/50 font-semibold uppercase tracking-wider">
-            Aviary & Content Management
+          <div className="flex items-center gap-3 mb-1">
+            <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+              <TrendingUp className="h-5 w-5" />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-text-premium tracking-tight">
+              Breeder Dashboard
+            </h1>
+          </div>
+          <p className="text-xs sm:text-sm text-text-premium/50 font-semibold uppercase tracking-wider pl-12">
+            Aviary &amp; Content Management
           </p>
         </div>
         <form action={handleLogout}>
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold transition-all shadow-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-red-200 dark:border-red-900/40 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 text-xs font-bold transition-all shadow-sm cursor-pointer"
           >
-            <LogOut className="h-4 w-4" /> Sign Out
+            <LogOut className="h-4 w-4" />
+            Sign Out
           </button>
         </form>
       </div>
 
-      {/* Metrics Row */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-2xl border border-black/[0.04] shadow-sm text-left">
-          <span className="text-[10px] text-text-premium/40 uppercase font-extrabold tracking-widest block">
-            Available Parrots
-          </span>
-          <span className="text-3xl font-extrabold text-emerald-600 block mt-1">
-            {metrics.availableParrots}
-          </span>
-          <span className="text-xs text-text-premium/50 font-semibold block mt-0.5">
-            Total listings: {metrics.totalParrots}
-          </span>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-black/[0.04] shadow-sm text-left">
-          <span className="text-[10px] text-text-premium/40 uppercase font-extrabold tracking-widest block">
-            Reserved Birds
-          </span>
-          <span className="text-3xl font-extrabold text-amber-600 block mt-1">
-            {metrics.reservedParrots}
-          </span>
-          <span className="text-xs text-text-premium/50 font-semibold block mt-0.5">
-            Pending transport details
-          </span>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-black/[0.04] shadow-sm text-left">
-          <span className="text-[10px] text-text-premium/40 uppercase font-extrabold tracking-widest block">
-            Sold Birds
-          </span>
-          <span className="text-3xl font-extrabold text-red-600 block mt-1">
-            {metrics.soldParrots}
-          </span>
-          <span className="text-xs text-text-premium/50 font-semibold block mt-0.5">
-            Successful transitions
-          </span>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-black/[0.04] shadow-sm text-left relative overflow-hidden">
-          <span className="text-[10px] text-text-premium/40 uppercase font-extrabold tracking-widest block">
-            Unread Inquiries
-          </span>
-          <span className={`text-3xl font-extrabold block mt-1 ${metrics.unreadMessages > 0 ? "text-amber-600 font-extrabold" : "text-text-premium/40"}`}>
-            {metrics.unreadMessages}
-          </span>
-          <span className="text-xs text-text-premium/50 font-semibold block mt-0.5">
-            Requires attention
-          </span>
-          {metrics.unreadMessages > 0 && (
-            <MailWarning className="absolute right-4 bottom-4 h-12 w-12 text-amber-500/10 pointer-events-none" />
-          )}
-        </div>
+      {/* ── Stat Cards ── */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        {statCards.map((card, idx) => (
+          <div
+            key={idx}
+            className={`relative p-5 sm:p-6 rounded-2xl border ${card.border} ${card.bg} shadow-sm text-left overflow-hidden`}
+          >
+            <span className="text-[10px] text-text-premium/50 uppercase font-black tracking-widest block">
+              {card.label}
+            </span>
+            <span className={`text-3xl font-black ${card.color} block mt-1`}>
+              {card.value}
+            </span>
+            <span className="text-xs text-text-premium/50 font-bold block mt-0.5">
+              {card.sub}
+            </span>
+            {card.hasAlert && (
+              <MailWarning className="absolute right-4 bottom-4 h-10 w-10 text-amber-500/15 pointer-events-none" />
+            )}
+          </div>
+        ))}
       </section>
 
-      {/* Directory Management Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {navItems.map((item, idx) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={idx}
-              href={item.href}
-              className="group flex gap-5 bg-white p-6 rounded-3xl border border-black/[0.05] hover:border-primary/20 hover:shadow-md transition-all duration-300 text-left relative"
-            >
-              <div className={`h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 ${item.color} group-hover:scale-103 transition-transform`}>
-                <Icon className="h-6 w-6" />
-              </div>
-              <div className="space-y-1.5 pr-8">
-                <h3 className="font-extrabold text-base text-text-premium group-hover:text-primary transition-colors flex items-center gap-2">
-                  {item.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-text-premium/60 leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
+      {/* ── Blog stat bonus card ── */}
+      <div className="flex items-center gap-3 px-5 py-4 rounded-2xl bg-primary/5 border border-primary/15 text-sm text-text-premium/80 font-semibold">
+        <FileText className="h-5 w-5 text-primary shrink-0" />
+        <span>
+          <span className="font-extrabold text-primary">{metrics.totalBlogs}</span>{" "}
+          blog {metrics.totalBlogs === 1 ? "article" : "articles"} published in the Care Blog.
+        </span>
+        <Link
+          href="/admin/dashboard/blog"
+          className="ml-auto flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-hover transition-colors"
+        >
+          Manage <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
 
-              {/* Unread Message Indicator Badge */}
-              {item.badge !== undefined && item.badge > 0 && (
-                <span className="absolute top-6 right-6 h-6 w-6 rounded-full bg-amber-500 text-white font-extrabold text-[10px] flex items-center justify-center animate-bounce">
-                  {item.badge}
-                </span>
-              )}
-            </Link>
-          );
-        })}
+      {/* ── Directory Management Grid ── */}
+      <section>
+        <h2 className="text-sm font-extrabold uppercase tracking-widest text-text-premium/45 mb-5">
+          Content Modules
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+          {navItems.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={idx}
+                href={item.href}
+                className="group flex gap-4 sm:gap-5 bg-white dark:bg-white/[0.04] p-5 sm:p-6 rounded-2xl border border-black/[0.06] dark:border-white/[0.08] hover:border-primary/25 dark:hover:border-primary/25 hover:shadow-md transition-all duration-300 text-left relative"
+              >
+                <div
+                  className={`h-11 w-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 ${accentMap[item.accent]}`}
+                >
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="space-y-1.5 pr-6 min-w-0">
+                  <h3 className="font-extrabold text-sm sm:text-base text-text-premium group-hover:text-primary transition-colors flex items-center gap-2 flex-wrap">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-text-premium/55 leading-relaxed line-clamp-2">
+                    {item.description}
+                  </p>
+                </div>
+
+                <ArrowRight className="absolute right-5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-premium/20 group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" />
+
+                {item.badge !== undefined && item.badge > 0 && (
+                  <span className="absolute top-4 right-4 h-6 w-6 rounded-full bg-amber-500 text-white font-extrabold text-[10px] flex items-center justify-center animate-bounce shadow-sm">
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </div>
       </section>
     </div>
   );

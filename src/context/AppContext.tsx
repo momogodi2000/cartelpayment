@@ -5,6 +5,36 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 type Language = "en" | "fr";
 type Theme = "light" | "dark" | "exotic";
 
+export interface AppParrotImage {
+  url: string;
+  alt?: string;
+}
+
+export interface AppParrot {
+  id: string;
+  name: string;
+  slug: string;
+  species: string;
+  price: number;
+  status: string;
+  size?: string;
+  sex?: string;
+  rarity?: string;
+  origin?: string;
+  age?: string;
+  description?: string;
+  shortDescription?: string;
+  behavior?: string;
+  feeding?: string;
+  domestication?: string;
+  healthNotes?: string;
+  lifespan?: string;
+  weight?: string;
+  careLevel?: string;
+  careInstructions?: string;
+  images?: AppParrotImage[];
+}
+
 interface AppContextType {
   language: Language;
   theme: Theme;
@@ -12,14 +42,14 @@ interface AppContextType {
   setTheme: (theme: Theme) => void;
   toggleLanguage: () => void;
   toggleTheme: () => void;
-  selectedParrot: any | null;
-  setSelectedParrot: (parrot: any | null) => void;
+  selectedParrot: AppParrot | null;
+  setSelectedParrot: (parrot: AppParrot | null) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [selectedParrot, setSelectedParrot] = useState<any | null>(null);
+  const [selectedParrot, setSelectedParrot] = useState<AppParrot | null>(null);
   const [language, setLanguageState] = useState<Language>(() => {
     if (typeof window === "undefined") return "en";
     const savedLang = localStorage.getItem("arahaven_lang") as Language;

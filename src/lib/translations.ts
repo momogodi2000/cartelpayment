@@ -28,8 +28,24 @@ export const translations = {
     "nav.about": "Our Aviary",
     "nav.blog": "Care Blog",
     "nav.contact": "Inquire",
+    "nav.discover": "Discover",
     "nav.admin": "CMS Access",
     "nav.adminDashboard": "Breeder Panel",
+    "nav.login": "Sign In",
+    "nav.brandSubtitle": "Exotic Aviary",
+    "nav.discoverGalleryDesc": "Aviary photos & videos",
+    "nav.discoverAboutDesc": "Our story & standards",
+    "nav.discoverBlogDesc": "Care guides & insights",
+    "nav.whatsappDesk": "WhatsApp Desk",
+    "nav.whatsappConsultation": "WhatsApp Consultation",
+    "auth.title": "AraHaven CMS Portal",
+    "auth.subtitle": "Administrative Access",
+    "auth.email": "Email Address",
+    "auth.password": "Secure Password",
+    "auth.submit": "Login to CMS",
+    "auth.loading": "Verifying Credentials...",
+    "auth.redirecting": "Redirecting...",
+    "auth.back": "Back to Home",
 
     // Themes
     "theme.light": "Light Nature",
@@ -384,6 +400,52 @@ export const translations = {
     "hero.bgShowcase": "Highlighting Nursery Hatchling",
     "testimonials.title": "Breeder Placements & Trust Reviews",
     "testimonials.subtitle": "Why responsible collectors and families trust our nursery standards worldwide.",
+
+    // Admin Dashboard (EN)
+    "admin.dashboard.title": "Breeder Dashboard",
+    "admin.dashboard.subtitle": "Aviary & Content Management",
+    "admin.dashboard.signOut": "Sign Out",
+    "admin.dashboard.availableParrots": "Available Parrots",
+    "admin.dashboard.totalListings": "Total listings",
+    "admin.dashboard.reservedBirds": "Reserved Birds",
+    "admin.dashboard.pendingTransport": "Pending transport details",
+    "admin.dashboard.soldBirds": "Sold Birds",
+    "admin.dashboard.successfulTransitions": "Successful transitions",
+    "admin.dashboard.unreadInquiries": "Unread Inquiries",
+    "admin.dashboard.requiresAttention": "Requires attention",
+    "admin.parrots.title": "Parrots Directory",
+    "admin.parrots.desc": "Create, view, modify specifications, prices, and update bird statuses.",
+    "admin.blog.title": "Blog Management",
+    "admin.blog.desc": "Write SEO articles, manage care guidelines, and publish/unpublish posts.",
+    "admin.gallery.title": "Gallery Items",
+    "admin.gallery.desc": "Manage farm photography, nursery videos, and arrange sorting orders.",
+    "admin.messages.title": "Inquiry Messages",
+    "admin.messages.desc": "Review client contact details and mark messages as read.",
+    "admin.newsletter.title": "Newsletter & Campaigns",
+    "admin.newsletter.desc": "Manage subscribers and broadcast marketing campaigns.",
+    "admin.settings.title": "Settings & Audit Logs",
+    "admin.settings.desc": "Configure system properties and inspect administrative audit trails.",
+
+    // Form Validation (EN)
+    "form.required": "This field is required.",
+    "form.invalidEmail": "Please enter a valid email address.",
+    "form.success": "Your message was sent successfully!",
+    "form.error": "An error occurred. Please try again.",
+    "form.sending": "Sending...",
+
+    // SEO Metadata (EN)
+    "meta.home.title": "AraHaven Aviary | Premium Exotic Parrots & Hand-Tamed Macaws",
+    "meta.home.desc": "Certified exotic bird breeder specializing in ethically raised, hand-tamed macaws, cockatoos, and amazon parrots in Latin America.",
+    "meta.catalog.title": "Exotic Parrot Catalog | AraHaven Aviary",
+    "meta.catalog.desc": "Browse our certified available, reserved, and custom-bred hand-raised parrots. Request shipping quotes and health registries.",
+    "meta.about.title": "About Our Aviary | AraHaven",
+    "meta.about.desc": "Learn about AraHaven's ethical breeding philosophy, CITES certifications, and nursery methods for hand-tamed companion parrots.",
+    "meta.gallery.title": "Aviary Gallery | AraHaven",
+    "meta.gallery.desc": "Virtual tour of our incubation units, outdoor flight aviaries, and hand-taming nurseries.",
+    "meta.blog.title": "Avian Care Blog | AraHaven",
+    "meta.blog.desc": "Expert guides on parrot nutrition, CITES compliance, hand-taming, and exotic bird care.",
+    "meta.contact.title": "Contact Us | AraHaven Aviary",
+    "meta.contact.desc": "Request custom export licensing, DNA test logs, or schedule a video call with our nursery team.",
   },
   fr: {
     // Navigation
@@ -393,8 +455,18 @@ export const translations = {
     "nav.about": "Notre Élevage",
     "nav.blog": "Blog d'Élevage",
     "nav.contact": "S'enquérir",
+    "nav.discover": "Découvrir",
     "nav.admin": "Accès Portail",
     "nav.adminDashboard": "Panneau Éleveur",
+    "nav.login": "Connexion",
+    "auth.title": "Portail CMS AraHaven",
+    "auth.subtitle": "Accès Administratif",
+    "auth.email": "Adresse E-mail",
+    "auth.password": "Mot de Passe Sécurisé",
+    "auth.submit": "Se connecter au CMS",
+    "auth.loading": "Vérification des Identifiants...",
+    "auth.redirecting": "Redirection...",
+    "auth.back": "Retour à l'Accueil",
 
     // Themes
     "theme.light": "Nature Claire",
@@ -750,15 +822,61 @@ export const translations = {
     "hero.bgShowcase": "Mise en valeur d'un bébé",
     "testimonials.title": "Placements de l'Élevage & Avis Clients",
     "testimonials.subtitle": "Pourquoi les collectionneurs responsables et les familles nous font confiance à l'échelle internationale.",
+
+    // Admin Dashboard (FR)
+    "admin.dashboard.title": "Tableau de Bord Éleveur",
+    "admin.dashboard.subtitle": "Gestion de l'Élevage & Contenu",
+    "admin.dashboard.signOut": "Se Déconnecter",
+    "admin.dashboard.availableParrots": "Perroquets Disponibles",
+    "admin.dashboard.totalListings": "Total des annonces",
+    "admin.dashboard.reservedBirds": "Oiseaux Réservés",
+    "admin.dashboard.pendingTransport": "Détails transport en attente",
+    "admin.dashboard.soldBirds": "Oiseaux Vendus",
+    "admin.dashboard.successfulTransitions": "Transitions réussies",
+    "admin.dashboard.unreadInquiries": "Demandes Non Lues",
+    "admin.dashboard.requiresAttention": "Nécessite attention",
+    "admin.parrots.title": "Annuaire des Perroquets",
+    "admin.parrots.desc": "Créer, voir, modifier les spécifications, prix et statuts des oiseaux.",
+    "admin.blog.title": "Gestion du Blog",
+    "admin.blog.desc": "Rédiger des articles SEO, gérer les guides de soins et publier/dépublier.",
+    "admin.gallery.title": "Galerie Médias",
+    "admin.gallery.desc": "Gérer les photos, vidéos de la nurserie et organiser les tris.",
+    "admin.messages.title": "Messages de Contact",
+    "admin.messages.desc": "Consulter les coordonnées clients et marquer les messages comme lus.",
+    "admin.newsletter.title": "Newsletter & Campagnes",
+    "admin.newsletter.desc": "Gérer les abonnés et diffuser des campagnes marketing.",
+    "admin.settings.title": "Paramètres & Journaux",
+    "admin.settings.desc": "Configurer les propriétés système et inspecter les journaux d'audit.",
+
+    // Form Validation (FR)
+    "form.required": "Ce champ est obligatoire.",
+    "form.invalidEmail": "Veuillez saisir une adresse e-mail valide.",
+    "form.success": "Votre message a été envoyé avec succès !",
+    "form.error": "Une erreur s'est produite. Veuillez réessayer.",
+    "form.sending": "Envoi en cours...",
+
+    // SEO Metadata (FR)
+    "meta.home.title": "Élevage AraHaven | Perroquets Exotiques & Aras Apprivoisés",
+    "meta.home.desc": "Éleveur certifié de perroquets exotiques, spécialisé dans les aras, cacatoès et amazones élevés éthiquement en Amérique Latine.",
+    "meta.catalog.title": "Catalogue de Perroquets Exotiques | AraHaven",
+    "meta.catalog.desc": "Consultez nos perroquets disponibles, réservés et nés sur commande. Demandez des devis de transport et registres de santé.",
+    "meta.about.title": "À Propos de Notre Élevage | AraHaven",
+    "meta.about.desc": "Découvrez la philosophie d'élevage éthique d'AraHaven, nos certifications CITES et nos méthodes de nurserie.",
+    "meta.gallery.title": "Galerie de l'Élevage | AraHaven",
+    "meta.gallery.desc": "Visite virtuelle de nos unités d'incubation, volières de vol et nurseries d'apprivoisement.",
+    "meta.blog.title": "Blog de Soins Aviaires | AraHaven",
+    "meta.blog.desc": "Guides experts sur la nutrition des perroquets, conformité CITES, apprivoisement et soins des oiseaux exotiques.",
+    "meta.contact.title": "Nous Contacter | Élevage AraHaven",
+    "meta.contact.desc": "Demandez des licences d'exportation, des résultats ADN ou planifiez un appel vidéo avec notre équipe de nurserie.",
   },
 };
 
 // Client-side translation hook
 export function useTranslation(locale: Locale) {
   return {
-    t: (key: keyof typeof translations.en) => {
+    t: (key: string) => {
       const langDict = translations[locale] || translations.en;
-      return langDict[key] || translations.en[key] || key;
+      return langDict[key as keyof typeof translations.en] || translations.en[key as keyof typeof translations.en] || key;
     },
   };
 }
@@ -766,9 +884,9 @@ export function useTranslation(locale: Locale) {
 // Server-side translation helper
 export function getTranslation(locale: Locale) {
   return {
-    t: (key: keyof typeof translations.en) => {
+    t: (key: string) => {
       const langDict = translations[locale] || translations.en;
-      return langDict[key] || translations.en[key] || key;
+      return langDict[key as keyof typeof translations.en] || translations.en[key as keyof typeof translations.en] || key;
     },
   };
 }
@@ -987,7 +1105,7 @@ interface TestimonialLike {
   name: string;
   content: string;
   role: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export function translateTestimonial<T extends TestimonialLike>(testimonial: T, locale: Locale): T {

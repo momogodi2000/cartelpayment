@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"d:\\\\IT Project\\\\elvis\" -Force)",
+      "Bash(find \"d:\\\\IT Project\\\\elvis\" -maxdepth 1 -name \"tailwind.config.*\" -o -name \"next.config.*\" 2>nul)",
+      "Bash(Get-ChildItem -Path \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\admin\\\\\" -Recurse -File | Select-Object FullName)",
+      "Read(//d/IT Project/**)",
+      "Bash(next\\\\.config)",
+      "Bash(postcss\")",
+      "PowerShell(Get-ChildItem \"d:\\\\IT Project\\\\elvis\\\\\" | Where-Object { $_.Name -match \"tailwind|next.config|postcss\" })"
+    ],
+    "additionalDirectories": [
+      "d:\\IT Project\\elvis"
+    ]
+  }
+}

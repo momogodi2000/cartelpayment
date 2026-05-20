@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/context/AppContext";
@@ -20,56 +20,63 @@ const HERO_SLIDES: Slide[] = [
     nameEn: "Scarlet Macaw Baby",
     nameFr: "Bébé Ara Rouge (Macao)",
     descEn: "Closed-Loop Captive Breed — Hand-Raised with Love",
-    descFr: "Né en captivité — Élevé à la main avec amour"
+    descFr: "Né en captivité — Élevé à la main avec amour",
   },
   {
     url: "https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&w=1600&q=80",
     nameEn: "Hyacinth Macaw Baby",
     nameFr: "Bébé Ara Hyacinthe",
-    descEn: "Gentle Giant — Exceptional Socialization Swabs",
-    descFr: "Géant bleu pacifique — Excellente socialisation"
+    descEn: "Gentle Giant — Exceptional Socialization",
+    descFr: "Géant bleu pacifique — Excellente socialisation",
   },
   {
     url: "https://images.unsplash.com/photo-1591824438708-ce405f36ba3d?auto=format&fit=crop&w=1600&q=80",
     nameEn: "Blue & Gold Macaw",
     nameFr: "Ara Bleu et Or",
     descEn: "Active Nursery Graduate — Highly Communicative Companion",
-    descFr: "Diplômé de la nurserie — Compagnon très expressif"
+    descFr: "Diplômé de la nurserie — Compagnon très expressif",
   },
   {
     url: "https://images.unsplash.com/photo-1608826798020-f1db4d682497?auto=format&fit=crop&w=1600&q=80",
     nameEn: "Golden Conure Baby",
     nameFr: "Bébé Conure Dorée",
     descEn: "Vibrant Golden Plumage — CITES Appendix I Registered",
-    descFr: "Plumage d'or éclatant — Enregistré CITES Annexe I"
-  }
+    descFr: "Plumage d'or éclatant — Enregistré CITES Annexe I",
+  },
 ];
 
 export default function HeroBackground() {
   const { language } = useApp();
   const { t } = useTranslation(language);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const advance = useCallback(() => {
+    setCurrentSlideIndex((prev) => (prev + 1) % HERO_SLIDES.length);
+  }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlideIndex((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 10000); // 10 seconds rotate
-
+    if (isPaused) return;
+    const interval = setInterval(advance, 9000);
     return () => clearInterval(interval);
-  }, []);
+  }, [advance, isPaused]);
 
   const slide = HERO_SLIDES[currentSlideIndex];
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden select-none">
-      {/* Slide Container */}
+    <div
+      className="absolute inset-0 w-full h-full overflow-hidden select-none"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      {/* Slide Container with Ken Burns */}
       <AnimatePresence mode="popLayout">
         <motion.div
           key={currentSlideIndex}
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 0.35, scale: 1.0 }}
-          exit={{ opacity: 0, scale: 0.96 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
+          initial={{ opacity: 0, scale: 1.08 }}
+          animate={{ opacity: 0.58, scale: 1.0 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 1.4, ease: "easeInOut" }}
           className="absolute inset-0 w-full h-full"
         >
           <Image
@@ -83,32 +90,58 @@ export default function HeroBackground() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Dark overlay gradients matching page context */}
-      <div className="absolute inset-0 bg-gradient-to-t from-bg-premium via-transparent to-black/35 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_40%,_var(--color-bg-premium)_95%)] opacity-80 pointer-events-none" />
+      {/* Gradient overlays — layered for maximum readability */}
+      {/* Top gradient — for header contrast */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
+      {/* Bottom gradient — for hero text contrast */}
+      <div className="absolute inset-0 bg-gradient-to-t from-bg-premium via-bg-premium/30 to-transparent pointer-events-none" />
+      {/* Radial vignette for cinematic depth */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-70"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(0,0,0,0.45) 100%)",
+        }}
+      />
 
-      {/* Slide Info Card - Bottom Right */}
-      <div className="absolute bottom-6 right-6 z-20 hidden sm:block max-w-sm">
+      {/* Bottom-right: Slide info card */}
+      <div className="absolute bottom-8 right-6 z-20 hidden sm:block max-w-xs">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlideIndex}
-            initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0)" }}
-            exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-            transition={{ duration: 0.5 }}
-            className="p-4 rounded-2xl bg-white/10 dark:bg-black/25 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg text-left"
+            initial={{ opacity: 0, x: 12, filter: "blur(4px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0)" }}
+            exit={{ opacity: 0, x: -12, filter: "blur(4px)" }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="p-4 rounded-2xl bg-black/30 backdrop-blur-xl border border-white/[0.12] shadow-2xl text-left"
           >
-            <span className="text-[9px] uppercase tracking-widest font-extrabold text-primary dark:text-emerald-400 block mb-1">
+            <span className="text-[9px] uppercase tracking-widest font-extrabold text-emerald-400 block mb-1">
               {t("hero.bgShowcase")}
             </span>
             <h4 className="text-sm font-black text-white leading-tight">
               {language === "en" ? slide.nameEn : slide.nameFr}
             </h4>
-            <p className="text-white/85 text-[11px] mt-0.5 leading-relaxed font-semibold">
+            <p className="text-white/80 text-[11px] mt-0.5 leading-relaxed font-semibold">
               {language === "en" ? slide.descEn : slide.descFr}
             </p>
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* Bottom-center: Slide navigation dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+        {HERO_SLIDES.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentSlideIndex(idx)}
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              idx === currentSlideIndex
+                ? "w-8 bg-white shadow-md shadow-black/30"
+                : "w-2 bg-white/40 hover:bg-white/70"
+            }`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
       </div>
     </div>
   );
