@@ -11,6 +11,9 @@ interface ParrotImage {
   url: string;
   alt: string;
   order: number;
+  provider?: string;
+  storageKey?: string | null;
+  fileHash?: string | null;
 }
 
 interface Parrot {
@@ -58,6 +61,9 @@ const emptyForm = {
   healthNotes: "",
   featured: false,
   imageUrl: "",
+  imageProvider: "external",
+  imageKey: "",
+  imageFileHash: "",
 };
 
 const inputCls =
@@ -106,6 +112,9 @@ export default function ParrotsClient({ initialParrots }: ParrotsClientProps) {
       healthNotes: p.healthNotes,
       featured: p.featured,
       imageUrl: p.images[0]?.url || "",
+      imageProvider: p.images[0]?.provider || "external",
+      imageKey: p.images[0]?.storageKey || "",
+      imageFileHash: p.images[0]?.fileHash || "",
     });
     setImageMode("url");
     setErrors(null);
@@ -143,7 +152,13 @@ export default function ParrotsClient({ initialParrots }: ParrotsClientProps) {
       if (!res.ok) {
         setErrors(data.error || "Upload failed.");
       } else {
-        setForm((prev) => ({ ...prev, imageUrl: data.url }));
+        setForm((prev) => ({
+          ...prev,
+          imageUrl: data.url,
+          imageProvider: data.provider || "uploadthing",
+          imageKey: data.key || "",
+          imageFileHash: data.fileHash || "",
+        }));
       }
     } catch {
       setErrors("Upload failed. Check your connection.");
@@ -182,7 +197,14 @@ export default function ParrotsClient({ initialParrots }: ParrotsClientProps) {
       domestication: form.domestication,
       healthNotes: form.healthNotes,
       featured: form.featured,
-      images: [{ url: form.imageUrl || "/logo.png", alt: form.name || "AraHaven parrot", order: 0 }],
+      images: [{
+        url: form.imageUrl || "/logo.png",
+        alt: form.name || "AraHaven parrot",
+        order: 0,
+        provider: form.imageUrl ? form.imageProvider : "local",
+        storageKey: form.imageKey || undefined,
+        fileHash: form.imageFileHash || undefined,
+      }],
     };
 
     if (editingId) {
@@ -518,7 +540,13 @@ export default function ParrotsClient({ initialParrots }: ParrotsClientProps) {
                       <input
                         type="url"
                         value={form.imageUrl}
-                        onChange={(e) => setForm((p) => ({ ...p, imageUrl: e.target.value }))}
+                        onChange={(e) => setForm((p) => ({
+                          ...p,
+                          imageUrl: e.target.value,
+                          imageProvider: "external",
+                          imageKey: "",
+                          imageFileHash: "",
+                        }))}
                         placeholder="https://images.unsplash.com/photo-..."
                         className={inputCls}
                       />

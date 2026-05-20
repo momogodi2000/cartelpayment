@@ -11,10 +11,12 @@ The Prisma schema models the production surface:
 
 Important indexes exist on slugs, status, rarity, featured, created dates, emails, campaign status, and settings keys.
 
+Image files are stored outside Neon. The `ParrotImage` model stores URL and storage metadata (`provider`, `storageKey`, `fileHash`) so UploadThing-hosted files can be traced without storing binary blobs in PostgreSQL.
+
 Seeder behavior:
 
 - Reads default admin credentials from `.env`.
 - Fails safely when required admin seed variables are missing.
-- Creates admins only when they do not already exist.
+- Upserts default admins as active superadmins with full `*` permissions.
 - Seeds 30+ enriched parrot profiles and four images per bird.
 - Uses `SEED_RESET=true` only for intentional content reset.

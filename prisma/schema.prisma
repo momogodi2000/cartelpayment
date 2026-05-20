@@ -115,14 +115,19 @@ model Parrot {
 }
 
 model ParrotImage {
-  id       String @id @default(uuid())
-  parrotId String
-  url      String
-  alt      String
-  order    Int    @default(0)
-  parrot   Parrot @relation(fields: [parrotId], references: [id], onDelete: Cascade)
+  id         String @id @default(uuid())
+  parrotId   String
+  url        String
+  alt        String
+  order      Int    @default(0)
+  provider   String @default("external")
+  storageKey String?
+  fileHash   String?
+  parrot     Parrot @relation(fields: [parrotId], references: [id], onDelete: Cascade)
 
   @@index([parrotId])
+  @@index([provider])
+  @@index([storageKey])
 }
 
 model Category {

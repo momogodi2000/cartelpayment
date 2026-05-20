@@ -7,6 +7,9 @@ interface ParrotImageInput {
   url: string;
   alt: string;
   order: number;
+  provider?: string;
+  storageKey?: string;
+  fileHash?: string;
 }
 
 interface ParrotInput {
@@ -56,6 +59,9 @@ export async function createParrot(data: ParrotInput) {
             url: img.url,
             alt: img.alt,
             order: img.order,
+            provider: img.provider || "external",
+            storageKey: img.storageKey || null,
+            fileHash: img.fileHash || null,
           })),
         },
       },
@@ -104,6 +110,9 @@ export async function updateParrot(id: string, data: ParrotInput) {
             url: img.url,
             alt: img.alt,
             order: img.order,
+            provider: img.provider || "external",
+            storageKey: img.storageKey || null,
+            fileHash: img.fileHash || null,
           })),
         },
       },
