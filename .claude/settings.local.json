@@ -18,7 +18,8 @@
       "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\catalog\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\catalog\")",
       "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\contact\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\contact\")",
       "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\gallery\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\gallery\")",
-      "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\offline\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\offline\")"
+      "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\offline\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\offline\")",
+      "Bash(node -e ' *)"
     ],
     "additionalDirectories": [
       "d:\\IT Project\\elvis"

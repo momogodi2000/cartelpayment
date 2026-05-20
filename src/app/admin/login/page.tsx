@@ -26,11 +26,8 @@ function LoginForm() {
   useEffect(() => {
     if (state.success) {
       const redirectTo = searchParams.get("from") || "/admin/dashboard";
-      const timer = setTimeout(() => {
-        router.push(redirectTo);
-        router.refresh();
-      }, 800);
-      return () => clearTimeout(timer);
+      router.replace(redirectTo);
+      router.refresh();
     }
   }, [state.success, router, searchParams]);
 

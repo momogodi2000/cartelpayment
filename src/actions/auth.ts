@@ -21,6 +21,7 @@ export async function loginAdmin(prevState: unknown, formData: FormData) {
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return { success: false, message: "Invalid email or password." };
+    if (!user.isActive) return { success: false, message: "This administrator account is disabled." };
 
     const isPasswordValid = await verifyPassword(password, user.passwordHash);
     if (!isPasswordValid) return { success: false, message: "Invalid email or password." };

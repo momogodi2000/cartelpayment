@@ -47,10 +47,13 @@ model User {
   email        String   @unique
   passwordHash String
   role         Role     @default(ADMIN)
+  isActive     Boolean  @default(true)
+  permissions  String[] @default(["*"])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   @@index([email])
+  @@index([isActive])
 }
 
 model PasswordResetToken {

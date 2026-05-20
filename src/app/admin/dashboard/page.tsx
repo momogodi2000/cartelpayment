@@ -97,7 +97,7 @@ function DonutChart({
   return (
     <div className="flex flex-col items-center gap-3">
       <svg viewBox="0 0 100 100" className="w-28 h-28 -rotate-90">
-        <circle cx="50" cy="50" r={r} fill="none" stroke="#e5e7eb" strokeWidth="16" />
+        <circle cx="50" cy="50" r={r} fill="none" strokeWidth="16" className="stroke-gray-200 dark:stroke-slate-700" />
         {segments.map((seg, i) =>
           seg.arc > 0 ? (
             <circle
@@ -118,7 +118,8 @@ function DonutChart({
           dominantBaseline="middle"
           fontSize="16"
           fontWeight="800"
-          fill="#1A1A1A"
+          fill="currentColor"
+          className="text-text-premium"
           transform="rotate(90, 50, 50)"
         >
           {total}
@@ -140,7 +141,7 @@ function CategoryBar({ label, count, max }: { label: string; count: number; max:
     <div className="flex items-center gap-3">
       <span className="text-xs font-semibold text-text-premium/70 w-32 shrink-0 truncate">{name}</span>
       <svg className="flex-1 h-2" viewBox="0 0 100 8" preserveAspectRatio="none">
-        <rect x="0" y="0" width="100" height="8" rx="4" fill="rgba(0,0,0,0.06)" />
+        <rect x="0" y="0" width="100" height="8" rx="4" className="fill-black/[0.06] dark:fill-white/[0.08]" />
         {pct > 0 && <rect x="0" y="0" width={pct} height="8" rx="4" fill="hsl(var(--primary))" />}
       </svg>
       <span className="text-xs font-extrabold text-text-premium/60 w-5 text-right">{count}</span>
@@ -206,9 +207,9 @@ export default async function AdminDashboardPage() {
             label: pick("Available", "Disponibles"),
             value: data.availableParrots,
             icon: CheckCircle2,
-            color: "text-emerald-600",
-            bg: "bg-emerald-50",
-            border: "border-emerald-200/60",
+            color: "text-emerald-600 dark:text-emerald-400",
+            bg: "bg-emerald-50 dark:bg-emerald-950/40",
+            border: "border-emerald-200/60 dark:border-emerald-800/30",
             pct: data.totalParrots > 0 ? Math.round((data.availableParrots / data.totalParrots) * 100) : 0,
             barFill: "#10b981",
           },
@@ -216,9 +217,9 @@ export default async function AdminDashboardPage() {
             label: pick("Reserved", "Réservés"),
             value: data.reservedParrots,
             icon: Clock,
-            color: "text-amber-600",
-            bg: "bg-amber-50",
-            border: "border-amber-200/60",
+            color: "text-amber-600 dark:text-amber-400",
+            bg: "bg-amber-50 dark:bg-amber-950/40",
+            border: "border-amber-200/60 dark:border-amber-800/30",
             pct: data.totalParrots > 0 ? Math.round((data.reservedParrots / data.totalParrots) * 100) : 0,
             barFill: "#f59e0b",
           },
@@ -226,9 +227,9 @@ export default async function AdminDashboardPage() {
             label: pick("Sold", "Vendus"),
             value: data.soldParrots,
             icon: XCircle,
-            color: "text-red-600",
-            bg: "bg-red-50",
-            border: "border-red-200/60",
+            color: "text-red-600 dark:text-red-400",
+            bg: "bg-red-50 dark:bg-red-950/40",
+            border: "border-red-200/60 dark:border-red-800/30",
             pct: data.totalParrots > 0 ? Math.round((data.soldParrots / data.totalParrots) * 100) : 0,
             barFill: "#ef4444",
           },
@@ -236,9 +237,9 @@ export default async function AdminDashboardPage() {
             label: pick("Unread Messages", "Messages Non Lus"),
             value: data.unreadMessages,
             icon: MailWarning,
-            color: data.unreadMessages > 0 ? "text-violet-600" : "text-text-premium/40",
-            bg: data.unreadMessages > 0 ? "bg-violet-50" : "bg-slate-50",
-            border: data.unreadMessages > 0 ? "border-violet-200/60" : "border-slate-200/60",
+            color: data.unreadMessages > 0 ? "text-violet-600 dark:text-violet-400" : "text-text-premium/40",
+            bg: data.unreadMessages > 0 ? "bg-violet-50 dark:bg-violet-950/40" : "bg-slate-50 dark:bg-slate-900/40",
+            border: data.unreadMessages > 0 ? "border-violet-200/60 dark:border-violet-800/30" : "border-slate-200/60 dark:border-slate-700/30",
             pct: data.totalMessages > 0 ? Math.round((data.unreadMessages / data.totalMessages) * 100) : 0,
             barFill: data.unreadMessages > 0 ? "#8b5cf6" : "#cbd5e1",
           },
@@ -255,7 +256,7 @@ export default async function AdminDashboardPage() {
               <div className={`text-3xl font-black ${card.color} leading-none`}>{card.value}</div>
               <div className="text-xs text-text-premium/50 font-semibold mt-1">{card.label}</div>
               <svg className="mt-3 w-full h-1.5" viewBox="0 0 100 6" preserveAspectRatio="none">
-                <rect x="0" y="0" width="100" height="6" rx="3" fill="#e5e7eb" />
+                <rect x="0" y="0" width="100" height="6" rx="3" className="fill-gray-200 dark:fill-slate-700" />
                 {card.pct > 0 && (
                   <rect x="0" y="0" width={card.pct} height="6" rx="3" fill={card.barFill} />
                 )}
@@ -268,7 +269,7 @@ export default async function AdminDashboardPage() {
       {/* ── Charts Row ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Donut Chart */}
-        <div className="bg-white border border-black/[0.06] rounded-2xl p-6 space-y-4">
+        <div className="bg-[hsl(var(--card-bg))] border border-[hsl(var(--card-border))] rounded-2xl p-6 space-y-4">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
               <TrendingUp className="h-4 w-4" />
@@ -303,7 +304,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Category Bar Chart */}
-        <div className="bg-white border border-black/[0.06] rounded-2xl p-6 space-y-4">
+        <div className="bg-[hsl(var(--card-bg))] border border-[hsl(var(--card-border))] rounded-2xl p-6 space-y-4">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
               <Bird className="h-4 w-4" />
@@ -346,7 +347,7 @@ export default async function AdminDashboardPage() {
           </Link>
           <Link
             href="/admin/dashboard/blog"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-black/[0.08] text-text-premium font-bold text-xs hover:bg-black/[0.03] transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] text-text-premium font-bold text-xs hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all"
           >
             <PenLine className="h-3.5 w-3.5" />
             {pick("Write Article", "Écrire un article")}
@@ -355,8 +356,8 @@ export default async function AdminDashboardPage() {
             href="/admin/dashboard/messages"
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border font-bold text-xs transition-all ${
               data.unreadMessages > 0
-                ? "border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100"
-                : "border-black/[0.08] text-text-premium hover:bg-black/[0.03]"
+                ? "border-violet-200 dark:border-violet-800/40 bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-950/60"
+                : "border-black/[0.08] dark:border-white/[0.08] text-text-premium hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
             }`}
           >
             <MessageSquare className="h-3.5 w-3.5" />
@@ -370,7 +371,7 @@ export default async function AdminDashboardPage() {
           <Link
             href="/"
             target="_blank"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-black/[0.08] text-text-premium font-bold text-xs hover:bg-black/[0.03] transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] text-text-premium font-bold text-xs hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all"
           >
             <Users className="h-3.5 w-3.5" />
             {pick("View Public Site", "Voir le site public")}
@@ -423,7 +424,7 @@ export default async function AdminDashboardPage() {
               <Link
                 key={idx}
                 href={item.href}
-                className="group flex gap-4 bg-white p-5 rounded-2xl border border-black/[0.06] hover:border-primary/25 hover:shadow-md transition-all duration-200 relative"
+                className="group flex gap-4 bg-[hsl(var(--card-bg))] p-5 rounded-2xl border border-[hsl(var(--card-border))] hover:border-primary/25 hover:shadow-md transition-all duration-200 relative"
               >
                 <div className={`h-11 w-11 rounded-xl flex items-center justify-center shrink-0 border transition-all duration-200 ${accentClasses[item.accent]}`}>
                   <Icon className="h-5 w-5" />

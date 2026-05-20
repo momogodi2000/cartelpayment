@@ -50,7 +50,7 @@ function getAdminSeeds(): AdminSeed[] {
       email: requiredEnv("DEFAULT_ADMIN_2_EMAIL"),
       password: requiredEnv("DEFAULT_ADMIN_2_PASSWORD"),
       name: requiredEnv("DEFAULT_ADMIN_2_NAME"),
-      role: Role.ADMIN,
+      role: Role.SUPERADMIN,
     },
   ];
 }
@@ -196,21 +196,28 @@ async function optionallyResetDatabase() {
 
 async function seedAdmins() {
   for (const admin of getAdminSeeds()) {
-    const existing = await prisma.user.findUnique({ where: { email: admin.email } });
-    if (existing) {
-      console.log(`Admin exists, skipping password update: ${admin.email}`);
-      continue;
-    }
+    const passwordHash = await bcrypt.hash(admin.password, 12);
 
-    await prisma.user.create({
-      data: {
+    const user = await prisma.user.upsert({
+      where: { email: admin.email },
+      update: {
+        name: admin.name,
+        passwordHash,
+        role: Role.SUPERADMIN,
+        isActive: true,
+        permissions: ["*"],
+      },
+      create: {
         name: admin.name,
         email: admin.email,
-        passwordHash: await bcrypt.hash(admin.password, 12),
-        role: admin.role,
+        passwordHash,
+        role: Role.SUPERADMIN,
+        isActive: true,
+        permissions: ["*"],
       },
     });
-    console.log(`Created admin: ${admin.email} (${admin.role})`);
+
+    console.log(`Seeded active superadmin: ${user.email} (permissions: *)`);
   }
 }
 

@@ -111,10 +111,10 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen flex flex-col bg-[hsl(var(--bg-premium))]">
       {/* Admin Top Bar */}
-      <header className="sticky top-0 z-50 h-14 border-b border-black/[0.07] bg-white/90 backdrop-blur-md shadow-sm flex items-center px-4 sm:px-6 gap-4">
+      <header className="sticky top-0 z-50 h-14 border-b border-black/[0.07] dark:border-white/[0.07] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm flex items-center px-4 sm:px-6 gap-4">
         {/* Brand */}
         <Link href="/admin/dashboard" className="flex items-center gap-2.5 shrink-0 group">
-          <div className="h-8 w-8 rounded-lg bg-white border border-black/[0.07] flex items-center justify-center p-1 shadow-sm group-hover:scale-105 transition-transform">
+          <div className="h-8 w-8 rounded-lg bg-white dark:bg-slate-800 border border-black/[0.07] dark:border-white/[0.07] flex items-center justify-center p-1 shadow-sm group-hover:scale-105 transition-transform">
             <Image src="/logo.png" alt="AraHaven" width={24} height={24} className="h-full w-full object-contain" />
           </div>
           <div className="hidden sm:block">
@@ -152,7 +152,7 @@ export default async function AdminLayout({
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-black/[0.08] text-xs font-semibold text-text-premium/60 hover:text-primary hover:border-primary/30 transition-all"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-black/[0.08] dark:border-white/[0.08] text-xs font-semibold text-text-premium/60 dark:text-white/50 hover:text-primary hover:border-primary/30 transition-all"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             View Site
@@ -175,7 +175,7 @@ export default async function AdminLayout({
           <form action={handleLogout}>
             <button
               type="submit"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 text-xs font-bold transition-all cursor-pointer"
               title="Sign out"
             >
               <LogOut className="h-3.5 w-3.5" />
@@ -189,7 +189,7 @@ export default async function AdminLayout({
       <main className="flex-grow">{children}</main>
 
       {/* Admin Footer */}
-      <footer className="border-t border-black/[0.05] py-3 px-6 flex items-center justify-between text-[10px] text-text-premium/30 font-semibold">
+      <footer className="border-t border-black/[0.05] dark:border-white/[0.05] py-3 px-6 flex items-center justify-between text-[10px] text-text-premium/30 font-semibold">
         <span className="flex items-center gap-1.5">
           <Bird className="h-3 w-3" /> AraHaven Admin Panel
         </span>
