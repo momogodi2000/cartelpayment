@@ -48,26 +48,46 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export function AppProvider({ children }: { children: React.ReactNode }) {
+export function AppProvider({
+  children,
+  initialTheme = "light",
+  initialLanguage = "en",
+}: {
+  children: React.ReactNode;
+  initialTheme?: Theme;
+  initialLanguage?: Language;
+}) {
   const [selectedParrot, setSelectedParrot] = useState<AppParrot | null>(null);
-  const [language, setLanguageState] = useState<Language>(() => {
-    if (typeof window === "undefined") return "en";
+  const [language, setLanguageState] = useState<Language>(initialLanguage);
+  const [theme, setThemeState] = useState<Theme>(initialTheme);
+
+  // Sync to preferences post-mount to avoid hydration mismatch
+  useEffect(() => {
     const savedLang = localStorage.getItem("arahaven_lang") as Language;
     if (savedLang === "en" || savedLang === "fr") {
-      return savedLang;
+      if (savedLang !== language) {
+        setLanguageState(savedLang);
+      }
+    } else if (typeof navigator !== "undefined") {
+      const browserLang = navigator.language.split("-")[0] === "fr" ? "fr" : "en";
+      if (browserLang !== language) {
+        setLanguageState(browserLang);
+      }
     }
 
-    return navigator.language.split("-")[0] === "fr" ? "fr" : "en";
-  });
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === "undefined") return "light";
     const savedTheme = localStorage.getItem("arahaven_theme") as Theme;
     if (savedTheme === "light" || savedTheme === "dark" || savedTheme === "exotic") {
-      return savedTheme;
+      if (savedTheme !== theme) {
+        setThemeState(savedTheme);
+      }
+    } else if (typeof window !== "undefined") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      if (systemTheme !== theme) {
+        setThemeState(systemTheme);
+      }
     }
-
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Sync browser-only state to persistent browser systems.
   useEffect(() => {

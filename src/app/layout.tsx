@@ -48,15 +48,21 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-export default function RootLayout({
+import { cookies } from "next/headers";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const theme = (cookieStore.get("theme")?.value || "light") as "light" | "dark" | "exotic";
+  const locale = (cookieStore.get("locale")?.value || "en") as "en" | "fr";
+
   return (
-    <html lang="en" className={`h-full scroll-smooth antialiased ${playfair.variable} ${inter.variable}`} suppressHydrationWarning>
+    <html lang={locale} data-theme={theme} className={`h-full scroll-smooth antialiased ${playfair.variable} ${inter.variable}`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans">
-        <AppProvider>
+        <AppProvider initialTheme={theme} initialLanguage={locale}>
           <CartProvider>
             {/* Client-side PWA service worker registration */}
             <PWARegister />

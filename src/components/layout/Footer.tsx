@@ -20,7 +20,7 @@ export default function Footer() {
 
 
   return (
-    <footer className="bg-text-premium text-white/90 pt-16 pb-8 mt-auto border-t border-white/[0.05]">
+    <footer className="bg-[#0b0f19] dark:bg-[#070a10] text-white/90 pt-16 pb-8 mt-auto border-t border-white/[0.05]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-white/[0.08]">
           {/* Column 1: Breeder Info & Licensing */}

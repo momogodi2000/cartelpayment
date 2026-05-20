@@ -46,6 +46,11 @@ export default function Header() {
   const [isDiscoverOpen, setIsDiscoverOpen] = useState(false);
   const discoverRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
   const defaultText = t("home.whatsappMessage");
@@ -121,7 +126,7 @@ export default function Header() {
     <>
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
-          isScrolled
+          isScrolled || isOpen
             ? "bg-bg-premium/92 backdrop-blur-lg shadow-md border-b border-black/[0.06] dark:border-white/[0.06] py-3"
             : "bg-transparent py-5"
         }`}
@@ -139,11 +144,11 @@ export default function Header() {
                   className="h-full w-full object-contain"
                 />
               </div>
-              <div className="hidden sm:block">
-                <span className="font-extrabold text-xl tracking-tight text-text-premium block group-hover:text-primary transition-colors duration-300">
+              <div className="block">
+                <span className="font-extrabold text-base sm:text-xl tracking-tight text-text-premium block group-hover:text-primary transition-colors duration-300">
                   ARA<span className="text-accent">HAVEN</span>
                 </span>
-                <span className="text-[10px] text-primary font-bold tracking-widest uppercase block -mt-1">
+                <span className="text-[9px] sm:text-[10px] text-primary font-bold tracking-widest uppercase block -mt-1 hidden sm:block">
                   {t("nav.brandSubtitle")}
                 </span>
               </div>
@@ -267,14 +272,20 @@ export default function Header() {
                 className="p-2 rounded-xl hover:bg-black/[0.04] transition-all flex items-center gap-1.5 text-xs font-bold text-text-premium/80 border border-black/[0.07]"
                 title="Toggle Color Theme"
               >
-                {theme === "light" && <Sun className="h-3.5 w-3.5 text-amber-500" />}
-                {theme === "dark" && <Moon className="h-3.5 w-3.5 text-indigo-400" />}
-                {theme === "exotic" && <Palette className="h-3.5 w-3.5 text-pink-500" />}
-                <span className="capitalize text-[10px] hidden lg:inline">
-                  {theme === "light" && t("theme.light")}
-                  {theme === "dark" && t("theme.dark")}
-                  {theme === "exotic" && t("theme.exotic")}
-                </span>
+                {mounted ? (
+                  <>
+                    {theme === "light" && <Sun className="h-3.5 w-3.5 text-amber-500" />}
+                    {theme === "dark" && <Moon className="h-3.5 w-3.5 text-indigo-400" />}
+                    {theme === "exotic" && <Palette className="h-3.5 w-3.5 text-pink-500" />}
+                    <span className="capitalize text-[10px] hidden lg:inline">
+                      {theme === "light" && t("theme.light")}
+                      {theme === "dark" && t("theme.dark")}
+                      {theme === "exotic" && t("theme.exotic")}
+                    </span>
+                  </>
+                ) : (
+                  <div className="h-3.5 w-3.5 animate-pulse rounded bg-black/10 dark:bg-white/10" />
+                )}
               </button>
 
               {/* Cart Toggle */}
@@ -326,25 +337,6 @@ export default function Header() {
 
             {/* Mobile Controls */}
             <div className="flex md:hidden items-center gap-2">
-              {/* Language (Mobile) */}
-              <button
-                onClick={toggleLanguage}
-                className="p-2 rounded-lg hover:bg-black/[0.04] text-xs font-bold text-text-premium/80 border border-black/[0.07] flex items-center gap-1"
-              >
-                <Globe className="h-3.5 w-3.5" />
-                <span>{language === "en" ? "EN" : "FR"}</span>
-              </button>
-
-              {/* Theme (Mobile) */}
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg hover:bg-black/[0.04] text-text-premium/80 border border-black/[0.07]"
-              >
-                {theme === "light" && <Sun className="h-3.5 w-3.5 text-amber-500" />}
-                {theme === "dark" && <Moon className="h-3.5 w-3.5 text-indigo-400" />}
-                {theme === "exotic" && <Palette className="h-3.5 w-3.5 text-pink-500" />}
-              </button>
-
               {/* Cart (Mobile) */}
               <button
                 onClick={() => setIsCartOpen(true)}
@@ -382,6 +374,46 @@ export default function Header() {
               style={{ backgroundColor: "hsl(var(--bg-premium))" }}
             >
               <div className="border-t border-black/[0.06] px-4 pt-3 pb-6 space-y-1">
+                {/* Preferences Section (Mobile) */}
+                <div className="flex items-center justify-between gap-2 px-4 py-2 border-b border-black/[0.06] dark:border-white/[0.06] mb-3">
+                  <span className="text-[10px] font-bold text-text-premium/50 uppercase tracking-wider">
+                    {language === "en" ? "Preferences" : "Préférences"}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {/* Language Toggle (Mobile) */}
+                    <button
+                      onClick={toggleLanguage}
+                      className="p-2 rounded-xl hover:bg-black/[0.04] transition-all flex items-center gap-1.5 text-xs font-bold text-text-premium/80 border border-black/[0.07] dark:border-white/[0.07]"
+                      title={language === "en" ? "Switch to French" : "Passer en français"}
+                    >
+                      <Globe className="h-3.5 w-3.5" />
+                      <span>{language === "en" ? "EN" : "FR"}</span>
+                    </button>
+
+                    {/* Theme Toggle (Mobile) */}
+                    <button
+                      onClick={toggleTheme}
+                      className="p-2 rounded-xl hover:bg-black/[0.04] transition-all flex items-center gap-1.5 text-xs font-bold text-text-premium/80 border border-black/[0.07] dark:border-white/[0.07]"
+                      title="Toggle Color Theme"
+                    >
+                      {mounted ? (
+                        <>
+                          {theme === "light" && <Sun className="h-3.5 w-3.5 text-amber-500" />}
+                          {theme === "dark" && <Moon className="h-3.5 w-3.5 text-indigo-400" />}
+                          {theme === "exotic" && <Palette className="h-3.5 w-3.5 text-pink-500" />}
+                          <span className="capitalize text-[10px]">
+                            {theme === "light" && t("theme.light")}
+                            {theme === "dark" && t("theme.dark")}
+                            {theme === "exotic" && t("theme.exotic")}
+                          </span>
+                        </>
+                      ) : (
+                        <div className="h-3.5 w-3.5 animate-pulse rounded bg-black/10 dark:bg-white/10" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
                 {/* Primary links */}
                 {primaryLinks.map((link) => (
                   <Link

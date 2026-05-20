@@ -16,32 +16,39 @@ interface Slide {
 
 const HERO_SLIDES: Slide[] = [
   {
-    url: "https://images.unsplash.com/photo-1552728089-57bdde30ebd3?auto=format&fit=crop&w=1600&q=80",
+    url: "/images/hero/scarlet_macaw.png",
     nameEn: "Scarlet Macaw Baby",
     nameFr: "Bébé Ara Rouge (Macao)",
     descEn: "Closed-Loop Captive Breed — Hand-Raised with Love",
     descFr: "Né en captivité — Élevé à la main avec amour",
   },
   {
-    url: "https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&w=1600&q=80",
+    url: "/images/hero/hyacinth_macaw.png",
     nameEn: "Hyacinth Macaw Baby",
     nameFr: "Bébé Ara Hyacinthe",
     descEn: "Gentle Giant — Exceptional Socialization",
     descFr: "Géant bleu pacifique — Excellente socialisation",
   },
   {
-    url: "https://images.unsplash.com/photo-1591824438708-ce405f36ba3d?auto=format&fit=crop&w=1600&q=80",
+    url: "/images/hero/blue_gold.png",
     nameEn: "Blue & Gold Macaw",
     nameFr: "Ara Bleu et Or",
     descEn: "Active Nursery Graduate — Highly Communicative Companion",
     descFr: "Diplômé de la nurserie — Compagnon très expressif",
   },
   {
-    url: "https://images.unsplash.com/photo-1608826798020-f1db4d682497?auto=format&fit=crop&w=1600&q=80",
+    url: "/images/hero/golden_conure.png",
     nameEn: "Golden Conure Baby",
     nameFr: "Bébé Conure Dorée",
     descEn: "Vibrant Golden Plumage — CITES Appendix I Registered",
     descFr: "Plumage d'or éclatant — Enregistré CITES Annexe I",
+  },
+  {
+    url: "/images/hero/african_grey.png",
+    nameEn: "African Grey Baby",
+    nameFr: "Bébé Perroquet Gris du Gabon",
+    descEn: "Highly Cognitive — Advanced Mimicry & Intellectual Bond",
+    descFr: "Haute capacité cognitive — Mimétisme avancé et lien intellectuel",
   },
 ];
 

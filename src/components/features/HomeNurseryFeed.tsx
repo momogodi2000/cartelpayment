@@ -109,7 +109,7 @@ export default function HomeNurseryFeed() {
       {/* Mock Camera Stream (Right 2/3) */}
       <div className="lg:col-span-2 relative aspect-video w-full bg-slate-900 rounded-3xl border border-slate-800 shadow-lg overflow-hidden flex flex-col justify-between p-6">
         {/* Mock Stream Background Overlay */}
-        <div className="absolute inset-0 bg-cover bg-center opacity-40 pointer-events-none" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1552728089-57bdde30ebd3?auto=format&fit=crop&w=1200&q=80')` }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-40 pointer-events-none" style={{ backgroundImage: `url('/images/hero/scarlet_macaw.png')` }} />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent pointer-events-none" />
 
         {/* Scan lines & Vignette */}

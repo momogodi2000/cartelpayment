@@ -70,11 +70,11 @@ const imagePool = [
   "/images/parrots/umbrella.png",
   "/images/parrots/african_grey.png",
   "/images/parrots/golden_conure.png",
-  "https://images.unsplash.com/photo-1551085254-e96b210db58a?auto=format&fit=crop&w=1200&q=82",
-  "https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&w=1200&q=82",
-  "https://images.unsplash.com/photo-1552728089-57bdde30ebd3?auto=format&fit=crop&w=1200&q=82",
-  "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=1200&q=82",
-  "https://images.unsplash.com/photo-1620188467120-5042ed1eb5da?auto=format&fit=crop&w=1200&q=82",
+  "/images/hero/scarlet_macaw.png",
+  "/images/hero/hyacinth_macaw.png",
+  "/images/hero/blue_gold.png",
+  "/images/hero/golden_conure.png",
+  "/images/hero/african_grey.png",
 ];
 
 const species: Array<{

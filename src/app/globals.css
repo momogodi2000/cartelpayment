@@ -146,6 +146,7 @@ body {
   color: hsl(var(--text-premium));
   font-family: 'Outfit', sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
