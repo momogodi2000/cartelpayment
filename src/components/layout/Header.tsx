@@ -48,10 +48,7 @@ export default function Header() {
   const pathname = usePathname();
 
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
-  const defaultText =
-    language === "en"
-      ? "Hello! I visited your website and would like to ask some questions about your breeding methods and available birds."
-      : "Bonjour ! J'ai visité votre site web et j'aimerais poser des questions sur vos méthodes d'élevage et les oiseaux disponibles.";
+  const defaultText = t("home.whatsappMessage");
   const whatsappUrl = getWhatsAppLink(phone, defaultText);
 
   useEffect(() => {
@@ -97,19 +94,19 @@ export default function Header() {
       href: "/gallery",
       label: t("nav.gallery"),
       icon: ImageIcon,
-      desc: language === "en" ? "Aviary photos & videos" : "Photos et vidéos de l'élevage",
+      desc: t("nav.discoverGalleryDesc"),
     },
     {
       href: "/about",
       label: t("nav.about"),
       icon: Info,
-      desc: language === "en" ? "Our story & standards" : "Notre histoire & nos normes",
+      desc: t("nav.discoverAboutDesc"),
     },
     {
       href: "/blog",
       label: t("nav.blog"),
       icon: BookOpen,
-      desc: language === "en" ? "Care guides & insights" : "Guides de soins & conseils",
+      desc: t("nav.discoverBlogDesc"),
     },
   ];
 
@@ -131,7 +128,7 @@ export default function Header() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {/* ── Logo ── */}
+            {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group shrink-0">
               <div className="h-10 w-10 rounded-xl bg-white border border-black/[0.07] flex items-center justify-center p-1.5 shadow-sm shadow-primary/5 group-hover:scale-105 transition-transform duration-300">
                 <Image
@@ -147,12 +144,12 @@ export default function Header() {
                   ARA<span className="text-accent">HAVEN</span>
                 </span>
                 <span className="text-[10px] text-primary font-bold tracking-widest uppercase block -mt-1">
-                  {language === "en" ? "Exotic Aviary" : "Élevage Exotique"}
+                  {t("nav.brandSubtitle")}
                 </span>
               </div>
             </Link>
 
-            {/* ── Desktop Navigation ── */}
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-1">
               {/* Standalone primary links */}
               {primaryLinks.map((link) => (
@@ -172,7 +169,7 @@ export default function Header() {
                 </Link>
               ))}
 
-              {/* ── Discover Dropdown ── */}
+              {/* Discover Dropdown */}
               <div className="relative" ref={discoverRef}>
                 <button
                   onClick={() => setIsDiscoverOpen((p) => !p)}
@@ -185,7 +182,7 @@ export default function Header() {
                       : "text-text-premium/70 hover:text-primary hover:bg-black/[0.03]"
                   }`}
                 >
-                  {language === "en" ? "Discover" : "Découvrir"}
+                  {t("nav.discover")}
                   <ChevronDown
                     className={`h-3.5 w-3.5 transition-transform duration-200 ${
                       isDiscoverOpen ? "rotate-180" : ""
@@ -252,13 +249,13 @@ export default function Header() {
               </div>
             </nav>
 
-            {/* ── Desktop Right Controls ── */}
+            {/* Desktop Right Controls */}
             <div className="hidden md:flex items-center gap-2">
               {/* Language Toggle */}
               <button
                 onClick={toggleLanguage}
                 className="p-2 rounded-xl hover:bg-black/[0.04] transition-all flex items-center gap-1.5 text-xs font-bold text-text-premium/80 border border-black/[0.07]"
-                title={language === "en" ? "Switch to French" : "Passer en Français"}
+                title={language === "en" ? "Switch to French" : "Passer en francais"}
               >
                 <Globe className="h-3.5 w-3.5" />
                 <span>{language === "en" ? "EN" : "FR"}</span>
@@ -321,13 +318,13 @@ export default function Header() {
               >
                 <MessageSquare className="h-4 w-4" />
                 <span className="hidden lg:inline">
-                  {language === "en" ? "WhatsApp Desk" : "Bureau WhatsApp"}
+                  {t("nav.whatsappDesk")}
                 </span>
                 <span className="lg:hidden">WhatsApp</span>
               </Link>
             </div>
 
-            {/* ── Mobile Controls ── */}
+            {/* Mobile Controls */}
             <div className="flex md:hidden items-center gap-2">
               {/* Language (Mobile) */}
               <button
@@ -373,7 +370,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* ── Mobile Drawer ── */}
+        {/* Mobile Drawer */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -403,7 +400,7 @@ export default function Header() {
                 {/* Discover section with inline sub-links */}
                 <div className="pt-1">
                   <p className="text-[10px] uppercase tracking-widest font-extrabold text-text-premium/40 px-4 py-2">
-                    {language === "en" ? "Discover" : "Découvrir"}
+                    {t("nav.discover")}
                   </p>
                   {discoverLinks.map((item) => {
                     const Icon = item.icon;
@@ -449,7 +446,7 @@ export default function Header() {
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold shadow-lg shadow-primary/10 transition-all"
                   >
                     <MessageSquare className="h-5 w-5" />
-                    {language === "en" ? "WhatsApp Consultation" : "Consultation WhatsApp"}
+                    {t("nav.whatsappConsultation")}
                   </Link>
                 </div>
               </div>

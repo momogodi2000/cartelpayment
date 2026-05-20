@@ -7,7 +7,9 @@
       "Read(//d/IT Project/**)",
       "Bash(next\\\\.config)",
       "Bash(postcss\")",
-      "PowerShell(Get-ChildItem \"d:\\\\IT Project\\\\elvis\\\\\" | Where-Object { $_.Name -match \"tailwind|next.config|postcss\" })"
+      "PowerShell(Get-ChildItem \"d:\\\\IT Project\\\\elvis\\\\\" | Where-Object { $_.Name -match \"tailwind|next.config|postcss\" })",
+      "Bash(powershell -Command \"Get-Content src\\\\app\\\\page.tsx | Select-String 'font-black' | Select-Object LineNumber, Line | Format-Table -AutoSize\")",
+      "Bash(python -c \"import sys, json; d=json.load\\(sys.stdin\\); print\\(d.get\\('dependencies', {}\\).get\\('framer-motion', 'not found'\\)\\); print\\(d.get\\('devDependencies', {}\\).get\\('@testing-library/react', 'not found'\\)\\); print\\(d.get\\('devDependencies', {}\\).get\\('jsdom', 'not found'\\)\\); print\\(d.get\\('devDependencies', {}\\).get\\('@vitejs/plugin-react', 'not found'\\)\\)\")"
     ],
     "additionalDirectories": [
       "d:\\IT Project\\elvis"

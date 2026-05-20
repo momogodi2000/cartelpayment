@@ -70,7 +70,7 @@ function LoginForm() {
             <Image src="/logo.png" alt="AraHaven Logo" width={48} height={48} className="h-full w-full object-contain" />
           </div>
           <div className="space-y-1">
-            <h1 className="text-2xl font-extrabold text-text-premium leading-none tracking-tight">
+            <h1 className="text-2xl font-extrabold font-heading text-text-premium leading-none tracking-tight">
               {t("auth.title")}
             </h1>
             <p className="text-[10px] text-primary font-bold uppercase tracking-widest">
@@ -106,7 +106,7 @@ function LoginForm() {
                 type="email"
                 required
                 placeholder="admin@arahaven.com"
-                className="w-full pl-11 pr-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/[0.1] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm bg-bg-premium/30 text-text-premium placeholder-text-premium/30"
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-[hsl(var(--input-border))] bg-[hsl(var(--input-bg))] text-[hsl(var(--input-text))] placeholder-[hsl(var(--input-placeholder))] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all duration-200 text-sm"
               />
             </div>
           </div>
@@ -122,7 +122,7 @@ function LoginForm() {
                 type="password"
                 required
                 placeholder="••••••••"
-                className="w-full pl-11 pr-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/[0.1] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm bg-bg-premium/30 text-text-premium placeholder-text-premium/30"
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-[hsl(var(--input-border))] bg-[hsl(var(--input-bg))] text-[hsl(var(--input-text))] placeholder-[hsl(var(--input-placeholder))] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all duration-200 text-sm"
               />
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { MessageSquare, ArrowLeft, ShieldAlert, Check } from "lucide-react";
+import { MessageSquare, ArrowLeft, ShieldAlert, Check, ShieldCheck, Heart, Stethoscope } from "lucide-react";
 import prisma from "@/lib/db";
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { getServerTranslation, getServerLocale } from "@/lib/serverTranslations";
@@ -156,7 +156,7 @@ export default async function ParrotDetailPage({ params }: PageProps) {
               </span>
             </div>
             
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-text-premium leading-tight tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-text-premium leading-tight tracking-tight">
               {translated.name}
             </h1>
             <p className="text-2xl font-extrabold text-primary">${Number(translated.price).toLocaleString()}</p>
@@ -223,6 +223,58 @@ export default async function ParrotDetailPage({ params }: PageProps) {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+
+      {/* Breeder Guarantee Trust Banner */}
+      <div className="p-6 rounded-3xl bg-primary/5 border border-primary/15 dark:border-primary/20">
+        <div className="flex items-center gap-2 mb-4">
+          <ShieldCheck className="h-5 w-5 text-primary" />
+          <h3 className="font-extrabold text-sm text-text-premium">
+            {locale === "en" ? "AraHaven Breeder Guarantee" : "Garantie Éleveur AraHaven"}
+          </h3>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            {
+              icon: ShieldCheck,
+              titleEn: "CITES Certified",
+              titleFr: "Certifié CITES",
+              descEn: "Fully documented with legal export permits",
+              descFr: "Entièrement documenté avec permis d'exportation",
+            },
+            {
+              icon: Stethoscope,
+              titleEn: "Vet Checked",
+              titleFr: "Contrôle Vétérinaire",
+              descEn: "Complete health examination & pathogen screening",
+              descFr: "Examen de santé complet et dépistage des pathogènes",
+            },
+            {
+              icon: Heart,
+              titleEn: "Hand-Raised",
+              titleFr: "Élevé à la Main",
+              descEn: "Socialized from birth for maximum bonding",
+              descFr: "Socialisé dès la naissance pour un lien maximal",
+            },
+          ].map((badge) => {
+            const Icon = badge.icon;
+            return (
+              <div key={badge.titleEn} className="flex items-start gap-3 p-3 rounded-2xl bg-white dark:bg-black/10 border border-primary/10">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="font-extrabold text-xs text-text-premium">
+                    {locale === "en" ? badge.titleEn : badge.titleFr}
+                  </p>
+                  <p className="text-[11px] text-text-premium/60 leading-relaxed mt-0.5">
+                    {locale === "en" ? badge.descEn : badge.descFr}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

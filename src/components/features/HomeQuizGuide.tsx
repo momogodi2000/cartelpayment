@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, RefreshCw, CheckCircle, Home, Clock, Award } from "lucide-react";
+import { RefreshCw, CheckCircle, Home, Clock, Award } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { useTranslation } from "@/lib/translations";
 

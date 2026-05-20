@@ -15,6 +15,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import prisma from "@/lib/db";
+import { getServerTranslation } from "@/lib/serverTranslations";
 
 export const revalidate = 0;
 
@@ -50,6 +51,9 @@ async function getDashboardMetrics() {
 
 export default async function AdminDashboardPage() {
   const metrics = await getDashboardMetrics();
+  const { locale } = await getServerTranslation();
+  const isFr = locale === "fr";
+  const pick = (en: string, fr: string) => (isFr ? fr : en);
 
   const handleLogout = async () => {
     "use server";
@@ -184,12 +188,12 @@ export default async function AdminDashboardPage() {
             <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
               <TrendingUp className="h-5 w-5" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-text-premium tracking-tight">
-              Breeder Dashboard
+            <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-text-premium tracking-tight">
+              {pick("Breeder Dashboard", "Tableau de bord")}
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-text-premium/50 font-semibold uppercase tracking-wider pl-12">
-            Aviary &amp; Content Management
+            {pick("Aviary & Content Management", "Gestion de l'élevage et du contenu")}
           </p>
         </div>
         <form action={handleLogout}>
@@ -198,7 +202,7 @@ export default async function AdminDashboardPage() {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-red-200 dark:border-red-900/40 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 text-xs font-bold transition-all shadow-sm cursor-pointer"
           >
             <LogOut className="h-4 w-4" />
-            Sign Out
+            {pick("Sign Out", "Déconnexion")}
           </button>
         </form>
       </div>
@@ -211,13 +215,13 @@ export default async function AdminDashboardPage() {
             className={`relative p-5 sm:p-6 rounded-2xl border ${card.border} ${card.bg} shadow-sm text-left overflow-hidden`}
           >
             <span className="text-[10px] text-text-premium/50 uppercase font-black tracking-widest block">
-              {card.label}
+              {pick(card.label, card.labelFr)}
             </span>
             <span className={`text-3xl font-black ${card.color} block mt-1`}>
               {card.value}
             </span>
             <span className="text-xs text-text-premium/50 font-bold block mt-0.5">
-              {card.sub}
+              {pick(card.sub, card.subFr)}
             </span>
             {card.hasAlert && (
               <MailWarning className="absolute right-4 bottom-4 h-10 w-10 text-amber-500/15 pointer-events-none" />
@@ -231,20 +235,23 @@ export default async function AdminDashboardPage() {
         <FileText className="h-5 w-5 text-primary shrink-0" />
         <span>
           <span className="font-extrabold text-primary">{metrics.totalBlogs}</span>{" "}
-          blog {metrics.totalBlogs === 1 ? "article" : "articles"} published in the Care Blog.
+          {pick(
+            `blog ${metrics.totalBlogs === 1 ? "article" : "articles"} published in the Care Blog.`,
+            `article${metrics.totalBlogs > 1 ? "s" : ""} publié${metrics.totalBlogs > 1 ? "s" : ""} dans le Blog.`
+          )}
         </span>
         <Link
           href="/admin/dashboard/blog"
           className="ml-auto flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-hover transition-colors"
         >
-          Manage <ArrowRight className="h-3.5 w-3.5" />
+          {pick("Manage", "Gérer")} <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
 
       {/* ── Directory Management Grid ── */}
       <section>
         <h2 className="text-sm font-extrabold uppercase tracking-widest text-text-premium/45 mb-5">
-          Content Modules
+          {pick("Content Modules", "Modules de Contenu")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
           {navItems.map((item, idx) => {
@@ -262,10 +269,10 @@ export default async function AdminDashboardPage() {
                 </div>
                 <div className="space-y-1.5 pr-6 min-w-0">
                   <h3 className="font-extrabold text-sm sm:text-base text-text-premium group-hover:text-primary transition-colors flex items-center gap-2 flex-wrap">
-                    {item.title}
+                    {pick(item.title, item.titleFr)}
                   </h3>
                   <p className="text-xs text-text-premium/55 leading-relaxed line-clamp-2">
-                    {item.description}
+                    {pick(item.description, item.descFr)}
                   </p>
                 </div>
 

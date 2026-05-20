@@ -1,9 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+/*
+ * Map the Tailwind `dark:` variant to our custom data-theme system.
+ * This makes dark: classes work whenever [data-theme="dark"] is set on
+ * the <html> element — consistent with our AppContext theme toggle.
+ */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 @theme {
-  --font-sans: 'Outfit', sans-serif;
-  
+  /* Typography — loaded via next/font (no external @import needed) */
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-heading: var(--font-playfair), 'Playfair Display', Georgia, serif;
+
   /* Primary Brand Colors */
   --color-primary: hsl(var(--primary));
   --color-primary-hover: hsl(var(--primary-hover));
@@ -66,6 +74,9 @@
   --dropdown-bg: 0, 0%, 100%;
   --table-row-hover: 0, 0%, 97%;
   --modal-bg: 0, 0%, 100%;
+  --muted-text: 0, 0%, 45%;
+  --surface: 0, 0%, 99%;
+  --border-subtle: 0, 0%, 90%;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -93,6 +104,9 @@
   --dropdown-bg: 220, 20%, 12%;
   --table-row-hover: 220, 20%, 16%;
   --modal-bg: 220, 20%, 11%;
+  --muted-text: 220, 10%, 60%;
+  --surface: 220, 20%, 14%;
+  --border-subtle: 220, 15%, 22%;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -119,6 +133,9 @@
   --dropdown-bg: 0, 0%, 100%;
   --table-row-hover: 340, 20%, 97%;
   --modal-bg: 0, 0%, 100%;
+  --muted-text: 260, 20%, 50%;
+  --surface: 20, 30%, 98%;
+  --border-subtle: 340, 15%, 88%;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -295,4 +312,16 @@ body {
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* TYPOGRAPHY UTILITIES                                */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@utility font-heading {
+  font-family: var(--font-heading);
+}
+
+/* Apply heading font to h1-h3 in content areas */
+.prose h1, .prose h2, .prose h3 {
+  font-family: var(--font-heading);
 }

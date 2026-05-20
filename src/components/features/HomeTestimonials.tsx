@@ -4,8 +4,6 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import { useApp } from "@/context/AppContext";
-import { useTranslation } from "@/lib/translations";
 
 interface Testimonial {
   id: string;
@@ -21,7 +19,6 @@ interface HomeTestimonialsProps {
 }
 
 export default function HomeTestimonials({ testimonials }: HomeTestimonialsProps) {
-  const { language } = useApp();
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Auto-play every 8 seconds

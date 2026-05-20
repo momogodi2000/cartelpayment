@@ -42,7 +42,7 @@ export default function ParrotCard({ parrot }: ParrotCardProps) {
     : "Petite Taille";
 
   return (
-    <div className="flex flex-col bg-white dark:bg-black/10 rounded-3xl border border-black/[0.06] dark:border-white/[0.08] shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden h-full">
+    <div className="flex flex-col bg-white dark:bg-black/10 rounded-3xl border border-black/[0.06] dark:border-white/[0.08] shadow-sm hover:shadow-xl hover:shadow-black/[0.08] hover:-translate-y-1.5 hover:border-primary/20 transition-all duration-300 group overflow-hidden h-full">
       {/* Image and Badges */}
       <div
         onClick={() => setSelectedParrot(parrot)}
@@ -64,7 +64,12 @@ export default function ParrotCard({ parrot }: ParrotCardProps) {
               {translated.rarityLabel}
             </span>
           )}
-          {translated.rarity !== "EXCEPTIONAL" && (
+          {translated.rarity === "RARE" && (
+            <span className="flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold bg-violet-600 text-white shadow-sm">
+              {translated.rarityLabel}
+            </span>
+          )}
+          {translated.rarity === "COMMON" && (
             <span className="px-3 py-1 rounded-full text-[10px] font-extrabold bg-white/95 text-primary shadow-sm border border-black/[0.03]">
               {translated.rarityLabel}
             </span>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Thermometer, Droplets, AlertCircle, Radio, Sparkles, UserCheck } from "lucide-react";
+import { Thermometer, Droplets, Radio, Sparkles, UserCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/context/AppContext";
 import { useTranslation } from "@/lib/translations";
