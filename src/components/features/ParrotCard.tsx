@@ -3,10 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MessageSquare, MapPin, Sparkles } from "lucide-react";
+import { MessageSquare, MapPin, Sparkles, ShoppingBag } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { useApp } from "@/context/AppContext";
-import { translateParrot } from "@/lib/translations";
+import { translateParrot, useTranslation } from "@/lib/translations";
+import { useCart } from "@/context/CartContext";
 
 interface ParrotImage {
   url: string;
@@ -31,9 +32,13 @@ interface ParrotCardProps {
 
 export default function ParrotCard({ parrot }: ParrotCardProps) {
   const { language } = useApp();
+  const { t } = useTranslation(language);
+  const { addToCart, isInCart } = useCart();
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
   
   const translated = translateParrot(parrot, language);
+  const inCart = isInCart(parrot.id);
+  const isAvailable = parrot.status === "AVAILABLE";
 
   // Custom pre-filled message for this specific parrot
   const inquiryText = language === "en"
@@ -125,15 +130,41 @@ export default function ParrotCard({ parrot }: ParrotCardProps) {
         <div className="pt-4 border-t border-black/[0.04] flex gap-2">
           <Link
             href={`/catalog/${translated.slug}`}
-            className="flex-1 text-center py-2.5 rounded-xl border border-black/[0.08] hover:bg-black/[0.02] text-xs font-bold text-text-premium transition-colors"
+            className="flex-grow text-center py-2.5 rounded-xl border border-black/[0.08] hover:bg-black/[0.02] text-xs font-bold text-text-premium transition-colors"
           >
             {language === "en" ? "Details" : "Détails"}
           </Link>
+
+          {isAvailable && (
+            <button
+              onClick={() => {
+                if (inCart) return;
+                addToCart({
+                  id: parrot.id,
+                  name: translated.name,
+                  slug: translated.slug,
+                  species: translated.species,
+                  price: Number(translated.price),
+                  imageUrl: primaryImage,
+                });
+              }}
+              disabled={inCart}
+              className={`px-3 py-2.5 rounded-xl border transition-colors flex items-center justify-center ${
+                inCart
+                  ? "bg-emerald-50 border-emerald-200 text-emerald-600"
+                  : "border-black/[0.08] hover:bg-black/[0.02] text-text-premium/80"
+              }`}
+              title={inCart ? t("cart.alreadyIn") : t("cart.add")}
+            >
+              <ShoppingBag className="h-4 w-4" />
+            </button>
+          )}
+
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-sm transition-colors"
+            className="flex-grow inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-sm transition-colors"
           >
             <MessageSquare className="h-3.5 w-3.5" />
             {language === "en" ? "Inquire" : "S'enquérir"}

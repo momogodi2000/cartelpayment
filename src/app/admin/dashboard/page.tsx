@@ -8,7 +8,9 @@ import {
   Image as ImageIcon,
   MessageSquare,
   LogOut,
-  MailWarning
+  MailWarning,
+  Send,
+  Settings
 } from "lucide-react";
 import prisma from "@/lib/db";
 
@@ -84,6 +86,20 @@ export default async function AdminDashboardPage() {
       icon: MessageSquare,
       color: "text-amber-600 bg-amber-50 border-amber-100",
       badge: metrics.unreadMessages,
+    },
+    {
+      href: "/admin/dashboard/newsletter",
+      title: "Newsletter & Campaigns",
+      description: "Manage subscriber list, design email template updates, and broadcast marketing/nursery campaigns.",
+      icon: Send,
+      color: "text-sky-600 bg-sky-50 border-sky-100",
+    },
+    {
+      href: "/admin/dashboard/settings",
+      title: "Settings & Audit Logs",
+      description: "Configure system properties like contact email or WhatsApp, and inspect secure administrative audit trails.",
+      icon: Settings,
+      color: "text-slate-600 bg-slate-50 border-slate-100",
     },
   ];
 

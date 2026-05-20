@@ -6,6 +6,7 @@ import { Phone, Mail, MapPin, Award, CheckCircle2, ChevronRight } from "lucide-r
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { useApp } from "@/context/AppContext";
 import { useTranslation } from "@/lib/translations";
+import NewsletterForm from "@/components/common/NewsletterForm";
 
 export default function Footer() {
   const { language } = useApp();
@@ -80,19 +81,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Standards / Values */}
+          {/* Column 3: Newsletter Signup */}
           <div className="space-y-4">
-            <h3 className="font-bold text-sm text-white uppercase tracking-wider mb-5">
-              {language === "en" ? "Breeding Excellence" : "Excellence d'Élevage"}
-            </h3>
-            <ul className="space-y-3">
-              {breedingStandards.map((value, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-white/70">
-                  <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>{value}</span>
-                </li>
-              ))}
-            </ul>
+            <NewsletterForm />
           </div>
 
           {/* Column 4: Contact details */}

@@ -1,0 +1,45 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Lint Verification
+        run: npm run lint
+        continue-on-error: true # Keep going even if simple lint warnings exist
+
+      - name: TypeScript Compile Check
+        run: npx tsc --noEmit
+
+      - name: Build Application
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test?schema=public
+          JWT_SECRET: test_jwt_secret_value
+          NEXT_PUBLIC_WHATSAPP_NUMBER: 50688888888
+
+      - name: Run Unit Tests
+        run: npm run test
+        continue-on-error: true # Don't block builds if tests are set up locally

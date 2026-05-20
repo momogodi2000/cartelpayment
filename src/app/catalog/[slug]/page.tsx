@@ -7,6 +7,7 @@ import { getWhatsAppLink } from "@/lib/whatsapp";
 import { getServerTranslation, getServerLocale } from "@/lib/serverTranslations";
 import { translateParrot } from "@/lib/translations";
 import DetailGallery from "./DetailGallery";
+import AddToCartButton from "@/components/common/AddToCartButton";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -174,22 +175,27 @@ export default async function ParrotDetailPage({ params }: PageProps) {
                 ? "We arrange secure international/domestic flights, veterinary testing clearances, and closed-ring CITES certifications. Direct inquiry via WhatsApp secures reservation discussions."
                 : "Nous organisons des vols sécurisés nationaux et internationaux, les examens vétérinaires et les permis CITES de bague fermée. Une demande directe sur WhatsApp permet de réserver."}
             </p>
-            <div className="flex flex-wrap gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row gap-4 pt-2">
+              <AddToCartButton
+                item={{
+                  id: parrot.id,
+                  name: translated.name,
+                  slug: translated.slug,
+                  species: translated.species,
+                  price: Number(translated.price),
+                  imageUrl: translated.images[0]?.url || "/logo.png",
+                }}
+                status={translated.status}
+              />
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition-colors"
+                className="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition-all hover:scale-[1.01] active:scale-[0.99]"
               >
-                <MessageSquare className="h-5 w-5 fill-white text-emerald-600" />
+                <MessageSquare className="h-4 w-4 fill-white text-emerald-600" />
                 {locale === "en" ? "Inquire on WhatsApp" : "S'enquérir sur WhatsApp"}
               </a>
-              <Link
-                href="/contact"
-                className="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-2 bg-white hover:bg-black/[0.01] text-text-premium font-bold px-8 py-3.5 rounded-xl border border-black/[0.08] shadow-sm transition-colors"
-              >
-                {locale === "en" ? "Send Message Form" : "Envoyer un message"}
-              </Link>
             </div>
           </div>
 
