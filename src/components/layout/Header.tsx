@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, MessageSquare, Globe, Sun, Moon, Palette, ShoppingBag } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/whatsapp";
@@ -75,7 +76,7 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="h-10 w-10 rounded-xl bg-white border border-black/[0.06] flex items-center justify-center p-1.5 shadow-sm shadow-primary/5 group-hover:scale-105 transition-transform duration-300">
-                <img src="/logo.png" alt="AraHaven Logo" className="h-full w-full object-contain" />
+                <Image src="/logo.png" alt="AraHaven Logo" width={32} height={32} className="h-full w-full object-contain" />
               </div>
               <div>
                 <span className="font-extrabold text-xl tracking-tight text-text-premium block group-hover:text-primary transition-colors duration-300">

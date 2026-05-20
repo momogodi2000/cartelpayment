@@ -24,22 +24,35 @@ jobs:
         run: npm ci
 
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: npm run db:generate
 
       - name: Lint Verification
         run: npm run lint
-        continue-on-error: true # Keep going even if simple lint warnings exist
 
       - name: TypeScript Compile Check
-        run: npx tsc --noEmit
+        run: npm run typecheck
+
+      - name: Run Unit Tests
+        run: npm run test
+
+      - name: Run Coverage Gate
+        run: npm run test:coverage
 
       - name: Build Application
         run: npm run build
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test?schema=public
-          JWT_SECRET: test_jwt_secret_value
+          JWT_SECRET: test_jwt_secret_value_that_is_long_enough_for_ci
           NEXT_PUBLIC_WHATSAPP_NUMBER: 50688888888
+          DEFAULT_ADMIN_1_EMAIL: yvangodimomo@gmail.com
+          DEFAULT_ADMIN_1_PASSWORD: ChangeMeStrongPassword1!
+          DEFAULT_ADMIN_1_NAME: Yvan Momo
+          DEFAULT_ADMIN_2_EMAIL: elvispablo@gmail.com
+          DEFAULT_ADMIN_2_PASSWORD: ChangeMeStrongPassword2!
+          DEFAULT_ADMIN_2_NAME: Elvis Pablo
 
-      - name: Run Unit Tests
-        run: npm run test
-        continue-on-error: true # Don't block builds if tests are set up locally
+      - name: Security Audit
+        run: npm audit --audit-level=high
+
+      - name: Docker Build
+        run: docker build -t arahaven-exotic-aviary:ci .

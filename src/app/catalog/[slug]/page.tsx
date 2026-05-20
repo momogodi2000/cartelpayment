@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: PageProps) {
 // 2. Main Page Render
 export default async function ParrotDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const { t, locale } = await getServerTranslation();
+  const { locale } = await getServerTranslation();
 
   const parrot = await prisma.parrot.findUnique({
     where: { slug },
@@ -105,7 +105,7 @@ export default async function ParrotDetailPage({ params }: PageProps) {
             "@context": "https://schema.org",
             "@type": "Product",
             "name": translated.name,
-            "image": translated.images.map((img: any) => img.url),
+            "image": translated.images.map((img: { url: string }) => img.url),
             "description": translated.description,
             "category": "Birds",
             "brand": {

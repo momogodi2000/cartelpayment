@@ -1,12 +1,181 @@
-import { PrismaClient, Role, Rarity, Size, ParrotStatus, Sex, MediaType } from "@prisma/client";
+import {
+  MediaType,
+  ParrotStatus,
+  Prisma,
+  PrismaClient,
+  Rarity,
+  Role,
+  Sex,
+  Size,
+} from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log("Starting database seeding...");
+type AdminSeed = {
+  email: string;
+  password: string;
+  name: string;
+  role: Role;
+};
 
-  // 1. Clean Database in reverse order of dependencies
+type ParrotSeed = Omit<Prisma.ParrotCreateInput, "images" | "cartInquiries"> & {
+  imageUrls: string[];
+};
+
+function requiredEnv(name: string): string {
+  const value = process.env[name]?.trim();
+  if (!value) {
+    throw new Error(`Missing required seed environment variable: ${name}`);
+  }
+  return value;
+}
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function getAdminSeeds(): AdminSeed[] {
+  return [
+    {
+      email: requiredEnv("DEFAULT_ADMIN_1_EMAIL"),
+      password: requiredEnv("DEFAULT_ADMIN_1_PASSWORD"),
+      name: requiredEnv("DEFAULT_ADMIN_1_NAME"),
+      role: Role.SUPERADMIN,
+    },
+    {
+      email: requiredEnv("DEFAULT_ADMIN_2_EMAIL"),
+      password: requiredEnv("DEFAULT_ADMIN_2_PASSWORD"),
+      name: requiredEnv("DEFAULT_ADMIN_2_NAME"),
+      role: Role.ADMIN,
+    },
+  ];
+}
+
+const categories = [
+  ["Macaws", "macaws", "Large, intelligent Neotropical parrots with dramatic color and long companion lifespans."],
+  ["Cockatoos", "cockatoos", "Affectionate crest-bearing parrots known for emotional intelligence and strong family bonds."],
+  ["Amazons", "amazons", "Vibrant, confident parrots famous for musical voices and bold social personalities."],
+  ["Conures", "conures", "Compact, active parrots with bright markings and playful daily routines."],
+  ["African Greys", "african-greys", "Highly cognitive parrots prized for advanced mimicry and thoughtful companionship."],
+  ["Collector Species", "collector-species", "Rare, legally bred parrots for experienced keepers and premium aviaries."],
+] as const;
+
+const imagePool = [
+  "/images/parrots/hyacinth.png",
+  "/images/parrots/blue_gold.png",
+  "/images/parrots/umbrella.png",
+  "/images/parrots/african_grey.png",
+  "/images/parrots/golden_conure.png",
+  "https://images.unsplash.com/photo-1551085254-e96b210db58a?auto=format&fit=crop&w=1200&q=82",
+  "https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&w=1200&q=82",
+  "https://images.unsplash.com/photo-1552728089-57bdde30ebd3?auto=format&fit=crop&w=1200&q=82",
+  "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=1200&q=82",
+  "https://images.unsplash.com/photo-1620188467120-5042ed1eb5da?auto=format&fit=crop&w=1200&q=82",
+];
+
+const species: Array<{
+  name: string;
+  scientific: string;
+  category: string;
+  country: string;
+  rarity: Rarity;
+  size: Size;
+  sex: Sex;
+  price: number;
+  status: ParrotStatus;
+  temperament: string;
+  lifespan: string;
+  diet: string;
+  weight: string;
+  talking: string;
+  intelligence: string;
+  training: string;
+  social: string;
+  care: string;
+  featured?: boolean;
+}> = [
+  { name: "Hyacinth Macaw", scientific: "Anodorhynchus hyacinthinus", category: "macaws", country: "Brazil", rarity: Rarity.EXCEPTIONAL, size: Size.LARGE, sex: Sex.MALE, price: 9500, status: ParrotStatus.AVAILABLE, temperament: "Gentle, steady, affectionate", lifespan: "50-60 years", diet: "High-fat macaw diet with palm nuts, macadamia, pellets, mango, and leafy greens", weight: "1.2-1.7 kg", talking: "Moderate, clear short phrases", intelligence: "Exceptional", training: "Intermediate", social: "Deeply bonded and calm with consistent handling", care: "Expert" , featured: true },
+  { name: "Blue and Gold Macaw", scientific: "Ara ararauna", category: "macaws", country: "Costa Rica", rarity: Rarity.COMMON, size: Size.LARGE, sex: Sex.FEMALE, price: 2800, status: ParrotStatus.AVAILABLE, temperament: "Outgoing, cuddly, confident", lifespan: "45-55 years", diet: "Premium pellets, vegetables, papaya, mango, walnuts, and soaked grains", weight: "900-1200 g", talking: "Strong mimic with playful phrases", intelligence: "High", training: "Moderate", social: "Excellent family companion with daily enrichment", care: "Advanced", featured: true },
+  { name: "Scarlet Macaw", scientific: "Ara macao", category: "macaws", country: "Panama", rarity: Rarity.RARE, size: Size.LARGE, sex: Sex.UNKNOWN, price: 3600, status: ParrotStatus.AVAILABLE, temperament: "Bright, energetic, theatrical", lifespan: "45-55 years", diet: "Pellets, tropical fruits, vegetables, almonds, and foraging branches", weight: "900-1100 g", talking: "Moderate, expressive sounds", intelligence: "High", training: "Advanced", social: "Thrives with confident handlers and structured play", care: "Advanced" },
+  { name: "Green-Winged Macaw", scientific: "Ara chloropterus", category: "macaws", country: "Ecuador", rarity: Rarity.RARE, size: Size.LARGE, sex: Sex.MALE, price: 3400, status: ParrotStatus.RESERVED, temperament: "Patient, gentle, loyal", lifespan: "50-60 years", diet: "Macaw pellets, Brazil nuts, vegetables, berries, and sprouted legumes", weight: "1050-1350 g", talking: "Moderate", intelligence: "High", training: "Moderate", social: "Steady with families when introduced slowly", care: "Advanced" },
+  { name: "Military Macaw", scientific: "Ara militaris", category: "macaws", country: "Mexico", rarity: Rarity.RARE, size: Size.LARGE, sex: Sex.FEMALE, price: 3100, status: ParrotStatus.AVAILABLE, temperament: "Alert, loyal, intelligent", lifespan: "45-55 years", diet: "Pellets, cactus fruits, greens, squash, nuts, and seasonal fruit", weight: "850-1100 g", talking: "Good", intelligence: "High", training: "Intermediate", social: "Bonds closely and appreciates predictable routines", care: "Advanced" },
+  { name: "Red-Fronted Macaw", scientific: "Ara rubrogenys", category: "collector-species", country: "Bolivia", rarity: Rarity.EXCEPTIONAL, size: Size.MEDIUM, sex: Sex.MALE, price: 5200, status: ParrotStatus.AVAILABLE, temperament: "Curious, agile, rare", lifespan: "35-45 years", diet: "Low-fat pellets, vegetables, berries, small nuts, and native browse", weight: "450-650 g", talking: "Limited but charming", intelligence: "High", training: "Intermediate", social: "Best for experienced keepers who enjoy flight training", care: "Expert" },
+  { name: "Umbrella Cockatoo", scientific: "Cacatua alba", category: "cockatoos", country: "Indonesia", rarity: Rarity.RARE, size: Size.LARGE, sex: Sex.FEMALE, price: 3400, status: ParrotStatus.AVAILABLE, temperament: "Affectionate, expressive, soft", lifespan: "40-60 years", diet: "Low-fat pellets, vegetables, leafy greens, grains, and limited almonds", weight: "500-630 g", talking: "Fair, sweet voice", intelligence: "High emotional intelligence", training: "Moderate", social: "Needs generous daily companionship and boundaries", care: "Expert", featured: true },
+  { name: "Moluccan Cockatoo", scientific: "Cacatua moluccensis", category: "cockatoos", country: "Indonesia", rarity: Rarity.EXCEPTIONAL, size: Size.LARGE, sex: Sex.MALE, price: 4800, status: ParrotStatus.AVAILABLE, temperament: "Velcro-affectionate, dramatic, sensitive", lifespan: "50-70 years", diet: "Pellets, steamed vegetables, greens, small nuts, and foraging toys", weight: "750-950 g", talking: "Fair", intelligence: "Very high", training: "Advanced", social: "Requires expert social planning to avoid over-bonding", care: "Expert" },
+  { name: "Galah Cockatoo", scientific: "Eolophus roseicapilla", category: "cockatoos", country: "Australia", rarity: Rarity.RARE, size: Size.MEDIUM, sex: Sex.MALE, price: 2500, status: ParrotStatus.RESERVED, temperament: "Friendly, witty, athletic", lifespan: "35-45 years", diet: "Low-fat pellets, broccoli, greens, grains, and limited seed rewards", weight: "270-360 g", talking: "Good", intelligence: "High", training: "Moderate", social: "Cheerful with families and playful training sessions", care: "Intermediate" },
+  { name: "Sulphur-Crested Cockatoo", scientific: "Cacatua galerita", category: "cockatoos", country: "Australia", rarity: Rarity.RARE, size: Size.LARGE, sex: Sex.MALE, price: 3200, status: ParrotStatus.AVAILABLE, temperament: "Comical, loud, affectionate", lifespan: "40-60 years", diet: "Pellets, kale, pumpkin, grains, and controlled nut treats", weight: "700-950 g", talking: "Good, musical mimic", intelligence: "High", training: "Advanced", social: "Loves dancing, routines, and visible household activity", care: "Expert" },
+  { name: "Major Mitchell's Cockatoo", scientific: "Lophochroa leadbeateri", category: "collector-species", country: "Australia", rarity: Rarity.EXCEPTIONAL, size: Size.MEDIUM, sex: Sex.FEMALE, price: 6800, status: ParrotStatus.AVAILABLE, temperament: "Elegant, selective, calm", lifespan: "45-60 years", diet: "Dryland pellets, greens, vegetables, small seeds, and browse", weight: "360-430 g", talking: "Limited", intelligence: "High", training: "Advanced", social: "Prefers quiet, respectful handlers and stable routines", care: "Expert" },
+  { name: "African Grey", scientific: "Psittacus erithacus", category: "african-greys", country: "Democratic Republic of Congo", rarity: Rarity.RARE, size: Size.MEDIUM, sex: Sex.MALE, price: 2400, status: ParrotStatus.AVAILABLE, temperament: "Observant, thoughtful, precise", lifespan: "45-60 years", diet: "Calcium-rich pellets, vegetables, berries, palm oil supplement, and sprouted grains", weight: "400-500 g", talking: "Exceptional vocabulary and sound mimicry", intelligence: "Exceptional", training: "Intermediate", social: "Bonds through trust, puzzles, and calm daily conversation", care: "Advanced", featured: true },
+  { name: "Timneh African Grey", scientific: "Psittacus timneh", category: "african-greys", country: "Ghana", rarity: Rarity.RARE, size: Size.MEDIUM, sex: Sex.UNKNOWN, price: 2200, status: ParrotStatus.AVAILABLE, temperament: "Calm, clever, grounded", lifespan: "40-55 years", diet: "Pellets, leafy greens, carrots, berries, and low-fat seed rewards", weight: "280-375 g", talking: "Excellent", intelligence: "Exceptional", training: "Moderate", social: "Often adapts faster than Congo Greys to household changes", care: "Advanced" },
+  { name: "Double Yellow-Headed Amazon", scientific: "Amazona oratrix", category: "amazons", country: "Mexico", rarity: Rarity.RARE, size: Size.MEDIUM, sex: Sex.MALE, price: 2100, status: ParrotStatus.AVAILABLE, temperament: "Bold, musical, charismatic", lifespan: "40-60 years", diet: "Low-fat pellets, sweet potato, peppers, greens, berries, and limited nuts", weight: "400-550 g", talking: "Exceptional singer and mimic", intelligence: "High", training: "Moderate", social: "Confident bird for owners who enjoy vocal personality", care: "Intermediate" },
+  { name: "Yellow-Naped Amazon", scientific: "Amazona auropalliata", category: "amazons", country: "Honduras", rarity: Rarity.RARE, size: Size.MEDIUM, sex: Sex.FEMALE, price: 2300, status: ParrotStatus.AVAILABLE, temperament: "Talkative, social, spirited", lifespan: "45-60 years", diet: "Vegetable-rich Amazon diet, pellets, cooked grains, and fruit rewards", weight: "480-650 g", talking: "Excellent", intelligence: "High", training: "Moderate", social: "Enjoys training games and a clear household role", care: "Intermediate" },
+  { name: "Blue-Fronted Amazon", scientific: "Amazona aestiva", category: "amazons", country: "Argentina", rarity: Rarity.COMMON, size: Size.MEDIUM, sex: Sex.UNKNOWN, price: 1800, status: ParrotStatus.AVAILABLE, temperament: "Funny, confident, resilient", lifespan: "40-55 years", diet: "Pellets, vegetables, greens, low-sugar fruit, and seed rewards", weight: "360-520 g", talking: "Very good", intelligence: "High", training: "Beginner to moderate", social: "Strong choice for owners wanting personality and manageable size", care: "Intermediate" },
+  { name: "Orange-Winged Amazon", scientific: "Amazona amazonica", category: "amazons", country: "Venezuela", rarity: Rarity.COMMON, size: Size.MEDIUM, sex: Sex.MALE, price: 1450, status: ParrotStatus.AVAILABLE, temperament: "Warm, steady, sociable", lifespan: "35-50 years", diet: "Pellets, greens, bell peppers, carrots, and modest fruit", weight: "320-470 g", talking: "Good", intelligence: "High", training: "Beginner to moderate", social: "Approachable Amazon with consistent daily handling", care: "Intermediate" },
+  { name: "Golden Conure", scientific: "Guaruba guarouba", category: "collector-species", country: "Brazil", rarity: Rarity.EXCEPTIONAL, size: Size.MEDIUM, sex: Sex.UNKNOWN, price: 4500, status: ParrotStatus.AVAILABLE, temperament: "Radiant, playful, affectionate", lifespan: "25-35 years", diet: "Pellets, fruit, vegetables, sprouted grains, and controlled seeds", weight: "250-300 g", talking: "Limited, expressive calls", intelligence: "High", training: "Intermediate", social: "Highly social and happiest with frequent interaction", care: "Advanced", featured: true },
+  { name: "Sun Conure", scientific: "Aratinga solstitialis", category: "conures", country: "Guyana", rarity: Rarity.COMMON, size: Size.SMALL, sex: Sex.UNKNOWN, price: 650, status: ParrotStatus.AVAILABLE, temperament: "Sunny, playful, cuddly", lifespan: "25-30 years", diet: "Small pellets, vegetables, sprouted seeds, papaya, and berries", weight: "100-130 g", talking: "Limited, expressive", intelligence: "Moderate", training: "Beginner", social: "Excellent for active homes that accept excited calls", care: "Beginner-friendly" },
+  { name: "Jenday Conure", scientific: "Aratinga jandaya", category: "conures", country: "Brazil", rarity: Rarity.COMMON, size: Size.SMALL, sex: Sex.FEMALE, price: 700, status: ParrotStatus.AVAILABLE, temperament: "Energetic, loyal, bright", lifespan: "25-30 years", diet: "Pellets, greens, carrots, tropical fruit, and sprouted grains", weight: "110-140 g", talking: "Limited", intelligence: "Moderate", training: "Beginner", social: "Loves shoulder time, supervised play, and family movement", care: "Beginner-friendly" },
+  { name: "Green-Cheeked Conure", scientific: "Pyrrhura molinae", category: "conures", country: "Bolivia", rarity: Rarity.COMMON, size: Size.SMALL, sex: Sex.MALE, price: 550, status: ParrotStatus.AVAILABLE, temperament: "Sweet, mischievous, compact", lifespan: "20-30 years", diet: "Small pellets, vegetables, limited fruit, and training seeds", weight: "60-80 g", talking: "Limited whisper mimic", intelligence: "Moderate", training: "Beginner", social: "A strong first parrot for attentive households", care: "Beginner-friendly" },
+  { name: "Black-Capped Conure", scientific: "Pyrrhura rupicola", category: "conures", country: "Peru", rarity: Rarity.RARE, size: Size.SMALL, sex: Sex.UNKNOWN, price: 900, status: ParrotStatus.AVAILABLE, temperament: "Gentle, curious, quiet-for-conure", lifespan: "20-30 years", diet: "Pellets, chopped vegetables, berries, sprouts, and small seed rewards", weight: "65-85 g", talking: "Limited", intelligence: "Moderate", training: "Beginner", social: "Playful companion with a softer household footprint", care: "Beginner-friendly" },
+  { name: "White-Bellied Caique", scientific: "Pionites leucogaster", category: "collector-species", country: "Brazil", rarity: Rarity.RARE, size: Size.SMALL, sex: Sex.MALE, price: 1500, status: ParrotStatus.AVAILABLE, temperament: "Comical, fearless, energetic", lifespan: "25-35 years", diet: "Pellets, vegetables, grains, fruit, and active foraging meals", weight: "150-170 g", talking: "Limited", intelligence: "High", training: "Intermediate", social: "Loves wrestling, hopping, and supervised floor play", care: "Intermediate" },
+  { name: "Black-Headed Caique", scientific: "Pionites melanocephalus", category: "collector-species", country: "Peru", rarity: Rarity.RARE, size: Size.SMALL, sex: Sex.FEMALE, price: 1550, status: ParrotStatus.AVAILABLE, temperament: "Bold, hilarious, interactive", lifespan: "25-35 years", diet: "Pellets, vegetable chop, tropical fruit, grains, and puzzle feeding", weight: "150-180 g", talking: "Limited", intelligence: "High", training: "Intermediate", social: "Needs active owners and clear play boundaries", care: "Intermediate" },
+  { name: "Male Eclectus", scientific: "Eclectus roratus", category: "collector-species", country: "Solomon Islands", rarity: Rarity.RARE, size: Size.MEDIUM, sex: Sex.MALE, price: 1900, status: ParrotStatus.AVAILABLE, temperament: "Calm, observant, polished", lifespan: "30-50 years", diet: "High-fresh-food diet with papaya, figs, greens, legumes, and low-iron pellets", weight: "380-520 g", talking: "Good", intelligence: "High", training: "Moderate", social: "Gentle household presence that dislikes chaotic handling", care: "Advanced" },
+  { name: "Female Eclectus", scientific: "Eclectus roratus", category: "collector-species", country: "Indonesia", rarity: Rarity.RARE, size: Size.MEDIUM, sex: Sex.FEMALE, price: 2200, status: ParrotStatus.AVAILABLE, temperament: "Confident, elegant, intelligent", lifespan: "30-50 years", diet: "Fresh vegetables, fruit, legumes, herbs, and specialized pellets", weight: "400-550 g", talking: "Good", intelligence: "High", training: "Moderate", social: "Benefits from respectful routines and enrichment choices", care: "Advanced" },
+  { name: "Hawk-Headed Parrot", scientific: "Deroptyus accipitrinus", category: "collector-species", country: "Suriname", rarity: Rarity.EXCEPTIONAL, size: Size.MEDIUM, sex: Sex.UNKNOWN, price: 3900, status: ParrotStatus.AVAILABLE, temperament: "Spectacular, alert, expressive", lifespan: "30-40 years", diet: "Pellets, berries, fruit, vegetables, and forest-style foraging", weight: "230-300 g", talking: "Fair", intelligence: "High", training: "Advanced", social: "Best for experienced keepers who can read body language", care: "Expert" },
+  { name: "Derbyan Parakeet", scientific: "Psittacula derbiana", category: "collector-species", country: "China", rarity: Rarity.RARE, size: Size.MEDIUM, sex: Sex.MALE, price: 1700, status: ParrotStatus.AVAILABLE, temperament: "Graceful, intelligent, composed", lifespan: "25-35 years", diet: "Pellets, vegetables, apple, pomegranate, grains, and herbs", weight: "280-320 g", talking: "Very good", intelligence: "High", training: "Moderate", social: "Elegant aviary bird that bonds well through voice work", care: "Intermediate" },
+  { name: "Indian Ringneck", scientific: "Psittacula krameri", category: "collector-species", country: "India", rarity: Rarity.COMMON, size: Size.SMALL, sex: Sex.MALE, price: 750, status: ParrotStatus.AVAILABLE, temperament: "Independent, clever, stylish", lifespan: "25-30 years", diet: "Pellets, vegetables, fruit, legumes, and light seeds", weight: "110-140 g", talking: "Excellent for size", intelligence: "High", training: "Beginner to moderate", social: "Enjoys training and respectful touch boundaries", care: "Intermediate" },
+  { name: "Quaker Parrot", scientific: "Myiopsitta monachus", category: "conures", country: "Argentina", rarity: Rarity.COMMON, size: Size.SMALL, sex: Sex.UNKNOWN, price: 600, status: ParrotStatus.AVAILABLE, temperament: "Chatty, busy, clever", lifespan: "20-30 years", diet: "Pellets, vegetables, grains, fruit, and careful seed portions", weight: "90-120 g", talking: "Excellent", intelligence: "High", training: "Beginner", social: "Lively companion that enjoys routines and nest-building toys", care: "Beginner-friendly" },
+  { name: "Senegal Parrot", scientific: "Poicephalus senegalus", category: "collector-species", country: "Senegal", rarity: Rarity.COMMON, size: Size.SMALL, sex: Sex.FEMALE, price: 950, status: ParrotStatus.AVAILABLE, temperament: "Quiet, loyal, thoughtful", lifespan: "25-35 years", diet: "Pellets, vegetables, grains, greens, and nut rewards", weight: "120-170 g", talking: "Fair", intelligence: "High", training: "Beginner to moderate", social: "Excellent apartment-friendly parrot with steady companionship", care: "Beginner-friendly" },
+  { name: "Alexandrine Parakeet", scientific: "Psittacula eupatria", category: "collector-species", country: "Sri Lanka", rarity: Rarity.COMMON, size: Size.MEDIUM, sex: Sex.MALE, price: 900, status: ParrotStatus.AVAILABLE, temperament: "Regal, social, trainable", lifespan: "25-35 years", diet: "Pellets, vegetables, fruit, grains, and browse branches", weight: "220-260 g", talking: "Very good", intelligence: "High", training: "Beginner to moderate", social: "Large-parakeet personality with elegant handling habits", care: "Intermediate" },
+  { name: "Palm Cockatoo", scientific: "Probosciger aterrimus", category: "collector-species", country: "Papua New Guinea", rarity: Rarity.EXCEPTIONAL, size: Size.LARGE, sex: Sex.UNKNOWN, price: 18000, status: ParrotStatus.SOLD, temperament: "Majestic, reserved, rare", lifespan: "60-80 years", diet: "Specialized nuts, palm fruit, pellets, greens, and expert avian diet planning", weight: "850-1100 g", talking: "Limited", intelligence: "Exceptional", training: "Expert", social: "Collector-level species requiring deep husbandry expertise", care: "Expert" },
+];
+
+function buildParrotSeed(item: (typeof species)[number], index: number): ParrotSeed {
+  const summary = `${item.name} is a ${item.rarity.toLowerCase()} ${item.category.replace("-", " ")} from ${item.country}, selected for ${item.temperament.toLowerCase()} temperament and premium captive-bred care.`;
+
+  return {
+    name: item.name,
+    slug: `${slugify(item.name)}-${slugify(item.country)}`,
+    species: item.scientific,
+    originCountry: item.country,
+    category: item.category,
+    temperament: item.temperament,
+    lifespan: item.lifespan,
+    diet: item.diet,
+    weight: item.weight,
+    talkingAbility: item.talking,
+    intelligenceLevel: item.intelligence,
+    trainingDifficulty: item.training,
+    socialBehavior: item.social,
+    careLevel: item.care,
+    seoDescription: `${item.name} for serious parrot families and collectors. Learn temperament, care, diet, talking ability, and legal captive-bred availability.`,
+    tags: [item.category, item.rarity.toLowerCase(), item.care.toLowerCase(), item.country.toLowerCase()],
+    careInstructions: `Provide a spacious enclosure, supervised daily flight or play, fresh diet rotation, enrichment toys, weekly weight tracking, and annual avian veterinary exams. ${item.name} especially benefits from ${item.social.toLowerCase()}.`,
+    description: `${summary} This bird profile is designed for responsible buyers who want complete husbandry context before making an inquiry. Expected lifespan is ${item.lifespan}, average weight is ${item.weight}, and the care level is ${item.care}. Diet planning should include ${item.diet.toLowerCase()}. Our nursery prioritizes ethical socialization, legal captive-bred records, and transparent pre-placement guidance.`,
+    shortDescription: summary,
+    age: `${4 + (index % 9)} months`,
+    size: item.size,
+    sex: item.sex,
+    origin: `${item.country} (Captive Bred)`,
+    rarity: item.rarity,
+    price: new Prisma.Decimal(item.price),
+    status: item.status,
+    behavior: `${item.temperament}. ${item.social}.`,
+    feeding: item.diet,
+    domestication: `Hand-raised, step-up conditioned, and socialized through calm handling, target training, and positive reinforcement.`,
+    healthNotes: `Closed-band identification, veterinary wellness check, DNA record where applicable, and pathogen screening prepared before transfer.`,
+    featured: item.featured ?? false,
+    imageUrls: [imagePool[index % imagePool.length], imagePool[(index + 3) % imagePool.length], imagePool[(index + 5) % imagePool.length], imagePool[(index + 7) % imagePool.length]],
+  };
+}
+
+async function optionallyResetDatabase() {
+  if (process.env.SEED_RESET !== "true") return;
+
+  console.log("SEED_RESET=true detected. Cleaning seed-owned tables...");
   await prisma.adminAuditLog.deleteMany({});
   await prisma.siteSetting.deleteMany({});
   await prisma.emailCampaignRecipient.deleteMany({});
@@ -22,451 +191,199 @@ async function main() {
   await prisma.category.deleteMany({});
   await prisma.parrotImage.deleteMany({});
   await prisma.parrot.deleteMany({});
-  await prisma.user.deleteMany({});
+  console.log("Database reset complete. Admin users are preserved unless their emails are updated by this seed.");
+}
 
-  console.log("Database cleaned.");
-
-  // 2. Seed Default Admins from env or fallback
-  const admin1Email = process.env.DEFAULT_ADMIN_1_EMAIL || "yvangodimomo@gmail.com";
-  const admin1Password = process.env.DEFAULT_ADMIN_1_PASSWORD || "ChangeMeStrongPassword1!";
-  const admin1Name = process.env.DEFAULT_ADMIN_1_NAME || "Yvan Momo";
-
-  const admin2Email = process.env.DEFAULT_ADMIN_2_EMAIL || "elvispablo@gmail.com";
-  const admin2Password = process.env.DEFAULT_ADMIN_2_PASSWORD || "ChangeMeStrongPassword2!";
-  const admin2Name = process.env.DEFAULT_ADMIN_2_NAME || "Elvis Pablo";
-
-  const hash1 = await bcrypt.hash(admin1Password, 12);
-  const hash2 = await bcrypt.hash(admin2Password, 12);
-
-  const u1 = await prisma.user.create({
-    data: {
-      name: admin1Name,
-      email: admin1Email,
-      passwordHash: hash1,
-      role: Role.SUPERADMIN,
-    },
-  });
-
-  const u2 = await prisma.user.create({
-    data: {
-      name: admin2Name,
-      email: admin2Email,
-      passwordHash: hash2,
-      role: Role.ADMIN,
-    },
-  });
-
-  console.log(`Seeded administrators: ${u1.email} (Superadmin), ${u2.email} (Admin).`);
-
-  // 3. Create Categories
-  const catMacaws = await prisma.category.create({
-    data: { name: "Macaws", slug: "macaws", description: "Large, colorful Neotropical parrots known for intelligence and long lifespans." },
-  });
-  const catCockatoos = await prisma.category.create({
-    data: { name: "Cockatoos", slug: "cockatoos", description: "Affectionate crest-waving parrots with high emotional intelligence." },
-  });
-  const catAmazons = await prisma.category.create({
-    data: { name: "Amazons", slug: "amazons", description: "Vibrant green, talkative parrots native to the Americas." },
-  });
-  const catConures = await prisma.category.create({
-    data: { name: "Conures", slug: "conures", description: "Active, pocket-sized playful birds with bright markings." },
-  });
-  const catAfricanGreys = await prisma.category.create({
-    data: { name: "African Greys", slug: "african-greys", description: "The intellect champions of the bird world, master mimics." },
-  });
-
-  console.log("Created categories.");
-
-  // 4. Create Parrots (12+ Varieties with real details)
-  const parrotsData = [
-    {
-      name: "Hyacinth Macaw",
-      slug: "hyacinth-macaw-majestic",
-      species: "Anodorhynchus hyacinthinus",
-      description: "The Hyacinth Macaw is the largest of all parrot species, boasting a spectacular deep cobalt blue plumage contrasting with bright yellow eye-rings. This hand-reared fledgling has been socialized with our expert caretakers from hatching. He is gentle, curious, and responds beautifully to positive reinforcement. CITES Appendix I registration and health logs are complete.",
-      shortDescription: "Spectacular, gentle-giant cobalt blue Hyacinth Macaw. Extremely rare.",
-      age: "8 months",
-      size: Size.LARGE,
-      sex: Sex.MALE,
-      origin: "Brazil (Captive Bred)",
-      rarity: Rarity.EXCEPTIONAL,
-      price: 9500.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Very calm, sweet-tempered, likes to play with large wooden chew blocks, and loves gentle head scratches.",
-      feeding: "Needs a high-fat diet rich in raw macadamia nuts, brazil nuts, organic pellets, and a selection of fresh tropical fruits.",
-      domestication: "Step-up trained, harness-acclimated, and comfortable in various indoor/outdoor settings.",
-      healthNotes: "Microchipped, PCR screened negative for PBFD, Avian Bornavirus, and Psittacosis. DNA Sexed.",
-      featured: true,
-      images: [
-        { url: "/images/parrots/hyacinth.png", alt: "Cobalt blue Hyacinth Macaw close up profile", order: 0 }
-      ]
-    },
-    {
-      name: "Blue and Gold Macaw",
-      slug: "blue-and-gold-macaw-nursery",
-      species: "Ara ararauna",
-      description: "A gorgeous, sweet-natured Blue & Gold Macaw. Raised in our social nursery, this bird is very cuddle-friendly, affectionate, and thrives in interactive family environments. She has outstanding talking capabilities and has already begun mimicking simple greetings.",
-      shortDescription: "Affectionate and highly verbal Blue and Gold Macaw. Ideal family pet.",
-      age: "5 months",
-      size: Size.LARGE,
-      sex: Sex.FEMALE,
-      origin: "Costa Rica (Captive Bred)",
-      rarity: Rarity.COMMON,
-      price: 2800.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Active, highly outgoing, loves acrobatics on rope swings, and craves daily social engagement.",
-      feeding: "Premium pellets (70%), accompanied by daily fresh vegetable chop (peppers, squash) and fresh fruits.",
-      domestication: "Fully hand-tamed, steps up instantly on command, loves being handled.",
-      healthNotes: "Dewormed, vaccinated for polyomavirus, complete veterinary wellness clearance provided.",
-      featured: true,
-      images: [
-        { url: "/images/parrots/blue_gold.png", alt: "Blue and Gold Macaw looking friendly on a perch", order: 0 }
-      ]
-    },
-    {
-      name: "Umbrella Cockatoo",
-      slug: "umbrella-cockatoo-cuddly",
-      species: "Cacatua alba",
-      description: "An incredibly cuddly, affectionate Umbrella Cockatoo. This bird behaves like a lap-pet, craving close human contact and head rubs. She raises her stunning white crest when excited or curious. Best suited for an owner who can dedicate significant interactive time.",
-      shortDescription: "Lap-pet temperament, pure white Umbrella Cockatoo. Extremely affectionate.",
-      age: "9 months",
-      size: Size.LARGE,
-      sex: Sex.FEMALE,
-      origin: "Indonesia (Captive Bred)",
-      rarity: Rarity.RARE,
-      price: 3400.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Clownish, loves showing off its crest, highly emotional, craves cuddling, can make vocal calls when seeking attention.",
-      feeding: "Low-fat organic pellet mix, grains, leafy vegetables, and raw almonds as training treats.",
-      domestication: "Hand-raised from day one, exceptionally tame, responds to target training.",
-      healthNotes: "DNA certified female, clear blood panel, negative for PBFD and Psittacosis.",
-      featured: true,
-      images: [
-        { url: "/images/parrots/umbrella.png", alt: "Umbrella Cockatoo with its elegant white crest raised", order: 0 }
-      ]
-    },
-    {
-      name: "African Grey",
-      slug: "african-grey-intellect",
-      species: "Psittacus erithacus",
-      description: "The African Grey is legendary for its cognitive intelligence and uncanny talking abilities. This youngster is highly observant, already mastering a dozen clear words and sounds. He needs an owner who can provide puzzle toys and constant intellectual stimulation.",
-      shortDescription: "Master mimic African Grey. Silver plumage with a bright crimson tail.",
-      age: "6 months",
-      size: Size.MEDIUM,
-      sex: Sex.MALE,
-      origin: "Congo (Captive Bred)",
-      rarity: Rarity.RARE,
-      price: 2400.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Quietly analytical, loves puzzle toys, highly mimic-driven, can be cautious around new objects.",
-      feeding: "Calcium-fortified pellets, palm oil supplements, broccoli, carrots, sprouted seeds, and dark berries.",
-      domestication: "Hand-fed, steps up on a finger, trained to solve simple color-matching toys.",
-      healthNotes: "DNA certified male, microchipped, negative disease screen.",
-      featured: true,
-      images: [
-        { url: "/images/parrots/african_grey.png", alt: "Intelligent African Grey showing silver feathers and crimson tail", order: 0 }
-      ]
-    },
-    {
-      name: "Golden Conure",
-      slug: "golden-conure-queen",
-      species: "Guaruba guarouba",
-      description: "Also known as the Queen of Bavaria Conure, this rare jewel is completely golden yellow with rich forest-green flight feathers. Known for their highly social, playful, and loving nature. Ideal for enthusiasts looking for a visually striking and friendly companion.",
-      shortDescription: "Breathtaking bright yellow Golden Conure. Playful, loving, and active.",
-      age: "7 months",
-      size: Size.MEDIUM,
-      sex: Sex.UNKNOWN,
-      origin: "Brazil (Captive Bred)",
-      rarity: Rarity.EXCEPTIONAL,
-      price: 4500.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Very energetic, highly social, loves wrestling with small foot toys and hiding in soft towels.",
-      feeding: "Variety of seeds, grains, high-nutrient pellets, and freshly prepared vegetable chop.",
-      domestication: "Hand-raised, loves human touch, well-socialized with multiple caretakers.",
-      healthNotes: "Registered under legal conservation permits, fully dewormed, healthy veterinary checkup.",
-      featured: true,
-      images: [
-        { url: "/images/parrots/golden_conure.png", alt: "Stunning yellow Golden Conure looking bright and active", order: 0 }
-      ]
-    },
-    {
-      name: "Sulphur-Crested Cockatoo",
-      slug: "sulphur-crested-cockatoo-playful",
-      species: "Cacatua galerita",
-      description: "A loud, proud, and incredibly playful Sulphur-Crested Cockatoo. With a white body and a striking yellow crest, this bird is full of personality. He loves dancing to music and has an affectionate, funny behavior.",
-      shortDescription: "Dancing white cockatoo with a bright yellow crest. Full of personality.",
-      age: "10 months",
-      size: Size.LARGE,
-      sex: Sex.MALE,
-      origin: "Australia (Captive Bred)",
-      rarity: Rarity.RARE,
-      price: 3200.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Loves to dance, bounce, and mimic household sounds. Extremely social and high-energy.",
-      feeding: "Nutritionally balanced pellets, grains, fresh vegetables like kale and squash, occasional walnut treats.",
-      domestication: "Step-up trained, loves cuddle sessions, responsive to basic tricks and voice prompts.",
-      healthNotes: "Vet certified health panel, microchipped, negative for Psittacine Beak & Feather Disease.",
-      featured: false,
-      images: [
-        { url: "https://images.unsplash.com/photo-1551085254-e96b210db58a?auto=format&fit=crop&w=800&q=80", alt: "Sulphur crested cockatoo baby", order: 0 }
-      ]
-    },
-    {
-      name: "Double Yellow-Headed Amazon",
-      slug: "double-yellow-headed-amazon-singer",
-      species: "Amazona oratrix",
-      description: "Amazon parrots are famous for their singing ability, and the Double Yellow-Head is the premier vocalist. This bird loves opera and hums melodies. He has a brilliant green body and is starting to develop a bright yellow head.",
-      shortDescription: "Vocal Double Yellow-Headed Amazon. Loves singing and mimicking music.",
-      age: "11 months",
-      size: Size.MEDIUM,
-      sex: Sex.MALE,
-      origin: "Mexico (Captive Bred)",
-      rarity: Rarity.RARE,
-      price: 2100.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Outgoing, bold, loves being the center of attention, enjoys singing loud melodies in the morning.",
-      feeding: "Amazon pellet formula, low-fat seeds, heavy on vitamin-A vegetables (sweet potato, carrots, peppers).",
-      domestication: "Step-up trained, hand-tamed, enjoys positive reinforcement vocal training.",
-      healthNotes: "Vaccinated, DNA tested male, clear respiratory and fecal exam.",
-      featured: false,
-      images: [
-        { url: "https://images.unsplash.com/photo-1620188467120-5042ed1eb5da?auto=format&fit=crop&w=800&q=80", alt: "Double yellow headed amazon green parrot", order: 0 }
-      ]
-    },
-    {
-      name: "Eclectus Parrot",
-      slug: "eclectus-parrot-emerald",
-      species: "Eclectus roratus",
-      description: "With feathers that resemble soft, shiny fur, the male Eclectus is a brilliant emerald green with blue and red details under the wings. They are calm, gentle, and possess soft, flute-like voices.",
-      shortDescription: "Stunning emerald green male Eclectus. Calm, quiet, and very sweet.",
-      age: "6 months",
-      size: Size.MEDIUM,
-      sex: Sex.MALE,
-      origin: "Solomon Islands (Captive Bred)",
-      rarity: Rarity.RARE,
-      price: 1900.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Calm, gentle, quiet observer, enjoys relaxing on a t-stand and watching the household.",
-      feeding: "Highly specialized diet. Requires high fresh food intake: papaya, mango, figs, raw beans, grains, pellets.",
-      domestication: "Hand-raised, very steady hand contact, steps up easily, quiet and non-destructive.",
-      healthNotes: "Dewormed, negative for avian bornavirus, healthy digestive system.",
-      featured: false,
-      images: [
-        { url: "https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&w=800&q=80", alt: "Emerald green male eclectus parrot", order: 0 }
-      ]
-    },
-    {
-      name: "Sun Conure",
-      slug: "sun-conure-playful-nursery",
-      species: "Aratinga solstitialis",
-      description: "Vibrant yellow, orange, and red conure. Incredibly playful and active. They make comical, wonderful pets but have a loud, expressive call when excited. Hops like a toy and loves hiding in pockets.",
-      shortDescription: "Comical, pocket-sized vibrant conure. Playful and highly energetic.",
-      age: "4 months",
-      size: Size.SMALL,
-      sex: Sex.UNKNOWN,
-      origin: "Guyana (Captive Bred)",
-      rarity: Rarity.COMMON,
-      price: 650.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Very playful, performs acrobatic spins, loves human attention and snuggling inside cupped hands.",
-      feeding: "Sprouted seeds, chopped fresh fruits, organic crumble pellets, daily leafy green treats.",
-      domestication: "Hand-raised, loves skin-contact, step-up trained.",
-      healthNotes: "Dewormed, de-liced, healthy fledgling state, disease panel tested.",
-      featured: false,
-      images: [
-        { url: "https://images.unsplash.com/photo-1618172193763-c511deb635ca?auto=format&fit=crop&w=800&q=80", alt: "Vibrant yellow sun conure close up", order: 0 }
-      ]
-    },
-    {
-      name: "Galah Cockatoo",
-      slug: "galah-cockatoo-rose",
-      species: "Eolophus roseicapilla",
-      description: "A gorgeous rose-pink and grey Galah Cockatoo. Known for their friendly, outgoing personalities, Galahs are highly social and less demanding than other cockatoo species. He has been socialized with children and other pets.",
-      shortDescription: "Friendly and highly social rose-pink and grey Galah Cockatoo.",
-      age: "6 months",
-      size: Size.MEDIUM,
-      sex: Sex.MALE,
-      origin: "Australia (Captive Bred)",
-      rarity: Rarity.RARE,
-      price: 2500.00,
-      status: ParrotStatus.RESERVED,
-      behavior: "Very outgoing, playful, loves hanging upside down, extremely gentle and calm around people.",
-      feeding: "Broccoli, cauliflower, low-fat pellets, grains, sprouted seeds, and walnuts as rewards.",
-      domestication: "Step-up trained, loves head rubs, comfortable on play gyms.",
-      healthNotes: "DNA certified male, avian vet certificate, clear disease screen.",
-      featured: false,
-      images: [
-        { url: "https://images.unsplash.com/photo-1590424753072-35804fc2ff4d?auto=format&fit=crop&w=800&q=80", alt: "Rose-pink Galah Cockatoo standing", order: 0 }
-      ]
-    },
-    {
-      name: "Green-Winged Macaw",
-      slug: "green-winged-macaw-gentle",
-      species: "Ara chloropterus",
-      description: "Often called the 'Gentle Giant' of the large macaws, the Green-Winged Macaw has a deep red body and forest green wing stripes. This bird is very steady, sweet-tempered, and less high-strung than Scarlet Macaws. Hand-raised and ready for a loving home.",
-      shortDescription: "Steady, sweet forest green and red macaw. Gentle-giant temperament.",
-      age: "7 months",
-      size: Size.LARGE,
-      sex: Sex.MALE,
-      origin: "Ecuador (Captive Bred)",
-      rarity: Rarity.RARE,
-      price: 3400.00,
-      status: ParrotStatus.SOLD,
-      behavior: "Very calm, interactive, gentle behavior, loves playing with heavy-duty chew toys.",
-      feeding: "Soaked almonds, walnuts, raw vegetables, dynamic fruit plate, and specialized high-nutrition pellets.",
-      domestication: "Highly socialized with various people, step-up trained, enjoys being handled.",
-      healthNotes: "DNA certified male, blood panel clear, negative for polyomavirus and avian bornavirus.",
-      featured: false,
-      images: [
-        { url: "https://images.unsplash.com/photo-1588615419957-c83134608c2a?auto=format&fit=crop&w=800&q=80", alt: "Green Winged Macaw close profile", order: 0 }
-      ]
-    },
-    {
-      name: "White-Bellied Caique",
-      slug: "white-bellied-caique-clown",
-      species: "Pionites leucogaster",
-      description: "The undisputed clown of the bird world! This White-Bellied Caique hops like a wind-up toy and loves wrestling. He is hand-reared, high energy, and is guaranteed to keep you entertained for hours. Perfectly suited for active bird enthusiasts.",
-      shortDescription: "Comical hopping caique. Dynamic, high energy, and extremely entertaining.",
-      age: "5 months",
-      size: Size.SMALL,
-      sex: Sex.MALE,
-      origin: "Brazil (Captive Bred)",
-      rarity: Rarity.RARE,
-      price: 1500.00,
-      status: ParrotStatus.AVAILABLE,
-      behavior: "Extremely energetic, hops, rolls on its back, loves wrestling with hands and small foot toys.",
-      feeding: "Fresh vegetable chop (peppers, squash), grains, seeds, and specialized caique pellets.",
-      domestication: "Trained to hop, steps up instantly, highly social and eager to interact.",
-      healthNotes: "Vet checked, negative for major avian pathogens, DNA verified.",
-      featured: false,
-      images: [
-        { url: "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80", alt: "Playful Caique looking active", order: 0 }
-      ]
+async function seedAdmins() {
+  for (const admin of getAdminSeeds()) {
+    const existing = await prisma.user.findUnique({ where: { email: admin.email } });
+    if (existing) {
+      console.log(`Admin exists, skipping password update: ${admin.email}`);
+      continue;
     }
-  ];
 
-  for (const bird of parrotsData) {
-    const { images, ...parrotFields } = bird;
-    const createdParrot = await prisma.parrot.create({
+    await prisma.user.create({
       data: {
-        ...parrotFields,
-        images: {
-          create: images
-        }
-      }
+        name: admin.name,
+        email: admin.email,
+        passwordHash: await bcrypt.hash(admin.password, 12),
+        role: admin.role,
+      },
     });
-    console.log(`Created parrot: ${createdParrot.name} (Slug: ${createdParrot.slug})`);
+    console.log(`Created admin: ${admin.email} (${admin.role})`);
+  }
+}
+
+async function seedCategories() {
+  for (const [name, slug, description] of categories) {
+    await prisma.category.upsert({
+      where: { slug },
+      update: { name, description },
+      create: { name, slug, description },
+    });
+  }
+  console.log(`Seeded ${categories.length} categories.`);
+}
+
+async function seedParrots() {
+  const parrots = species.map(buildParrotSeed);
+
+  for (const parrot of parrots) {
+    const { imageUrls, ...data } = parrot;
+    const created = await prisma.parrot.upsert({
+      where: { slug: data.slug },
+      update: data,
+      create: data,
+    });
+
+    await prisma.parrotImage.deleteMany({ where: { parrotId: created.id } });
+    await prisma.parrotImage.createMany({
+      data: imageUrls.map((url, order) => ({
+        parrotId: created.id,
+        url,
+        alt: `${created.name} ${["showcase", "profile", "interaction", "habitat"][order]} image`,
+        order,
+      })),
+    });
   }
 
-  // 5. Create Blog Posts
-  const blogPosts = [
-    {
-      title: "How to Choose the Right Parrot for Your Home",
-      slug: "how-to-choose-right-parrot",
-      excerpt: "Bringing a parrot into your family is a lifetime commitment. Learn how size, longevity, noise, and socialization requirements differ by species to make the perfect choice.",
-      content: `<h2>Understanding the Commitment</h2><p>Parrots are not standard pets; they are highly intelligent, long-lived companions. Some species like macaws can live over 50 years. Choosing the right parrot is crucial to ensure a harmonious match with your lifestyle.</p><h3>Key Considerations</h3><ul><li><strong>Space:</strong> Large birds like Macaws and Cockatoos require substantial cage setups and play gyms. Small birds like Conures fit better in apartments.</li><li><strong>Noise Levels:</strong> Parrots communicate vocally. While Sun Conures and Amazons can be loud, species like Caiques or hand-tamed cockatoos are moderate.</li><li><strong>Social Needs:</strong> Birds are flock animals. They need at least 2-3 hours of direct interaction daily to prevent boredom and behavioral issues.</li></ul><h3>Breed Profiles</h3><p>In our experience breeding in Latin America, we recommend families to consider the gentle temperament of Blue & Gold Macaws, or the compact and playful nature of Caiques.</p>`,
-      coverImage: "https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?auto=format&fit=crop&w=800&q=80",
-      category: "Guides",
-      tags: ["guides", "adoption", "parrot care"],
-      published: true,
-      seoTitle: "How to Choose the Perfect Parrot Breed | Breeder Guide",
-      seoDescription: "An expert breeder's guide to choosing the right exotic parrot. Explore species sizing, temperament, lifespans, and space requirements.",
-    },
-    {
-      title: "The Ultimate Guide to Parrot Nutrition and Feeding",
-      slug: "ultimate-parrot-nutrition-guide",
-      excerpt: "Seed-only diets are a leading cause of health problems in parrots. Discover the ideal breakdown of organic pellets, fresh vegetables, grains, and fruits for optimal health.",
-      content: `<h2>Moving Beyond Seeds</h2><p>For decades, commercial bird seed mixes were sold as complete feeds. We now know that a seed-only diet leads to fatty liver disease, vitamin deficiencies, and shorter lifespans. Proper nutrition is the foundation of brilliant plumage and high energy.</p><h3>The Perfect Dietary Breakdown</h3><p>We recommend feeding your hand-raised parrots a diet consisting of:</p><ul><li><strong>60-70% High-Quality Pellets:</strong> Serves as the nutritional baseline containing essential vitamins.</li><li><strong>20-30% Fresh Vegetables & Greens:</strong> Broccoli, carrots, bell peppers, sweet potatoes (cooked), kale, and daily herbs.</li><li><strong>5-10% Fruits:</strong> Papaya, mango, apples (seedless), berries. Treat fruit as a natural sweet reward.</li><li><strong>Seeds & Nuts:</strong> Use strictly as training rewards. Walnuts, almonds, and macadamias are excellent, especially for macaws who require higher fat content.</li></ul>`,
-      coverImage: "/images/parrots/hyacinth.png",
-      category: "Health & Nutrition",
-      tags: ["nutrition", "diet", "parrot care"],
-      published: true,
-      seoTitle: "Parrot Nutrition & Diet Guide: What to Feed Your Bird",
-      seoDescription: "Discover why seed-only diets are harmful and learn how to construct a balanced diet of pellets, fresh vegetables, and tropical fruits.",
-    }
-  ];
+  console.log(`Seeded ${parrots.length} premium parrot profiles with four images each.`);
+}
 
-  for (const post of blogPosts) {
-    await prisma.blogPost.create({ data: post });
+async function seedBlog() {
+  const posts = [
+    ["how-to-train-parrots", "How to Train Parrots with Trust-Based Methods", "A practical guide to positive reinforcement, step-up training, recall cues, and confidence-building routines for companion parrots."],
+    ["rare-parrot-species", "Rare Parrot Species for Serious Collectors", "Explore legally bred collector species, rarity signals, documentation expectations, and long-term care responsibilities."],
+    ["best-parrots-for-beginners", "Best Parrots for Beginners", "A clear comparison of beginner-friendly parrots, including conures, Senegals, Quakers, and key lifestyle tradeoffs."],
+    ["parrot-feeding-guide", "Premium Parrot Feeding Guide", "How to build a balanced diet with pellets, fresh vegetables, fruit, sprouts, nuts, and species-specific adjustments."],
+    ["tropical-bird-care", "Tropical Bird Care in Modern Homes", "Humidity, light, enrichment, cage design, and daily routines for healthy tropical parrots."],
+    ["domesticate-parrots", "How Ethical Domestication Works", "What hand-raising, socialization, trust-building, and legal captive-bred documentation mean for future owners."],
+    ["luxury-exotic-birds", "Luxury Exotic Birds and Responsible Ownership", "A premium buyer's guide to rare parrots, breeder transparency, veterinary records, and lifetime care planning."],
+    ["talking-parrots-guide", "Talking Parrots Guide", "Species comparison and training tips for African Greys, Amazons, Ringnecks, Quakers, and other strong talkers."],
+  ] as const;
+
+  for (const [slug, title, excerpt] of posts) {
+    await prisma.blogPost.upsert({
+      where: { slug },
+      update: {
+        title,
+        excerpt,
+        published: true,
+        seoTitle: `${title} | AraHaven Aviary`,
+        seoDescription: excerpt.slice(0, 155),
+      },
+      create: {
+        title,
+        slug,
+        excerpt,
+        content: `<h2>${title}</h2><p>${excerpt}</p><p>Our breeder team recommends pairing research with direct consultation so each bird is matched to the right home, schedule, and long-term care plan.</p><h3>Buyer checklist</h3><ul><li>Confirm legal captive-bred documentation.</li><li>Ask for health screening and diet history.</li><li>Prepare enrichment before arrival.</li><li>Choose a contact plan for follow-up support.</li></ul><p><strong>CTA:</strong> Contact the nursery on WhatsApp for species-specific guidance.</p>`,
+        coverImage: imagePool[posts.findIndex((post) => post[0] === slug) % imagePool.length],
+        category: "Education",
+        tags: ["parrot care", "exotic birds", "breeder guide"],
+        published: true,
+        seoTitle: `${title} | AraHaven Aviary`,
+        seoDescription: excerpt.slice(0, 155),
+      },
+    });
   }
-  console.log("Created blog posts.");
 
-  // 6. Create FAQs
+  console.log(`Seeded ${posts.length} SEO blog articles.`);
+}
+
+async function seedSupportingContent() {
   const faqs = [
-    {
-      question: "Are your baby parrots legal and captive-bred?",
-      answer: "Yes, 100%. We operate a fully certified and licensed breeding facility in Latin America. All of our breeding stock and chicks are closed-banded, microchipped, and come with legal CITES permits and health certifications validating they are captive-bred specimens.",
-      order: 0,
-    },
-    {
-      question: "Do you ship parrots internationally?",
-      answer: "We support shipping domestic clients and select international locations that permit import of captive-bred exotic birds. International shipments require specific CITES import/export permits and veterinarian clearances. Please contact us via WhatsApp to discuss shipping logistics to your country.",
-      order: 1,
-    },
-    {
-      question: "What is your health guarantee for new babies?",
-      answer: "All our baby parrots are sold with a comprehensive 7-day health guarantee. We recommend having your new bird examined by a certified avian veterinarian within this timeframe. Each bird is DNA sexed and tested negative for major avian diseases (PBFD, Polyomavirus, Psittacosis) before leaving our facility.",
-      order: 2,
-    }
+    { question: "Are your parrots legally captive-bred?", answer: "Yes. Each eligible bird is closed-banded or microchipped with captive-bred records and transfer documentation prepared before placement.", order: 1 },
+    { question: "Can you help with international transport?", answer: "We advise on legal export requirements, avian veterinary documents, and airline-safe live animal logistics where import rules allow it.", order: 2 },
+    { question: "Do you offer health guarantees?", answer: "Every bird is placed with a veterinary wellness summary, diet history, and a recommended post-arrival avian exam window.", order: 3 },
+    { question: "Which parrot is best for beginners?", answer: "Green-cheeked conures, Senegals, and Quakers can be excellent first choices for prepared owners who respect daily enrichment needs.", order: 4 },
+    { question: "Is online payment available?", answer: "Version 1 uses inquiry checkout only. Our team confirms availability, documents, transport, and next steps directly.", order: 5 },
   ];
 
   for (const faq of faqs) {
-    await prisma.fAQ.create({ data: faq });
+    const existing = await prisma.fAQ.findFirst({ where: { question: faq.question } });
+    if (existing) await prisma.fAQ.update({ where: { id: existing.id }, data: faq });
+    else await prisma.fAQ.create({ data: faq });
   }
-  console.log("Created FAQs.");
 
-  // 7. Create Gallery Items
+  const testimonials = [
+    { name: "Johnathan Miller", role: "Hyacinth Macaw Owner", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=80", content: "The documentation, health records, and WhatsApp follow-up made the whole process feel extremely professional.", rating: 5, order: 1 },
+    { name: "Dr. Elena Rostova", role: "Avian Veterinarian", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=240&q=80", content: "Their husbandry notes are unusually detailed. I appreciated the pathogen screening and diet transition plan.", rating: 5, order: 2 },
+    { name: "Marcus Chen", role: "Collector Species Client", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=80", content: "AraHaven handled my rare species inquiry with calm expertise and transparent expectations.", rating: 5, order: 3 },
+  ];
+
+  for (const testimonial of testimonials) {
+    const existing = await prisma.testimonial.findFirst({ where: { name: testimonial.name } });
+    if (existing) await prisma.testimonial.update({ where: { id: existing.id }, data: testimonial });
+    else await prisma.testimonial.create({ data: testimonial });
+  }
+
   const galleryItems = [
-    {
-      title: "Hand-Feeding Baby Macaws",
-      type: MediaType.IMAGE,
-      url: "/images/parrots/blue_gold.png",
-      caption: "Our nursery caretakers hand-feeding young macaw chicks with specialized formulas twice daily.",
-      category: "Nursery",
-      order: 0,
-    },
-    {
-      title: "Socializing Tame Cockatoos",
-      type: MediaType.IMAGE,
-      url: "/images/parrots/umbrella.png",
-      caption: "Umbrella cockatoo interactively playing on our indoor socialization stands with wooden blocks.",
-      category: "Socialization",
-      order: 1,
-    }
+    { title: "Macaw Nursery Socialization", type: MediaType.IMAGE, url: "/images/parrots/blue_gold.png", caption: "Daily handling sessions help young macaws become confident and calm around people.", category: "Nursery", order: 1 },
+    { title: "Cockatoo Enrichment", type: MediaType.IMAGE, url: "/images/parrots/umbrella.png", caption: "Structured enrichment supports emotional regulation in affectionate cockatoos.", category: "Care", order: 2 },
+    { title: "Collector Species Gallery", type: MediaType.IMAGE, url: "/images/parrots/golden_conure.png", caption: "Rare legally bred species are presented with clear care expectations.", category: "Collector", order: 3 },
   ];
 
   for (const item of galleryItems) {
-    await prisma.galleryItem.create({ data: item });
+    const existing = await prisma.galleryItem.findFirst({ where: { title: item.title } });
+    if (existing) await prisma.galleryItem.update({ where: { id: existing.id }, data: item });
+    else await prisma.galleryItem.create({ data: item });
   }
-  console.log("Created gallery items.");
 
-  // 8. Create Testimonials
-  await prisma.testimonial.createMany({
-    data: [
-      { name: "Johnathan Miller", role: "Hyacinth Macaw Owner", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80", content: "Buying from AraHaven was an absolute dream. Our Hyacinth Macaw baby arrived fully healthy, microchipped, and tamed. He stepped onto our hands on day one!", rating: 5, order: 0 },
-      { name: "Dr. Elena Rostova", role: "Avian Veterinarian", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80", content: "As a veterinarian, I appreciate their rigorous testing protocols. They provide DNA certificates and full pathogen diagnostic reports for PBFD and Psittacosis.", rating: 5, order: 1 }
-    ]
+  await prisma.newsletterSubscriber.upsert({
+    where: { email: "demo.subscriber@arahaven.com" },
+    update: { active: true },
+    create: { email: "demo.subscriber@arahaven.com", active: true },
   });
-  console.log("Created Testimonials.");
 
-  // 9. Create Site Settings
-  await prisma.siteSetting.createMany({
-    data: [
-      { key: "site_name", value: "AraHaven Aviary" },
-      { key: "maintenance_mode", value: "false" },
-      { key: "whatsapp_number", value: "50688888888" },
-      { key: "contact_email", value: "nursery@arahaven.com" },
-      { key: "site_url", value: "http://localhost:3000" }
-    ]
+  await prisma.emailCampaign.upsert({
+    where: { id: "seed-welcome-campaign" },
+    update: {
+      title: "Welcome to AraHaven",
+      subject: "Premium exotic bird updates from AraHaven",
+      body: "<p>Thank you for joining AraHaven. We share ethical breeding updates, care guides, and availability notes for serious parrot families.</p>",
+    },
+    create: {
+      id: "seed-welcome-campaign",
+      title: "Welcome to AraHaven",
+      subject: "Premium exotic bird updates from AraHaven",
+      body: "<p>Thank you for joining AraHaven. We share ethical breeding updates, care guides, and availability notes for serious parrot families.</p>",
+      status: "DRAFT",
+    },
   });
-  console.log("Created Site Settings.");
 
-  console.log("Database seeding completed successfully!");
+  const settings = [
+    ["site_name", process.env.NEXT_PUBLIC_SITE_NAME || "AraHaven Aviary"],
+    ["site_url", process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"],
+    ["whatsapp_number", process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ""],
+    ["contact_email", process.env.SMTP_FROM || "nursery@arahaven.com"],
+    ["maintenance_mode", "false"],
+  ] as const;
+
+  for (const [key, value] of settings) {
+    await prisma.siteSetting.upsert({
+      where: { key },
+      update: { value },
+      create: { key, value },
+    });
+  }
+
+  console.log("Seeded FAQs, testimonials, gallery, email template, subscriber, and site settings.");
+}
+
+async function main() {
+  console.log("Starting AraHaven database seed...");
+  await optionallyResetDatabase();
+  await seedAdmins();
+  await seedCategories();
+  await seedParrots();
+  await seedBlog();
+  await seedSupportingContent();
+  console.log("Database seed completed successfully.");
 }
 
 main()
-  .catch((e) => {
-    console.error("Error during database seeding:", e);
+  .catch((error: unknown) => {
+    console.error("Seed failed safely:", error);
     process.exit(1);
   })
   .finally(async () => {

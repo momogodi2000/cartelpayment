@@ -4,6 +4,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/common/WhatsAppButton";
 import PWARegister from "@/components/common/PWARegister";
+import ProductDetailModal from "@/components/common/ProductDetailModal";
 import { AppProvider } from "@/context/AppContext";
 import { CartProvider } from "@/context/CartContext";
 
@@ -57,6 +58,9 @@ export default function RootLayout({
 
             {/* Floating WhatsApp contact widget */}
             <WhatsAppButton />
+
+            {/* Global product detail modal overlay */}
+            <ProductDetailModal />
           </CartProvider>
         </AppProvider>
       </body>

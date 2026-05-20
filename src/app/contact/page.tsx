@@ -120,7 +120,7 @@ export default function ContactPage() {
                 <>
                   Lundi – Samedi : 08h00 – 18h00 (GMT-6)
                   <br />
-                  Dimanche : Appels d'urgence et réservations uniquement.
+                  Dimanche : Appels d&apos;urgence et réservations uniquement.
                 </>
               )}
             </p>

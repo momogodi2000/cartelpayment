@@ -12,6 +12,13 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+ARG DATABASE_URL="postgresql://postgres:postgres@localhost:5432/arahaven?schema=public"
+ARG JWT_SECRET="docker_build_secret_that_is_not_used_at_runtime"
+ARG NEXT_PUBLIC_WHATSAPP_NUMBER="50688888888"
+ENV DATABASE_URL=$DATABASE_URL
+ENV JWT_SECRET=$JWT_SECRET
+ENV NEXT_PUBLIC_WHATSAPP_NUMBER=$NEXT_PUBLIC_WHATSAPP_NUMBER
+
 # Generate Prisma Client
 RUN npx prisma generate
 

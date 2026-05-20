@@ -1,8 +1,25 @@
 import bcrypt from "bcryptjs";
 import * as jose from "jose";
 
-const JWT_SECRET = process.env.JWT_SECRET || "e4c9c1b48b788a1b24bf300624d62325c81f3b7bd4eb639b8bc14efcbfcb4f55";
-const secretKey = new TextEncoder().encode(JWT_SECRET);
+const TEST_SECRET = "test-only-secret-that-is-long-enough-for-jwt-signing";
+
+function getJwtSecret(): Uint8Array {
+  const secret = process.env.JWT_SECRET || process.env.AUTH_SECRET || process.env.SESSION_SECRET;
+
+  if (!secret) {
+    if (process.env.NODE_ENV === "test" || process.env.VITEST) {
+      return new TextEncoder().encode(TEST_SECRET);
+    }
+
+    throw new Error("Missing JWT_SECRET, AUTH_SECRET, or SESSION_SECRET environment variable.");
+  }
+
+  if (process.env.NODE_ENV === "production" && secret.length < 32) {
+    throw new Error("JWT secret must contain at least 32 characters in production.");
+  }
+
+  return new TextEncoder().encode(secret);
+}
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
@@ -23,12 +40,12 @@ export async function signToken(payload: SessionUser): Promise<string> {
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("24h")
-    .sign(secretKey);
+    .sign(getJwtSecret());
 }
 
 export async function verifyToken(token: string): Promise<SessionUser | null> {
   try {
-    const { payload } = await jose.jwtVerify(token, secretKey, {
+    const { payload } = await jose.jwtVerify(token, getJwtSecret(), {
       algorithms: ["HS256"],
     });
     return payload as unknown as SessionUser;

@@ -12,45 +12,41 @@ interface AppContextType {
   setTheme: (theme: Theme) => void;
   toggleLanguage: () => void;
   toggleTheme: () => void;
+  selectedParrot: any | null;
+  setSelectedParrot: (parrot: any | null) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("en");
-  const [theme, setThemeState] = useState<Theme>("light");
-  const [mounted, setMounted] = useState(false);
-
-  // Sync state with localStorage/cookies on mount
-  useEffect(() => {
-    // 1. Language preference
+  const [selectedParrot, setSelectedParrot] = useState<any | null>(null);
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window === "undefined") return "en";
     const savedLang = localStorage.getItem("arahaven_lang") as Language;
     if (savedLang === "en" || savedLang === "fr") {
-      setLanguageState(savedLang);
-    } else {
-      // Browser language detection
-      const browserLang = navigator.language.split("-")[0];
-      if (browserLang === "fr") {
-        setLanguageState("fr");
-        document.cookie = `locale=fr; path=/; max-age=31536000; SameSite=Lax`;
-      }
+      return savedLang;
     }
 
-    // 2. Theme preference
+    return navigator.language.split("-")[0] === "fr" ? "fr" : "en";
+  });
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "light";
     const savedTheme = localStorage.getItem("arahaven_theme") as Theme;
     if (savedTheme === "light" || savedTheme === "dark" || savedTheme === "exotic") {
-      setThemeState(savedTheme);
-      document.documentElement.setAttribute("data-theme", savedTheme);
-    } else {
-      // System dark mode preference
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      if (prefersDark) {
-        setThemeState("dark");
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
+      return savedTheme;
     }
-    setMounted(true);
-  }, []);
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+
+  // Sync browser-only state to persistent browser systems.
+  useEffect(() => {
+    localStorage.setItem("arahaven_lang", language);
+    localStorage.setItem("arahaven_theme", theme);
+    document.cookie = `locale=${language}; path=/; max-age=31536000; SameSite=Lax`;
+    document.cookie = `theme=${theme}; path=/; max-age=31536000; SameSite=Lax`;
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [language, theme]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
@@ -84,6 +80,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setTheme,
         toggleLanguage,
         toggleTheme,
+        selectedParrot,
+        setSelectedParrot,
       }}
     >
       {children}

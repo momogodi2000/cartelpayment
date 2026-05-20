@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, ArrowLeft, Plus, CheckCircle, Trash2, ToggleLeft, ToggleRight, Send, AlertTriangle } from "lucide-react";
+import { Mail, ArrowLeft, Plus, Trash2, ToggleLeft, ToggleRight, Send, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { toggleSubscriberStatus, deleteSubscriber } from "@/actions/newsletter";
 import { createCampaign, deleteCampaign, sendCampaign } from "@/actions/campaigns";
@@ -78,7 +78,7 @@ export default function NewsletterClient({ initialSubscribers, initialCampaigns 
 
     const res = await createCampaign({ title, subject, body });
     if (res.success && res.campaign) {
-      setCampaigns([res.campaign as any, ...campaigns]);
+      setCampaigns([res.campaign, ...campaigns]);
       setTitle("");
       setSubject("");
       setBody("");

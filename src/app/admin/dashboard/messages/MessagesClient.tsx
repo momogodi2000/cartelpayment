@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { MailOpen, Trash2, Calendar, Phone, ArrowLeft, MessageSquare, ShoppingBag, Globe, Check, Clock, Archive } from "lucide-react";
+import { MailOpen, Trash2, Calendar, Phone, ArrowLeft, MessageSquare, ShoppingBag, Globe } from "lucide-react";
 import Link from "next/link";
 import { markMessageAsRead, deleteMessage } from "@/actions/messages";
 import { updateInquiryStatus, deleteInquiry } from "@/actions/inquiries";
@@ -36,10 +36,12 @@ interface CartInquiry {
   country: string;
   message: string;
   preferredContact: string;
-  status: string;
+  status: InquiryStatus;
   createdAt: Date | string;
   items: CartInquiryItem[];
 }
+
+type InquiryStatus = "PENDING" | "COMPLETED" | "ARCHIVED";
 
 interface MessagesClientProps {
   initialMessages: Message[];
@@ -79,7 +81,7 @@ export default function MessagesClient({ initialMessages, initialInquiries }: Me
   };
 
   // Cart Inquiry actions
-  const handleUpdateInquiryStatus = async (id: string, status: "PENDING" | "COMPLETED" | "ARCHIVED") => {
+  const handleUpdateInquiryStatus = async (id: string, status: InquiryStatus) => {
     setInquiries((prev) =>
       prev.map((inq) => (inq.id === id ? { ...inq, status } : inq))
     );
@@ -250,7 +252,7 @@ export default function MessagesClient({ initialMessages, initialInquiries }: Me
                     <div className="flex items-center gap-2 self-end md:self-start">
                       <select
                         value={inq.status}
-                        onChange={(e) => handleUpdateInquiryStatus(inq.id, e.target.value as any)}
+                        onChange={(e) => handleUpdateInquiryStatus(inq.id, e.target.value as InquiryStatus)}
                         className={`text-xs font-bold px-3 py-1.5 rounded-xl border focus:outline-none ${
                           inq.status === "PENDING"
                             ? "bg-amber-50 text-amber-700 border-amber-200"
@@ -298,7 +300,7 @@ export default function MessagesClient({ initialMessages, initialInquiries }: Me
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-black/[0.01] p-4 rounded-2xl border border-black/[0.03] mt-2">
                     <div className="text-xs text-text-premium/70 max-w-xl">
                       <span className="font-bold block mb-1">Message:</span>
-                      <p className="italic leading-relaxed">"{inq.message || "No special requests provided."}"</p>
+                      <p className="italic leading-relaxed">&quot;{inq.message || "No special requests provided."}&quot;</p>
                     </div>
                     <div className="shrink-0 text-right">
                       <span className="text-[10px] uppercase font-bold text-text-premium/40 block">Inquiry Value</span>

@@ -35,9 +35,9 @@ export async function createCampaign(formData: { title: string; subject: string;
     });
 
     return { success: true, campaign };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Create campaign error:", error);
-    return { success: false, error: error?.message || "Failed to create campaign" };
+    return { success: false, error: error instanceof Error ? error.message : "Failed to create campaign" };
   }
 }
 
@@ -117,10 +117,10 @@ export async function sendCampaign(campaignId: string) {
             </div>
           `,
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(`Failed to send campaign email to ${sub.email}:`, err);
         status = "FAILED";
-        errorMsg = err?.message || "SMTP error";
+        errorMsg = err instanceof Error ? err.message : "SMTP error";
       }
 
       // Record Recipient status
@@ -148,8 +148,8 @@ export async function sendCampaign(campaignId: string) {
     });
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Send campaign error:", error);
-    return { success: false, error: error?.message || "Failed to broadcast email campaign" };
+    return { success: false, error: error instanceof Error ? error.message : "Failed to broadcast email campaign" };
   }
 }

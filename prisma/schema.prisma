@@ -58,6 +58,20 @@ model Parrot {
   name             String
   slug             String            @unique
   species          String
+  originCountry    String            @default("")
+  category         String            @default("")
+  temperament      String            @default("")
+  lifespan         String            @default("")
+  diet             String            @default("")
+  weight           String            @default("")
+  talkingAbility   String            @default("")
+  intelligenceLevel String           @default("")
+  trainingDifficulty String          @default("")
+  socialBehavior   String            @default("")
+  careLevel        String            @default("")
+  seoDescription   String            @default("")
+  tags             String[]          @default([])
+  careInstructions String            @default("")
   description      String
   shortDescription String
   age              String
@@ -82,6 +96,7 @@ model Parrot {
   @@index([rarity])
   @@index([featured])
   @@index([createdAt])
+  @@index([category])
 }
 
 model ParrotImage {

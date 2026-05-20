@@ -1,7 +1,17 @@
 import { describe, it, expect } from "vitest";
 import { getWhatsAppLink } from "../lib/whatsapp";
 import { hashPassword, verifyPassword, signToken, verifyToken } from "../lib/auth";
-import { loginSchema, contactMessageSchema } from "../lib/schemas";
+import { loginSchema, contactMessageSchema, parrotSchema } from "../lib/schemas";
+import { checkoutSchema, generateWhatsAppText } from "../lib/checkout";
+
+function restoreEnv(name: string, value: string | undefined) {
+  const env = process.env as unknown as Record<string, string | undefined>;
+  if (value === undefined) {
+    delete env[name];
+  } else {
+    env[name] = value;
+  }
+}
 
 describe("WhatsApp Utilities", () => {
   it("should generate a clean WhatsApp wa.me link with encoded text", () => {
@@ -57,6 +67,36 @@ describe("Auth Utilities", () => {
   it("should return null for invalid or tampered JWT tokens", async () => {
     const payload = await verifyToken("invalid-token-string");
     expect(payload).toBeNull();
+  });
+
+  it("should use configured secrets when provided", async () => {
+    const originalSecret = process.env.JWT_SECRET;
+    process.env.JWT_SECRET = "configured-test-secret-that-is-long-enough";
+
+    const token = await signToken({
+      id: "admin-2",
+      email: "configured@arahaven.com",
+      role: "SUPERADMIN",
+    });
+    const payload = await verifyToken(token);
+
+    expect(payload?.email).toBe("configured@arahaven.com");
+    restoreEnv("JWT_SECRET", originalSecret);
+  });
+
+  it("should reject short production secrets", async () => {
+    const originalSecret = process.env.JWT_SECRET;
+    const originalNodeEnv = process.env.NODE_ENV;
+    const env = process.env as unknown as Record<string, string | undefined>;
+    process.env.JWT_SECRET = "short";
+    env.NODE_ENV = "production";
+
+    await expect(
+      signToken({ id: "admin-3", email: "short@arahaven.com", role: "ADMIN" })
+    ).rejects.toThrow("at least 32 characters");
+
+    restoreEnv("JWT_SECRET", originalSecret);
+    restoreEnv("NODE_ENV", originalNodeEnv);
   });
 });
 
@@ -125,5 +165,106 @@ describe("Zod Validation Schemas", () => {
       });
       expect(resultShort.success).toBe(false);
     });
+  });
+
+  describe("parrotSchema", () => {
+    it("should accept enriched premium parrot data", () => {
+      const result = parrotSchema.safeParse({
+        name: "Hyacinth Macaw",
+        slug: "hyacinth-macaw-test",
+        species: "Anodorhynchus hyacinthinus",
+        originCountry: "Brazil",
+        category: "macaws",
+        temperament: "Gentle and intelligent",
+        lifespan: "50-60 years",
+        diet: "Palm nuts, pellets, vegetables, and tropical fruit",
+        weight: "1.2-1.7 kg",
+        talkingAbility: "Moderate",
+        intelligenceLevel: "Exceptional",
+        trainingDifficulty: "Intermediate",
+        socialBehavior: "Deeply bonded with steady handlers",
+        careLevel: "Expert",
+        seoDescription: "Premium captive-bred Hyacinth Macaw profile.",
+        tags: ["macaws", "rare"],
+        careInstructions: "Provide daily enrichment and avian veterinary care.",
+        description: "A premium, hand-raised Hyacinth Macaw profile with complete care data.",
+        shortDescription: "Premium hand-raised Hyacinth Macaw.",
+        age: "8 months",
+        size: "LARGE",
+        sex: "MALE",
+        origin: "Brazil (Captive Bred)",
+        rarity: "EXCEPTIONAL",
+        price: 9500,
+        status: "AVAILABLE",
+        behavior: "Gentle and confident.",
+        feeding: "High-fat macaw diet.",
+        domestication: "Step-up trained.",
+        healthNotes: "Vet checked.",
+        featured: true,
+        images: [{ url: "https://example.com/macaw.webp", alt: "Hyacinth Macaw", order: 0 }],
+      });
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe("checkoutSchema", () => {
+    it("should validate a complete inquiry checkout", () => {
+      const result = checkoutSchema.safeParse({
+        name: "Alice Buyer",
+        email: "alice@example.com",
+        phone: "+15551234567",
+        country: "United States",
+        preferredContact: "WHATSAPP",
+        message: "Please send care records.",
+        parrotIds: ["parrot-1"],
+      });
+
+      expect(result.success).toBe(true);
+    });
+  });
+});
+
+describe("Checkout WhatsApp Message", () => {
+  it("should generate a useful checkout summary for selected birds", () => {
+    const message = generateWhatsAppText(
+      {
+        name: "Alice Buyer",
+        email: "alice@example.com",
+        phone: "+15551234567",
+        country: "United States",
+        preferredContact: "WHATSAPP",
+        message: "Please send care records.",
+        parrotIds: ["parrot-1", "parrot-2"],
+      },
+      [
+        { name: "Hyacinth Macaw", species: "Anodorhynchus hyacinthinus" },
+        { name: "African Grey", species: "Psittacus erithacus" },
+      ]
+    );
+
+    expect(message).toContain("Alice Buyer");
+    expect(message).toContain("Hyacinth Macaw");
+    expect(message).toContain("African Grey");
+    expect(message).toContain("Please send care records.");
+  });
+
+  it("should generate an email-preferred checkout summary without optional message", () => {
+    const message = generateWhatsAppText(
+      {
+        name: "Marc Buyer",
+        email: "marc@example.com",
+        phone: "+33123456789",
+        country: "France",
+        preferredContact: "EMAIL",
+        message: "",
+        parrotIds: ["parrot-1"],
+      },
+      [{ name: "Sun Conure", species: "Aratinga solstitialis" }]
+    );
+
+    expect(message).toContain("Preferred Contact: EMAIL");
+    expect(message).toContain("Sun Conure");
+    expect(message).not.toContain("My message");
   });
 });

@@ -15,6 +15,7 @@ export async function GET() {
     return NextResponse.json(
       {
         status: "operational",
+        version: process.env.npm_package_version || "0.1.0",
         uptimeSeconds: Math.floor(uptime),
         database: {
           status: "connected",
@@ -39,12 +40,12 @@ export async function GET() {
         },
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Status check failed:", error);
     return NextResponse.json(
       {
         status: "degraded",
-        error: error?.message || "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         timestamp: new Date().toISOString(),
       },
       {

@@ -46,7 +46,7 @@ export default function SettingsClient({ initialSettings, initialLogs }: Setting
 
   // Audit Logs Filter
   const [search, setSearch] = useState("");
-  const [logs, setLogs] = useState<AuditLog[]>(initialLogs);
+  const [logs] = useState<AuditLog[]>(initialLogs);
 
   const handleSaveSetting = async (key: string) => {
     setSavingKey(key);

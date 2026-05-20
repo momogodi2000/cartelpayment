@@ -28,8 +28,8 @@ export async function updateSiteSetting(key: string, value: string) {
     revalidatePath("/contact");
 
     return { success: true, updated };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`Error updating setting ${key}:`, error);
-    return { success: false, error: error?.message || "Failed to update setting." };
+    return { success: false, error: error instanceof Error ? error.message : "Failed to update setting." };
   }
 }

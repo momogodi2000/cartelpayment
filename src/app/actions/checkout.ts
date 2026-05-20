@@ -1,18 +1,9 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { z } from "zod";
 import { sendMail } from "@/lib/mail";
-
-const checkoutSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(6, "Phone number must be at least 6 characters"),
-  country: z.string().min(2, "Country must be at least 2 characters"),
-  message: z.string().optional().default(""),
-  preferredContact: z.enum(["EMAIL", "WHATSAPP", "PHONE"]),
-  parrotIds: z.array(z.string()).min(1, "Please add at least one bird to your inquiry"),
-});
+import { z } from "zod";
+import { checkoutSchema, generateWhatsAppText } from "@/lib/checkout";
 
 export async function processCheckout(formData: z.infer<typeof checkoutSchema>) {
   try {
@@ -134,25 +125,11 @@ export async function processCheckout(formData: z.infer<typeof checkoutSchema>) 
       inquiryId: inquiry.id,
       whatsappText: generateWhatsAppText(validatedData, parrots),
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return { success: false, error: error.issues[0].message };
     }
     console.error("Checkout process error:", error);
     return { success: false, error: "An unexpected error occurred during checkout. Please try again." };
   }
-}
-
-function generateWhatsAppText(
-  data: z.infer<typeof checkoutSchema>,
-  parrots: any[]
-) {
-  const intro = data.preferredContact === "WHATSAPP"
-    ? `Hello AraHaven! My name is ${data.name} from ${data.country}. I just submitted a reservation inquiry on your website and would like to proceed via WhatsApp.`
-    : `Hello AraHaven! My name is ${data.name} from ${data.country}. I submitted a reservation inquiry (Preferred Contact: ${data.preferredContact}).`;
-
-  const birds = parrots.map((p) => `- ${p.name} (${p.species})`).join("\n");
-  const msgText = data.message ? `\nMy message:\n"${data.message}"` : "";
-
-  return `${intro}\n\nSelected Birds:\n${birds}${msgText}\n\nEmail: ${data.email}\nPhone: ${data.phone}`;
 }

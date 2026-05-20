@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { useApp } from "@/context/AppContext";
 import { useTranslation } from "@/lib/translations";
@@ -61,9 +62,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       } else {
         setError(res.error || "An unexpected error occurred.");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err?.message || "Failed to submit inquiry.");
+      setError(err instanceof Error ? err.message : "Failed to submit inquiry.");
     } finally {
       setLoading(false);
     }
@@ -137,9 +138,11 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           key={item.id}
                           className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-black/[0.04] shadow-sm relative group"
                         >
-                          <img
+                          <Image
                             src={item.imageUrl}
                             alt={item.name}
+                            width={64}
+                            height={64}
                             className="h-16 w-16 rounded-xl object-cover border border-black/[0.04]"
                           />
                           <div className="flex-grow min-w-0">

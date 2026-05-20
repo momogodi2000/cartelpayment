@@ -2,7 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { Phone, Mail, MapPin, Award, CheckCircle2, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { Phone, Mail, MapPin, Award, ChevronRight } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { useApp } from "@/context/AppContext";
 import { useTranslation } from "@/lib/translations";
@@ -31,6 +32,8 @@ export default function Footer() {
     "Documents Vétérinaires & Agréments CITES",
   ];
 
+  void breedingStandards;
+
   return (
     <footer className="bg-text-premium text-white/90 pt-16 pb-8 mt-auto border-t border-white/[0.05]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,7 +42,7 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="h-9 w-9 rounded-lg bg-white border border-white/10 flex items-center justify-center p-1 shadow-sm">
-                <img src="/logo.png" alt="AraHaven Logo" className="h-full w-full object-contain" />
+                <Image src="/logo.png" alt="AraHaven Logo" width={32} height={32} className="h-full w-full object-contain" />
               </div>
               <span className="font-extrabold text-lg tracking-tight text-white">
                 ARA<span className="text-accent">HAVEN</span>

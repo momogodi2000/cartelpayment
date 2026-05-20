@@ -46,8 +46,8 @@ export async function sendMail({ to, subject, html }: SendMailParams): Promise<{
 
     console.log(`[SMTP INFO] Mail dispatched successfully. Message ID: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`[SMTP ERROR] Failed to dispatch email to ${to}:`, error);
-    return { success: false, error: error?.message || "Unknown SMTP error" };
+    return { success: false, error: error instanceof Error ? error.message : "Unknown SMTP error" };
   }
 }

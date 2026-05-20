@@ -3,6 +3,12 @@ import prisma from "@/lib/db";
 import MessagesClient from "./MessagesClient";
 
 export const revalidate = 0; // Always pull latest messages
+const inquiryStatuses = ["PENDING", "COMPLETED", "ARCHIVED"] as const;
+type InquiryStatus = (typeof inquiryStatuses)[number];
+
+function normalizeInquiryStatus(status: string): InquiryStatus {
+  return inquiryStatuses.includes(status as InquiryStatus) ? (status as InquiryStatus) : "PENDING";
+}
 
 async function getData() {
   try {
@@ -23,6 +29,7 @@ async function getData() {
 
     const inquiries = rawInquiries.map((inq) => ({
       ...inq,
+      status: normalizeInquiryStatus(inq.status),
       items: inq.items.map((item) => ({
         ...item,
         parrot: {

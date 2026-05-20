@@ -77,10 +77,20 @@ body {
 
 /* Glassmorphism Styles */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .glass {
+  background: rgba(18, 24, 38, 0.4);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="exotic"] .glass {
+  background: rgba(253, 244, 245, 0.45);
+  border-color: rgba(219, 39, 119, 0.15);
 }
 
 .glass-dark {
@@ -90,17 +100,26 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Scrollbar Utilities */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 /* Custom Scrollbar for premium aesthetic */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: hsl(0, 0%, 96%);
+  background: hsl(var(--bg-premium));
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(145, 60%, 26%, 0.4);
+  background: hsl(var(--primary), 0.4);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(145, 60%, 26%, 0.7);
+  background: hsl(var(--primary), 0.7);
 }

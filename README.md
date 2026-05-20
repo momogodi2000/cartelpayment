@@ -1,119 +1,95 @@
-# AraHaven Exotic Aviary Platform
+# AraHaven Exotic Aviary
 
-AraHaven is a production-ready, highly secure, and aesthetically premium full-stack web application designed for a tropical exotic bird breeder. It features an immersive showcase catalog, a translation system (English and French), a reservation cart funnel leading to custom WhatsApp generation, a comprehensive Admin Dashboard CMS, automated email campaign broadcasts, rate-limited endpoints, and a secure audit trail logging system.
+Premium Next.js platform for a professional exotic parrot breeder. The app combines a public catalog, WhatsApp-first inquiry cart, admin CMS, newsletter campaigns, PWA support, PostgreSQL data storage, Docker, CI, and health monitoring.
 
----
+## Tech Stack
 
-## 1. Technological Stack
+- Next.js 16 App Router, React 19, TypeScript strict mode
+- Tailwind CSS 4 design tokens and Framer Motion
+- Prisma ORM with PostgreSQL or Neon
+- bcryptjs password hashing, jose JWT sessions, HttpOnly cookies
+- Nodemailer SMTP abstraction
+- Vitest coverage, Playwright script, GitHub Actions CI
+- Docker and docker-compose
 
-*   **Frontend**: Next.js 16 (App Router) + React 19 + Framer Motion (for micro-animations and smooth transitions).
-*   **Styling**: Tailwind CSS 4 with custom global theme rules.
-*   **Database & ORM**: PostgreSQL database (Prisma ORM client) with transaction safety.
-*   **Authentication**: Secure stateful cookies via JWT signed using the `jose` crypto framework.
-*   **Email Engine**: Nodemailer (SMTP transporter integration) with customizable HTML templates.
-*   **Testing**: Vitest for high-speed unit testing.
-*   **Deployment**: Docker multi-stage containerization with Docker Compose support.
+## Install
 
----
-
-## 2. Database Models & Schema Design
-
-The relational database architecture is defined in `prisma/schema.prisma` and includes the following core models:
-
-1.  **Parrot**: Holds the directory of exotic birds with specifications (species, age, price, status, rarity, size, behavior notes) and links to multiple custom assets.
-2.  **BlogPost**: SEO-optimized articles with category tags, excerpt content, and draft publishing toggles.
-3.  **GalleryItem**: Media gallery containing photos/videos of the breeding farm and hand-raising nursery.
-4.  **CartInquiry**: Tracks reservation inquires. Link cards hold the details of the customer (name, phone, country, email) and preferred contact channel.
-5.  **CartInquiryItem**: Join model linking `CartInquiry` to one or multiple `Parrot` entities.
-6.  **NewsletterSubscriber**: Database of emails registered to receive update broadcasts.
-7.  **EmailCampaign**: Tracks marketing newsletters, draft statuses, and recipient delivery lists.
-8.  **SiteSetting**: Key-value pairs for global configurations (e.g. maintenance mode, official whatsapp destination, support email).
-9.  **AdminAuditLog**: Secure ledger documenting administrative actions.
-
----
-
-## 3. Local Environment Configurations
-
-Create a `.env` file at the root folder with the following variables:
-
-```env
-# Neon Serverless PostgreSQL connection URL
-DATABASE_URL="postgresql://user:pass@host:5432/db?sslmode=require"
-
-# JWT Secret key for admin authentication
-JWT_SECRET="generate-a-secure-random-secret-key-for-jwt-signing"
-
-# Official WhatsApp number (without spaces, symbols or leading zeros)
-NEXT_PUBLIC_WHATSAPP_NUMBER="50688888888"
-
-# SMTP Mail configurations
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT=587
-SMTP_USER="nursery@arahaven.com"
-SMTP_PASS="your-smtp-app-password"
-SMTP_FROM="nursery@arahaven.com"
-```
-
----
-
-## 4. Development Operations
-
-### Step 1: Install Dependencies
 ```bash
 npm install
-```
-
-### Step 2: Database Sync & Client Generation
-Synchronize the PostgreSQL schema structure and generate the local Prisma client binding:
-```bash
-npx prisma db push
-npx prisma generate
-```
-
-### Step 3: Populate Initial Seed Data
-Run the realistic database seeder to load default admin accounts, site configurations, blog posts, and 12+ real-world parrot species listings:
-```bash
-npx prisma db seed
-```
-
-### Step 4: Run Development Server
-```bash
+cp .env.example .env
+npm run db:generate
+npm run db:push
+npm run db:seed
 npm run dev
 ```
-Open `http://localhost:3000` to review the application.
 
----
+Open `http://localhost:3000`.
 
-## 5. Testing Framework
+## Environment
 
-The platform is integrated with Vitest to cover schemas validation, token generation, security hashing, and URL builder helpers.
+Required production variables:
 
-*   **Run all unit tests**:
-    ```bash
-    npm run test
-    ```
+- `DATABASE_URL`
+- `JWT_SECRET` or `AUTH_SECRET` or `SESSION_SECRET`
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_SITE_NAME`
+- `NEXT_PUBLIC_WHATSAPP_NUMBER`
+- `DEFAULT_ADMIN_1_EMAIL`, `DEFAULT_ADMIN_1_PASSWORD`, `DEFAULT_ADMIN_1_NAME`
+- `DEFAULT_ADMIN_2_EMAIL`, `DEFAULT_ADMIN_2_PASSWORD`, `DEFAULT_ADMIN_2_NAME`
 
----
+Optional SMTP variables:
 
-## 6. Observability & Telemetry API
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_SECURE`
 
-We provide two live observability routes to monitor service operations:
-*   `/api/health`: Light check checking Database connection. Returns `200` if operational or `503` if disconnected.
-*   `/api/status`: Returns system metrics like Node process uptime, heap memory consumption, system OS type, and DB request latency in milliseconds.
+Never commit real secrets. The seeder now fails safely if default admin credentials are missing.
 
----
+## Database
 
-## 7. DevOps & Container Deployment
+Schema lives in [prisma/schema.prisma](/d:/IT%20Project/elvis/prisma/schema.prisma). It includes admins, parrots, parrot images, categories, blog posts, gallery, FAQs, testimonials, contact messages, cart inquiries, newsletter subscribers, email campaigns, audit logs, and site settings.
 
-### Local Orchestration with Docker Compose
-You can build the entire stack (including a local PostgreSQL database instance and Next.js web application container) with a single command:
+Useful commands:
+
 ```bash
+npm run db:generate
+npm run db:push
+npm run db:seed
+```
+
+Set `SEED_RESET=true` only when you intentionally want to clear seed-owned content before re-seeding. Admin users are created only when absent; existing admin passwords are not overwritten.
+
+## Quality
+
+```bash
+npm run lint
+npm run typecheck
+npm run test
+npm run test:coverage
+npm run build
+```
+
+Coverage thresholds are configured in [vitest.config.ts](/d:/IT%20Project/elvis/vitest.config.ts): branches 85%, functions 90%, lines 90%, statements 90% for tested modules.
+
+## Docker
+
+```bash
+npm run docker:build
+npm run docker:run
 docker-compose up --build
 ```
-The application will map to `http://localhost:3000`.
 
-### Production Building (Dockerfile)
-The multi-stage `Dockerfile` handles:
-1.  **Dependency Caching**: Minimizes build times.
-2.  **Asset Compilation**: Compiles client-side bundles and runs Next.js production minification.
-3.  **Standalone Execution**: Serves built assets under an unprivileged `nextjs` security profile.
+The Dockerfile performs a Prisma client generation and Next.js production build, then runs the app with `next start`.
+
+## CI/CD
+
+GitHub Actions in [.github/workflows/ci.yml](/d:/IT%20Project/elvis/.github/workflows/ci.yml) runs install, Prisma generation, lint, typecheck, tests, coverage, build, security audit, and Docker build. The workflow now fails on real quality failures instead of continuing past them.
+
+## Monitoring
+
+- `GET /api/health`: application and database health
+- `GET /api/status`: uptime, memory, environment, database latency, timestamp
+
+Future-ready hooks are documented for Sentry, Logtail, Grafana, Prometheus, and Vercel Analytics.
+
+## Admin
+
+Admin login is available at `/admin/login`. Protected dashboard routes live under `/admin/dashboard`, including parrots, blog, gallery, newsletter, inquiries/messages, and settings.

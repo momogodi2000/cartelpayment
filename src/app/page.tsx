@@ -1,19 +1,39 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ShieldCheck, Heart, Award, CheckCircle2, MessageSquare } from "lucide-react";
+import {
+  ArrowRight,
+  ShieldCheck,
+  Heart,
+  Award,
+  CheckCircle2,
+  MessageSquare,
+  Activity,
+  Dna,
+  FileText,
+  HelpCircle
+} from "lucide-react";
 import prisma from "@/lib/db";
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { getServerTranslation } from "@/lib/serverTranslations";
-import { translateParrot, translateFAQ } from "@/lib/translations";
+import { translateParrot, translateFAQ, translateTestimonial } from "@/lib/translations";
 
-// Fetch featured parrots and FAQs in a server component
+import HeroBackground from "@/components/features/HeroBackground";
+import ProductCarousel from "@/components/features/ProductCarousel";
+import HomeTimeline from "@/components/features/HomeTimeline";
+import HomeNurseryFeed from "@/components/features/HomeNurseryFeed";
+import HomeQuizGuide from "@/components/features/HomeQuizGuide";
+import HomeTestimonials from "@/components/features/HomeTestimonials";
+
+// Disable server cache so updates in admin panel reflect immediately
+export const revalidate = 0;
+
 async function getHomeData() {
   try {
     const featuredParrots = await prisma.parrot.findMany({
       where: { featured: true },
-      take: 3,
       include: { images: { orderBy: { order: "asc" } } },
+      orderBy: { createdAt: "desc" }
     });
 
     const faqs = await prisma.fAQ.findMany({
@@ -21,20 +41,32 @@ async function getHomeData() {
       take: 4,
     });
 
-    return { featuredParrots, faqs };
+    const testimonials = await prisma.testimonial.findMany({
+      orderBy: { rating: "desc" },
+      take: 5,
+    });
+
+    return { featuredParrots, faqs, testimonials };
   } catch (error) {
     console.error("Error fetching homepage data:", error);
-    return { featuredParrots: [], faqs: [] };
+    return { featuredParrots: [], faqs: [], testimonials: [] };
   }
 }
 
 export default async function HomePage() {
   const { t, locale } = await getServerTranslation();
-  const { featuredParrots, faqs } = await getHomeData();
+  const { featuredParrots, faqs, testimonials } = await getHomeData();
   
-  // Translate dynamic data
-  const translatedParrots = featuredParrots.map((parrot) => translateParrot(parrot, locale));
+  // Translate data for rendering
+  const translatedParrots = featuredParrots.map((parrot) => {
+    const p = translateParrot(parrot, locale);
+    return {
+      ...p,
+      price: Number(p.price)
+    };
+  });
   const translatedFaqs = faqs.map((faq) => translateFAQ(faq, locale));
+  const translatedTestimonials = testimonials.map((test) => translateTestimonial(test, locale));
 
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
   
@@ -45,8 +77,8 @@ export default async function HomePage() {
   const generalWhatsapp = getWhatsAppLink(phone, generalInquiryText);
 
   return (
-    <div className="relative overflow-hidden min-h-screen">
-      {/* Schema.org LocalBusiness JSON-LD */}
+    <div className="relative overflow-hidden min-h-screen space-y-24 pb-20">
+      {/* Schema.org LocalBusiness JSON-LD for SEO */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -68,272 +100,222 @@ export default async function HomePage() {
         }}
       />
 
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-bg-premium to-bg-premium py-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-secondary/10 via-transparent to-transparent pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Hero Content */}
-          <div className="space-y-8 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest border border-primary/20">
-              <Award className="h-4 w-4" /> {t("hero.badge")}
+      {/* Hero Section with Animated Slideshow Background */}
+      <section className="relative min-h-[95vh] flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8 border-b border-black/[0.04] dark:border-white/[0.04]">
+        {/* Background Slideshow Component */}
+        <HeroBackground />
+
+        {/* Content Overlay Container */}
+        <div className="max-w-7xl mx-auto w-full relative z-30 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Hero Content Left (Glass Card style for supreme readability on active background image) */}
+          <div className="lg:col-span-7 space-y-8 text-left p-6 sm:p-8 md:p-10 rounded-3xl bg-white/20 dark:bg-black/35 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/20 text-white font-extrabold text-[10px] sm:text-xs uppercase tracking-widest border border-white/30 shadow-sm">
+              <Award className="h-4 w-4 shrink-0" />
+              {t("hero.badge")}
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-text-premium leading-tight tracking-tight">
+            
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-sm">
               {locale === "en" ? (
                 <>
                   Ethically Raised, <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-amber-300">
                     Hand-Tamed Parrots
                   </span>
                 </>
               ) : (
                 <>
                   Perroquets Élevés avec Éthique, <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-amber-300">
                     Apprivoisés à la Main
                   </span>
                 </>
               )}
             </h1>
-            <p className="text-base sm:text-lg text-text-premium/70 max-w-xl leading-relaxed">
+            
+            <p className="text-sm sm:text-base md:text-lg text-white/90 leading-relaxed font-semibold drop-shadow-sm">
               {t("hero.subtitle")}
             </p>
-            <div className="flex flex-wrap items-center gap-4">
+            
+            <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
                 href="/catalog"
-                className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/35 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-extrabold px-8 py-4 rounded-2xl shadow-lg hover:shadow-emerald-600/35 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
-                {t("hero.cta")} <ArrowRight className="h-4 w-4" />
+                {t("hero.cta")}
+                <ArrowRight className="h-4.5 w-4.5 shrink-0" />
               </Link>
               <Link
                 href={generalWhatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-white hover:bg-black/[0.02] text-text-premium font-bold px-8 py-4 rounded-full border border-black/[0.08] shadow-sm transition-all duration-300 hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-extrabold px-8 py-4 rounded-2xl border border-white/30 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
-                <MessageSquare className="h-4 w-4 text-emerald-600" /> {t("hero.secondary")}
+                <MessageSquare className="h-4.5 w-4.5 text-emerald-300 shrink-0" />
+                {t("hero.secondary")}
               </Link>
             </div>
           </div>
 
-          {/* Hero Image / Badge */}
-          <div className="relative flex justify-center">
-            <div className="relative w-full max-w-md aspect-square rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/50 bg-white/30 backdrop-blur-sm group">
-              <Image
-                src="https://images.unsplash.com/photo-1552728089-57bdde30ebd3?auto=format&fit=crop&w=800&q=80"
-                alt="Beautiful Scarlet Macaw"
-                fill
-                priority
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6 glass p-4 rounded-2xl border border-white/20">
-                <p className="text-white text-sm font-bold">
-                  {locale === "en" ? "Scarlet Macaw Baby" : "Bébé Ara Rouge"}
-                </p>
-                <p className="text-white/80 text-xs">
-                  {locale === "en" ? "Captive Bred - Hand-Raised with Love" : "Né en Captivité - Élevé avec Amour"}
-                </p>
-              </div>
-            </div>
-          </div>
+          {/* Right Column: Empty to allow the background image slide to remain visible on desktop, or we can use it to emphasize trust */}
+          <div className="lg:col-span-5 hidden lg:block" />
         </div>
       </section>
 
-      {/* Breeder Credentials & Stats */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-12">
-          <div className="max-w-2xl mx-auto space-y-4">
-            <h2 className="text-3xl font-extrabold text-text-premium tracking-tight">
-              {t("credentials.title")}
-            </h2>
-            <p className="text-text-premium/70 text-sm sm:text-base">
-              {t("credentials.subtitle")}
+      {/* Breeder Credentials & Aviary Standards */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-12">
+        <div className="max-w-2xl mx-auto space-y-3">
+          <h2 className="text-3xl sm:text-4xl font-black text-text-premium tracking-tight">
+            {t("credentials.title")}
+          </h2>
+          <p className="text-text-premium/70 text-xs sm:text-sm leading-relaxed">
+            {t("credentials.subtitle")}
+          </p>
+          <div className="h-1 w-16 bg-primary mx-auto rounded-full mt-3" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-8 rounded-3xl border border-black/[0.05] dark:border-white/[0.05] bg-white dark:bg-black/10 hover:shadow-md transition-all duration-300 space-y-4 text-left">
+            <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+            <h3 className="text-lg font-extrabold text-text-premium tracking-tight">{t("cred.1.title")}</h3>
+            <p className="text-xs sm:text-sm text-text-premium/70 leading-relaxed">
+              {t("cred.1.desc")}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-3xl border border-black/[0.05] bg-bg-premium/40 hover:bg-bg-premium transition-colors space-y-4 text-left">
-              <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <ShieldCheck className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-text-premium">{t("cred.1.title")}</h3>
-              <p className="text-sm text-text-premium/70 leading-relaxed">
-                {t("cred.1.desc")}
-              </p>
+          <div className="p-8 rounded-3xl border border-black/[0.05] dark:border-white/[0.05] bg-white dark:bg-black/10 hover:shadow-md transition-all duration-300 space-y-4 text-left">
+            <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+              <Heart className="h-6 w-6" />
             </div>
+            <h3 className="text-lg font-extrabold text-text-premium tracking-tight">{t("cred.2.title")}</h3>
+            <p className="text-xs sm:text-sm text-text-premium/70 leading-relaxed">
+              {t("cred.2.desc")}
+            </p>
+          </div>
 
-            <div className="p-8 rounded-3xl border border-black/[0.05] bg-bg-premium/40 hover:bg-bg-premium transition-colors space-y-4 text-left">
-              <div className="h-12 w-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary">
-                <Heart className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-text-premium">{t("cred.2.title")}</h3>
-              <p className="text-sm text-text-premium/70 leading-relaxed">
-                {t("cred.2.desc")}
-              </p>
+          <div className="p-8 rounded-3xl border border-black/[0.05] dark:border-white/[0.05] bg-white dark:bg-black/10 hover:shadow-md transition-all duration-300 space-y-4 text-left">
+            <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+              <Award className="h-6 w-6" />
             </div>
-
-            <div className="p-8 rounded-3xl border border-black/[0.05] bg-bg-premium/40 hover:bg-bg-premium transition-colors space-y-4 text-left">
-              <div className="h-12 w-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
-                <Award className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-text-premium">{t("cred.3.title")}</h3>
-              <p className="text-sm text-text-premium/70 leading-relaxed">
-                {t("cred.3.desc")}
-              </p>
-            </div>
+            <h3 className="text-lg font-extrabold text-text-premium tracking-tight">{t("cred.3.title")}</h3>
+            <p className="text-xs sm:text-sm text-text-premium/70 leading-relaxed">
+              {t("cred.3.desc")}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Featured Parrots Showcase */}
+      {/* Featured Parrots Showcase Carousel */}
       {translatedParrots.length > 0 && (
-        <section className="py-20 bg-bg-premium">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-extrabold text-text-premium tracking-tight">
-                  {t("featured.title")}
-                </h2>
-                <p className="text-text-premium/70 text-sm">
-                  {t("featured.subtitle")}
-                </p>
-              </div>
-              <Link
-                href="/catalog"
-                className="text-primary hover:text-primary-hover font-bold text-sm flex items-center gap-1 shrink-0"
-              >
-                {t("featured.viewAll")} <ArrowRight className="h-4 w-4" />
-              </Link>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-black/[0.04] dark:border-white/[0.04] pb-4">
+            <div className="space-y-2 text-left">
+              <h2 className="text-3xl sm:text-4xl font-black text-text-premium tracking-tight">
+                {t("featured.title")}
+              </h2>
+              <p className="text-text-premium/70 text-xs sm:text-sm">
+                {t("featured.subtitle")}
+              </p>
             </div>
+            <Link
+              href="/catalog"
+              className="text-primary hover:text-primary-hover font-extrabold text-xs sm:text-sm flex items-center gap-1 shrink-0"
+            >
+              {t("featured.viewAll")}
+              <ArrowRight className="h-4 w-4 shrink-0" />
+            </Link>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {translatedParrots.map((parrot) => {
-                const parrotUrl = `/catalog/${parrot.slug}`;
-                const birdImage = parrot.images[0]?.url || "https://images.unsplash.com/photo-1552728089-57bdde30ebd3?auto=format&fit=crop&w=800&q=80";
-                
-                const inquiryText = locale === "en"
-                  ? `Hello! I am interested in the parrot ${parrot.name} (Species: ${parrot.species}) shown on your website. Could you please give me more information about its availability and shipping?`
-                  : `Bonjour ! Je suis intéressé(e) par le perroquet ${parrot.name} (Espèce : ${parrot.species}) présenté sur votre site. Pourriez-vous me donner plus d'informations sur sa disponibilité et son transport ?`;
-                
-                const link = getWhatsAppLink(phone, inquiryText);
-
-                return (
-                  <div
-                    key={parrot.id}
-                    className="flex flex-col rounded-3xl border border-black/[0.06] bg-white overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group"
-                  >
-                    {/* Image */}
-                    <div className="relative aspect-[4/3] overflow-hidden bg-bg-premium">
-                      <Image
-                        src={birdImage}
-                        alt={parrot.images[0]?.alt || parrot.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                      />
-                      <div className="absolute top-4 left-4 flex gap-2">
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/95 text-primary shadow-sm">
-                          {parrot.rarityLabel}
-                        </span>
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm ${
-                            parrot.status === "AVAILABLE"
-                              ? "bg-emerald-600"
-                              : parrot.status === "RESERVED"
-                              ? "bg-amber-600"
-                              : "bg-red-600"
-                          }`}
-                        >
-                          {parrot.statusLabel}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Info */}
-                    <div className="p-6 space-y-4 flex-grow flex flex-col justify-between">
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-start">
-                          <h3 className="font-extrabold text-xl text-text-premium group-hover:text-primary transition-colors">
-                            {parrot.name}
-                          </h3>
-                          <span className="font-extrabold text-primary text-lg">
-                            ${Number(parrot.price).toLocaleString()}
-                          </span>
-                        </div>
-                        <p className="text-xs text-primary font-bold tracking-wide italic">
-                          {parrot.species}
-                        </p>
-                        <p className="text-sm text-text-premium/70 line-clamp-2">
-                          {parrot.shortDescription}
-                        </p>
-                      </div>
-
-                      <div className="pt-4 border-t border-black/[0.04] flex gap-3">
-                        <Link
-                          href={parrotUrl}
-                          className="flex-1 text-center py-2.5 rounded-xl border border-black/[0.08] text-xs font-bold text-text-premium hover:bg-black/[0.02] transition-colors"
-                        >
-                          {t("catalog.detailsButton")}
-                        </Link>
-                        <a
-                          href={link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-sm transition-colors"
-                        >
-                          <MessageSquare className="h-3.5 w-3.5" />
-                          {locale === "en" ? "Inquiry" : "S'enquérir"}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          {/* Interactive framer-motion Product Carousel Component */}
+          <div className="relative">
+            <ProductCarousel parrots={translatedParrots} />
           </div>
         </section>
       )}
 
-      {/* Frequently Asked Questions */}
-      {translatedFaqs.length > 0 && (
-        <section className="py-20 bg-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-            <div className="text-center space-y-4">
-              <h2 className="text-3xl font-extrabold text-text-premium tracking-tight">
-                {t("faq.title")}
-              </h2>
-              <p className="text-text-premium/70 text-sm">
-                {t("faq.subtitle")}
-              </p>
-            </div>
+      {/* Interactive CITES Compliance & Adoption Logistics Timeline */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 bg-black/[0.01] dark:bg-white/[0.005] py-16 rounded-3xl border border-black/[0.03] dark:border-white/[0.03]">
+        <div className="max-w-2xl mx-auto text-center space-y-3">
+          <h2 className="text-3xl sm:text-4xl font-black text-text-premium tracking-tight">
+            {t("home.timeline.title")}
+          </h2>
+          <p className="text-text-premium/70 text-xs sm:text-sm leading-relaxed">
+            {t("home.timeline.subtitle")}
+          </p>
+          <div className="h-1 w-16 bg-primary mx-auto rounded-full mt-3" />
+        </div>
 
-            <div className="space-y-6">
-              {translatedFaqs.map((faq) => (
-                <div
-                  key={faq.id}
-                  className="p-6 rounded-2xl border border-black/[0.05] bg-bg-premium/30 space-y-2 text-left"
-                >
-                  <h3 className="font-extrabold text-base text-text-premium flex items-start gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    {faq.question}
-                  </h3>
-                  <p className="text-sm text-text-premium/70 leading-relaxed pl-7">
-                    {faq.answer}
-                  </p>
-                </div>
-              ))}
-            </div>
-            
-            <div className="text-center pt-4">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 text-primary hover:text-primary-hover font-bold text-sm"
+        {/* Timeline Component */}
+        <HomeTimeline />
+      </section>
+
+      {/* Breeder Nursery Live Stats & Simulation Feed */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <HomeNurseryFeed />
+      </section>
+
+      {/* Client Placements & Veterinarians Testimonials Slider */}
+      {translatedTestimonials.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="max-w-2xl mx-auto text-center space-y-3">
+            <h2 className="text-3xl sm:text-4xl font-black text-text-premium tracking-tight">
+              {t("testimonials.title")}
+            </h2>
+            <p className="text-text-premium/70 text-xs sm:text-sm leading-relaxed">
+              {t("testimonials.subtitle")}
+            </p>
+            <div className="h-1 w-16 bg-primary mx-auto rounded-full mt-3" />
+          </div>
+
+          {/* Client Testimonials slider component */}
+          <HomeTestimonials testimonials={translatedTestimonials} />
+        </section>
+      )}
+
+      {/* Lifestyle Species Matching Quiz */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <HomeQuizGuide />
+      </section>
+
+      {/* Frequently Asked Questions Section */}
+      {translatedFaqs.length > 0 && (
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 pb-8">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl sm:text-4xl font-black text-text-premium tracking-tight">
+              {t("faq.title")}
+            </h2>
+            <p className="text-text-premium/70 text-xs sm:text-sm">
+              {t("faq.subtitle")}
+            </p>
+            <div className="h-1 w-16 bg-primary mx-auto rounded-full mt-3" />
+          </div>
+
+          <div className="space-y-4">
+            {translatedFaqs.map((faq) => (
+              <div
+                key={faq.id}
+                className="p-6 rounded-2xl border border-black/[0.04] dark:border-white/[0.04] bg-white dark:bg-black/10 space-y-2.5 text-left hover:shadow-sm transition-all duration-300"
               >
-                {locale === "en" ? "Still have questions? Contact us" : "Encore des questions ? Contactez-nous"}{" "}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
+                <h3 className="font-extrabold text-sm sm:text-base text-text-premium flex items-start gap-2.5">
+                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  {faq.question}
+                </h3>
+                <p className="text-xs sm:text-sm text-text-premium/70 leading-relaxed pl-7">
+                  {faq.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-center pt-4">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-1.5 text-primary hover:text-primary-hover font-extrabold text-xs sm:text-sm"
+            >
+              {locale === "en" ? "Still have questions? Contact us" : "Encore des questions ? Contactez-nous"}
+              <ArrowRight className="h-4 w-4 shrink-0" />
+            </Link>
           </div>
         </section>
       )}
