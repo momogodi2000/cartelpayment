@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useActionState, startTransition } from "react";
-import { Phone, Mail, MapPin, Send, MessageSquare, Award, Clock } from "lucide-react";
+import { Mail, MapPin, Send, MessageSquare, Award, Clock } from "lucide-react";
 import { submitContactMessage } from "@/actions/messages";
 import Honeypot from "@/components/common/Honeypot";
 import { getWhatsAppLink } from "@/lib/whatsapp";
+import { useApp } from "@/context/AppContext";
+import { useTranslation } from "@/lib/translations";
 
 interface FormState {
   success: boolean;
@@ -19,13 +21,17 @@ const initialState: FormState = {
 };
 
 export default function ContactPage() {
+  const { language } = useApp();
+  const { t } = useTranslation(language);
   const [state, formAction, isPending] = useActionState(submitContactMessage, initialState);
 
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
-  const generalWhatsapp = getWhatsAppLink(
-    phone,
-    "Hello! I visited your website and would like to ask some questions about your breeding methods."
-  );
+  
+  const inquiryText = language === "en"
+    ? "Hello! I visited your website and would like to ask some questions about your breeding methods."
+    : "Bonjour ! J'ai visité votre site web et j'aimerais poser des questions sur vos méthodes d'élevage.";
+    
+  const generalWhatsapp = getWhatsAppLink(phone, inquiryText);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,10 +46,10 @@ export default function ContactPage() {
       {/* Header */}
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <h1 className="text-4xl font-extrabold text-text-premium tracking-tight">
-          Contact AraHaven Aviary
+          {t("contact.title")}
         </h1>
         <p className="text-sm sm:text-base text-text-premium/70 leading-relaxed">
-          Have questions about species care, nursery reservations, or transport logistics? Write to our caretakers or chat with us instantly on WhatsApp.
+          {t("contact.subtitle")}
         </p>
         <div className="h-1 w-20 bg-primary mx-auto rounded-full mt-4" />
       </div>
@@ -52,9 +58,11 @@ export default function ContactPage() {
         {/* Left Side: Contact Information Cards */}
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.06] shadow-sm space-y-6">
-            <h2 className="text-xl font-extrabold text-text-premium">Direct Contacts</h2>
+            <h2 className="text-xl font-extrabold text-text-premium">{t("contact.infoTitle")}</h2>
             <p className="text-xs sm:text-sm text-text-premium/70 leading-relaxed">
-              We respond promptly to inquiries. For immediate assistance regarding available birds, WhatsApp is the fastest method.
+              {language === "en"
+                ? "We respond promptly to inquiries. For immediate assistance regarding available birds, WhatsApp is the fastest method."
+                : "Nous répondons rapidement aux demandes. Pour une assistance immédiate sur les oiseaux disponibles, WhatsApp est la méthode la plus rapide."}
             </p>
 
             <div className="space-y-4">
@@ -68,8 +76,8 @@ export default function ContactPage() {
                   <MessageSquare className="h-5 w-5 fill-white text-emerald-600" />
                 </div>
                 <div>
-                  <span className="font-extrabold text-sm text-emerald-800 block">WhatsApp Chat</span>
-                  <span className="text-xs text-emerald-600">Instant breeder response</span>
+                  <span className="font-extrabold text-sm text-emerald-800 block">{language === "en" ? "WhatsApp Chat" : "Discussion WhatsApp"}</span>
+                  <span className="text-xs text-emerald-600">{language === "en" ? "Instant breeder response" : "Réponse instantanée"}</span>
                 </div>
               </a>
 
@@ -78,8 +86,8 @@ export default function ContactPage() {
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="font-extrabold text-sm text-text-premium block">San José, Costa Rica</span>
-                  <span className="text-xs text-text-premium/60">Latin America Breeding Sanctuary</span>
+                  <span className="font-extrabold text-sm text-text-premium block">{t("contact.locationVal")}</span>
+                  <span className="text-xs text-text-premium/60">{t("contact.location")}</span>
                 </div>
               </div>
 
@@ -89,7 +97,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <span className="font-extrabold text-sm text-text-premium block">nursery@arahaven.com</span>
-                  <span className="text-xs text-text-premium/60">For files & documentation</span>
+                  <span className="text-xs text-text-premium/60">{language === "en" ? "For files & documentation" : "Pour documents & dossiers"}</span>
                 </div>
               </div>
             </div>
@@ -99,11 +107,22 @@ export default function ContactPage() {
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.06] shadow-sm space-y-4">
             <div className="flex items-center gap-3">
               <Clock className="h-5 w-5 text-primary" />
-              <span className="font-extrabold text-sm text-text-premium">Nursery Hours</span>
+              <span className="font-extrabold text-sm text-text-premium">{t("contact.hours")}</span>
             </div>
             <p className="text-xs text-text-premium/70 pl-8 leading-relaxed">
-              Monday – Saturday: 8:00 AM – 6:00 PM (GMT-6)<br />
-              Sunday: Emergency calls & reservations only.
+              {language === "en" ? (
+                <>
+                  Monday – Saturday: 8:00 AM – 6:00 PM (GMT-6)
+                  <br />
+                  Sunday: Emergency calls & reservations only.
+                </>
+              ) : (
+                <>
+                  Lundi – Samedi : 08h00 – 18h00 (GMT-6)
+                  <br />
+                  Dimanche : Appels d'urgence et réservations uniquement.
+                </>
+              )}
             </p>
             <div className="pt-2 border-t border-black/[0.04] flex items-center gap-3">
               <Award className="h-5 w-5 text-accent" />
@@ -118,9 +137,11 @@ export default function ContactPage() {
             onSubmit={handleSubmit}
             className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.06] shadow-sm space-y-6"
           >
-            <h2 className="text-xl font-extrabold text-text-premium">Send a Message</h2>
+            <h2 className="text-xl font-extrabold text-text-premium">{t("contact.formHeader")}</h2>
             <p className="text-xs sm:text-sm text-text-premium/70">
-              Submit your questions, and our veterinary and transport support team will contact you.
+              {language === "en"
+                ? "Submit your questions, and our veterinary and transport support team will contact you."
+                : "Soumettez vos questions et notre équipe vétérinaire et logistique vous contactera."}
             </p>
 
             {/* Anti-Spam Bot Honeypot */}
@@ -135,14 +156,14 @@ export default function ContactPage() {
                     : "bg-red-50 border-red-200 text-red-800"
                 }`}
               >
-                {state.message}
+                {state.success ? t("contact.success") : t("contact.error")}
               </div>
             )}
 
             {/* Name */}
             <div className="space-y-1">
               <label htmlFor="name" className="block text-xs font-bold uppercase text-text-premium/70 tracking-wider">
-                Full Name *
+                {t("contact.name")} *
               </label>
               <input
                 id="name"
@@ -161,7 +182,7 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-1">
                 <label htmlFor="email" className="block text-xs font-bold uppercase text-text-premium/70 tracking-wider">
-                  Email Address *
+                  {t("contact.email")} *
                 </label>
                 <input
                   id="email"
@@ -178,7 +199,7 @@ export default function ContactPage() {
 
               <div className="space-y-1">
                 <label htmlFor="phone" className="block text-xs font-bold uppercase text-text-premium/70 tracking-wider">
-                  Phone Number (with Country Code) *
+                  {t("contact.phone")} *
                 </label>
                 <input
                   id="phone"
@@ -200,13 +221,13 @@ export default function ContactPage() {
                 htmlFor="parrotReference"
                 className="block text-xs font-bold uppercase text-text-premium/70 tracking-wider"
               >
-                Parrot Reference (Optional)
+                {t("contact.parrotRef")}
               </label>
               <input
                 id="parrotReference"
                 name="parrotReference"
                 type="text"
-                placeholder="e.g. Scarlet Macaw Baby"
+                placeholder={language === "en" ? "e.g. Scarlet Macaw Baby" : "ex. Bébé Ara Rouge"}
                 className="w-full px-4 py-3 rounded-xl border border-black/[0.08] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm"
               />
               {state.errors?.parrotReference && (
@@ -217,14 +238,14 @@ export default function ContactPage() {
             {/* Message */}
             <div className="space-y-1">
               <label htmlFor="message" className="block text-xs font-bold uppercase text-text-premium/70 tracking-wider">
-                Your Message *
+                {language === "en" ? "Your Message" : "Votre Message"} *
               </label>
               <textarea
                 id="message"
                 name="message"
                 required
                 rows={4}
-                placeholder="Write your questions here..."
+                placeholder={t("contact.messagePlaceholder")}
                 className="w-full px-4 py-3 rounded-xl border border-black/[0.08] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm resize-none"
               />
               {state.errors?.message && (
@@ -239,7 +260,7 @@ export default function ContactPage() {
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white font-bold transition-all shadow-md shadow-primary/10 duration-200"
             >
               <Send className="h-4 w-4" />
-              {isPending ? "Submitting Message..." : "Submit Message"}
+              {isPending ? t("contact.submitting") : t("contact.submit")}
             </button>
           </form>
         </div>

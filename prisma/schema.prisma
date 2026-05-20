@@ -54,31 +54,34 @@ model User {
 }
 
 model Parrot {
-  id               String        @id @default(uuid())
+  id               String            @id @default(uuid())
   name             String
-  slug             String        @unique
+  slug             String            @unique
   species          String
   description      String
   shortDescription String
   age              String
-  size             Size          @default(MEDIUM)
-  sex              Sex           @default(UNKNOWN)
+  size             Size              @default(MEDIUM)
+  sex              Sex               @default(UNKNOWN)
   origin           String
-  rarity           Rarity        @default(COMMON)
-  price            Decimal       @db.Decimal(10, 2)
-  status           ParrotStatus  @default(AVAILABLE)
+  rarity           Rarity            @default(COMMON)
+  price            Decimal           @db.Decimal(10, 2)
+  status           ParrotStatus      @default(AVAILABLE)
   behavior         String
   feeding          String
   domestication    String
   healthNotes      String
-  featured         Boolean       @default(false)
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  featured         Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
   images           ParrotImage[]
+  cartInquiries    CartInquiryItem[]
 
   @@index([slug])
   @@index([status])
   @@index([rarity])
+  @@index([featured])
+  @@index([createdAt])
 }
 
 model ParrotImage {
@@ -118,6 +121,8 @@ model BlogPost {
 
   @@index([slug])
   @@index([published])
+  @@index([category])
+  @@index([createdAt])
 }
 
 model GalleryItem {
@@ -148,4 +153,99 @@ model ContactMessage {
   createdAt       DateTime @default(now())
 
   @@index([read])
+  @@index([createdAt])
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  avatar    String
+  content   String
+  rating    Int      @default(5)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model CartInquiry {
+  id                  String            @id @default(uuid())
+  name                String
+  email               String
+  phone               String
+  country             String
+  message             String
+  preferredContact    String            // "EMAIL" | "WHATSAPP" | "PHONE"
+  status              String            @default("PENDING") // "PENDING" | "COMPLETED" | "ARCHIVED"
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  items               CartInquiryItem[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model CartInquiryItem {
+  id            String      @id @default(uuid())
+  cartInquiryId String
+  parrotId      String
+  cartInquiry   CartInquiry @relation(fields: [cartInquiryId], references: [id], onDelete: Cascade)
+  parrot        Parrot      @relation(fields: [parrotId], references: [id], onDelete: Cascade)
+
+  @@index([cartInquiryId])
+  @@index([parrotId])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model EmailCampaign {
+  id         String                   @id @default(uuid())
+  title      String
+  subject    String
+  body       String                   // HTML content
+  status     String                   @default("DRAFT") // "DRAFT" | "SCHEDULED" | "SENT"
+  createdAt  DateTime                 @default(now())
+  sentAt     DateTime?
+  recipients EmailCampaignRecipient[]
+
+  @@index([status])
+}
+
+model EmailCampaignRecipient {
+  id              String        @id @default(uuid())
+  emailCampaignId String
+  email           String
+  status          String        @default("PENDING") // "PENDING" | "SENT" | "FAILED"
+  sentAt          DateTime?
+  errorMessage    String?
+  emailCampaign   EmailCampaign @relation(fields: [emailCampaignId], references: [id], onDelete: Cascade)
+
+  @@index([emailCampaignId])
+  @@index([email])
+}
+
+model AdminAuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  userEmail String
+  action    String
+  details   String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model SiteSetting {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+
+  @@index([key])
 }

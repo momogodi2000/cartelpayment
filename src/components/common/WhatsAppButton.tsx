@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { MessageCircle, X } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/whatsapp";
+import { useApp } from "@/context/AppContext";
 
 interface WhatsAppButtonProps {
   phone?: string;
@@ -10,11 +11,16 @@ interface WhatsAppButtonProps {
 }
 
 export default function WhatsAppButton({ phone, customText }: WhatsAppButtonProps) {
+  const { language } = useApp();
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
 
   const targetPhone = phone || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
-  const defaultText = customText || "Hello! I visited your website and would like to ask some questions about your breeding methods and available birds.";
+  
+  const defaultTextEn = "Hello! I visited your website and would like to ask some questions about your breeding methods and available birds.";
+  const defaultTextFr = "Bonjour ! J'ai visité votre site web et j'aimerais poser des questions sur vos méthodes d'élevage et les oiseaux disponibles.";
+  
+  const defaultText = customText || (language === "en" ? defaultTextEn : defaultTextFr);
   const whatsappUrl = getWhatsAppLink(targetPhone, defaultText);
 
   useEffect(() => {
@@ -52,9 +58,11 @@ export default function WhatsAppButton({ phone, customText }: WhatsAppButtonProp
           <MessageCircle className="relative h-5 w-5 fill-white text-emerald-600" />
         </span>
         <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-out whitespace-nowrap hidden sm:inline-block">
-          Chat With Nursery
+          {language === "en" ? "Chat With Nursery" : "Contacter la Nurserie"}
         </span>
-        <span className="sm:hidden">Chat</span>
+        <span className="sm:hidden">
+          {language === "en" ? "Chat" : "Contact"}
+        </span>
       </a>
 
       {/* Dismiss Button */}

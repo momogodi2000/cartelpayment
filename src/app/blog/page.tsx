@@ -1,8 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, BookOpen, ChevronRight } from "lucide-react";
+import { Clock, ChevronRight } from "lucide-react";
 import prisma from "@/lib/db";
+import { getServerTranslation } from "@/lib/serverTranslations";
+import { translateBlogPost } from "@/lib/translations";
 
 export const revalidate = 3600; // Cache blog listing for 1 hour
 
@@ -19,17 +21,19 @@ async function getBlogPosts() {
 }
 
 export default async function BlogPage() {
-  const posts = await getBlogPosts();
+  const { t, locale } = await getServerTranslation();
+  const rawPosts = await getBlogPosts();
+  const posts = rawPosts.map((p) => translateBlogPost(p, locale));
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-12">
       {/* Header */}
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <h1 className="text-4xl font-extrabold text-text-premium tracking-tight">
-          AraHaven Care & health Blog
+          {t("blog.title")}
         </h1>
         <p className="text-sm sm:text-base text-text-premium/70 leading-relaxed">
-          Expert recommendations, care guidelines, diet breakdowns, and hand-taming training tips directly from our aviary nursery specialists.
+          {t("blog.subtitle")}
         </p>
         <div className="h-1 w-20 bg-primary mx-auto rounded-full mt-4" />
       </div>
@@ -37,7 +41,9 @@ export default async function BlogPage() {
       {/* Grid */}
       {posts.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-3xl border border-black/[0.06] shadow-sm">
-          <p className="text-text-premium/50 text-sm font-semibold">No blog posts published yet.</p>
+          <p className="text-text-premium/50 text-sm font-semibold">
+            {locale === "en" ? "No blog posts published yet." : "Aucun article de blog publié pour le moment."}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -65,7 +71,13 @@ export default async function BlogPage() {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-xs text-text-premium/50 font-semibold">
                     <Clock className="h-3.5 w-3.5" />
-                    <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                    <span>
+                      {new Date(post.createdAt).toLocaleDateString(locale === "en" ? "en-US" : "fr-FR", {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </span>
                   </div>
                   <h3 className="font-extrabold text-lg sm:text-xl text-text-premium group-hover:text-primary transition-colors leading-snug line-clamp-2">
                     {post.title}
@@ -80,7 +92,7 @@ export default async function BlogPage() {
                     href={`/blog/${post.slug}`}
                     className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-hover transition-colors"
                   >
-                    Read Article <ChevronRight className="h-4 w-4" />
+                    {locale === "en" ? "Read Article" : "Lire l'article"} <ChevronRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>

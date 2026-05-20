@@ -1,13 +1,14 @@
 import React, { Suspense } from "react";
 import prisma from "@/lib/db";
 import CatalogClient from "./CatalogClient";
+import { getServerTranslation } from "@/lib/serverTranslations";
 
 // Disable build cache cache to ensure client always sees correct database statuses
 export const revalidate = 0;
 
 async function getCatalogData() {
   try {
-    const parrots = await prisma.parrot.findMany({
+    const list = await prisma.parrot.findMany({
       include: {
         images: {
           orderBy: { order: "asc" },
@@ -15,6 +16,11 @@ async function getCatalogData() {
       },
       orderBy: { createdAt: "desc" },
     });
+
+    const parrots = list.map((p) => ({
+      ...p,
+      price: Number(p.price),
+    }));
 
     const categories = await prisma.category.findMany({
       orderBy: { name: "asc" },
@@ -28,6 +34,7 @@ async function getCatalogData() {
 }
 
 export default async function CatalogPage() {
+  const { t, locale } = await getServerTranslation();
   const { parrots, categories } = await getCatalogData();
 
   return (
@@ -35,10 +42,10 @@ export default async function CatalogPage() {
       {/* Header */}
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <h1 className="text-4xl font-extrabold text-text-premium tracking-tight">
-          Exotic Parrot Catalog
+          {t("catalog.title")}
         </h1>
         <p className="text-sm sm:text-base text-text-premium/70 leading-relaxed">
-          Browse our certified available, reserved, and custom-bred hand-raised parrots. Connect instantly to request detailed shipping quotes and health registries.
+          {t("catalog.subtitle")}
         </p>
         <div className="h-1 w-20 bg-primary mx-auto rounded-full mt-4" />
       </div>
@@ -46,7 +53,7 @@ export default async function CatalogPage() {
       <Suspense
         fallback={
           <div className="text-center py-20 text-text-premium/50 font-bold animate-pulse">
-            Loading Exotic Bird Catalog...
+            {locale === "en" ? "Loading Exotic Bird Catalog..." : "Chargement du catalogue d'oiseaux..."}
           </div>
         }
       >

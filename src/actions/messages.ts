@@ -3,7 +3,7 @@
 import prisma from "@/lib/db";
 import { contactMessageSchema } from "@/lib/schemas";
 
-export async function submitContactMessage(prevState: any, formData: FormData) {
+export async function submitContactMessage(prevState: unknown, formData: FormData) {
   try {
     // 1. Extract form fields
     const rawData = {

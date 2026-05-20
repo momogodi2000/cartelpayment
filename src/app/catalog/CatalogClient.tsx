@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import FilterBar from "@/components/features/FilterBar";
 import ParrotCard from "@/components/features/ParrotCard";
-import { Filter, SlidersHorizontal, Trash2 } from "lucide-react";
+import { Filter, Trash2 } from "lucide-react";
+import { useApp } from "@/context/AppContext";
 
 interface Category {
   id: string;
@@ -23,7 +24,7 @@ interface Parrot {
   slug: string;
   species: string;
   shortDescription: string;
-  price: number | any;
+  price: number;
   status: string;
   rarity: string;
   origin: string;
@@ -55,6 +56,7 @@ const DEFAULT_FILTERS: FilterState = {
 };
 
 export default function CatalogClient({ initialParrots, categories }: CatalogClientProps) {
+  const { language } = useApp();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -70,10 +72,8 @@ export default function CatalogClient({ initialParrots, categories }: CatalogCli
     priceOrder: searchParams.get("priceOrder") || "",
   });
 
-  const [filteredParrots, setFilteredParrots] = useState<Parrot[]>(initialParrots);
-
-  // 2. Perform dynamic filtering & sorting on states change
-  useEffect(() => {
+  // 2. Perform dynamic filtering & sorting inline via useMemo
+  const filteredParrots = React.useMemo(() => {
     let result = [...initialParrots];
 
     // Search Filter (Name and Species)
@@ -87,11 +87,8 @@ export default function CatalogClient({ initialParrots, categories }: CatalogCli
 
     // Category / Species Group Filter
     if (filters.category) {
-      // Macaws, Amazons, Cockatoos, Conures (we match the slug name or category mapping)
-      // Since Category mapping is matched by the database, we can check species or naming
       const catObj = categories.find((c) => c.slug === filters.category);
       if (catObj) {
-        // Broadly match the category name inside species or bird name
         const matchName = catObj.name.toLowerCase();
         result = result.filter(
           (bird) =>
@@ -123,7 +120,7 @@ export default function CatalogClient({ initialParrots, categories }: CatalogCli
       result.sort((a, b) => Number(b.price) - Number(a.price));
     }
 
-    setFilteredParrots(result);
+    return result;
   }, [filters, initialParrots, categories]);
 
   // 3. Update URL search parameters to maintain sync
@@ -168,10 +165,20 @@ export default function CatalogClient({ initialParrots, categories }: CatalogCli
       <div className="lg:col-span-3 space-y-6">
         <div className="flex items-center justify-between bg-white px-6 py-4 rounded-2xl border border-black/[0.04] shadow-sm">
           <p className="text-xs sm:text-sm text-text-premium/70 font-semibold">
-            Showing <span className="text-primary font-extrabold">{filteredParrots.length}</span> premium birds
+            {language === "en" ? (
+              <>
+                Showing <span className="text-primary font-extrabold">{filteredParrots.length}</span> premium birds
+              </>
+            ) : (
+              <>
+                Affichage de <span className="text-primary font-extrabold">{filteredParrots.length}</span> oiseaux premium
+              </>
+            )}
           </p>
           {isPending && (
-            <span className="text-xs text-primary font-bold animate-pulse">Syncing URL...</span>
+            <span className="text-xs text-primary font-bold animate-pulse">
+              {language === "en" ? "Syncing URL..." : "Synchronisation URL..."}
+            </span>
           )}
         </div>
 
@@ -180,15 +187,19 @@ export default function CatalogClient({ initialParrots, categories }: CatalogCli
             <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto">
               <Filter className="h-6 w-6" />
             </div>
-            <h3 className="font-extrabold text-lg text-text-premium">No Parrots Match Your Search</h3>
+            <h3 className="font-extrabold text-lg text-text-premium">
+              {language === "en" ? "No Parrots Match Your Search" : "Aucun perroquet ne correspond"}
+            </h3>
             <p className="text-xs sm:text-sm text-text-premium/60 max-w-sm mx-auto leading-relaxed">
-              Try adjusting your search keywords, species grouping, or status options to find suitable available birds.
+              {language === "en"
+                ? "Try adjusting your search keywords, species grouping, or status options to find suitable available birds."
+                : "Essayez d'ajuster vos mots-clés, votre groupe d'espèces ou vos options de statut pour trouver des oiseaux correspondants."}
             </p>
             <button
               onClick={handleReset}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-sm transition-colors"
             >
-              <Trash2 className="h-4 w-4" /> Reset Filters
+              <Trash2 className="h-4 w-4" /> {language === "en" ? "Reset Filters" : "Réinitialiser les filtres"}
             </button>
           </div>
         ) : (

@@ -1,9 +1,11 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { MessageSquare, ArrowLeft, Heart, ShieldAlert, Award, ShieldCheck, Check } from "lucide-react";
+import { MessageSquare, ArrowLeft, ShieldAlert, Check } from "lucide-react";
 import prisma from "@/lib/db";
 import { getWhatsAppLink } from "@/lib/whatsapp";
+import { getServerTranslation, getServerLocale } from "@/lib/serverTranslations";
+import { translateParrot } from "@/lib/translations";
 import DetailGallery from "./DetailGallery";
 
 interface PageProps {
@@ -13,6 +15,7 @@ interface PageProps {
 // 1. Dynamic SEO Metadata Generation
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
+  const locale = await getServerLocale();
   
   try {
     const parrot = await prisma.parrot.findUnique({
@@ -22,9 +25,13 @@ export async function generateMetadata({ params }: PageProps) {
 
     if (!parrot) return {};
 
-    const pageTitle = `${parrot.name} (${parrot.species}) | AraHaven Aviary`;
-    const pageDesc = parrot.shortDescription;
-    const coverImage = parrot.images[0]?.url || "";
+    const translated = translateParrot(parrot, locale);
+    const pageTitle = locale === "en"
+      ? `${translated.name} (${translated.species}) | AraHaven Aviary`
+      : `${translated.name} (${translated.species}) | Élevage AraHaven`;
+    
+    const pageDesc = translated.shortDescription;
+    const coverImage = translated.images[0]?.url || "";
 
     return {
       title: pageTitle,
@@ -42,7 +49,7 @@ export async function generateMetadata({ params }: PageProps) {
         images: coverImage ? [coverImage] : [],
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Parrot Specifications",
     };
@@ -52,6 +59,7 @@ export async function generateMetadata({ params }: PageProps) {
 // 2. Main Page Render
 export default async function ParrotDetailPage({ params }: PageProps) {
   const { slug } = await params;
+  const { t, locale } = await getServerTranslation();
 
   const parrot = await prisma.parrot.findUnique({
     where: { slug },
@@ -62,24 +70,28 @@ export default async function ParrotDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  const translated = translateParrot(parrot, locale);
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
   
   // Custom pre-filled contact message templates
-  const inquiryText = `Hello! I am interested in the parrot ${parrot.name} (Species: ${parrot.species}) shown on your website. Could you please give me more information about its availability and shipping?`;
+  const inquiryText = locale === "en"
+    ? `Hello! I am interested in the parrot ${translated.name} (Species: ${translated.species}) shown on your website. Could you please give me more information about its availability and shipping?`
+    : `Bonjour ! Je suis intéressé(e) par le perroquet ${translated.name} (Espèce : ${translated.species}) présenté sur votre site. Pourriez-vous me donner plus d'informations sur sa disponibilité et son transport ?`;
+  
   const whatsappUrl = getWhatsAppLink(phone, inquiryText);
 
   // Schema.org Availability Code Mapping
   let schemaAvailability = "https://schema.org/InStock";
-  if (parrot.status === "RESERVED") schemaAvailability = "https://schema.org/PreOrder";
-  if (parrot.status === "SOLD") schemaAvailability = "https://schema.org/OutOfStock";
+  if (translated.status === "RESERVED") schemaAvailability = "https://schema.org/PreOrder";
+  if (translated.status === "SOLD") schemaAvailability = "https://schema.org/OutOfStock";
 
   const specRows = [
-    { label: "Species (Scientific)", value: parrot.species, highlight: true },
-    { label: "Sex (DNA Certified)", value: parrot.sex },
-    { label: "Age", value: parrot.age },
-    { label: "Rarity Status", value: parrot.rarity },
-    { label: "Bird Size", value: parrot.size },
-    { label: "Origin Sanctuary", value: parrot.origin },
+    { label: locale === "en" ? "Species (Scientific)" : "Espèce (Scientifique)", value: translated.species, highlight: true },
+    { label: locale === "en" ? "Sex (DNA Certified)" : "Sexe (Certifié ADN)", value: translated.sexLabel },
+    { label: locale === "en" ? "Age" : "Âge", value: translated.age },
+    { label: locale === "en" ? "Rarity Status" : "Statut de Rareté", value: translated.rarityLabel },
+    { label: locale === "en" ? "Bird Size" : "Taille de l'Oiseau", value: translated.sizeLabel },
+    { label: locale === "en" ? "Origin Sanctuary" : "Sanctuaire d'Origine", value: translated.origin },
   ];
 
   return (
@@ -91,9 +103,9 @@ export default async function ParrotDetailPage({ params }: PageProps) {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Product",
-            "name": parrot.name,
-            "image": parrot.images.map((img) => img.url),
-            "description": parrot.description,
+            "name": translated.name,
+            "image": translated.images.map((img: any) => img.url),
+            "description": translated.description,
             "category": "Birds",
             "brand": {
               "@type": "Brand",
@@ -101,10 +113,10 @@ export default async function ParrotDetailPage({ params }: PageProps) {
             },
             "offers": {
               "@type": "Offer",
-              "price": Number(parrot.price),
+              "price": Number(translated.price),
               "priceCurrency": "USD",
               "availability": schemaAvailability,
-              "url": `https://arahaven.com/catalog/${parrot.slug}`
+              "url": `https://arahaven.com/catalog/${translated.slug}`
             }
           })
         }}
@@ -116,7 +128,7 @@ export default async function ParrotDetailPage({ params }: PageProps) {
           href="/catalog"
           className="inline-flex items-center gap-2 text-xs font-bold text-text-premium/60 hover:text-primary transition-colors duration-200"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to Catalog
+          <ArrowLeft className="h-4 w-4" /> {locale === "en" ? "Back to Catalog" : "Retour au catalogue"}
         </Link>
       </div>
 
@@ -124,7 +136,7 @@ export default async function ParrotDetailPage({ params }: PageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Left Side: Images */}
         <div className="lg:col-span-5">
-          <DetailGallery images={parrot.images} parrotName={parrot.name} />
+          <DetailGallery images={translated.images} parrotName={translated.name} />
         </div>
 
         {/* Right Side: Details & CTAs */}
@@ -133,30 +145,34 @@ export default async function ParrotDetailPage({ params }: PageProps) {
             {/* Badges */}
             <div className="flex gap-2">
               <span className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm ${
-                parrot.status === "AVAILABLE" ? "bg-emerald-600" : parrot.status === "RESERVED" ? "bg-amber-600" : "bg-red-600"
+                translated.status === "AVAILABLE" ? "bg-emerald-600" : translated.status === "RESERVED" ? "bg-amber-600" : "bg-red-600"
               }`}>
-                {parrot.status}
+                {translated.statusLabel}
               </span>
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-white text-primary border border-black/[0.08] shadow-sm">
-                {parrot.rarity} Rarity
+                {translated.rarityLabel}
               </span>
             </div>
             
             <h1 className="text-3xl sm:text-4xl font-extrabold text-text-premium leading-tight tracking-tight">
-              {parrot.name}
+              {translated.name}
             </h1>
-            <p className="text-2xl font-extrabold text-primary">${Number(parrot.price).toLocaleString()}</p>
+            <p className="text-2xl font-extrabold text-primary">${Number(translated.price).toLocaleString()}</p>
           </div>
 
           <p className="text-sm sm:text-base text-text-premium/70 leading-relaxed">
-            {parrot.description}
+            {translated.description}
           </p>
 
           {/* Primary & Secondary Conversion CTA Cards */}
           <div className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm space-y-4">
-            <h3 className="font-extrabold text-sm text-text-premium">Adopt This Companion</h3>
+            <h3 className="font-extrabold text-sm text-text-premium">
+              {locale === "en" ? "Adopt This Companion" : "Adopter ce compagnon"}
+            </h3>
             <p className="text-xs text-text-premium/65 leading-relaxed">
-              We arrange secure international/domestic flights, veterinary testing clearances, and closed-ring CITES certifications. Direct inquiry via WhatsApp secures reservation discussions.
+              {locale === "en"
+                ? "We arrange secure international/domestic flights, veterinary testing clearances, and closed-ring CITES certifications. Direct inquiry via WhatsApp secures reservation discussions."
+                : "Nous organisons des vols sécurisés nationaux et internationaux, les examens vétérinaires et les permis CITES de bague fermée. Une demande directe sur WhatsApp permet de réserver."}
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
               <a
@@ -166,13 +182,13 @@ export default async function ParrotDetailPage({ params }: PageProps) {
                 className="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition-colors"
               >
                 <MessageSquare className="h-5 w-5 fill-white text-emerald-600" />
-                Inquire on WhatsApp
+                {locale === "en" ? "Inquire on WhatsApp" : "S'enquérir sur WhatsApp"}
               </a>
               <Link
                 href="/contact"
                 className="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-2 bg-white hover:bg-black/[0.01] text-text-premium font-bold px-8 py-3.5 rounded-xl border border-black/[0.08] shadow-sm transition-colors"
               >
-                Send Message Form
+                {locale === "en" ? "Send Message Form" : "Envoyer un message"}
               </Link>
             </div>
           </div>
@@ -180,7 +196,9 @@ export default async function ParrotDetailPage({ params }: PageProps) {
           {/* Spec Sheet Table */}
           <div className="border border-black/[0.05] rounded-3xl overflow-hidden shadow-sm bg-white">
             <div className="px-6 py-4 border-b border-black/[0.04]">
-              <h3 className="font-extrabold text-sm text-text-premium">Specifications</h3>
+              <h3 className="font-extrabold text-sm text-text-premium">
+                {locale === "en" ? "Specifications" : "Spécifications"}
+              </h3>
             </div>
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <tbody>
@@ -209,24 +227,30 @@ export default async function ParrotDetailPage({ params }: PageProps) {
           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <Check className="h-4 w-4" />
           </div>
-          <h3 className="font-extrabold text-sm text-text-premium">Behavior & Character</h3>
-          <p className="text-xs text-text-premium/70 leading-relaxed">{parrot.behavior}</p>
+          <h3 className="font-extrabold text-sm text-text-premium">
+            {locale === "en" ? "Behavior & Character" : "Comportement & Caractère"}
+          </h3>
+          <p className="text-xs text-text-premium/70 leading-relaxed">{translated.behavior}</p>
         </div>
 
         <div className="space-y-3 bg-white p-6 rounded-3xl border border-black/[0.06]">
           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <Check className="h-4 w-4" />
           </div>
-          <h3 className="font-extrabold text-sm text-text-premium">Nutrition & Feeding</h3>
-          <p className="text-xs text-text-premium/70 leading-relaxed">{parrot.feeding}</p>
+          <h3 className="font-extrabold text-sm text-text-premium">
+            {locale === "en" ? "Nutrition & Feeding" : "Nutrition & Alimentation"}
+          </h3>
+          <p className="text-xs text-text-premium/70 leading-relaxed">{translated.feeding}</p>
         </div>
 
         <div className="space-y-3 bg-white p-6 rounded-3xl border border-black/[0.06]">
           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <Check className="h-4 w-4" />
           </div>
-          <h3 className="font-extrabold text-sm text-text-premium">Taming & Nursery Details</h3>
-          <p className="text-xs text-text-premium/70 leading-relaxed">{parrot.domestication}</p>
+          <h3 className="font-extrabold text-sm text-text-premium">
+            {locale === "en" ? "Taming & Nursery Details" : "Apprivoisement & Nurserie"}
+          </h3>
+          <p className="text-xs text-text-premium/70 leading-relaxed">{translated.domestication}</p>
         </div>
       </section>
 
@@ -234,9 +258,11 @@ export default async function ParrotDetailPage({ params }: PageProps) {
       <div className="p-5 rounded-2xl bg-amber-50/50 border border-amber-100 flex gap-3 text-left">
         <ShieldAlert className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
         <div>
-          <span className="font-extrabold text-xs text-amber-800 block">Health & Legality Certification</span>
+          <span className="font-extrabold text-xs text-amber-800 block">
+            {locale === "en" ? "Health & Legality Certification" : "Certification de Santé & Légalité"}
+          </span>
           <span className="text-xs text-amber-700 leading-relaxed block">
-            {parrot.healthNotes}. AraHaven ensures complete legal clearance prior to export/transfer.
+            {translated.healthNotes}. {locale === "en" ? "AraHaven ensures complete legal clearance prior to export/transfer." : "AraHaven assure le dédouanement légal complet avant l'exportation ou le transfert."}
           </span>
         </div>
       </div>

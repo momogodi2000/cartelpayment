@@ -64,9 +64,10 @@ export async function createParrot(data: ParrotInput) {
     revalidatePath("/catalog");
     revalidatePath("/");
     return { success: true, parrot };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating parrot:", error);
-    return { success: false, error: error?.message || "Failed to create parrot." };
+    const message = error instanceof Error ? error.message : "Failed to create parrot.";
+    return { success: false, error: message };
   }
 }
 
@@ -111,9 +112,10 @@ export async function updateParrot(id: string, data: ParrotInput) {
     revalidatePath(`/catalog/${data.slug}`);
     revalidatePath("/");
     return { success: true, parrot };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating parrot:", error);
-    return { success: false, error: error?.message || "Failed to update parrot." };
+    const message = error instanceof Error ? error.message : "Failed to update parrot.";
+    return { success: false, error: message };
   }
 }
 
@@ -127,8 +129,9 @@ export async function deleteParrot(id: string) {
     revalidatePath("/catalog");
     revalidatePath("/");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting parrot:", error);
-    return { success: false, error: error?.message || "Failed to delete parrot." };
+    const message = error instanceof Error ? error.message : "Failed to delete parrot.";
+    return { success: false, error: message };
   }
 }

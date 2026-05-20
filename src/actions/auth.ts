@@ -5,7 +5,7 @@ import prisma from "@/lib/db";
 import { loginSchema } from "@/lib/schemas";
 import { verifyPassword, signToken } from "@/lib/auth";
 
-export async function loginAdmin(prevState: any, formData: FormData) {
+export async function loginAdmin(prevState: unknown, formData: FormData) {
   try {
     const rawEmail = formData.get("email")?.toString() || "";
     const rawPassword = formData.get("password")?.toString() || "";

@@ -6,10 +6,14 @@ export const revalidate = 0; // Always fetch fresh list
 
 async function getParrots() {
   try {
-    return await prisma.parrot.findMany({
+    const list = await prisma.parrot.findMany({
       include: { images: { orderBy: { order: "asc" } } },
       orderBy: { createdAt: "desc" },
     });
+    return list.map((p) => ({
+      ...p,
+      price: Number(p.price),
+    }));
   } catch (error) {
     console.error("Error fetching admin parrots:", error);
     return [];

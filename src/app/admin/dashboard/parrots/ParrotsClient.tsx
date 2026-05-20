@@ -20,12 +20,12 @@ interface Parrot {
   description: string;
   shortDescription: string;
   age: string;
-  size: "SMALL" | "MEDIUM" | "LARGE" | any;
-  sex: "MALE" | "FEMALE" | "UNKNOWN" | any;
+  size: "SMALL" | "MEDIUM" | "LARGE";
+  sex: "MALE" | "FEMALE" | "UNKNOWN";
   origin: string;
-  rarity: "COMMON" | "RARE" | "EXCEPTIONAL" | any;
-  price: number | any;
-  status: "AVAILABLE" | "RESERVED" | "SOLD" | any;
+  rarity: "COMMON" | "RARE" | "EXCEPTIONAL";
+  price: number;
+  status: "AVAILABLE" | "RESERVED" | "SOLD";
   behavior: string;
   feeding: string;
   domestication: string;
@@ -137,12 +137,12 @@ export default function ParrotsClient({ initialParrots }: ParrotsClientProps) {
       description: form.description,
       shortDescription: form.shortDescription,
       age: form.age,
-      size: form.size as any,
-      sex: form.sex as any,
+      size: form.size as "SMALL" | "MEDIUM" | "LARGE",
+      sex: form.sex as "MALE" | "FEMALE" | "UNKNOWN",
       origin: form.origin,
-      rarity: form.rarity as any,
+      rarity: form.rarity as "COMMON" | "RARE" | "EXCEPTIONAL",
       price: priceNum,
-      status: form.status as any,
+      status: form.status as "AVAILABLE" | "RESERVED" | "SOLD",
       behavior: form.behavior,
       feeding: form.feeding,
       domestication: form.domestication,
@@ -169,7 +169,7 @@ export default function ParrotsClient({ initialParrots }: ParrotsClientProps) {
       const res = await createParrot(payload);
       if (res.success && res.parrot) {
         // Simple client side reload helper
-        setParrots((prev) => [{ ...res.parrot, images: payload.images } as any, ...prev]);
+        setParrots((prev) => [{ ...res.parrot, images: payload.images } as unknown as Parrot, ...prev]);
         setIsModalOpen(false);
       } else {
         setErrors(res.error || "Failed to create.");
@@ -241,7 +241,7 @@ export default function ParrotsClient({ initialParrots }: ParrotsClientProps) {
                 <tr key={p.id} className="border-b border-black/[0.03] hover:bg-bg-premium/30 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      {p.featured && <Sparkles className="h-4 w-4 text-accent" title="Featured on home" />}
+                      {p.featured && <span title="Featured on home"><Sparkles className="h-4 w-4 text-accent" /></span>}
                       <div>
                         <span className="font-extrabold text-sm text-text-premium block">{p.name}</span>
                         <span className="text-[10px] text-primary font-bold tracking-wider italic uppercase block">

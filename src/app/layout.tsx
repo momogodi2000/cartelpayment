@@ -4,6 +4,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/common/WhatsAppButton";
 import PWARegister from "@/components/common/PWARegister";
+import { AppProvider } from "@/context/AppContext";
 
 export const metadata: Metadata = {
   title: {
@@ -39,20 +40,22 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full scroll-smooth antialiased">
       <body className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans">
-        {/* Client-side PWA service worker registration */}
-        <PWARegister />
+        <AppProvider>
+          {/* Client-side PWA service worker registration */}
+          <PWARegister />
 
-        {/* Global sticky header */}
-        <Header />
+          {/* Global sticky header */}
+          <Header />
 
-        {/* Dynamic page content */}
-        <main className="flex-grow">{children}</main>
+          {/* Dynamic page content */}
+          <main className="flex-grow">{children}</main>
 
-        {/* Footer containing credentials & links */}
-        <Footer />
+          {/* Footer containing credentials & links */}
+          <Footer />
 
-        {/* Floating WhatsApp contact widget */}
-        <WhatsAppButton />
+          {/* Floating WhatsApp contact widget */}
+          <WhatsAppButton />
+        </AppProvider>
       </body>
     </html>
   );

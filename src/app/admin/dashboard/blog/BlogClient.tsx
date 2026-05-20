@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, Edit2, Trash2, ArrowLeft, Search, Eye, FileText, ToggleLeft, ToggleRight } from "lucide-react";
+import { Plus, Edit2, Trash2, ArrowLeft, Search, Eye, ToggleLeft, ToggleRight } from "lucide-react";
 import Link from "next/link";
 import { createBlogPost, updateBlogPost, deleteBlogPost } from "@/actions/blog";
 
@@ -17,7 +17,7 @@ interface BlogPost {
   published: boolean;
   seoTitle: string;
   seoDescription: string;
-  createdAt: Date | any;
+  createdAt: Date | string;
 }
 
 interface BlogClientProps {
@@ -154,7 +154,7 @@ export default function BlogClient({ initialPosts }: BlogClientProps) {
     } else {
       const res = await createBlogPost(payload);
       if (res.success && res.post) {
-        setPosts((prev) => [res.post as any, ...prev]);
+        setPosts((prev) => [res.post as BlogPost, ...prev]);
         setIsModalOpen(false);
       } else {
         setErrors(res.error || "Failed to create.");

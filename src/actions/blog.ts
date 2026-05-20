@@ -35,9 +35,10 @@ export async function createBlogPost(data: BlogPostInput) {
 
     revalidatePath("/blog");
     return { success: true, post };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating blog post:", error);
-    return { success: false, error: error?.message || "Failed to create blog post." };
+    const message = error instanceof Error ? error.message : "Failed to create blog post.";
+    return { success: false, error: message };
   }
 }
 
@@ -62,9 +63,10 @@ export async function updateBlogPost(id: string, data: BlogPostInput) {
     revalidatePath("/blog");
     revalidatePath(`/blog/${data.slug}`);
     return { success: true, post };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating blog post:", error);
-    return { success: false, error: error?.message || "Failed to update blog post." };
+    const message = error instanceof Error ? error.message : "Failed to update blog post.";
+    return { success: false, error: message };
   }
 }
 
@@ -76,8 +78,9 @@ export async function deleteBlogPost(id: string) {
 
     revalidatePath("/blog");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting blog post:", error);
-    return { success: false, error: error?.message || "Failed to delete blog post." };
+    const message = error instanceof Error ? error.message : "Failed to delete blog post.";
+    return { success: false, error: message };
   }
 }

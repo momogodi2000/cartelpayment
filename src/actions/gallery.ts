@@ -27,9 +27,10 @@ export async function createGalleryItem(data: GalleryItemInput) {
 
     revalidatePath("/gallery");
     return { success: true, item };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating gallery item:", error);
-    return { success: false, error: error?.message || "Failed to create gallery item." };
+    const message = error instanceof Error ? error.message : "Failed to create gallery item.";
+    return { success: false, error: message };
   }
 }
 
@@ -49,9 +50,10 @@ export async function updateGalleryItem(id: string, data: GalleryItemInput) {
 
     revalidatePath("/gallery");
     return { success: true, item };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating gallery item:", error);
-    return { success: false, error: error?.message || "Failed to update gallery item." };
+    const message = error instanceof Error ? error.message : "Failed to update gallery item.";
+    return { success: false, error: message };
   }
 }
 
@@ -63,8 +65,9 @@ export async function deleteGalleryItem(id: string) {
 
     revalidatePath("/gallery");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting gallery item:", error);
-    return { success: false, error: error?.message || "Failed to delete gallery item." };
+    const message = error instanceof Error ? error.message : "Failed to delete gallery item.";
+    return { success: false, error: message };
   }
 }

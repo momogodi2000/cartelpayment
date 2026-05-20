@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState, useEffect, startTransition } from "react";
+import React, { useActionState, useEffect, startTransition, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Lock, Mail, ShieldAlert, KeyRound } from "lucide-react";
 import { loginAdmin } from "@/actions/auth";
@@ -15,7 +15,7 @@ const initialState: FormState = {
   message: "",
 };
 
-export default function AdminLoginPage() {
+function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginAdmin, initialState);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -115,5 +115,21 @@ export default function AdminLoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[80vh] flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-bg-premium to-bg-premium">
+          <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-black/[0.06] shadow-xl text-center text-sm font-semibold text-text-premium/50 animate-pulse">
+            Loading login portal...
+          </div>
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

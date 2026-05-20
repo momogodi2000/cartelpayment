@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, MailOpen, Trash2, Calendar, Phone, ArrowLeft } from "lucide-react";
+import { MailOpen, Trash2, Calendar, Phone, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { markMessageAsRead, deleteMessage } from "@/actions/messages";
 
@@ -13,7 +13,7 @@ interface Message {
   message: string;
   parrotReference: string | null;
   read: boolean;
-  createdAt: Date | any;
+  createdAt: Date | string;
 }
 
 interface MessagesClientProps {

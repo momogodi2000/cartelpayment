@@ -3,25 +3,22 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, MessageSquare, ShieldAlert } from "lucide-react";
+import { Menu, X, MessageSquare, Globe, Sun, Moon, Palette } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/whatsapp";
-
-const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/catalog", label: "Catalog" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/about", label: "About Breeder" },
-  { href: "/blog", label: "Care Blog" },
-  { href: "/contact", label: "Contact" },
-];
+import { useApp } from "@/context/AppContext";
+import { useTranslation } from "@/lib/translations";
 
 export default function Header() {
+  const { language, theme, toggleLanguage, toggleTheme } = useApp();
+  const { t } = useTranslation(language);
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
-  const defaultText = "Hello! I visited your website and would like to ask some questions about your breeding methods and available birds.";
+  const defaultText = language === "en" 
+    ? "Hello! I visited your website and would like to ask some questions about your breeding methods and available birds."
+    : "Bonjour ! J'ai visité votre site web et j'aimerais poser des questions sur vos méthodes d'élevage et les oiseaux disponibles.";
   const whatsappUrl = getWhatsAppLink(phone, defaultText);
 
   useEffect(() => {
@@ -39,8 +36,10 @@ export default function Header() {
 
   // Close mobile menu on route change
   useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
+    if (isOpen) {
+      setTimeout(() => setIsOpen(false), 0);
+    }
+  }, [pathname, isOpen]);
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -48,6 +47,15 @@ export default function Header() {
     }
     return pathname.startsWith(href);
   };
+
+  const navLinks = [
+    { href: "/", label: t("nav.home") },
+    { href: "/catalog", label: t("nav.catalog") },
+    { href: "/gallery", label: t("nav.gallery") },
+    { href: "/about", label: t("nav.about") },
+    { href: "/blog", label: t("nav.blog") },
+    { href: "/contact", label: t("nav.contact") },
+  ];
 
   return (
     <header
@@ -60,23 +68,23 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform duration-300">
-              🦜
-            </span>
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="h-10 w-10 rounded-xl bg-white border border-black/[0.06] flex items-center justify-center p-1.5 shadow-sm shadow-primary/5 group-hover:scale-105 transition-transform duration-300">
+              <img src="/logo.png" alt="AraHaven Logo" className="h-full w-full object-contain" />
+            </div>
             <div>
               <span className="font-extrabold text-xl tracking-tight text-text-premium block group-hover:text-primary transition-colors duration-300">
                 ARA<span className="text-accent">HAVEN</span>
               </span>
               <span className="text-[10px] text-primary font-bold tracking-widest uppercase block -mt-1">
-                Exotic Aviary
+                {language === "en" ? "Exotic Aviary" : "Élevage Exotique"}
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
+          <nav className="hidden md:flex items-center gap-6">
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -94,8 +102,35 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* WhatsApp CTA Action */}
+          {/* Desktop Controls & CTA */}
           <div className="hidden md:flex items-center gap-4">
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="p-2 rounded-xl hover:bg-black/[0.03] transition-all flex items-center gap-1.5 text-xs font-bold text-text-premium/80 border border-black/[0.06]"
+              title={language === "en" ? "Switch to French" : "Passer en Français"}
+            >
+              <Globe className="h-3.5 w-3.5" />
+              <span>{language === "en" ? "EN" : "FR"}</span>
+            </button>
+
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl hover:bg-black/[0.03] transition-all flex items-center gap-1.5 text-xs font-bold text-text-premium/80 border border-black/[0.06]"
+              title="Toggle Color Theme"
+            >
+              {theme === "light" && <Sun className="h-3.5 w-3.5 text-amber-500" />}
+              {theme === "dark" && <Moon className="h-3.5 w-3.5 text-indigo-400" />}
+              {theme === "exotic" && <Palette className="h-3.5 w-3.5 text-pink-500" />}
+              <span className="capitalize text-[10px] hidden lg:inline">
+                {theme === "light" && t("theme.light")}
+                {theme === "dark" && t("theme.dark")}
+                {theme === "exotic" && t("theme.exotic")}
+              </span>
+            </button>
+
+            {/* Inquire CTA */}
             <Link
               href={whatsappUrl}
               target="_blank"
@@ -103,12 +138,32 @@ export default function Header() {
               className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary hover:bg-primary-hover text-white font-bold text-sm shadow-md shadow-primary/10 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
               <MessageSquare className="h-4 w-4" />
-              Inquire on WhatsApp
+              {language === "en" ? "WhatsApp Desk" : "Bureau WhatsApp"}
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          {/* Mobile Controls & Burger Menu */}
+          <div className="flex md:hidden items-center gap-2">
+            {/* Language Selector (Mobile) */}
+            <button
+              onClick={toggleLanguage}
+              className="p-2 rounded-lg hover:bg-black/[0.03] text-xs font-bold text-text-premium/80 border border-black/[0.06] flex items-center gap-1"
+            >
+              <Globe className="h-3.5 w-3.5" />
+              <span>{language === "en" ? "EN" : "FR"}</span>
+            </button>
+
+            {/* Theme Selector (Mobile) */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-black/[0.03] text-text-premium/80 border border-black/[0.06]"
+            >
+              {theme === "light" && <Sun className="h-3.5 w-3.5 text-amber-500" />}
+              {theme === "dark" && <Moon className="h-3.5 w-3.5 text-indigo-400" />}
+              {theme === "exotic" && <Palette className="h-3.5 w-3.5 text-pink-500" />}
+            </button>
+
+            {/* Menu Toggle */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-lg text-text-premium/70 hover:text-primary hover:bg-black/[0.02] transition-colors focus:outline-none"
@@ -120,11 +175,11 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Drawer (Glassmorphism overlay) */}
+      {/* Mobile Drawer */}
       {isOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-bg-premium/95 backdrop-blur-lg shadow-xl border-b border-black/[0.08] transition-all duration-300 animate-in fade-in slide-in-from-top-5">
           <div className="px-4 pt-2 pb-6 space-y-3">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -145,7 +200,7 @@ export default function Header() {
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold shadow-lg shadow-primary/10 transition-all"
               >
                 <MessageSquare className="h-5 w-5" />
-                Inquire on WhatsApp
+                {language === "en" ? "Consult WhatsApp" : "Consulter via WhatsApp"}
               </Link>
             </div>
           </div>

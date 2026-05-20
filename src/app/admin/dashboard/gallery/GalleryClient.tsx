@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, Edit2, Trash2, ArrowLeft, Search, Camera, Video, ArrowUpDown } from "lucide-react";
+import { Plus, Edit2, Trash2, ArrowLeft, Search } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { createGalleryItem, updateGalleryItem, deleteGalleryItem } from "@/actions/gallery";
@@ -9,7 +9,7 @@ import { createGalleryItem, updateGalleryItem, deleteGalleryItem } from "@/actio
 interface GalleryItem {
   id: string;
   title: string;
-  type: "IMAGE" | "VIDEO" | any;
+  type: "IMAGE" | "VIDEO";
   url: string;
   caption: string;
   category: string;
@@ -92,7 +92,7 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
 
     const payload = {
       title: form.title,
-      type: form.type as any,
+      type: form.type as "IMAGE" | "VIDEO",
       url: form.url,
       caption: form.caption,
       category: form.category,
@@ -112,7 +112,7 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
     } else {
       const res = await createGalleryItem(payload);
       if (res.success && res.item) {
-        setItems((prev) => [res.item as any, ...prev]);
+        setItems((prev) => [res.item as GalleryItem, ...prev]);
         setIsModalOpen(false);
       } else {
         setErrors(res.error || "Failed to create.");

@@ -8,12 +8,9 @@ import {
   Image as ImageIcon,
   MessageSquare,
   LogOut,
-  Layers,
-  HelpCircle,
   MailWarning
 } from "lucide-react";
 import prisma from "@/lib/db";
-import { logoutAdmin } from "@/actions/auth";
 
 export const revalidate = 0; // Always fetch live counts
 

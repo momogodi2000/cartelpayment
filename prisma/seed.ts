@@ -32,7 +32,7 @@ async function main() {
   console.log(`Created admin user: ${admin.email}`);
 
   // 3. Create Categories
-  const macawCategory = await prisma.category.create({
+  await prisma.category.create({
     data: {
       name: "Macaws",
       slug: "macaws",
@@ -40,7 +40,7 @@ async function main() {
     },
   });
 
-  const amazonCategory = await prisma.category.create({
+  await prisma.category.create({
     data: {
       name: "Amazons",
       slug: "amazons",
@@ -48,7 +48,7 @@ async function main() {
     },
   });
 
-  const cockatooCategory = await prisma.category.create({
+  await prisma.category.create({
     data: {
       name: "Cockatoos",
       slug: "cockatoos",
@@ -56,7 +56,7 @@ async function main() {
     },
   });
 
-  const conureCategory = await prisma.category.create({
+  await prisma.category.create({
     data: {
       name: "Conures",
       slug: "conures",

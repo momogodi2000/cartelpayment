@@ -1,7 +1,7 @@
 import React from "react";
-import Image from "next/image";
 import prisma from "@/lib/db";
 import GalleryClient from "./GalleryClient";
+import { getServerTranslation } from "@/lib/serverTranslations";
 
 async function getGalleryItems() {
   try {
@@ -15,6 +15,7 @@ async function getGalleryItems() {
 }
 
 export default async function GalleryPage() {
+  const { t } = await getServerTranslation();
   const items = await getGalleryItems();
 
   return (
@@ -22,10 +23,10 @@ export default async function GalleryPage() {
       {/* Header */}
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <h1 className="text-4xl font-extrabold text-text-premium tracking-tight">
-          AraHaven Media Gallery
+          {t("gallery.title")}
         </h1>
         <p className="text-sm sm:text-base text-text-premium/70 leading-relaxed">
-          Take a visual tour of our breeding aviaries, state-of-the-art incubation nursery, hand-taming procedures, and happy companion parrots.
+          {t("gallery.subtitle")}
         </p>
         <div className="h-1 w-20 bg-primary mx-auto rounded-full mt-4" />
       </div>

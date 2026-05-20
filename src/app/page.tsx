@@ -1,9 +1,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ShieldCheck, Heart, Award, CheckCircle2, MessageSquare, AlertCircle } from "lucide-react";
+import { ArrowRight, ShieldCheck, Heart, Award, CheckCircle2, MessageSquare } from "lucide-react";
 import prisma from "@/lib/db";
 import { getWhatsAppLink } from "@/lib/whatsapp";
+import { getServerTranslation } from "@/lib/serverTranslations";
+import { translateParrot, translateFAQ } from "@/lib/translations";
 
 // Fetch featured parrots and FAQs in a server component
 async function getHomeData() {
@@ -14,7 +16,7 @@ async function getHomeData() {
       include: { images: { orderBy: { order: "asc" } } },
     });
 
-    const faqs = await prisma.faq.findMany({
+    const faqs = await prisma.fAQ.findMany({
       orderBy: { order: "asc" },
       take: 4,
     });
@@ -27,12 +29,20 @@ async function getHomeData() {
 }
 
 export default async function HomePage() {
+  const { t, locale } = await getServerTranslation();
   const { featuredParrots, faqs } = await getHomeData();
+  
+  // Translate dynamic data
+  const translatedParrots = featuredParrots.map((parrot) => translateParrot(parrot, locale));
+  const translatedFaqs = faqs.map((faq) => translateFAQ(faq, locale));
+
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
-  const generalWhatsapp = getWhatsAppLink(
-    phone,
-    "Hello! I visited your website and would like to ask some questions about your breeding methods and available birds."
-  );
+  
+  const generalInquiryText = locale === "en"
+    ? "Hello! I visited your website and would like to ask some questions about your breeding methods and available birds."
+    : "Bonjour ! J'ai visité votre site web et j'aimerais poser des questions sur vos méthodes d'élevage et les oiseaux disponibles.";
+  
+  const generalWhatsapp = getWhatsAppLink(phone, generalInquiryText);
 
   return (
     <div className="relative overflow-hidden min-h-screen">
@@ -65,23 +75,34 @@ export default async function HomePage() {
           {/* Hero Content */}
           <div className="space-y-8 text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest border border-primary/20">
-              <Award className="h-4 w-4" /> CITES Certified Aviary
+              <Award className="h-4 w-4" /> {t("hero.badge")}
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-text-premium leading-tight tracking-tight">
-              Ethically Raised, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-                Hand-Tamed Parrots
-              </span>
+              {locale === "en" ? (
+                <>
+                  Ethically Raised, <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                    Hand-Tamed Parrots
+                  </span>
+                </>
+              ) : (
+                <>
+                  Perroquets Élevés avec Éthique, <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                    Apprivoisés à la Main
+                  </span>
+                </>
+              )}
             </h1>
             <p className="text-base sm:text-lg text-text-premium/70 max-w-xl leading-relaxed">
-              Welcome to AraHaven, Latin America&apos;s premier breeding sanctuary. We nurture and raise majestic macaws, intelligent cockatoos, and charismatic amazon parrots with absolute dedication, veterinary excellence, and love.
+              {t("hero.subtitle")}
             </p>
             <div className="flex flex-wrap items-center gap-4">
               <Link
                 href="/catalog"
                 className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/35 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
               >
-                Explore Catalog <ArrowRight className="h-4 w-4" />
+                {t("hero.cta")} <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href={generalWhatsapp}
@@ -89,7 +110,7 @@ export default async function HomePage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-white hover:bg-black/[0.02] text-text-premium font-bold px-8 py-4 rounded-full border border-black/[0.08] shadow-sm transition-all duration-300 hover:scale-[1.02]"
               >
-                <MessageSquare className="h-4 w-4 text-emerald-600" /> Ask a Question
+                <MessageSquare className="h-4 w-4 text-emerald-600" /> {t("hero.secondary")}
               </Link>
             </div>
           </div>
@@ -107,8 +128,12 @@ export default async function HomePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 glass p-4 rounded-2xl border border-white/20">
-                <p className="text-white text-sm font-bold">Scarlet Macaw Baby</p>
-                <p className="text-white/80 text-xs">Captive Bred - Hand-Raised with Love</p>
+                <p className="text-white text-sm font-bold">
+                  {locale === "en" ? "Scarlet Macaw Baby" : "Bébé Ara Rouge"}
+                </p>
+                <p className="text-white/80 text-xs">
+                  {locale === "en" ? "Captive Bred - Hand-Raised with Love" : "Né en Captivité - Élevé avec Amour"}
+                </p>
               </div>
             </div>
           </div>
@@ -120,10 +145,10 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-12">
           <div className="max-w-2xl mx-auto space-y-4">
             <h2 className="text-3xl font-extrabold text-text-premium tracking-tight">
-              Why AraHaven Stands Out
+              {t("credentials.title")}
             </h2>
             <p className="text-text-premium/70 text-sm sm:text-base">
-              We operate under strict ethical breeding protocols, maintaining legal compliance with CITES and local veterinary guidelines.
+              {t("credentials.subtitle")}
             </p>
           </div>
 
@@ -132,9 +157,9 @@ export default async function HomePage() {
               <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                 <ShieldCheck className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-text-premium">Legal Certifications</h3>
+              <h3 className="text-lg font-bold text-text-premium">{t("cred.1.title")}</h3>
               <p className="text-sm text-text-premium/70 leading-relaxed">
-                All of our birds are closed-banded, microchipped, and come with legitimate health records and CITES licensing documentation.
+                {t("cred.1.desc")}
               </p>
             </div>
 
@@ -142,9 +167,9 @@ export default async function HomePage() {
               <div className="h-12 w-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary">
                 <Heart className="h-6 w-6" />
               </div>
-              <h3 className="Hand-Tamed Specialty text-lg font-bold text-text-premium">Hand-Raised & Socialized</h3>
+              <h3 className="text-lg font-bold text-text-premium">{t("cred.2.title")}</h3>
               <p className="text-sm text-text-premium/70 leading-relaxed">
-                Our nursery is designed to optimize cognitive socialization. Chicks are hand-fed, step-up trained, and adapted to domestic homes.
+                {t("cred.2.desc")}
               </p>
             </div>
 
@@ -152,9 +177,9 @@ export default async function HomePage() {
               <div className="h-12 w-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
                 <Award className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-text-premium">Lifelong Guidance</h3>
+              <h3 className="text-lg font-bold text-text-premium">{t("cred.3.title")}</h3>
               <p className="text-sm text-text-premium/70 leading-relaxed">
-                Adopting a parrot is a long journey. We supply comprehensive support guides on housing, nutrition, behavior, and training.
+                {t("cred.3.desc")}
               </p>
             </div>
           </div>
@@ -162,31 +187,35 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Parrots Showcase */}
-      {featuredParrots.length > 0 && (
+      {translatedParrots.length > 0 && (
         <section className="py-20 bg-bg-premium">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
               <div className="space-y-2">
                 <h2 className="text-3xl font-extrabold text-text-premium tracking-tight">
-                  Featured Available Parrots
+                  {t("featured.title")}
                 </h2>
                 <p className="text-text-premium/70 text-sm">
-                  Hand-reared babies currently socialized in our nursery, waiting for their forever homes.
+                  {t("featured.subtitle")}
                 </p>
               </div>
               <Link
                 href="/catalog"
                 className="text-primary hover:text-primary-hover font-bold text-sm flex items-center gap-1 shrink-0"
               >
-                View Full Catalog <ArrowRight className="h-4 w-4" />
+                {t("featured.viewAll")} <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {featuredParrots.map((parrot) => {
+              {translatedParrots.map((parrot) => {
                 const parrotUrl = `/catalog/${parrot.slug}`;
                 const birdImage = parrot.images[0]?.url || "https://images.unsplash.com/photo-1552728089-57bdde30ebd3?auto=format&fit=crop&w=800&q=80";
-                const inquiryText = `Hello! I am interested in the parrot ${parrot.name} (Species: ${parrot.species}) shown on your website. Could you please give me more information about its availability and shipping?`;
+                
+                const inquiryText = locale === "en"
+                  ? `Hello! I am interested in the parrot ${parrot.name} (Species: ${parrot.species}) shown on your website. Could you please give me more information about its availability and shipping?`
+                  : `Bonjour ! Je suis intéressé(e) par le perroquet ${parrot.name} (Espèce : ${parrot.species}) présenté sur votre site. Pourriez-vous me donner plus d'informations sur sa disponibilité et son transport ?`;
+                
                 const link = getWhatsAppLink(phone, inquiryText);
 
                 return (
@@ -205,7 +234,7 @@ export default async function HomePage() {
                       />
                       <div className="absolute top-4 left-4 flex gap-2">
                         <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/95 text-primary shadow-sm">
-                          {parrot.rarity}
+                          {parrot.rarityLabel}
                         </span>
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm ${
@@ -216,7 +245,7 @@ export default async function HomePage() {
                               : "bg-red-600"
                           }`}
                         >
-                          {parrot.status}
+                          {parrot.statusLabel}
                         </span>
                       </div>
                     </div>
@@ -245,7 +274,7 @@ export default async function HomePage() {
                           href={parrotUrl}
                           className="flex-1 text-center py-2.5 rounded-xl border border-black/[0.08] text-xs font-bold text-text-premium hover:bg-black/[0.02] transition-colors"
                         >
-                          Specifications
+                          {t("catalog.detailsButton")}
                         </Link>
                         <a
                           href={link}
@@ -254,7 +283,7 @@ export default async function HomePage() {
                           className="flex-1 inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-sm transition-colors"
                         >
                           <MessageSquare className="h-3.5 w-3.5" />
-                          WhatsApp Inquiry
+                          {locale === "en" ? "Inquiry" : "S'enquérir"}
                         </a>
                       </div>
                     </div>
@@ -267,20 +296,20 @@ export default async function HomePage() {
       )}
 
       {/* Frequently Asked Questions */}
-      {faqs.length > 0 && (
+      {translatedFaqs.length > 0 && (
         <section className="py-20 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="text-center space-y-4">
               <h2 className="text-3xl font-extrabold text-text-premium tracking-tight">
-                Frequently Asked Questions
+                {t("faq.title")}
               </h2>
               <p className="text-text-premium/70 text-sm">
-                Get answers to general concerns regarding adoption, health, shipping, and licensing.
+                {t("faq.subtitle")}
               </p>
             </div>
 
             <div className="space-y-6">
-              {faqs.map((faq) => (
+              {translatedFaqs.map((faq) => (
                 <div
                   key={faq.id}
                   className="p-6 rounded-2xl border border-black/[0.05] bg-bg-premium/30 space-y-2 text-left"
@@ -301,7 +330,8 @@ export default async function HomePage() {
                 href="/contact"
                 className="inline-flex items-center gap-2 text-primary hover:text-primary-hover font-bold text-sm"
               >
-                Still have questions? Contact us <ArrowRight className="h-4 w-4" />
+                {locale === "en" ? "Still have questions? Contact us" : "Encore des questions ? Contactez-nous"}{" "}
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
