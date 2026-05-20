@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline | AraHaven Aviary</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #F5F5F5;
+      color: #1A1A1A;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      margin: 20px;
+      padding: 40px;
+      background-color: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .logo {
+      font-size: 50px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1A6B3C;
+      margin: 0 0 10px 0;
+      letter-spacing: -0.5px;
+    }
+    p {
+      color: #555;
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0 0 30px 0;
+    }
+    .contacts {
+      background-color: #F9F9F9;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: left;
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .contact-item:last-child {
+      margin-bottom: 0;
+    }
+    .contact-label {
+      font-weight: bold;
+      color: #1A6B3C;
+      width: 80px;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      background-color: #1A6B3C;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(26, 107, 60, 0.2);
+      transition: background-color 0.2s;
+    }
+    .btn:hover {
+      background-color: #0D7C66;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🦜</div>
+    <h1>You are Currently Offline</h1>
+    <p>We couldn't connect to the AraHaven servers. However, you can still view our emergency contact details below. Please feel free to call or text us directly!</p>
+    
+    <div class="contacts">
+      <div class="contact-item">
+        <span class="contact-label">Phone:</span>
+        <span>+506 8888-8888</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">WhatsApp:</span>
+        <span>+506 8888-8888</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Email:</span>
+        <span>nursery@arahaven.com</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Location:</span>
+        <span>San José, Costa Rica</span>
+      </div>
+    </div>
+
+    <a href="javascript:window.location.reload();" class="btn">Try Reconnecting</a>
+  </div>
+</body>
+</html>

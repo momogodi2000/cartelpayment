@@ -1,0 +1,151 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  SUPERADMIN
+}
+
+enum Rarity {
+  COMMON
+  RARE
+  EXCEPTIONAL
+}
+
+enum Size {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum ParrotStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  UNKNOWN
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Parrot {
+  id               String        @id @default(uuid())
+  name             String
+  slug             String        @unique
+  species          String
+  description      String
+  shortDescription String
+  age              String
+  size             Size          @default(MEDIUM)
+  sex              Sex           @default(UNKNOWN)
+  origin           String
+  rarity           Rarity        @default(COMMON)
+  price            Decimal       @db.Decimal(10, 2)
+  status           ParrotStatus  @default(AVAILABLE)
+  behavior         String
+  feeding          String
+  domestication    String
+  healthNotes      String
+  featured         Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  images           ParrotImage[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([rarity])
+}
+
+model ParrotImage {
+  id       String @id @default(uuid())
+  parrotId String
+  url      String
+  alt      String
+  order    Int    @default(0)
+  parrot   Parrot @relation(fields: [parrotId], references: [id], onDelete: Cascade)
+
+  @@index([parrotId])
+}
+
+model Category {
+  id          String @id @default(uuid())
+  name        String
+  slug        String @unique
+  description String
+
+  @@index([slug])
+}
+
+model BlogPost {
+  id             String   @id @default(uuid())
+  title          String
+  slug           String   @unique
+  excerpt        String
+  content        String
+  coverImage     String
+  category       String
+  tags           String[]
+  published      Boolean  @default(false)
+  seoTitle       String
+  seoDescription String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([slug])
+  @@index([published])
+}
+
+model GalleryItem {
+  id       String    @id @default(uuid())
+  title    String
+  type     MediaType @default(IMAGE)
+  url      String
+  caption  String
+  category String
+  order    Int       @default(0)
+}
+
+model FAQ {
+  id       String @id @default(uuid())
+  question String
+  answer   String
+  order    Int    @default(0)
+}
+
+model ContactMessage {
+  id              String   @id @default(uuid())
+  name            String
+  email           String
+  phone           String
+  message         String
+  parrotReference String?
+  read            Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  @@index([read])
+}

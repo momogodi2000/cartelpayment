@@ -1,0 +1,24 @@
+{
+  "short_name": "AraHaven",
+  "name": "AraHaven Exotic Aviary",
+  "description": "Certified exotic bird breeder specializing in healthy, hand-tamed, and CITES registered macaws, cockatoos, and amazon parrots.",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F5F5F5",
+  "theme_color": "#1A6B3C",
+  "display": "standalone",
+  "orientation": "portrait"
+}
