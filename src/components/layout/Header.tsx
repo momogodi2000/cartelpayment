@@ -49,6 +49,7 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -69,10 +70,11 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
+  // Close mobile menu on route change (setTimeout keeps setState out of the effect body)
   useEffect(() => {
-    if (isOpen) setTimeout(() => setIsOpen(false), 0);
-  }, [pathname, isOpen]);
+    const t = setTimeout(() => setIsOpen(false), 0);
+    return () => clearTimeout(t);
+  }, [pathname]);
 
   // Close discover dropdown on outside click
   useEffect(() => {

@@ -9,7 +9,16 @@
       "Bash(postcss\")",
       "PowerShell(Get-ChildItem \"d:\\\\IT Project\\\\elvis\\\\\" | Where-Object { $_.Name -match \"tailwind|next.config|postcss\" })",
       "Bash(powershell -Command \"Get-Content src\\\\app\\\\page.tsx | Select-String 'font-black' | Select-Object LineNumber, Line | Format-Table -AutoSize\")",
-      "Bash(python -c \"import sys, json; d=json.load\\(sys.stdin\\); print\\(d.get\\('dependencies', {}\\).get\\('framer-motion', 'not found'\\)\\); print\\(d.get\\('devDependencies', {}\\).get\\('@testing-library/react', 'not found'\\)\\); print\\(d.get\\('devDependencies', {}\\).get\\('jsdom', 'not found'\\)\\); print\\(d.get\\('devDependencies', {}\\).get\\('@vitejs/plugin-react', 'not found'\\)\\)\")"
+      "Bash(python -c \"import sys, json; d=json.load\\(sys.stdin\\); print\\(d.get\\('dependencies', {}\\).get\\('framer-motion', 'not found'\\)\\); print\\(d.get\\('devDependencies', {}\\).get\\('@testing-library/react', 'not found'\\)\\); print\\(d.get\\('devDependencies', {}\\).get\\('jsdom', 'not found'\\)\\); print\\(d.get\\('devDependencies', {}\\).get\\('@vitejs/plugin-react', 'not found'\\)\\)\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(k,':',v\\) for k,v in {**d.get\\('dependencies',{}\\),**d.get\\('devDependencies',{}\\)}.items\\(\\)]\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\")",
+      "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\page.tsx\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\page.tsx\")",
+      "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\about\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\about\")",
+      "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\blog\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\blog\")",
+      "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\catalog\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\catalog\")",
+      "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\contact\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\contact\")",
+      "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\gallery\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\gallery\")",
+      "PowerShell(Move-Item \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\offline\" \"d:\\\\IT Project\\\\elvis\\\\src\\\\app\\\\\\(public\\)\\\\offline\")"
     ],
     "additionalDirectories": [
       "d:\\IT Project\\elvis"

@@ -53,6 +53,18 @@ model User {
   @@index([email])
 }
 
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([email])
+}
+
 model Parrot {
   id               String            @id @default(uuid())
   name             String

@@ -66,6 +66,7 @@ export function AppProvider({
     const savedLang = localStorage.getItem("arahaven_lang") as Language;
     if (savedLang === "en" || savedLang === "fr") {
       if (savedLang !== language) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLanguageState(savedLang);
       }
     } else if (typeof navigator !== "undefined") {
