@@ -59,6 +59,7 @@ export async function createParrot(data: ParrotInput) {
           })),
         },
       },
+      include: { images: { orderBy: { order: "asc" } } },
     });
 
     revalidatePath("/catalog");
@@ -106,6 +107,7 @@ export async function updateParrot(id: string, data: ParrotInput) {
           })),
         },
       },
+      include: { images: { orderBy: { order: "asc" } } },
     });
 
     revalidatePath("/catalog");

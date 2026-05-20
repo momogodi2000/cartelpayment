@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { Bird, ExternalLink, LogOut, ShieldCheck, Activity, Thermometer, Database } from "lucide-react";
 import { verifyToken } from "@/lib/auth";
+import AdminTopControls from "./AdminTopControls";
 
 async function handleLogout() {
   "use server";
@@ -109,9 +110,9 @@ export default async function AdminLayout({
   const initials = user.email.slice(0, 2).toUpperCase();
 
   return (
-    <div className="min-h-screen flex flex-col bg-[hsl(var(--bg-premium))]">
+    <div className="min-h-screen flex flex-col bg-[hsl(var(--bg-premium))] text-text-premium">
       {/* Admin Top Bar */}
-      <header className="sticky top-0 z-50 h-14 border-b border-black/[0.07] dark:border-white/[0.07] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm flex items-center px-4 sm:px-6 gap-4">
+      <header className="sticky top-0 z-50 min-h-14 border-b border-[hsl(var(--card-border))] bg-[hsl(var(--card-bg))]/95 backdrop-blur-md shadow-sm flex flex-wrap items-center px-4 sm:px-6 py-2 gap-3">
         {/* Brand */}
         <Link href="/admin/dashboard" className="flex items-center gap-2.5 shrink-0 group">
           <div className="h-8 w-8 rounded-lg bg-white dark:bg-slate-800 border border-black/[0.07] dark:border-white/[0.07] flex items-center justify-center p-1 shadow-sm group-hover:scale-105 transition-transform">
@@ -128,7 +129,7 @@ export default async function AdminLayout({
         </Link>
 
         {/* Navigation Pills */}
-        <nav className="hidden md:flex items-center gap-1 ml-2">
+        <nav className="hidden lg:flex items-center gap-1 ml-2">
           {[
             { href: "/admin/dashboard", label: "Overview" },
             { href: "/admin/dashboard/parrots", label: "Parrots" },
@@ -139,7 +140,7 @@ export default async function AdminLayout({
             <Link
               key={item.href}
               href={item.href}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-text-premium/60 hover:text-primary hover:bg-primary/5 transition-all duration-150"
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-text-premium/65 hover:text-primary hover:bg-primary/8 transition-all duration-150"
             >
               {item.label}
             </Link>
@@ -147,26 +148,28 @@ export default async function AdminLayout({
         </nav>
 
         <div className="flex items-center gap-2 ml-auto">
+          <AdminTopControls />
+
           {/* View Public Site */}
           <Link
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-black/[0.08] dark:border-white/[0.08] text-xs font-semibold text-text-premium/60 dark:text-white/50 hover:text-primary hover:border-primary/30 transition-all"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[hsl(var(--card-border))] text-xs font-semibold text-text-premium/65 hover:text-primary hover:border-primary/30 transition-all"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             View Site
           </Link>
 
           {/* User Badge */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/5 border border-primary/15">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/5 border border-primary/15">
             <div className="h-6 w-6 rounded-full bg-primary text-white text-[10px] font-extrabold flex items-center justify-center shrink-0">
               {initials}
             </div>
-            <span className="hidden sm:block text-xs font-semibold text-text-premium/70 max-w-[140px] truncate">
+              <span className="text-xs font-semibold text-text-premium/70 max-w-[140px] truncate">
               {user.email}
             </span>
-            <span className="text-[9px] font-extrabold text-primary uppercase tracking-wider hidden lg:block">
+            <span className="text-[9px] font-extrabold text-primary uppercase tracking-wider hidden xl:block">
               {user.role}
             </span>
           </div>

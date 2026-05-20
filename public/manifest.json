@@ -4,15 +4,9 @@
   "description": "Certified exotic bird breeder specializing in healthy, hand-tamed, and CITES registered macaws, cockatoos, and amazon parrots.",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/logo.png",
       "type": "image/png",
-      "sizes": "192x192",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "type": "image/png",
-      "sizes": "512x512",
+      "sizes": "1024x1024",
       "purpose": "any maskable"
     }
   ],

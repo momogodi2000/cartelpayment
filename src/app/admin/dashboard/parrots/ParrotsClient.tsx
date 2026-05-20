@@ -182,9 +182,7 @@ export default function ParrotsClient({ initialParrots }: ParrotsClientProps) {
       domestication: form.domestication,
       healthNotes: form.healthNotes,
       featured: form.featured,
-      images: form.imageUrl
-        ? [{ url: form.imageUrl, alt: form.name, order: 0 }]
-        : [],
+      images: [{ url: form.imageUrl || "/logo.png", alt: form.name || "AraHaven parrot", order: 0 }],
     };
 
     if (editingId) {
@@ -253,8 +251,8 @@ export default function ParrotsClient({ initialParrots }: ParrotsClientProps) {
       </div>
 
       {/* Table */}
-      <div className="bg-[hsl(var(--card-bg))] rounded-3xl border border-[hsl(var(--card-border))] overflow-hidden shadow-sm">
-        <table className="w-full text-left border-collapse text-xs sm:text-sm">
+      <div className="bg-[hsl(var(--card-bg))] rounded-3xl border border-[hsl(var(--card-border))] overflow-x-auto shadow-sm">
+        <table className="min-w-[760px] w-full text-left border-collapse text-xs sm:text-sm">
           <thead>
             <tr className="bg-bg-premium/50 border-b border-[hsl(var(--card-border))]">
               <th className="px-6 py-4 font-bold text-text-premium/60">Bird Details</th>

@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
+import { randomUUID } from "crypto";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
+
+export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
@@ -18,8 +21,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
-  if (!validTypes.includes(file.type)) {
+  const extensionByType: Record<string, string> = {
+    "image/jpeg": "jpg",
+    "image/jpg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/gif": "gif",
+  };
+  const ext = extensionByType[file.type];
+  if (!ext) {
     return NextResponse.json({ error: "Invalid type. Use JPG, PNG, WebP, or GIF." }, { status: 400 });
   }
 
@@ -29,8 +39,7 @@ export async function POST(request: NextRequest) {
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const filename = `parrot_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const filename = `parrot_${Date.now()}_${randomUUID().slice(0, 8)}.${ext}`;
   const uploadDir = join(process.cwd(), "public", "uploads", "parrots");
 
   await mkdir(uploadDir, { recursive: true });

@@ -6,6 +6,10 @@ import PWARegister from "@/components/common/PWARegister";
 import { AppProvider } from "@/context/AppContext";
 import { CartProvider } from "@/context/CartContext";
 
+const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000");
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "AraHaven Aviary";
+const appLogo = "/logo.png";
+
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
@@ -20,9 +24,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
+  applicationName: siteName,
   title: {
-    default: "AraHaven Aviary | Premium Exotic Parrots & Hand-Tamed Macaws",
-    template: "%s | AraHaven Aviary",
+    default: `${siteName} | Premium Exotic Parrots & Hand-Tamed Macaws`,
+    template: `%s | ${siteName}`,
   },
   description:
     "Certified exotic bird breeder specializing in ethically raised, hand-tamed, and legally documented macaws, cockatoos, and amazon parrots in Latin America.",
@@ -40,8 +46,32 @@ export const metadata: Metadata = {
     "cites certified breeder",
   ],
   icons: {
-    icon: "/favicon.ico",
-    apple: "/icons/icon-192x192.png",
+    icon: [{ url: appLogo, type: "image/png" }],
+    shortcut: appLogo,
+    apple: appLogo,
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName,
+    title: `${siteName} | Premium Exotic Parrots`,
+    description:
+      "Explore legally documented, hand-tamed exotic parrots from a professional premium aviary.",
+    images: [
+      {
+        url: appLogo,
+        width: 512,
+        height: 512,
+        alt: `${siteName} logo`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: `${siteName} | Premium Exotic Parrots`,
+    description:
+      "Explore legally documented, hand-tamed exotic parrots from a professional premium aviary.",
+    images: [appLogo],
   },
 };
 

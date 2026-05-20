@@ -413,12 +413,12 @@ export default async function AdminDashboardPage() {
           ].map((item, idx) => {
             const Icon = item.icon;
             const accentClasses: Record<string, string> = {
-              emerald: "text-emerald-600 bg-emerald-50 border-emerald-100 group-hover:bg-emerald-100",
-              blue: "text-blue-600 bg-blue-50 border-blue-100 group-hover:bg-blue-100",
-              violet: "text-violet-600 bg-violet-50 border-violet-100 group-hover:bg-violet-100",
-              amber: "text-amber-600 bg-amber-50 border-amber-100 group-hover:bg-amber-100",
-              sky: "text-sky-600 bg-sky-50 border-sky-100 group-hover:bg-sky-100",
-              slate: "text-slate-600 bg-slate-50 border-slate-100 group-hover:bg-slate-100",
+              emerald: "text-emerald-700 bg-emerald-50 border-emerald-100 group-hover:bg-emerald-100 dark:text-emerald-300 dark:bg-emerald-950/35 dark:border-emerald-800/40 dark:group-hover:bg-emerald-900/45",
+              blue: "text-blue-700 bg-blue-50 border-blue-100 group-hover:bg-blue-100 dark:text-blue-300 dark:bg-blue-950/35 dark:border-blue-800/40 dark:group-hover:bg-blue-900/45",
+              violet: "text-violet-700 bg-violet-50 border-violet-100 group-hover:bg-violet-100 dark:text-violet-300 dark:bg-violet-950/35 dark:border-violet-800/40 dark:group-hover:bg-violet-900/45",
+              amber: "text-amber-700 bg-amber-50 border-amber-100 group-hover:bg-amber-100 dark:text-amber-300 dark:bg-amber-950/35 dark:border-amber-800/40 dark:group-hover:bg-amber-900/45",
+              sky: "text-sky-700 bg-sky-50 border-sky-100 group-hover:bg-sky-100 dark:text-sky-300 dark:bg-sky-950/35 dark:border-sky-800/40 dark:group-hover:bg-sky-900/45",
+              slate: "text-slate-700 bg-slate-50 border-slate-100 group-hover:bg-slate-100 dark:text-slate-300 dark:bg-slate-900/70 dark:border-slate-700/60 dark:group-hover:bg-slate-800/80",
             };
             return (
               <Link

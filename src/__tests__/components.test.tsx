@@ -419,6 +419,7 @@ describe("CartDrawer Component", () => {
   it("shows success state after a successful checkout submission", async () => {
     vi.mocked(processCheckout).mockResolvedValue({
       success: true,
+      inquiryId: "inquiry-123",
       whatsappText: "Hello AraHaven! I want the African Grey.",
     });
     vi.spyOn(window, "open").mockImplementation(() => null);
@@ -463,7 +464,7 @@ describe("CartDrawer Component", () => {
   });
 
   it("shows a generic error when processCheckout returns failure with no error message", async () => {
-    vi.mocked(processCheckout).mockResolvedValue({ success: false });
+    vi.mocked(processCheckout).mockResolvedValue({ success: false, error: "" });
 
     mockCart = [
       {
