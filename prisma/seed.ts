@@ -5,10 +5,11 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("Starting database seeding...");
+  console.log("Prisma client keys:", Object.keys(prisma));
 
   // 1. Clean Database
   await prisma.contactMessage.deleteMany({});
-  await prisma.faq.deleteMany({});
+  await prisma.fAQ.deleteMany({});
   await prisma.galleryItem.deleteMany({});
   await prisma.blogPost.deleteMany({});
   await prisma.category.deleteMany({});
@@ -404,7 +405,7 @@ async function main() {
   ];
 
   for (const faq of faqs) {
-    await prisma.faq.create({
+    await prisma.fAQ.create({
       data: faq,
     });
   }
