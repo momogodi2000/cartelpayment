@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
-import { useApp } from "@/context/AppContext";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { useLocale } from "next-intl";
 import type { Testimonial } from "@/data/testimonials";
 
 interface Props {
@@ -11,13 +11,13 @@ interface Props {
 }
 
 export default function HomeTestimonials({ testimonials }: Props) {
-  const { language } = useApp();
+  const locale = useLocale();
   const [current, setCurrent] = useState(0);
 
   if (testimonials.length === 0) return null;
 
   const t = testimonials[current];
-  const content = language === "en" ? t.contentEn : t.content;
+  const content = locale === "en" ? t.contentEn : t.content;
 
   const prev = () => setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length);
   const next = () => setCurrent((c) => (c + 1) % testimonials.length);

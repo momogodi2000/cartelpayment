@@ -1,7 +1,8 @@
-﻿import { MetadataRoute } from "next";
+import { MetadataRoute } from "next";
+import { siteConfig } from "@/data/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu";
+  const siteUrl = siteConfig.siteUrl || "https://caniprestige.eu";
   return {
     rules: [
       {

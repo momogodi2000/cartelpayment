@@ -1,16 +1,15 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { MessageCircle, X } from "lucide-react";
-import { useApp } from "@/context/AppContext";
+import { useTranslations } from "next-intl";
 
 interface Props {
   href: string;
-  locale: string;
 }
 
-export function WhatsAppButton({ href, locale }: Props) {
-  const { language } = useApp();
+export function WhatsAppButton({ href }: Props) {
+  const t = useTranslations("Common");
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
 
@@ -30,7 +29,7 @@ export function WhatsAppButton({ href, locale }: Props) {
 
   if (!isVisible) return null;
 
-  const label = language === "en" ? "Contact WhatsApp" : "Contacter via WhatsApp";
+  const label = t("whatsappButton");
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 group">
@@ -48,13 +47,13 @@ export function WhatsAppButton({ href, locale }: Props) {
         <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-out whitespace-nowrap hidden sm:inline-block">
           {label}
         </span>
-        <span className="sm:hidden">{language === "en" ? "Chat" : "Contact"}</span>
+        <span className="sm:hidden">{t("whatsappChatShort")}</span>
       </a>
 
       <button
         onClick={handleDismiss}
         className="h-8 w-8 rounded-full bg-white/95 hover:bg-white text-text-premium/50 hover:text-text-premium flex items-center justify-center border border-black/[0.08] shadow-md hover:scale-105 transition-all"
-        aria-label="Dismiss WhatsApp button"
+        aria-label={t("whatsappButtonShort")}
       >
         <X className="h-4 w-4" />
       </button>

@@ -1,8 +1,7 @@
-﻿"use client";
+"use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-type Language = "en" | "fr";
 type Theme = "light" | "dark" | "exotic";
 
 export interface DogImage {
@@ -38,11 +37,8 @@ export interface AppDog {
 }
 
 interface AppContextType {
-  language: Language;
   theme: Theme;
-  setLanguage: (lang: Language) => void;
   setTheme: (theme: Theme) => void;
-  toggleLanguage: () => void;
   toggleTheme: () => void;
   selectedDog: AppDog | null;
   setSelectedDog: (dog: AppDog | null) => void;
@@ -51,33 +47,21 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  lang: "caniprestige_lang",
   theme: "caniprestige_theme",
 } as const;
 
 export function AppProvider({
   children,
   initialTheme = "light",
-  initialLanguage = "en",
 }: {
   children: React.ReactNode;
   initialTheme?: Theme;
-  initialLanguage?: Language;
 }) {
   const [selectedDog, setSelectedDog] = useState<AppDog | null>(null);
-  const [language, setLanguageState] = useState<Language>(initialLanguage);
   const [theme, setThemeState] = useState<Theme>(initialTheme);
 
-  // Sync to preferences post-mount to avoid hydration mismatch
+  // Sync to saved preference post-mount to avoid hydration mismatch
   useEffect(() => {
-    const savedLang = localStorage.getItem(STORAGE_KEYS.lang) as Language;
-    if (savedLang === "en" || savedLang === "fr") {
-      if (savedLang !== language) setLanguageState(savedLang);
-    } else if (typeof navigator !== "undefined") {
-      const browserLang = navigator.language.split("-")[0] === "fr" ? "fr" : "en";
-      if (browserLang !== language) setLanguageState(browserLang);
-    }
-
     const savedTheme = localStorage.getItem(STORAGE_KEYS.theme) as Theme;
     if (savedTheme === "light" || savedTheme === "dark" || savedTheme === "exotic") {
       if (savedTheme !== theme) setThemeState(savedTheme);
@@ -88,20 +72,12 @@ export function AppProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Persist preferences to localStorage, cookie, and DOM
+  // Persist to localStorage, cookie, and DOM
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.lang, language);
     localStorage.setItem(STORAGE_KEYS.theme, theme);
-    document.cookie = `locale=${language}; path=/; max-age=31536000; SameSite=Lax`;
     document.cookie = `theme=${theme}; path=/; max-age=31536000; SameSite=Lax`;
     document.documentElement.setAttribute("data-theme", theme);
-  }, [language, theme]);
-
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    localStorage.setItem(STORAGE_KEYS.lang, lang);
-    document.cookie = `locale=${lang}; path=/; max-age=31536000; SameSite=Lax`;
-  };
+  }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
@@ -109,8 +85,6 @@ export function AppProvider({
     document.documentElement.setAttribute("data-theme", newTheme);
     document.cookie = `theme=${newTheme}; path=/; max-age=31536000; SameSite=Lax`;
   };
-
-  const toggleLanguage = () => setLanguage(language === "en" ? "fr" : "en");
 
   const toggleTheme = () => {
     if (theme === "light") setTheme("dark");
@@ -120,16 +94,7 @@ export function AppProvider({
 
   return (
     <AppContext.Provider
-      value={{
-        language,
-        theme,
-        setLanguage,
-        setTheme,
-        toggleLanguage,
-        toggleTheme,
-        selectedDog,
-        setSelectedDog,
-      }}
+      value={{ theme, setTheme, toggleTheme, selectedDog, setSelectedDog }}
     >
       {children}
     </AppContext.Provider>

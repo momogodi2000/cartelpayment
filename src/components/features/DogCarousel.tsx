@@ -1,12 +1,8 @@
-﻿"use client";
+"use client";
 
-import React, { useState, useRef } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-import { useApp } from "@/context/AppContext";
-import { useTranslation } from "@/lib/translations";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import DogCard from "./DogCard";
 import type { Dog } from "@/data/dogs";
 
@@ -15,8 +11,6 @@ interface Props {
 }
 
 export default function DogCarousel({ dogs }: Props) {
-  const { language } = useApp();
-  const { t } = useTranslation(language);
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsToShow = 3;
   const maxIndex = Math.max(0, dogs.length - itemsToShow);
@@ -36,25 +30,20 @@ export default function DogCarousel({ dogs }: Props) {
           style={{ width: `${(dogs.length / itemsToShow) * 100}%` }}
         >
           {dogs.map((dog) => (
-            <div
-              key={dog.id}
-              style={{ width: `${100 / dogs.length}%` }}
-              className="shrink-0"
-            >
+            <div key={dog.id} style={{ width: `${100 / dogs.length}%` }} className="shrink-0">
               <DogCard dog={dog} />
             </div>
           ))}
         </motion.div>
       </div>
 
-      {/* Controls */}
       {dogs.length > itemsToShow && (
         <div className="flex items-center justify-center gap-3">
           <button
             onClick={prev}
             disabled={currentIndex === 0}
             className="h-10 w-10 rounded-xl border border-black/[0.08] dark:border-white/[0.1] flex items-center justify-center text-text-premium/60 hover:text-text-premium hover:bg-black/[0.02] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            aria-label="Previous dogs"
+            aria-label="Previous"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -76,7 +65,7 @@ export default function DogCarousel({ dogs }: Props) {
             onClick={next}
             disabled={currentIndex === maxIndex}
             className="h-10 w-10 rounded-xl border border-black/[0.08] dark:border-white/[0.1] flex items-center justify-center text-text-premium/60 hover:text-text-premium hover:bg-black/[0.02] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            aria-label="Next dogs"
+            aria-label="Next"
           >
             <ChevronRight className="h-5 w-5" />
           </button>

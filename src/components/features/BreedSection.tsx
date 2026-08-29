@@ -1,11 +1,10 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { useApp } from "@/context/AppContext";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 import type { Breed } from "@/data/breeds";
 
 interface Props {
@@ -22,7 +21,11 @@ const item = {
 };
 
 export default function BreedSection({ breeds }: Props) {
-  const { language } = useApp();
+  const locale = useLocale();
+  const t = useTranslations("DogCard");
+
+  const sizeLabel = (category: string) =>
+    category === "petit" ? t("small") : category === "moyen" ? t("medium") : t("large");
 
   return (
     <motion.div
@@ -33,7 +36,7 @@ export default function BreedSection({ breeds }: Props) {
       className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4"
     >
       {breeds.slice(0, 10).map((breed) => {
-        const name = language === "en" ? breed.nameEn : breed.name;
+        const name = locale === "en" ? breed.nameEn : breed.name;
         return (
           <motion.div key={breed.id} variants={item}>
             <Link
@@ -43,7 +46,7 @@ export default function BreedSection({ breeds }: Props) {
               <div className="relative h-16 w-16 rounded-2xl overflow-hidden ring-2 ring-black/[0.04] group-hover:ring-primary/20 transition-all">
                 <Image
                   src={breed.image}
-                  alt={`${name} — race canine`}
+                  alt={name}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                   sizes="64px"
@@ -53,11 +56,7 @@ export default function BreedSection({ breeds }: Props) {
                 <p className="text-xs font-extrabold text-text-premium group-hover:text-primary transition-colors leading-tight">
                   {name}
                 </p>
-                <p className="text-[10px] text-text-premium/50 mt-0.5 capitalize">
-                  {language === "fr"
-                    ? (breed.category === "petit" ? "Petit" : breed.category === "moyen" ? "Moyen" : "Grand")
-                    : (breed.category === "petit" ? "Small" : breed.category === "moyen" ? "Medium" : "Large")}
-                </p>
+                <p className="text-[10px] text-text-premium/50 mt-0.5">{sizeLabel(breed.category)}</p>
               </div>
             </Link>
           </motion.div>

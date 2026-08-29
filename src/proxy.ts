@@ -1,5 +1,9 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/routing';
+
+const intlMiddleware = createMiddleware(routing);
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
@@ -34,7 +38,8 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  const response = NextResponse.next();
+  // Internationalization middleware
+  let response = intlMiddleware(request);
 
   // Security headers
   response.headers.set("X-DNS-Prefetch-Control", "on");
