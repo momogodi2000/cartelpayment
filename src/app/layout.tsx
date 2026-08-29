@@ -1,14 +1,12 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
 import PWARegister from "@/components/common/PWARegister";
 import { AppProvider } from "@/context/AppContext";
-import { CartProvider } from "@/context/CartContext";
 
 const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000");
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "AraHaven Aviary";
-const appLogo = "/logo.png";
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "PawElite";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -27,56 +25,68 @@ export const metadata: Metadata = {
   metadataBase: siteUrl,
   applicationName: siteName,
   title: {
-    default: `${siteName} | Premium Exotic Parrots & Hand-Tamed Macaws`,
+    default: `${siteName} — Chiens & Chiots de Race | Sélection Européenne`,
     template: `%s | ${siteName}`,
   },
   description:
-    "Certified exotic bird breeder specializing in ethically raised, hand-tamed, and legally documented macaws, cockatoos, and amazon parrots in Latin America.",
+    "PawElite sélectionne les meilleurs chiens et chiots de race pour vous accompagner. Découvrez nos profils détaillés, contactez-nous via WhatsApp. Sélection européenne responsable.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "AraHaven",
+    title: "PawElite",
   },
   keywords: [
-    "exotic birds",
-    "parrots for sale",
-    "hand-tamed macaw",
-    "cockatoo breeder",
-    "cites certified breeder",
+    "chiens de race europe",
+    "chiots de race",
+    "chiots disponibles france",
+    "golden retriever chiot",
+    "labrador chiot",
+    "berger allemand chiot",
+    "élevage canin responsable",
+    "chiot pedigree europe",
+    "dogs puppies europe",
+    "purebred dogs",
   ],
   icons: {
-    icon: [{ url: appLogo, type: "image/png" }],
-    shortcut: appLogo,
-    apple: appLogo,
+    icon: [{ url: "/logo.png", type: "image/png" }],
+    shortcut: "/logo.png",
+    apple: "/logo.png",
   },
   openGraph: {
     type: "website",
     url: "/",
     siteName,
-    title: `${siteName} | Premium Exotic Parrots`,
+    title: `${siteName} — Chiens & Chiots de Race Premium`,
     description:
-      "Explore legally documented, hand-tamed exotic parrots from a professional premium aviary.",
+      "Découvrez des chiens et chiots de race sélectionnés avec soin, issus d'élevages responsables en Europe. Transparence, bien-être et passion canine.",
     images: [
       {
-        url: appLogo,
+        url: "/logo.png",
         width: 512,
         height: 512,
-        alt: `${siteName} logo`,
+        alt: `${siteName} — Sélection Canine Européenne`,
       },
     ],
   },
   twitter: {
-    card: "summary",
-    title: `${siteName} | Premium Exotic Parrots`,
+    card: "summary_large_image",
+    title: `${siteName} — Chiens & Chiots de Race`,
     description:
-      "Explore legally documented, hand-tamed exotic parrots from a professional premium aviary.",
-    images: [appLogo],
+      "Sélection premium de chiens et chiots de race en Europe. Contact direct via WhatsApp.",
+    images: ["/logo.png"],
+  },
+  alternates: {
+    canonical: siteUrl.toString(),
+    languages: {
+      "fr": `${siteUrl.toString()}`,
+      "en": `${siteUrl.toString()}`,
+    },
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1A6B3C",
+  themeColor: "#7A5C2E",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -92,7 +102,7 @@ export default async function RootLayout({
     | "light"
     | "dark"
     | "exotic";
-  const locale = (cookieStore.get("locale")?.value || "en") as "en" | "fr";
+  const locale = (cookieStore.get("locale")?.value || "fr") as "en" | "fr";
 
   return (
     <html
@@ -103,10 +113,8 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans">
         <AppProvider initialTheme={theme} initialLanguage={locale}>
-          <CartProvider>
-            <PWARegister />
-            {children}
-          </CartProvider>
+          <PWARegister />
+          {children}
         </AppProvider>
       </body>
     </html>

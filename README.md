@@ -1,98 +1,49 @@
-# AraHaven Exotic Aviary
+# PawElite
 
-Premium Next.js platform for a professional exotic parrot breeder. The app combines a public catalog, WhatsApp-first inquiry cart, admin CMS, newsletter campaigns, PWA support, PostgreSQL data storage, Docker, CI, and health monitoring.
+Premium Next.js frontend platform for a professional European dog & puppy breeder vitrine. 
+The application provides a static catalog and content showcase without a backend, designed to route all inquiries and leads to WhatsApp.
 
-## Tech Stack
+## Features
 
-- Next.js 16 App Router, React 19, TypeScript strict mode
-- Tailwind CSS 4 design tokens and Framer Motion
-- Prisma ORM with PostgreSQL or Neon
-- bcryptjs password hashing, jose JWT sessions, HttpOnly cookies
-- Nodemailer SMTP abstraction
-- Vitest coverage, Playwright script, GitHub Actions CI
-- Docker and docker-compose
+- **Next.js App Router**: Fast, optimized server-rendered and static pages.
+- **Frontend Only**: No database, Prisma, or complex backend dependencies. 
+- **Static Data Management**: Content is managed via TypeScript static data files (`src/data/*.ts`), allowing simple content updates without a CMS.
+- **WhatsApp Integration**: All user interactions (inquiries about dogs, contact forms) are routed dynamically to a WhatsApp number with pre-filled context.
+- **Bilingual Interface**: Support for French (FR) and English (EN) using React Context and centralized dictionaries.
+- **Modern UI**: Styled with Tailwind CSS, Framer Motion animations, and Radix UI primitives.
+- **SEO Optimized**: Dynamic metadata, structured JSON-LD for dogs, and optimized standard `robots.txt` and `sitemap.xml`.
 
-## Install
+## Setup
 
 ```bash
+# Install dependencies
 npm install
+
+# Copy environment variables and adjust if needed
 cp .env.example .env
-npm run db:generate
-npm run db:push
-npm run db:seed
+
+# Start development server
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:3000` to view the site.
 
-## Environment
+## Architecture
 
-Required production variables:
+- **`src/app/`**: Next.js App Router pages (Homepage, `/catalogue`, `/catalogue/[slug]`, `/faq`, `/contact`, `/a-propos`).
+- **`src/components/`**: Reusable React components (UI elements, layout, sections).
+- **`src/data/`**: Static datasets for breeds, dogs, FAQ, site configuration, and testimonials. All demo data is marked clearly.
+- **`src/context/`**: Global state management (`AppContext.tsx`) for theme and language.
+- **`src/lib/`**: Utilities like `translations.ts` and `serverTranslations.ts`.
 
-- `DATABASE_URL`
-- `JWT_SECRET` or `AUTH_SECRET` or `SESSION_SECRET`
-- `NEXT_PUBLIC_SITE_URL`
-- `NEXT_PUBLIC_SITE_NAME`
-- `NEXT_PUBLIC_WHATSAPP_NUMBER`
-- `UPLOADTHING_TOKEN` for production parrot image uploads
-- `DEFAULT_ADMIN_1_EMAIL`, `DEFAULT_ADMIN_1_PASSWORD`, `DEFAULT_ADMIN_1_NAME`
-- `DEFAULT_ADMIN_2_EMAIL`, `DEFAULT_ADMIN_2_PASSWORD`, `DEFAULT_ADMIN_2_NAME`
+## Deployment
 
-Optional SMTP variables:
-
-- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_SECURE`
-
-Never commit real secrets. The seeder now fails safely if default admin credentials are missing.
-
-## Database
-
-Schema lives in [prisma/schema.prisma](/d:/IT%20Project/elvis/prisma/schema.prisma). It includes admins, parrots, parrot images, categories, blog posts, gallery, FAQs, testimonials, contact messages, cart inquiries, newsletter subscribers, email campaigns, audit logs, and site settings.
-
-Parrot image files are not stored as binary blobs in Neon. In production, `/api/upload` sends authenticated admin uploads to UploadThing and stores the returned URL plus provider metadata (`provider`, `storageKey`, `fileHash`) in the `ParrotImage` table. If `UPLOADTHING_TOKEN` is absent, the route falls back to local `public/uploads/parrots` storage for development only.
-
-Useful commands:
+The application is highly optimized for deployment to edge networks (Vercel, Cloudflare Pages, Netlify) as it is primarily a static exportable frontend site.
 
 ```bash
-npm run db:generate
-npm run db:push
-npm run db:seed
-```
-
-Set `SEED_RESET=true` only when you intentionally want to clear seed-owned content before re-seeding. Admin users are created only when absent; existing admin passwords are not overwritten.
-
-## Quality
-
-```bash
-npm run lint
-npm run typecheck
-npm run test
-npm run test:coverage
+# Build the production bundle
 npm run build
+
+# Start the production server locally
+npm run start
 ```
-
-Coverage thresholds are configured in [vitest.config.ts](/d:/IT%20Project/elvis/vitest.config.ts): branches 85%, functions 90%, lines 90%, statements 90% for tested modules.
-
-## Docker
-
-```bash
-npm run docker:build
-npm run docker:run
-docker-compose up --build
-```
-
-The Dockerfile performs a Prisma client generation and Next.js production build, then runs the app with `next start`.
-
-## CI/CD
-
-GitHub Actions in [.github/workflows/ci.yml](/d:/IT%20Project/elvis/.github/workflows/ci.yml) runs install, Prisma generation, lint, typecheck, tests, coverage, build, security audit, and Docker build. The workflow now fails on real quality failures instead of continuing past them.
-
-## Monitoring
-
-- `GET /api/health`: application and database health
-- `GET /api/status`: uptime, memory, environment, database latency, timestamp
-
-Future-ready hooks are documented for Sentry, Logtail, Grafana, Prometheus, and Vercel Analytics.
-
-## Admin
-
-Admin login is available at `/admin/login`. Protected dashboard routes live under `/admin/dashboard`, including parrots, blog, gallery, newsletter, inquiries/messages, and settings.

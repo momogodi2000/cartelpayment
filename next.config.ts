@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+﻿import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -15,19 +15,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "utfs.io",
-      },
-      {
-        protocol: "https",
-        hostname: "ufs.sh",
-      },
-      {
-        protocol: "https",
-        hostname: "*.ufs.sh",
-      },
-      {
-        protocol: "https",
-        hostname: "uploadthing.com",
+        hostname: "source.unsplash.com",
       },
     ],
   },

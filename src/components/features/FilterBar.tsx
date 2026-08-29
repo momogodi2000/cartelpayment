@@ -1,162 +1,161 @@
-"use client";
+﻿"use client";
 
 import React from "react";
-import { Search, RotateCcw, SlidersHorizontal } from "lucide-react";
+import { Search, X, SlidersHorizontal } from "lucide-react";
 import { useApp } from "@/context/AppContext";
+import { useTranslation } from "@/lib/translations";
+import type { Breed } from "@/data/breeds";
 
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-}
-
-interface FilterState {
+export interface DogFilterState {
   search: string;
-  category: string;
-  rarity: string;
+  breed: string;
+  sex: string;
   size: string;
-  status: string;
+  availability: string;
   priceOrder: string;
+  country: string;
 }
 
-interface FilterBarProps {
-  categories: Category[];
-  filters: FilterState;
-  onFilterChange: (key: keyof FilterState, value: string) => void;
+interface Props {
+  breeds: Breed[];
+  filters: DogFilterState;
+  onFilterChange: (key: keyof DogFilterState, value: string) => void;
   onReset: () => void;
+  countries: string[];
 }
 
-export default function FilterBar({ categories, filters, onFilterChange, onReset }: FilterBarProps) {
+export default function FilterBar({ breeds, filters, onFilterChange, onReset, countries }: Props) {
   const { language } = useApp();
+  const { t } = useTranslation(language);
 
-  const getCategoryName = (name: string) => {
-    if (language === "en") return name;
-    if (name.toLowerCase() === "macaws") return "Aras";
-    if (name.toLowerCase() === "cockatoos") return "Cacatoès";
-    if (name.toLowerCase() === "amazons") return "Amazones";
-    return name;
-  };
+  const hasActiveFilters = Object.values(filters).some((v) => v !== "");
+
+  const labelClass = "block text-xs font-bold text-text-premium/60 uppercase tracking-wider mb-1.5";
+  const selectClass = "w-full px-3 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-black/10 text-sm font-semibold text-text-premium focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors";
+  const inputClass = "w-full pl-9 pr-3 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.1] bg-white dark:bg-black/10 text-sm font-semibold text-text-premium placeholder:text-text-premium/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors";
 
   return (
-    <div className="bg-white rounded-3xl p-6 border border-black/[0.06] shadow-sm space-y-6">
+    <div className="bg-white dark:bg-black/10 rounded-3xl border border-black/[0.06] dark:border-white/[0.08] shadow-sm p-6 space-y-5 sticky top-24">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-black/[0.04]">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="h-4.5 w-4.5 text-primary" />
-          <h2 className="font-extrabold text-sm uppercase tracking-wider text-text-premium">
-            {language === "en" ? "Filter Options" : "Options de filtrage"}
-          </h2>
+          <SlidersHorizontal className="h-4 w-4 text-primary" />
+          <span className="text-sm font-extrabold text-text-premium">{t("filter.title")}</span>
         </div>
-        <button
-          onClick={onReset}
-          className="text-xs font-bold text-text-premium/50 hover:text-primary flex items-center gap-1 transition-colors"
-          title={language === "en" ? "Reset all filters" : "Réinitialiser tous les filtres"}
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          {language === "en" ? "Reset" : "Réinitialiser"}
-        </button>
+        {hasActiveFilters && (
+          <button
+            onClick={onReset}
+            className="flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary-hover transition-colors"
+          >
+            <X className="h-3.5 w-3.5" />
+            {t("filter.reset")}
+          </button>
+        )}
       </div>
 
-      {/* Search Input */}
-      <div className="space-y-1.5">
-        <label className="block text-xs font-bold text-text-premium/70 uppercase tracking-wider">
-          {language === "en" ? "Search Bird" : "Rechercher"}
-        </label>
+      {/* Search */}
+      <div>
+        <label className={labelClass}>{t("filter.search")}</label>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-premium/45" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-premium/40 pointer-events-none" />
           <input
             type="text"
+            placeholder={t("filter.search")}
             value={filters.search}
             onChange={(e) => onFilterChange("search", e.target.value)}
-            placeholder={language === "en" ? "Name or species..." : "Nom ou espèce..."}
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-black/[0.08] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-xs"
+            className={inputClass}
           />
         </div>
       </div>
 
-      {/* Category / Species */}
-      <div className="space-y-1.5">
-        <label className="block text-xs font-bold text-text-premium/70 uppercase tracking-wider">
-          {language === "en" ? "Species Group" : "Groupe d'espèces"}
-        </label>
+      {/* Breed */}
+      <div>
+        <label className={labelClass}>{t("filter.breed")}</label>
         <select
-          value={filters.category}
-          onChange={(e) => onFilterChange("category", e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl border border-black/[0.08] bg-white outline-none focus:border-primary transition-all text-xs"
+          value={filters.breed}
+          onChange={(e) => onFilterChange("breed", e.target.value)}
+          className={selectClass}
         >
-          <option value="">{language === "en" ? "All Species" : "Toutes les espèces"}</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.slug}>
-              {getCategoryName(cat.name)}
+          <option value="">{t("filter.allBreeds")}</option>
+          {breeds.map((b) => (
+            <option key={b.slug} value={b.slug}>
+              {language === "en" ? b.nameEn : b.name}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Rarity */}
-      <div className="space-y-1.5">
-        <label className="block text-xs font-bold text-text-premium/70 uppercase tracking-wider">
-          {language === "en" ? "Rarity Level" : "Niveau de rareté"}
-        </label>
+      {/* Sex */}
+      <div>
+        <label className={labelClass}>{t("filter.sex")}</label>
         <select
-          value={filters.rarity}
-          onChange={(e) => onFilterChange("rarity", e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl border border-black/[0.08] bg-white outline-none focus:border-primary transition-all text-xs"
+          value={filters.sex}
+          onChange={(e) => onFilterChange("sex", e.target.value)}
+          className={selectClass}
         >
-          <option value="">{language === "en" ? "All Levels" : "Tous les niveaux"}</option>
-          <option value="COMMON">{language === "en" ? "Common" : "Commun"}</option>
-          <option value="RARE">{language === "en" ? "Rare" : "Rare"}</option>
-          <option value="EXCEPTIONAL">{language === "en" ? "Exceptional" : "Exceptionnel"}</option>
+          <option value="">{t("filter.allSexes")}</option>
+          <option value="male">{t("filter.male")}</option>
+          <option value="femelle">{t("filter.female")}</option>
         </select>
       </div>
 
       {/* Size */}
-      <div className="space-y-1.5">
-        <label className="block text-xs font-bold text-text-premium/70 uppercase tracking-wider">
-          {language === "en" ? "Parrot Size" : "Taille du perroquet"}
-        </label>
+      <div>
+        <label className={labelClass}>{t("filter.size")}</label>
         <select
           value={filters.size}
           onChange={(e) => onFilterChange("size", e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl border border-black/[0.08] bg-white outline-none focus:border-primary transition-all text-xs"
+          className={selectClass}
         >
-          <option value="">{language === "en" ? "All Sizes" : "Toutes les tailles"}</option>
-          <option value="SMALL">{language === "en" ? "Small" : "Petite"}</option>
-          <option value="MEDIUM">{language === "en" ? "Medium" : "Moyenne"}</option>
-          <option value="LARGE">{language === "en" ? "Large" : "Grande"}</option>
+          <option value="">{t("filter.allSizes")}</option>
+          <option value="petit">{t("filter.small")}</option>
+          <option value="moyen">{t("filter.medium")}</option>
+          <option value="grand">{t("filter.large")}</option>
         </select>
       </div>
 
-      {/* Availability Status */}
-      <div className="space-y-1.5">
-        <label className="block text-xs font-bold text-text-premium/70 uppercase tracking-wider">
-          {language === "en" ? "Availability Status" : "Statut de disponibilité"}
-        </label>
+      {/* Availability */}
+      <div>
+        <label className={labelClass}>{t("filter.availability")}</label>
         <select
-          value={filters.status}
-          onChange={(e) => onFilterChange("status", e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl border border-black/[0.08] bg-white outline-none focus:border-primary transition-all text-xs"
+          value={filters.availability}
+          onChange={(e) => onFilterChange("availability", e.target.value)}
+          className={selectClass}
         >
-          <option value="">{language === "en" ? "All Statuses" : "Tous les statuts"}</option>
-          <option value="AVAILABLE">{language === "en" ? "Available" : "Disponible"}</option>
-          <option value="RESERVED">{language === "en" ? "Reserved" : "Réservé"}</option>
-          <option value="SOLD">{language === "en" ? "Sold" : "Vendu"}</option>
+          <option value="">{t("filter.allStatuses")}</option>
+          <option value="disponible">{t("filter.available")}</option>
+          <option value="réservé">{t("filter.reserved")}</option>
         </select>
       </div>
 
-      {/* Price Sorting */}
-      <div className="space-y-1.5">
-        <label className="block text-xs font-bold text-text-premium/70 uppercase tracking-wider">
-          {language === "en" ? "Sort by Price" : "Trier par prix"}
-        </label>
+      {/* Country */}
+      {countries.length > 0 && (
+        <div>
+          <label className={labelClass}>{t("filter.country")}</label>
+          <select
+            value={filters.country}
+            onChange={(e) => onFilterChange("country", e.target.value)}
+            className={selectClass}
+          >
+            <option value="">{t("filter.allCountries")}</option>
+            {countries.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Price Order */}
+      <div>
+        <label className={labelClass}>{t("filter.priceOrder")}</label>
         <select
           value={filters.priceOrder}
           onChange={(e) => onFilterChange("priceOrder", e.target.value)}
-          className="w-full px-3 py-2.5 rounded-xl border border-black/[0.08] bg-white outline-none focus:border-primary transition-all text-xs"
+          className={selectClass}
         >
-          <option value="">{language === "en" ? "Default Order" : "Ordre par défaut"}</option>
-          <option value="low-to-high">{language === "en" ? "Low to High" : "Du moins cher au plus cher"}</option>
-          <option value="high-to-low">{language === "en" ? "High to Low" : "Du plus cher au moins cher"}</option>
+          <option value="">{t("filter.newest")}</option>
+          <option value="low-to-high">{t("filter.lowToHigh")}</option>
+          <option value="high-to-low">{t("filter.highToLow")}</option>
         </select>
       </div>
     </div>

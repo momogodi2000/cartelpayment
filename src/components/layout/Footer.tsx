@@ -1,121 +1,117 @@
-"use client";
-
-import React from "react";
+﻿import React from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Phone, Mail, MapPin, Award, ChevronRight } from "lucide-react";
-import { getWhatsAppLink } from "@/lib/whatsapp";
-import { useApp } from "@/context/AppContext";
-import { useTranslation } from "@/lib/translations";
-import NewsletterForm from "@/components/common/NewsletterForm";
+import { MessageSquare, Heart, Mail } from "lucide-react";
+
+const footerLinks = {
+  main: [
+    { href: "/catalogue", labelFr: "Nos Chiens", labelEn: "Our Dogs" },
+    { href: "/a-propos", labelFr: "Notre Histoire", labelEn: "Our Story" },
+    { href: "/faq", labelFr: "FAQ", labelEn: "FAQ" },
+    { href: "/contact", labelFr: "Contact", labelEn: "Contact" },
+  ],
+  legal: [
+    { href: "/mentions-legales", labelFr: "Mentions Légales", labelEn: "Legal Notice" },
+    { href: "/confidentialite", labelFr: "Confidentialité", labelEn: "Privacy" },
+  ],
+};
+
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "33600000000";
+const cleanPhone = whatsappNumber.replace(/\D/g, "");
+const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Bonjour ! Je souhaite en savoir plus sur vos chiens disponibles.")}`;
 
 export default function Footer() {
-  const { language } = useApp();
-  const { t } = useTranslation(language);
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "50688888888";
-  const defaultText = language === "en"
-    ? "Hello! I visited your website and would like to ask some questions about your breeding methods."
-    : "Bonjour ! J'ai visité votre site web et j'aimerais poser des questions sur vos méthodes d'élevage.";
-  const whatsappUrl = getWhatsAppLink(phone, defaultText);
-
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#0b0f19] dark:bg-[#070a10] text-white/90 pt-16 pb-8 mt-auto border-t border-white/[0.05]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-white/[0.08]">
-          {/* Column 1: Breeder Info & Licensing */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg bg-white border border-white/10 flex items-center justify-center p-1 shadow-sm">
-                <Image src="/logo.png" alt="AraHaven Logo" width={32} height={32} className="h-full w-full object-contain" />
-              </div>
-              <span className="font-extrabold text-lg tracking-tight text-white">
-                ARA<span className="text-accent">HAVEN</span>
-              </span>
-            </div>
-            <p className="text-sm text-white/60 leading-relaxed">
-              {t("footer.desc")}
-            </p>
-            <div className="flex items-center gap-2 text-xs text-accent bg-accent/10 px-3 py-2 rounded-lg border border-accent/20 w-fit">
-              <Award className="h-4 w-4 shrink-0" />
-              <span>{t("hero.badge")}</span>
-            </div>
-          </div>
-
-          {/* Column 2: Quick Links */}
+    <footer className="bg-text-premium text-white/80 mt-auto">
+      {/* Main Footer */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
+        {/* Brand */}
+        <div className="space-y-4">
           <div>
-            <h3 className="font-bold text-sm text-white uppercase tracking-wider mb-5">
-              {t("footer.links")}
-            </h3>
-            <ul className="space-y-3">
-              {[
-                { href: "/", label: t("nav.home") },
-                { href: "/catalog", label: t("nav.catalog") },
-                { href: "/gallery", label: t("nav.gallery") },
-                { href: "/about", label: t("nav.about") },
-                { href: "/blog", label: t("nav.blog") },
-                { href: "/contact", label: t("nav.contact") },
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="group text-sm text-white/70 hover:text-white flex items-center gap-1 transition-colors duration-200"
-                  >
-                    <ChevronRight className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                    <span>{link.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 3: Newsletter Signup */}
-          <div className="space-y-4">
-            <NewsletterForm />
-          </div>
-
-          {/* Column 4: Contact details */}
-          <div className="space-y-4">
-            <h3 className="font-bold text-sm text-white uppercase tracking-wider mb-5">
-              {t("footer.contactTitle")}
-            </h3>
-            <p className="text-sm text-white/70">
-              {t("footer.contactDesc")}
+            <h2 className="text-xl font-black font-heading text-white">PawElite</h2>
+            <p className="text-xs font-semibold text-white/50 uppercase tracking-widest mt-0.5">
+              L'Excellence Canine Européenne
             </p>
-            <div className="space-y-3 text-sm text-white/70">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 hover:text-white transition-colors group"
-              >
-                <Phone className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
-                <span>{t("footer.whatsappContact")}</span>
-              </a>
-              <div className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span>{t("contact.locationVal")}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-primary" />
-                <span>nursery@arahaven.com</span>
-              </div>
-            </div>
           </div>
+          <p className="text-sm leading-relaxed text-white/60 max-w-xs">
+            Sélection premium de chiens et chiots de race issus d'élevages européens responsables.
+          </p>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors"
+          >
+            <MessageSquare className="h-4 w-4" />
+            Contacter via WhatsApp
+          </a>
         </div>
 
-        {/* Bottom bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-white/40 gap-4">
-          <p>
-            {`© ${new Date().getFullYear()} `}{t("footer.rights")}
+        {/* Navigation */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">Navigation</h3>
+          <ul className="space-y-2">
+            {footerLinks.main.map(({ href, labelFr }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-sm text-white/60 hover:text-white transition-colors"
+                >
+                  {labelFr}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Contact */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">Contact</h3>
+          <div className="space-y-3">
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
+            >
+              <MessageSquare className="h-4 w-4 text-emerald-400 shrink-0" />
+              WhatsApp — Contact Direct
+            </a>
+            <a
+              href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelite.eu"}`}
+              className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
+            >
+              <Mail className="h-4 w-4 text-primary shrink-0" />
+              {process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelite.eu"}
+            </a>
+          </div>
+
+          <div className="pt-4 p-4 rounded-xl bg-white/5 border border-white/10">
+            <p className="text-xs text-white/40 leading-relaxed">
+              <strong className="text-white/60">Démonstration :</strong> Ce site présente du contenu illustratif. Les données seront mises à jour avec les informations réelles de l'éleveur.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-white/40 flex items-center gap-1">
+            © {currentYear} PawElite. Tous droits réservés. Fait avec{" "}
+            <Heart className="h-3 w-3 text-accent inline" /> pour les amoureux des chiens.
           </p>
-          <div className="flex items-center gap-6">
-            <Link href="/offline" className="hover:underline">
-              {t("footer.offline")}
-            </Link>
-            <Link href="/admin/login" className="hover:underline text-white/30 hover:text-white">
-              {t("nav.admin")}
-            </Link>
+          <div className="flex items-center gap-4">
+            {footerLinks.legal.map(({ href, labelFr }) => (
+              <Link
+                key={href}
+                href={href}
+                className="text-xs text-white/40 hover:text-white/60 transition-colors"
+              >
+                {labelFr}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

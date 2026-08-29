@@ -1,0 +1,83 @@
+/**
+ * PawElite — Central Site Configuration
+ *
+ * Single source of truth for all site-wide settings.
+ * Update whatsappNumber, siteName, and siteUrl for production.
+ */
+
+export const siteConfig = {
+  // Brand Identity
+  name: "PawElite",
+  legalName: "PawElite — Sélection Canine Européenne",
+  tagline: "L'excellence canine européenne",
+  taglineEn: "European Canine Excellence",
+  description:
+    "Découvrez des chiens et chiots de race sélectionnés avec soin, issus d'élevages responsables en Europe.",
+  descriptionEn:
+    "Discover carefully selected purebred dogs and puppies from responsible European breeders.",
+
+  // Contact & Commerce
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "33600000000",
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelite.eu",
+
+  // URLs
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu",
+
+  // Currency & Region
+  currency: "EUR",
+  currencySymbol: "€",
+  defaultLocale: "fr" as const,
+  locales: ["fr", "en"] as const,
+  region: "Europe",
+
+  // Social Media
+  social: {
+    instagram: null as string | null,
+    facebook: null as string | null,
+  },
+
+  // SEO Defaults
+  seo: {
+    titleSuffix: "| PawElite",
+    defaultTitle: "PawElite — Chiens & Chiots de Race | Sélection Européenne",
+    defaultDescription:
+      "PawElite sélectionne les meilleurs chiens et chiots de race pour vous accompagner. Découvrez nos profils détaillés, contactez-nous via WhatsApp.",
+    keywords: [
+      "chiens de race europe",
+      "chiots de race",
+      "chiots disponibles france",
+      "golden retriever chiot",
+      "labrador chiot",
+      "berger allemand chiot",
+      "élevage canin responsable",
+      "chiot pedigree europe",
+    ],
+    ogImage: "/og-image.jpg",
+  },
+} as const;
+
+/**
+ * Generate a WhatsApp link with a contextualized message.
+ */
+export function getWhatsAppLink(message: string): string {
+  const cleanPhone = siteConfig.whatsappNumber.replace(/\D/g, "");
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Generate a contextualized WhatsApp inquiry for a specific dog.
+ */
+export function getDogInquiryMessage(
+  dogName: string,
+  breed: string,
+  slug: string,
+  locale: "fr" | "en" = "fr"
+): string {
+  const url = `${siteConfig.siteUrl}/catalogue/${slug}`;
+  if (locale === "en") {
+    return `Hello! I am interested in ${dogName} (${breed}) listed on your website. Could you provide more info about availability and next steps? Link: ${url}`;
+  }
+  return `Bonjour ! Je suis intéressé(e) par ${dogName} (${breed}) présenté(e) sur votre site. Pourriez-vous me donner plus d'informations sur la disponibilité et les modalités ? Lien : ${url}`;
+}
+
+export default siteConfig;

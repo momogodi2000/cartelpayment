@@ -1,49 +1,30 @@
-import { MetadataRoute } from "next";
-import prisma from "@/lib/db";
+﻿import { MetadataRoute } from "next";
+import dogs from "@/data/dogs";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://arahaven.com";
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu";
 
-  // 1. Core static routes
-  const staticRoutes = ["", "/about", "/gallery", "/catalog", "/blog", "/contact"].map((route) => ({
+  // Static routes
+  const staticRoutes = [
+    { route: "", priority: 1.0, changeFreq: "weekly" as const },
+    { route: "/catalogue", priority: 0.9, changeFreq: "daily" as const },
+    { route: "/about", priority: 0.7, changeFreq: "monthly" as const },
+    { route: "/faq", priority: 0.8, changeFreq: "monthly" as const },
+    { route: "/contact", priority: 0.7, changeFreq: "monthly" as const },
+  ].map(({ route, priority, changeFreq }) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: route === "" ? 1.0 : 0.8,
+    changeFrequency: changeFreq,
+    priority,
   }));
 
-  // 2. Fetch dynamic parrots for sitemap
-  let parrotRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const parrots = await prisma.parrot.findMany({
-      select: { slug: true, updatedAt: true },
-    });
-    parrotRoutes = parrots.map((bird) => ({
-      url: `${baseUrl}/catalog/${bird.slug}`,
-      lastModified: bird.updatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }));
-  } catch (error) {
-    console.error("Error fetching parrots for sitemap:", error);
-  }
+  // Dog detail pages from static data
+  const dogRoutes = dogs.map((dog) => ({
+    url: `${baseUrl}/catalogue/${dog.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
 
-  // 3. Fetch dynamic blog posts for sitemap
-  let blogRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const posts = await prisma.blogPost.findMany({
-      where: { published: true },
-      select: { slug: true, updatedAt: true },
-    });
-    blogRoutes = posts.map((post) => ({
-      url: `${baseUrl}/blog/${post.slug}`,
-      lastModified: post.updatedAt,
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    }));
-  } catch (error) {
-    console.error("Error fetching blog posts for sitemap:", error);
-  }
-
-  return [...staticRoutes, ...parrotRoutes, ...blogRoutes];
+  return [...staticRoutes, ...dogRoutes];
 }

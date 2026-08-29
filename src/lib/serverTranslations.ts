@@ -1,20 +1,14 @@
-import { cookies } from "next/headers";
-import { Locale, getTranslation as clientGetTranslation } from "./translations";
+﻿import { cookies } from "next/headers";
+import { getTranslation, type Locale } from "@/lib/translations";
 
 export async function getServerLocale(): Promise<Locale> {
-  try {
-    const cookieStore = await cookies();
-    const locale = cookieStore.get("locale")?.value;
-    return (locale === "fr" ? "fr" : "en") as Locale;
-  } catch {
-    return "en";
-  }
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("locale")?.value;
+  return (locale === "en" || locale === "fr" ? locale : "fr") as Locale;
 }
 
 export async function getServerTranslation() {
   const locale = await getServerLocale();
-  return {
-    t: clientGetTranslation(locale).t,
-    locale,
-  };
+  const { t } = getTranslation(locale);
+  return { t, locale };
 }

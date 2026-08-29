@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 /*
  * Map the Tailwind `dark:` variant to our custom data-theme system.
@@ -9,21 +9,21 @@
 
 @theme {
   /* Typography — loaded via next/font (no external @import needed) */
-  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
-  --font-heading: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-heading: var(--font-playfair), "Playfair Display", Georgia, serif;
 
   /* Primary Brand Colors */
   --color-primary: hsl(var(--primary));
   --color-primary-hover: hsl(var(--primary-hover));
   --color-primary-light: hsl(var(--primary-light));
-  
+
   --color-secondary: hsl(var(--secondary));
   --color-secondary-hover: hsl(var(--secondary-hover));
-  
+
   --color-accent: hsl(var(--accent));
   --color-accent-hover: hsl(var(--accent-hover));
   --color-accent-light: hsl(var(--accent-light));
-  
+
   --color-bg-premium: hsl(var(--bg-premium));
   --color-text-premium: hsl(var(--text-premium));
 
@@ -51,216 +51,147 @@
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 /* LIGHT THEME (Default)                               */
+/* Warm, premium palette — canine breeder aesthetic    */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 :root, [data-theme="light"] {
-  --primary: 145, 60%, 26%;
-  --primary-hover: 145, 60%, 20%;
-  --primary-light: 145, 45%, 94%;
-  --secondary: 168, 80%, 27%;
-  --secondary-hover: 168, 80%, 20%;
-  --accent: 35, 76%, 43%;
-  --accent-hover: 35, 76%, 35%;
-  --accent-light: 35, 70%, 94%;
-  --bg-premium: 0, 0%, 96%;
-  --text-premium: 0, 0%, 10%;
+  /* Warm Amber Gold — prestige, warmth */
+  --primary: 38, 65%, 38%;
+  --primary-hover: 38, 65%, 30%;
+  --primary-light: 38, 50%, 95%;
 
-  /* Semantic tokens for forms, cards, borders */
+  /* Deep Forest Green — nature, trust */
+  --secondary: 155, 40%, 28%;
+  --secondary-hover: 155, 40%, 22%;
+
+  /* Rich Terracotta — character, passion */
+  --accent: 18, 60%, 46%;
+  --accent-hover: 18, 60%, 38%;
+  --accent-light: 18, 55%, 95%;
+
+  /* Warm cream background */
+  --bg-premium: 35, 20%, 97%;
+  --text-premium: 25, 15%, 12%;
+
+  /* Semantic tokens */
   --input-bg: 0, 0%, 100%;
-  --input-border: 0, 0%, 85%;
-  --input-text: 0, 0%, 10%;
-  --input-placeholder: 0, 0%, 55%;
+  --input-border: 35, 15%, 82%;
+  --input-text: 25, 15%, 12%;
+  --input-placeholder: 30, 10%, 50%;
   --card-bg: 0, 0%, 100%;
-  --card-border: 0, 0%, 92%;
+  --card-border: 35, 20%, 90%;
   --dropdown-bg: 0, 0%, 100%;
-  --table-row-hover: 0, 0%, 97%;
+  --table-row-hover: 35, 20%, 97%;
   --modal-bg: 0, 0%, 100%;
-  --muted-text: 0, 0%, 45%;
-  --surface: 0, 0%, 99%;
-  --border-subtle: 0, 0%, 90%;
+  --muted-text: 30, 10%, 45%;
+  --surface: 35, 15%, 99%;
+  --border-subtle: 35, 20%, 88%;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* DARK THEME                                          */
+/* DARK THEME — Deep Night                             */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 [data-theme="dark"] {
-  --primary: 142, 70%, 45%;
-  --primary-hover: 142, 70%, 35%;
-  --primary-light: 142, 30%, 12%;
-  --secondary: 174, 75%, 45%;
-  --secondary-hover: 174, 75%, 35%;
-  --accent: 45, 90%, 55%;
-  --accent-hover: 45, 90%, 45%;
-  --accent-light: 45, 30%, 15%;
-  --bg-premium: 220, 20%, 10%;
-  --text-premium: 220, 10%, 95%;
+  --primary: 38, 70%, 52%;
+  --primary-hover: 38, 70%, 42%;
+  --primary-light: 38, 30%, 14%;
+  --secondary: 155, 50%, 42%;
+  --secondary-hover: 155, 50%, 32%;
+  --accent: 18, 65%, 58%;
+  --accent-hover: 18, 65%, 48%;
+  --accent-light: 18, 30%, 16%;
+  --bg-premium: 220, 18%, 10%;
+  --text-premium: 35, 20%, 94%;
 
-  /* Dark mode semantic tokens */
-  --input-bg: 220, 20%, 15%;
-  --input-border: 220, 15%, 25%;
-  --input-text: 220, 10%, 92%;
-  --input-placeholder: 220, 10%, 50%;
-  --card-bg: 220, 20%, 13%;
-  --card-border: 220, 15%, 20%;
-  --dropdown-bg: 220, 20%, 12%;
-  --table-row-hover: 220, 20%, 16%;
-  --modal-bg: 220, 20%, 11%;
-  --muted-text: 220, 10%, 60%;
-  --surface: 220, 20%, 14%;
-  --border-subtle: 220, 15%, 22%;
+  --input-bg: 220, 18%, 15%;
+  --input-border: 220, 12%, 28%;
+  --input-text: 35, 15%, 90%;
+  --input-placeholder: 220, 8%, 52%;
+  --card-bg: 220, 15%, 13%;
+  --card-border: 220, 12%, 22%;
+  --dropdown-bg: 220, 18%, 14%;
+  --table-row-hover: 220, 15%, 16%;
+  --modal-bg: 220, 18%, 12%;
+  --muted-text: 220, 8%, 50%;
+  --surface: 220, 18%, 11%;
+  --border-subtle: 220, 12%, 24%;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* EXOTIC THEME                                        */
+/* ELEGANT THEME — Ivory & Gold                        */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 [data-theme="exotic"] {
-  --primary: 340, 80%, 55%;
-  --primary-hover: 340, 80%, 45%;
-  --primary-light: 340, 30%, 95%;
-  --secondary: 260, 65%, 55%;
-  --secondary-hover: 260, 65%, 45%;
-  --accent: 40, 95%, 55%;
-  --accent-hover: 40, 95%, 45%;
-  --accent-light: 40, 60%, 94%;
-  --bg-premium: 20, 50%, 97%;
-  --text-premium: 260, 40%, 15%;
+  --primary: 45, 80%, 40%;
+  --primary-hover: 45, 80%, 32%;
+  --primary-light: 45, 50%, 95%;
+  --secondary: 165, 45%, 32%;
+  --secondary-hover: 165, 45%, 24%;
+  --accent: 20, 70%, 50%;
+  --accent-hover: 20, 70%, 42%;
+  --accent-light: 20, 50%, 96%;
+  --bg-premium: 42, 30%, 96%;
+  --text-premium: 30, 20%, 10%;
 
-  --input-bg: 0, 0%, 100%;
-  --input-border: 340, 20%, 85%;
-  --input-text: 260, 40%, 15%;
-  --input-placeholder: 260, 20%, 60%;
-  --card-bg: 0, 0%, 100%;
-  --card-border: 340, 15%, 90%;
-  --dropdown-bg: 0, 0%, 100%;
-  --table-row-hover: 340, 20%, 97%;
-  --modal-bg: 0, 0%, 100%;
-  --muted-text: 260, 20%, 50%;
-  --surface: 20, 30%, 98%;
-  --border-subtle: 340, 15%, 88%;
+  --input-bg: 42, 25%, 99%;
+  --input-border: 42, 25%, 80%;
+  --input-text: 30, 20%, 10%;
+  --input-placeholder: 38, 15%, 50%;
+  --card-bg: 42, 25%, 99%;
+  --card-border: 42, 25%, 88%;
+  --dropdown-bg: 42, 25%, 99%;
+  --table-row-hover: 42, 25%, 96%;
+  --modal-bg: 42, 25%, 99%;
+  --muted-text: 38, 12%, 45%;
+  --surface: 42, 25%, 98%;
+  --border-subtle: 42, 22%, 86%;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* GLOBAL BASE                                         */
+/* GLOBAL UTILITIES                                    */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-body {
-  background-color: hsl(var(--bg-premium));
-  color: hsl(var(--text-premium));
-  font-family: 'Outfit', sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden;
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* FORM INPUT — DARK MODE FIXES                        */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-/* Universal input fix for dark mode */
-[data-theme="dark"] input,
-[data-theme="dark"] textarea,
-[data-theme="dark"] select {
-  background-color: hsl(var(--input-bg)) !important;
-  border-color: hsl(var(--input-border)) !important;
-  color: hsl(var(--input-text)) !important;
+/* Focus styles — accessible, visible */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-[data-theme="dark"] input::placeholder,
-[data-theme="dark"] textarea::placeholder {
-  color: hsl(var(--input-placeholder)) !important;
+/* Premium card hover */
+.card-hover {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.card-hover:hover {
+  box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
 }
 
-[data-theme="dark"] select option {
-  background-color: hsl(var(--dropdown-bg));
-  color: hsl(var(--input-text));
+/* Text gradient utility */
+.text-gradient {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Focus ring for dark mode */
-[data-theme="dark"] input:focus,
-[data-theme="dark"] textarea:focus,
-[data-theme="dark"] select:focus {
-  border-color: hsl(var(--primary)) !important;
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.25);
+/* Shimmer loading skeleton */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--border-subtle)) 25%,
+    hsl(var(--surface)) 50%,
+    hsl(var(--border-subtle)) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
 }
 
-/* Label dark mode visibility */
-[data-theme="dark"] label {
-  color: hsl(var(--text-premium));
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* TABLE — DARK MODE FIXES                             */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-[data-theme="dark"] table {
-  color: hsl(var(--text-premium));
-}
-
-[data-theme="dark"] tr:hover {
-  background-color: hsl(var(--table-row-hover));
-}
-
-[data-theme="dark"] th {
-  color: hsl(var(--text-premium));
-}
-
-[data-theme="dark"] td {
-  color: hsl(var(--text-premium));
-  border-color: hsl(220, 15%, 20%);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* CARD — DARK MODE FIXES                              */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-/* Catalog count bar and similar bg-white elements */
-[data-theme="dark"] .bg-white {
-  background-color: hsl(var(--card-bg)) !important;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* GLASSMORPHISM STYLES                                */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.glass {
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-[data-theme="dark"] .glass {
-  background: rgba(18, 24, 38, 0.55);
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-[data-theme="exotic"] .glass {
-  background: rgba(253, 244, 245, 0.45);
-  border-color: rgba(219, 39, 119, 0.15);
-}
-
-.glass-dark {
-  background: rgba(26, 26, 26, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* DROPDOWN NAVIGATION                                 */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.nav-dropdown {
-  animation: fadeSlide 0.2s ease-out forwards;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* SCROLLBAR UTILITIES                                 */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Custom Scrollbar for premium aesthetic */
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -269,60 +200,9 @@ body {
   background: hsl(var(--bg-premium));
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary) / 0.35);
-  border-radius: 4px;
+  background: hsl(var(--primary) / 0.4);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary) / 0.6);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* ABOUT PAGE NURSERY SECTION — DARK MODE              */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-[data-theme="dark"] .bg-white.py-16,
-[data-theme="dark"] .bg-white.py-20 {
-  background-color: hsl(var(--card-bg)) !important;
-  border-color: hsl(220, 15%, 20%) !important;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* BADGE / PILL UTILITIES                              */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.badge-available {
-  background-color: #16a34a;
-  color: white;
-}
-.badge-reserved {
-  background-color: #d97706;
-  color: white;
-}
-.badge-sold {
-  background-color: #dc2626;
-  color: white;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* SHIMMER LOADING ANIMATION                           */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--bg-premium)) 25%,
-    hsl(var(--primary) / 0.05) 50%,
-    hsl(var(--bg-premium)) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-/* TYPOGRAPHY UTILITIES                                */
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-@utility font-heading {
-  font-family: var(--font-heading);
-}
-
-/* Apply heading font to h1-h3 in content areas */
-.prose h1, .prose h2, .prose h3 {
-  font-family: var(--font-heading);
 }

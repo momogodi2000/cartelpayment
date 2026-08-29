@@ -1,50 +1,61 @@
-import React, { Suspense } from "react";
-import prisma from "@/lib/db";
-import CatalogClient from "./CatalogClient";
+﻿import React, { Suspense } from "react";
 import { getServerTranslation } from "@/lib/serverTranslations";
+import dogs from "@/data/dogs";
+import breeds from "@/data/breeds";
+import CatalogClient from "./CatalogClient";
 
-// Disable build cache cache to ensure client always sees correct database statuses
-export const revalidate = 0;
+export const revalidate = 86400;
 
-async function getCatalogData() {
-  try {
-    const list = await prisma.parrot.findMany({
-      include: {
-        images: {
-          orderBy: { order: "asc" },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    const parrots = list.map((p) => ({
-      ...p,
-      price: Number(p.price),
-    }));
-
-    const categories = await prisma.category.findMany({
-      orderBy: { name: "asc" },
-    });
-
-    return { parrots, categories };
-  } catch (error) {
-    console.error("Error fetching catalog data:", error);
-    return { parrots: [], categories: [] };
-  }
+export async function generateMetadata() {
+  return {
+    title: "Catalogue Chiens & Chiots de Race | PawElite",
+    description:
+      "Découvrez notre catalogue complet de chiens et chiots de race disponibles en Europe. Filtrez par race, sexe, âge et localisation.",
+    openGraph: {
+      title: "Catalogue Chiens & Chiots | PawElite",
+      description: "Tous nos chiens et chiots de race disponibles en Europe.",
+      type: "website",
+    },
+  };
 }
 
 export default async function CatalogPage() {
   const { t, locale } = await getServerTranslation();
-  const { parrots, categories } = await getCatalogData();
+  const dogCount = dogs.filter((d) => d.availability === "disponible").length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-12">
+      {/* Breadcrumb Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": locale === "en" ? "Home" : "Accueil",
+                "item": process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu",
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": t("nav.catalog"),
+                "item": `${process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu"}/catalogue`,
+              },
+            ],
+          }),
+        }}
+      />
+
       {/* Hero Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/8 via-transparent to-secondary/5 border border-primary/10 px-8 py-12 sm:py-16 text-center space-y-4">
         <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-accent/5 blur-3xl pointer-events-none" />
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-extrabold uppercase tracking-widest">
-          {parrots.length} {locale === "en" ? "birds available" : "oiseaux disponibles"}
+          {dogCount} {locale === "en" ? "dogs available" : "chiens disponibles"}
         </span>
         <h1 className="text-4xl sm:text-5xl font-extrabold font-heading text-text-premium tracking-tight">
           {t("catalog.title")}
@@ -58,11 +69,11 @@ export default async function CatalogPage() {
       <Suspense
         fallback={
           <div className="text-center py-20 text-text-premium/50 font-bold animate-pulse">
-            {locale === "en" ? "Loading Exotic Bird Catalog..." : "Chargement du catalogue d'oiseaux..."}
+            {locale === "en" ? "Loading catalog..." : "Chargement du catalogue..."}
           </div>
         }
       >
-        <CatalogClient initialParrots={parrots} categories={categories} />
+        <CatalogClient initialDogs={dogs} breeds={breeds} />
       </Suspense>
     </div>
   );
