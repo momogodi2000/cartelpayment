@@ -1,41 +1,43 @@
 {
-    "name":  "pawelite",
-    "version":  "0.1.0",
-    "private":  true,
+    "name": "pawelite",
+    "version": "0.1.0",
+    "private": true,
     "scripts": {
         "dev": "next dev --webpack",
         "build": "next build --webpack",
         "start": "next start",
         "typecheck": "tsc --noEmit",
-                    "lint":  "eslint",
-                    "test":  "vitest run",
-                    "test:watch":  "vitest",
-                    "test:coverage":  "vitest run --coverage",
-                    "test:e2e":  "playwright test",
-                    "docker:build":  "docker build -t pawelite .",
-                    "docker:run":  "docker run --env-file .env -p 3000:3000 pawelite"
-                },
-    "overrides":  {
-                      "effect":  "^3.21.2",
-                      "postcss":  "^8.5.15"
-                  },
-    "dependencies":  {
-                         "framer-motion":  "^12.39.0",
-                         "lucide-react":  "^1.16.0",
-                         "next":  "^16.2.6",
-                         "react":  "19.2.4",
-                         "react-dom":  "19.2.4",
-                         "zod":  "^4.4.3"
-                     },
+        "lint": "eslint",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "test:e2e": "playwright test",
+        "docker:build": "docker build -t pawelite .",
+        "docker:run": "docker run --env-file .env -p 3000:3000 pawelite"
+    },
+    "overrides": {
+        "effect": "^3.21.2",
+        "postcss": "^8.5.15"
+    },
+    "dependencies": {
+        "@next/swc-win32-x64-msvc": "^16.3.3",
+        "framer-motion": "^12.39.0",
+        "lucide-react": "^1.16.0",
+        "next": "^16.2.6",
+        "react": "19.2.4",
+        "react-dom": "19.2.4",
+        "zod": "^4.4.3"
+    },
     "devDependencies": {
         "@tailwindcss/postcss": "^4",
-        "@types/node": "^20",
+        "@types/node": "^20.19.43",
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "eslint": "^9",
         "eslint-config-next": "16.2.6",
         "tailwindcss": "^4",
+        "ts-node": "^10.9.2",
         "tsx": "^4.22.3",
-        "typescript": "^5"
+        "typescript": "^5.9.3"
     }
 }

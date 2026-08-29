@@ -8,20 +8,20 @@
 export const siteConfig = {
   // Brand Identity
   name: "PawElite",
-  legalName: "PawElite — Théodore de Parin",
-  ownerName: "Théodore de Parin",
+  legalName: "PawElite — Persin Thibaut",
+  ownerName: "Persin Thibaut",
   ownerAddress: "77 Boulevard Saint-Jacques, 75014 Paris, France",
   ownerExperience: "6 ans d'expérience",
   tagline: "L'excellence canine européenne",
   taglineEn: "European Canine Excellence",
   description:
-    "Découvrez des chiens et chiots de race sélectionnés avec soin par Théodore de Parin, 6 ans d'expérience dans la sélection canine européenne.",
+    "Découvrez des chiens et chiots de race sélectionnés avec soin par Persin Thibaut, 6 ans d'expérience dans la sélection canine européenne.",
   descriptionEn:
-    "Discover carefully selected purebred dogs and puppies by Théodore de Parin, 6 years of experience in European canine selection.",
+    "Discover carefully selected purebred dogs and puppies by Persin Thibaut, 6 years of experience in European canine selection.",
 
   // Contact & Commerce
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "33600000000",
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelite.eu",
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "+33641325328",
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "persinthibaut@gmail.com",
 
   // URLs
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu",

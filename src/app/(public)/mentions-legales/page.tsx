@@ -20,10 +20,10 @@ export default function MentionsLegalesPage() {
       <section className="space-y-4 p-6 rounded-2xl bg-white dark:bg-black/10 border border-black/[0.05] dark:border-white/[0.05]">
         <h2 className="text-xl font-extrabold text-text-premium">1. Éditeur du Site</h2>
         <div className="text-sm text-text-premium/70 space-y-1 leading-relaxed">
-          <p><strong className="text-text-premium">Nom :</strong> Théodore de Parin</p>
+          <p><strong className="text-text-premium">Nom :</strong> Persin Thibaut</p>
           <p><strong className="text-text-premium">Activité :</strong> Sélection et présentation de chiens et chiots de race — activité non commerciale de mise en relation</p>
           <p><strong className="text-text-premium">Adresse :</strong> 77 Boulevard Saint-Jacques, 75014 Paris, France</p>
-          <p><strong className="text-text-premium">E-mail :</strong> contact@pawelite.eu</p>
+          <p><strong className="text-text-premium">E-mail :</strong> persinthibaut@gmail.com</p>
           <p><strong className="text-text-premium">Site Web :</strong> www.pawelite.eu</p>
           <p><strong className="text-text-premium">Expérience :</strong> 6 ans d'expérience dans la sélection canine européenne</p>
         </div>
@@ -41,7 +41,7 @@ export default function MentionsLegalesPage() {
       <section className="space-y-4 p-6 rounded-2xl bg-white dark:bg-black/10 border border-black/[0.05] dark:border-white/[0.05]">
         <h2 className="text-xl font-extrabold text-text-premium">3. Propriété Intellectuelle</h2>
         <p className="text-sm text-text-premium/70 leading-relaxed">
-          L'ensemble du contenu de ce site (textes, images, structure, mise en page) est protégé par les lois françaises et internationales relatives à la propriété intellectuelle. Toute reproduction, représentation ou diffusion, totale ou partielle, est interdite sans autorisation préalable écrite de Théodore de Parin.
+          L'ensemble du contenu de ce site (textes, images, structure, mise en page) est protégé par les lois françaises et internationales relatives à la propriété intellectuelle. Toute reproduction, représentation ou diffusion, totale ou partielle, est interdite sans autorisation préalable écrite de Persin Thibaut.
         </p>
         <p className="text-sm text-text-premium/70 leading-relaxed">
           Les photographies illustrant les chiens et races sont issues de Unsplash (licence libre) ou fournies directement par les éleveurs partenaires et restent leur propriété respective.
@@ -51,7 +51,7 @@ export default function MentionsLegalesPage() {
       <section className="space-y-4 p-6 rounded-2xl bg-white dark:bg-black/10 border border-black/[0.05] dark:border-white/[0.05]">
         <h2 className="text-xl font-extrabold text-text-premium">4. Responsabilité</h2>
         <p className="text-sm text-text-premium/70 leading-relaxed">
-          PawElite est un site vitrine de mise en relation. Les informations présentées sur les chiens (prix, disponibilité, caractéristiques) sont fournies par les éleveurs partenaires. Théodore de Parin s'efforce d'en garantir l'exactitude mais ne peut être tenu responsable d'éventuelles inexactitudes. Tout achat ou transaction se fait directement entre l'acheteur et l'éleveur.
+          PawElite est un site vitrine de mise en relation. Les informations présentées sur les chiens (prix, disponibilité, caractéristiques) sont fournies par les éleveurs partenaires. Persin Thibaut s'efforce d'en garantir l'exactitude mais ne peut être tenu responsable d'éventuelles inexactitudes. Tout achat ou transaction se fait directement entre l'acheteur et l'éleveur.
         </p>
         <p className="text-sm text-text-premium/70 leading-relaxed">
           Les prix affichés sont indicatifs et peuvent évoluer. La disponibilité des animaux n'est garantie qu'au moment de la prise de contact directe avec l'éleveur.
@@ -75,7 +75,7 @@ export default function MentionsLegalesPage() {
       <section className="space-y-4 p-6 rounded-2xl bg-white dark:bg-black/10 border border-black/[0.05] dark:border-white/[0.05]">
         <h2 className="text-xl font-extrabold text-text-premium">7. Contact</h2>
         <p className="text-sm text-text-premium/70 leading-relaxed">
-          Pour toute question relative aux présentes mentions légales, vous pouvez contacter Théodore de Parin à l'adresse : contact@pawelite.eu ou au 77 Boulevard Saint-Jacques, 75014 Paris, France.
+          Pour toute question relative aux présentes mentions légales, vous pouvez contacter Persin Thibaut à l'adresse : persinthibaut@gmail.com ou au 77 Boulevard Saint-Jacques, 75014 Paris, France.
         </p>
       </section>
     </div>

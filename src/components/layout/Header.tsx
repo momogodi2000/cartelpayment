@@ -14,7 +14,7 @@ import {
   Palette,
   ChevronDown,
   Info,
-  HelpCircle,
+  HelpCircle, FileCheck,
   Phone,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -77,6 +77,7 @@ export default function Header() {
     { href: "/a-propos", icon: Info, label: t("nav.about"), desc: language === "fr" ? "Notre histoire et nos valeurs" : "Our story and values" },
     { href: "/sante-vaccination", icon: HelpCircle, label: language === "fr" ? "Santé & Vaccination" : "Health & Vaccination", desc: language === "fr" ? "Protocole WSAVA, passeport européen" : "WSAVA protocol, European passport" },
     { href: "/livraison-transport", icon: Phone, label: language === "fr" ? "Livraison & Transport" : "Delivery & Transport", desc: language === "fr" ? "Remise en main propre, transport UE" : "Direct handover, EU transport" },
+    { href: "/devenir-partenaire", icon: FileCheck, label: language === "fr" ? "Espace Partenaire" : "Partner Area", desc: language === "fr" ? "Éleveurs et professionnels" : "Breeders and professionals" },
     { href: "/faq", icon: HelpCircle, label: t("nav.faq"), desc: language === "fr" ? "Réponses à vos questions" : "Answers to your questions" },
     { href: "/contact", icon: Phone, label: t("nav.contact"), desc: language === "fr" ? "Contactez-nous via WhatsApp" : "Contact us via WhatsApp" },
   ];

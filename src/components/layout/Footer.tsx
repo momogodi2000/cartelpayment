@@ -5,9 +5,9 @@ import { MessageSquare, Heart, Mail, MapPin, Award } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const OWNER_NAME = "Théodore de Parin";
+const OWNER_NAME = "Persin Thibaut";
 const ADDRESS = "77 Boulevard Saint-Jacques, 75014 Paris, France";
-const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "contact@pawelite.eu";
+const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "persinthibaut@gmail.com";
 const EXPERIENCE = "6 ans d'expérience";
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "33600000000";

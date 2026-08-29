@@ -64,7 +64,7 @@ export const breeds: Breed[] = [
       'Le Labrador Retriever est apprécié pour sa nature conviviale et son adaptabilité. Utilisé comme chien guide, chien de sauvetage ou simplement comme compagnon de famille, il s\'intègre parfaitement dans tout foyer européen.',
     descriptionEn:
       'The Labrador Retriever is celebrated for its friendly nature and adaptability. Used as a guide dog, search-and-rescue dog, or simply a family companion, it fits perfectly into any European home.',
-    image: 'https://images.unsplash.com/photo-1596492784531-6e6ebf19a0c2?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&auto=format&fit=crop',
     featured: true,
   },
   {
@@ -100,7 +100,7 @@ export const breeds: Breed[] = [
       'Le Bouledogue Français est un petit chien au grand cœur, idéal pour la vie en appartement. Ses grandes oreilles en chauve-souris et son tempérament espiègle en font l\'une des races les plus demandées en Europe.',
     descriptionEn:
       'The French Bulldog is a small dog with a big heart, ideal for apartment living. Its large bat ears and playful temperament make it one of the most sought-after breeds in Europe.',
-    image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&auto=format&fit=crop',
     featured: true,
   },
   {
@@ -118,7 +118,7 @@ export const breeds: Breed[] = [
       'Souvent considéré comme le chien le plus intelligent du monde, le Border Collie excelle dans les sports canins, l\'agility et le travail de troupeau. Il a besoin de stimulation mentale et physique quotidienne.',
     descriptionEn:
       'Often regarded as the world\'s most intelligent dog, the Border Collie excels in canine sports, agility, and herding. It requires daily mental and physical stimulation.',
-    image: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1543466835011-5a25bf1444de?w=800&auto=format&fit=crop',
     featured: false,
   },
   {
@@ -136,7 +136,7 @@ export const breeds: Breed[] = [
       'Le Cavalier King Charles Spaniel est un compagnon idéal pour les familles et les personnes âgées. Son caractère doux et sa beauté naturelle en font une race très prisée dans toute l\'Europe.',
     descriptionEn:
       'The Cavalier King Charles Spaniel is an ideal companion for families and the elderly alike. Its gentle character and natural beauty make it a highly prized breed across Europe.',
-    image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&auto=format&fit=crop',
     featured: false,
   },
   {
@@ -154,7 +154,7 @@ export const breeds: Breed[] = [
       'Le Beagle est un chien de meute au flair exceptionnel, apprécié pour son caractère jovial et son adaptabilité. Il est parfait pour les familles actives à la recherche d\'un compagnon fidèle.',
     descriptionEn:
       'The Beagle is a pack hound with an exceptional sense of smell, appreciated for its jovial character and adaptability. It is perfect for active families seeking a faithful companion.',
-    image: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1543466835011-5a25bf1444de?w=800&auto=format&fit=crop',
     featured: false,
   },
   {
@@ -172,7 +172,7 @@ export const breeds: Breed[] = [
       'Le Rottweiler est une race robuste et puissante, connue pour sa loyauté et son instinct de protection naturel. Bien socialisé dès son plus jeune âge, il devient un excellent chien de garde et de famille.',
     descriptionEn:
       'The Rottweiler is a robust and powerful breed, known for its loyalty and natural protective instinct. When properly socialised from a young age, it becomes an excellent guard and family dog.',
-    image: 'https://images.unsplash.com/photo-1567752881298-894bb81f9379?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&auto=format&fit=crop',
     featured: false,
   },
   {
@@ -190,7 +190,7 @@ export const breeds: Breed[] = [
       'Le Husky Sibérien est une race nordique magnifique, reconnaissable à ses yeux bleus perçants et son pelage épais. Grégaire par nature, il s\'épanouit en compagnie d\'autres chiens et d\'une famille active.',
     descriptionEn:
       'The Siberian Husky is a stunning Nordic breed, recognisable by its piercing blue eyes and thick coat. Gregarious by nature, it thrives in the company of other dogs and an active family.',
-    image: 'https://images.unsplash.com/photo-1617897903246-719242758050?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&auto=format&fit=crop',
     featured: false,
   },
   {
@@ -208,7 +208,7 @@ export const breeds: Breed[] = [
       'Le Caniche est l\'une des races les plus intelligentes et les plus polyvalentes au monde. Disponible en plusieurs tailles (toy, nain, moyen, grand), il s\'adapte aussi bien à la vie en appartement qu\'à la campagne.',
     descriptionEn:
       'The Poodle is one of the most intelligent and versatile breeds in the world. Available in several sizes (toy, miniature, medium, standard), it adapts equally well to apartment life and the countryside.',
-    image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1543466835011-5a25bf1444de?w=800&auto=format&fit=crop',
     featured: false,
   },
 ];

@@ -20,16 +20,16 @@ export default function PolitiqueConfidentialitePage() {
       <section className="space-y-4 p-6 rounded-2xl bg-white dark:bg-black/10 border border-black/[0.05] dark:border-white/[0.05]">
         <h2 className="text-xl font-extrabold text-text-premium">1. Responsable du Traitement</h2>
         <div className="text-sm text-text-premium/70 space-y-1">
-          <p><strong className="text-text-premium">Responsable :</strong> Théodore de Parin</p>
+          <p><strong className="text-text-premium">Responsable :</strong> Persin Thibaut</p>
           <p><strong className="text-text-premium">Adresse :</strong> 77 Boulevard Saint-Jacques, 75014 Paris, France</p>
-          <p><strong className="text-text-premium">E-mail :</strong> contact@pawelite.eu</p>
+          <p><strong className="text-text-premium">E-mail :</strong> persinthibaut@gmail.com</p>
         </div>
       </section>
 
       <section className="space-y-4 p-6 rounded-2xl bg-white dark:bg-black/10 border border-black/[0.05] dark:border-white/[0.05]">
         <h2 className="text-xl font-extrabold text-text-premium">2. Données Collectées</h2>
         <p className="text-sm text-text-premium/70 leading-relaxed">
-          PawElite est un site vitrine statique. Nous ne collectons pas de données personnelles via des formulaires intégrés. La seule interaction directe se fait via WhatsApp (application tierce soumise à la politique de confidentialité de WhatsApp/Meta) ou par e-mail (contact@pawelite.eu).
+          PawElite est un site vitrine statique. Nous ne collectons pas de données personnelles via des formulaires intégrés. La seule interaction directe se fait via WhatsApp (application tierce soumise à la politique de confidentialité de WhatsApp/Meta) ou par e-mail (persinthibaut@gmail.com).
         </p>
         <p className="text-sm text-text-premium/70 leading-relaxed">
           Les informations que vous nous communiquez volontairement (nom, question, coordonnées) via WhatsApp ou e-mail sont utilisées uniquement pour répondre à votre demande. Elles ne sont ni partagées avec des tiers, ni utilisées à des fins commerciales.
@@ -74,7 +74,7 @@ export default function PolitiqueConfidentialitePage() {
           ))}
         </ul>
         <p className="text-sm text-text-premium/70 leading-relaxed mt-3">
-          Pour exercer ces droits, contactez-nous à contact@pawelite.eu. En cas de litige, vous pouvez saisir la CNIL (www.cnil.fr).
+          Pour exercer ces droits, contactez-nous à persinthibaut@gmail.com. En cas de litige, vous pouvez saisir la CNIL (www.cnil.fr).
         </p>
       </section>
 
