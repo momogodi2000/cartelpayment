@@ -8,7 +8,7 @@ export const revalidate = 86400;
 
 export async function generateMetadata() {
   return {
-    title: "FAQ — Questions Fréquentes | PawElite",
+    title: "FAQ — Questions Fréquentes | CaniPrestige",
     description:
       "Toutes les réponses à vos questions sur nos chiens de race, notre processus d'acquisition et nos partenaires éleveurs européens.",
   };
@@ -18,8 +18,8 @@ export default async function FaqPage() {
   const { locale } = await getServerTranslation();
   const whatsappUrl = getWhatsAppLink(
     locale === "en"
-      ? "Hello! I have a question about PawElite dogs."
-      : "Bonjour ! J'ai une question concernant les chiens de PawElite."
+      ? "Hello! I have a question about CaniPrestige dogs."
+      : "Bonjour ! J'ai une question concernant les chiens de CaniPrestige."
   );
 
   return (

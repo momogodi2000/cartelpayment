@@ -1,4 +1,4 @@
-# PawElite
+# CaniPrestige
 
 Premium Next.js frontend platform for a professional European dog & puppy breeder vitrine. 
 The application provides a static catalog and content showcase without a backend, designed to route all inquiries and leads to WhatsApp.

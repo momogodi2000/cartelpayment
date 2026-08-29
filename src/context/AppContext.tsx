@@ -51,8 +51,8 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  lang: "pawelite_lang",
-  theme: "pawelite_theme",
+  lang: "caniprestige_lang",
+  theme: "caniprestige_theme",
 } as const;
 
 export function AppProvider({

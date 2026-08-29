@@ -5,7 +5,7 @@ import { Truck, MapPin, FileCheck, Shield, Info, CheckCircle2, MessageCircle, Al
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Livraison & Transport | PawElite — Remise en Main Propre & Transport UE",
+  title: "Livraison & Transport | CaniPrestige — Remise en Main Propre & Transport UE",
   description:
     "Modalités de remise en main propre et de transport encadré pour votre chiot. Conformité Règlement (UE) 576/2013, passeport européen, bien-être animal.",
 };

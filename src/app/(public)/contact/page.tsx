@@ -7,19 +7,19 @@ export const revalidate = 86400;
 
 export async function generateMetadata() {
   return {
-    title: "Contact | PawElite — Sélection Canine Européenne",
+    title: "Contact | CaniPrestige — Sélection Canine Européenne",
     description:
-      "Contactez PawElite via WhatsApp pour toute question sur nos chiens et chiots de race disponibles en Europe.",
+      "Contactez CaniPrestige via WhatsApp pour toute question sur nos chiens et chiots de race disponibles en Europe.",
   };
 }
 
 export default async function ContactPage() {
   const { locale } = await getServerTranslation();
   const whatsappMessage = locale === "en"
-    ? "Hello! I visited PawElite and would like to ask some questions about your available dogs."
-    : "Bonjour ! J'ai visite PawElite et j'aimerais poser des questions sur vos chiens disponibles.";
+    ? "Hello! I visited CaniPrestige and would like to ask some questions about your available dogs."
+    : "Bonjour ! J'ai visite CaniPrestige et j'aimerais poser des questions sur vos chiens disponibles.";
   const whatsappUrl = getWhatsAppLink(whatsappMessage);
-  const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelite.eu";
+  const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@caniprestige.eu";
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">

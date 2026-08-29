@@ -32,10 +32,10 @@ export async function generateMetadata({ params }: PageProps) {
   const dog = dogs.find((d) => d.slug === slug);
   if (!dog) return {};
   return {
-    title: `${dog.seoTitle} | PawElite`,
+    title: `${dog.seoTitle} | CaniPrestige`,
     description: dog.seoDescription,
     openGraph: {
-      title: `${dog.seoTitle} | PawElite`,
+      title: `${dog.seoTitle} | CaniPrestige`,
       description: dog.seoDescription,
       images: dog.images[0] ? [{ url: dog.images[0].url }] : [],
     },

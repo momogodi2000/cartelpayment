@@ -2,8 +2,8 @@ import React from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Mentions Légales | PawElite",
-  description: "Mentions légales du site PawElite — Informations légales, éditeur du site, hébergeur et conditions d'utilisation.",
+  title: "Mentions Légales | CaniPrestige",
+  description: "Mentions légales du site CaniPrestige — Informations légales, éditeur du site, hébergeur et conditions d'utilisation.",
 };
 
 export const revalidate = 86400;
@@ -24,7 +24,7 @@ export default function MentionsLegalesPage() {
           <p><strong className="text-text-premium">Activité :</strong> Sélection et présentation de chiens et chiots de race — activité non commerciale de mise en relation</p>
           <p><strong className="text-text-premium">Adresse :</strong> 77 Boulevard Saint-Jacques, 75014 Paris, France</p>
           <p><strong className="text-text-premium">E-mail :</strong> persinthibaut@gmail.com</p>
-          <p><strong className="text-text-premium">Site Web :</strong> www.pawelite.eu</p>
+          <p><strong className="text-text-premium">Site Web :</strong> www.caniprestige.eu</p>
           <p><strong className="text-text-premium">Expérience :</strong> 6 ans d'expérience dans la sélection canine européenne</p>
         </div>
       </section>
@@ -51,7 +51,7 @@ export default function MentionsLegalesPage() {
       <section className="space-y-4 p-6 rounded-2xl bg-white dark:bg-black/10 border border-black/[0.05] dark:border-white/[0.05]">
         <h2 className="text-xl font-extrabold text-text-premium">4. Responsabilité</h2>
         <p className="text-sm text-text-premium/70 leading-relaxed">
-          PawElite est un site vitrine de mise en relation. Les informations présentées sur les chiens (prix, disponibilité, caractéristiques) sont fournies par les éleveurs partenaires. Persin Thibaut s'efforce d'en garantir l'exactitude mais ne peut être tenu responsable d'éventuelles inexactitudes. Tout achat ou transaction se fait directement entre l'acheteur et l'éleveur.
+          CaniPrestige est un site vitrine de mise en relation. Les informations présentées sur les chiens (prix, disponibilité, caractéristiques) sont fournies par les éleveurs partenaires. Persin Thibaut s'efforce d'en garantir l'exactitude mais ne peut être tenu responsable d'éventuelles inexactitudes. Tout achat ou transaction se fait directement entre l'acheteur et l'éleveur.
         </p>
         <p className="text-sm text-text-premium/70 leading-relaxed">
           Les prix affichés sont indicatifs et peuvent évoluer. La disponibilité des animaux n'est garantie qu'au moment de la prise de contact directe avec l'éleveur.
@@ -61,7 +61,7 @@ export default function MentionsLegalesPage() {
       <section className="space-y-4 p-6 rounded-2xl bg-white dark:bg-black/10 border border-black/[0.05] dark:border-white/[0.05]">
         <h2 className="text-xl font-extrabold text-text-premium">5. Réglementation sur les Chiens Dangereux</h2>
         <p className="text-sm text-text-premium/70 leading-relaxed">
-          Conformément à l'article L.211-12 du Code rural et à l'arrêté du 27 avril 1999, certaines races de chiens sont soumises à une réglementation spécifique en France. Si le catalogue comprend des races de 1ère ou 2ème catégorie, les acheteurs seront informés des obligations légales : permis de détention, assurance responsabilité civile et déclaration en mairie. PawElite s'engage à informer systématiquement les acquéreurs potentiels de ces obligations avant toute mise en relation.
+          Conformément à l'article L.211-12 du Code rural et à l'arrêté du 27 avril 1999, certaines races de chiens sont soumises à une réglementation spécifique en France. Si le catalogue comprend des races de 1ère ou 2ème catégorie, les acheteurs seront informés des obligations légales : permis de détention, assurance responsabilité civile et déclaration en mairie. CaniPrestige s'engage à informer systématiquement les acquéreurs potentiels de ces obligations avant toute mise en relation.
         </p>
       </section>
 

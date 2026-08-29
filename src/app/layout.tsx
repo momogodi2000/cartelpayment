@@ -6,7 +6,7 @@ import PWARegister from "@/components/common/PWARegister";
 import { AppProvider } from "@/context/AppContext";
 
 const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000");
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "PawElite";
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "CaniPrestige";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -29,12 +29,12 @@ export const metadata: Metadata = {
     template: `%s | ${siteName}`,
   },
   description:
-    "PawElite sélectionne les meilleurs chiens et chiots de race pour vous accompagner. Découvrez nos profils détaillés, contactez-nous via WhatsApp. Sélection européenne responsable.",
+    "CaniPrestige sélectionne les meilleurs chiens et chiots de race pour vous accompagner. Découvrez nos profils détaillés, contactez-nous via WhatsApp. Sélection européenne responsable.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "PawElite",
+    title: "CaniPrestige",
   },
   keywords: [
     "chiens de race europe",
@@ -55,19 +55,19 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: {
-      template: "%s | PawElite",
-      default: "PawElite | L'excellence canine européenne",
+      template: "%s | CaniPrestige",
+      default: "CaniPrestige | L'excellence canine européenne",
     },
     description:
-      "PawElite sélectionne les meilleurs chiots de race auprès d'éleveurs européens certifiés.",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu",
-    siteName: "PawElite",
+      "CaniPrestige sélectionne les meilleurs chiots de race auprès d'éleveurs européens certifiés.",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu",
+    siteName: "CaniPrestige",
     images: [
       {
         url: "/logo.jpg",
         width: 1200,
         height: 630,
-        alt: "PawElite - Chiots d'exception",
+        alt: "CaniPrestige - Chiots d'exception",
       },
     ],
     locale: "fr_FR",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PawElite | Chiots d'exception",
+    title: "CaniPrestige | Chiots d'exception",
     description:
       "Découvrez notre sélection de chiots européens avec pedigree, carnet de santé à jour et garanties complètes.",
     images: ["/logo.jpg"],

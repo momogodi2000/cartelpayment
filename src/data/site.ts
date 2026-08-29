@@ -1,5 +1,5 @@
 /**
- * PawElite — Central Site Configuration
+ * CaniPrestige — Central Site Configuration
  *
  * Single source of truth for all site-wide settings.
  * Update whatsappNumber, siteName, and siteUrl for production.
@@ -7,8 +7,8 @@
 
 export const siteConfig = {
   // Brand Identity
-  name: "PawElite",
-  legalName: "PawElite — Persin Thibaut",
+  name: "CaniPrestige",
+  legalName: "CaniPrestige — Persin Thibaut",
   ownerName: "Persin Thibaut",
   ownerAddress: "77 Boulevard Saint-Jacques, 75014 Paris, France",
   ownerExperience: "6 ans d'expérience",
@@ -24,7 +24,7 @@ export const siteConfig = {
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "persinthibaut@gmail.com",
 
   // URLs
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu",
 
   // Currency & Region
   currency: "EUR",
@@ -41,10 +41,10 @@ export const siteConfig = {
 
   // SEO Defaults
   seo: {
-    titleSuffix: "| PawElite",
-    defaultTitle: "PawElite — Chiens & Chiots de Race | Sélection Européenne",
+    titleSuffix: "| CaniPrestige",
+    defaultTitle: "CaniPrestige — Chiens & Chiots de Race | Sélection Européenne",
     defaultDescription:
-      "PawElite sélectionne les meilleurs chiens et chiots de race pour vous accompagner. Découvrez nos profils détaillés, contactez-nous via WhatsApp.",
+      "CaniPrestige sélectionne les meilleurs chiens et chiots de race pour vous accompagner. Découvrez nos profils détaillés, contactez-nous via WhatsApp.",
     keywords: [
       "chiens de race europe",
       "chiots de race",

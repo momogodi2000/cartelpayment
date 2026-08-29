@@ -8,11 +8,11 @@ export const revalidate = 86400;
 
 export async function generateMetadata() {
   return {
-    title: "Catalogue Chiens & Chiots de Race | PawElite",
+    title: "Catalogue Chiens & Chiots de Race | CaniPrestige",
     description:
       "Découvrez notre catalogue complet de chiens et chiots de race disponibles en Europe. Filtrez par race, sexe, âge et localisation.",
     openGraph: {
-      title: "Catalogue Chiens & Chiots | PawElite",
+      title: "Catalogue Chiens & Chiots | CaniPrestige",
       description: "Tous nos chiens et chiots de race disponibles en Europe.",
       type: "website",
     },
@@ -37,13 +37,13 @@ export default async function CatalogPage() {
                 "@type": "ListItem",
                 "position": 1,
                 "name": locale === "en" ? "Home" : "Accueil",
-                "item": process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu",
+                "item": process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu",
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": t("nav.catalog"),
-                "item": `${process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu"}/catalogue`,
+                "item": `${process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu"}/catalogue`,
               },
             ],
           }),

@@ -53,7 +53,7 @@ export const translations = {
     "home.timeline.subtitle": "A simple, transparent and guided process to find your perfect companion.",
 
     // ─── Testimonials ──────────────────────────────────
-    "testimonials.title": "They Chose PawElite",
+    "testimonials.title": "They Chose CaniPrestige",
     "testimonials.subtitle": "Testimonials from our happy clients and their new companions.",
 
     // ─── FAQ ───────────────────────────────────────────
@@ -62,7 +62,7 @@ export const translations = {
     "faq.viewAll": "View All Questions",
 
     // ─── WhatsApp ─────────────────────────────────────
-    "home.whatsappMessage": "Hello! I visited PawElite and would like to learn more about your available dogs and puppies.",
+    "home.whatsappMessage": "Hello! I visited CaniPrestige and would like to learn more about your available dogs and puppies.",
 
     // ─── Catalog ──────────────────────────────────────
     "catalog.title": "Dogs & Puppies Catalog",
@@ -220,7 +220,7 @@ export const translations = {
     "home.timeline.subtitle": "Un processus simple, transparent et guidé pour trouver votre compagnon idéal.",
 
     // ─── Testimonials ──────────────────────────────────
-    "testimonials.title": "Ils Ont Choisi PawElite",
+    "testimonials.title": "Ils Ont Choisi CaniPrestige",
     "testimonials.subtitle": "Témoignages de nos clients satisfaits et de leurs nouveaux compagnons.",
 
     // ─── FAQ ───────────────────────────────────────────
@@ -229,7 +229,7 @@ export const translations = {
     "faq.viewAll": "Voir Toutes les Questions",
 
     // ─── WhatsApp ─────────────────────────────────────
-    "home.whatsappMessage": "Bonjour ! J'ai visité PawElite et je souhaite en savoir plus sur vos chiens et chiots disponibles.",
+    "home.whatsappMessage": "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens et chiots disponibles.",
 
     // ─── Catalog ──────────────────────────────────────
     "catalog.title": "Catalogue Chiens & Chiots",

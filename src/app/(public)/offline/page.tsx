@@ -11,7 +11,7 @@ export default function OfflinePage() {
     if (typeof window !== "undefined") window.location.reload();
   };
 
-  const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelite.eu";
+  const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@caniprestige.eu";
 
   return (
     <div className="max-w-md mx-auto px-4 py-20 text-center space-y-8 flex flex-col justify-center min-h-[70vh]">
@@ -25,8 +25,8 @@ export default function OfflinePage() {
         </h1>
         <p className="text-sm text-text-premium/70 leading-relaxed">
           {language === "en"
-            ? "We are unable to reach PawElite right now. Please check your connection and try again."
-            : "Nous ne parvenons pas à joindre PawElite pour le moment. Vérifiez votre connexion et réessayez."}
+            ? "We are unable to reach CaniPrestige right now. Please check your connection and try again."
+            : "Nous ne parvenons pas à joindre CaniPrestige pour le moment. Vérifiez votre connexion et réessayez."}
         </p>
       </div>
 

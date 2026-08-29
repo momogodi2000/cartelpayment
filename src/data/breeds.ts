@@ -1,5 +1,5 @@
 // ============================================================
-// breeds.ts — PawElite breed catalogue (static data)
+// breeds.ts — CaniPrestige breed catalogue (static data)
 // ============================================================
 
 export type BreedCategory = 'petit' | 'moyen' | 'grand';

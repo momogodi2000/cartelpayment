@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import dogs from "@/data/dogs";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu";
 
   // Static routes
   const staticRoutes = [

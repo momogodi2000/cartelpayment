@@ -2,8 +2,8 @@ import React from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Politique de Confidentialité | PawElite",
-  description: "Politique de protection des données personnelles du site PawElite — RGPD, collecte des données, droits des utilisateurs.",
+  title: "Politique de Confidentialité | CaniPrestige",
+  description: "Politique de protection des données personnelles du site CaniPrestige — RGPD, collecte des données, droits des utilisateurs.",
 };
 
 export const revalidate = 86400;
@@ -29,7 +29,7 @@ export default function PolitiqueConfidentialitePage() {
       <section className="space-y-4 p-6 rounded-2xl bg-white dark:bg-black/10 border border-black/[0.05] dark:border-white/[0.05]">
         <h2 className="text-xl font-extrabold text-text-premium">2. Données Collectées</h2>
         <p className="text-sm text-text-premium/70 leading-relaxed">
-          PawElite est un site vitrine statique. Nous ne collectons pas de données personnelles via des formulaires intégrés. La seule interaction directe se fait via WhatsApp (application tierce soumise à la politique de confidentialité de WhatsApp/Meta) ou par e-mail (persinthibaut@gmail.com).
+          CaniPrestige est un site vitrine statique. Nous ne collectons pas de données personnelles via des formulaires intégrés. La seule interaction directe se fait via WhatsApp (application tierce soumise à la politique de confidentialité de WhatsApp/Meta) ou par e-mail (persinthibaut@gmail.com).
         </p>
         <p className="text-sm text-text-premium/70 leading-relaxed">
           Les informations que vous nous communiquez volontairement (nom, question, coordonnées) via WhatsApp ou e-mail sont utilisées uniquement pour répondre à votre demande. Elles ne sont ni partagées avec des tiers, ni utilisées à des fins commerciales.

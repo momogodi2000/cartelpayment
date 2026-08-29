@@ -1,5 +1,5 @@
 ﻿// ============================================================
-// dogs.ts — PawElite real dog profiles
+// dogs.ts — CaniPrestige real dog profiles
 // ============================================================
 
 export type SizeCategory = 'petit' | 'moyen' | 'grand';
@@ -122,7 +122,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&auto=format&fit=crop', alt: "Max jouant dans l'herbe" },
     ],
     featured: true,
-    seoTitle: 'Max - Chiot Golden Retriever LOF a vendre | PawElite',
+    seoTitle: 'Max - Chiot Golden Retriever LOF a vendre | CaniPrestige',
     seoDescription: 'Decouvrez Max, superbe chiot Golden Retriever LOF de 3 mois disponible a Lyon. Pedigree, vaccins a jour, lignee de champions.',
   },
   {
@@ -182,7 +182,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop', alt: 'Luna assise' },
     ],
     featured: true,
-    seoTitle: 'Luna - Chiot Bouledogue Francais Fauve | PawElite',
+    seoTitle: 'Luna - Chiot Bouledogue Francais Fauve | CaniPrestige',
     seoDescription: 'Adoptez Luna, chiot Bouledogue Francais fauve en excellente sante. Disponible a Bruxelles, pedigree LOSH, parents testes.',
   },
   {
@@ -230,7 +230,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1567752881298-894bb81f9379?w=800&auto=format&fit=crop', alt: 'Thor regardant attentivement' },
     ],
     featured: false,
-    seoTitle: 'Thor - Chiot Berger Allemand Lignee de Travail | PawElite',
+    seoTitle: 'Thor - Chiot Berger Allemand Lignee de Travail | CaniPrestige',
     seoDescription: 'Thor, chiot Berger Allemand de 2.5 mois a Berlin. Lignee de travail VDH, parents sains (HD/ED normal). Parfait pour famille ou sport.',
   },
   {
@@ -290,7 +290,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop', alt: 'Bella couchee sur un lit' },
     ],
     featured: true,
-    seoTitle: 'Bella - Chiot Cavalier King Charles LOF | PawElite',
+    seoTitle: 'Bella - Chiot Cavalier King Charles LOF | CaniPrestige',
     seoDescription: 'Decouvrez Bella, magnifique chiot Cavalier King Charles Blenheim de 5 mois. Parents testes coeur/yeux, pure race, disponible a Paris.',
   },
   {
@@ -350,7 +350,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&auto=format&fit=crop', alt: 'Rocky en portrait' },
     ],
     featured: false,
-    seoTitle: 'Rocky - Jeune Rottweiler FCI a vendre | PawElite',
+    seoTitle: 'Rocky - Jeune Rottweiler FCI a vendre | CaniPrestige',
     seoDescription: 'Rocky, jeune male Rottweiler de 6 mois, lignee FCI, parents testes JLPP. Deja bien sociabilise, disponible a Amsterdam.',
   },
   {
@@ -410,7 +410,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&auto=format&fit=crop', alt: 'Zeus aux yeux bleus' },
     ],
     featured: true,
-    seoTitle: 'Zeus - Chiot Husky Siberien yeux bleus | PawElite',
+    seoTitle: 'Zeus - Chiot Husky Siberien yeux bleus | CaniPrestige',
     seoDescription: 'Zeus, superbe chiot Husky Siberien de 3 mois a Madrid. Yeux bleus, pedigree FCI, parents testes. Disponible maintenant.',
   },
   {
@@ -470,7 +470,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop', alt: 'Chanel en pose elegante' },
     ],
     featured: true,
-    seoTitle: 'Chanel - Chiot Caniche Royal Abricot Geneve | PawElite',
+    seoTitle: 'Chanel - Chiot Caniche Royal Abricot Geneve | CaniPrestige',
     seoDescription: 'Chanel, chiot Caniche Royal abricot de 4 mois a Geneve. Lignee show SCS/FCI, parents testes ADN. Disponible maintenant.',
   },
   {
@@ -530,7 +530,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1567752881298-894bb81f9379?w=800&auto=format&fit=crop', alt: 'Rex en plein air' },
     ],
     featured: false,
-    seoTitle: 'Rex - Chiot Labrador Retriever Jaune Amsterdam | PawElite',
+    seoTitle: 'Rex - Chiot Labrador Retriever Jaune Amsterdam | CaniPrestige',
     seoDescription: 'Rex, male Labrador Retriever jaune de 5 mois a Amsterdam. Pedigree FCI, parents testes HD/EIC. Actuellement reserve.',
   },
   {
@@ -590,7 +590,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=800&auto=format&fit=crop', alt: 'Lena jouant' },
     ],
     featured: false,
-    seoTitle: 'Lena - Chiot Beagle Tricolore Bruxelles | PawElite',
+    seoTitle: 'Lena - Chiot Beagle Tricolore Bruxelles | CaniPrestige',
     seoDescription: 'Lena, chiot Beagle tricolore de 3 mois a Bruxelles. Pedigree LOSH, excellente sociabilisation, disponible maintenant.',
   },
   {
@@ -650,7 +650,7 @@ export const dogs: Dog[] = [
       { url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop', alt: "Sultan en position d'alerte" },
     ],
     featured: false,
-    seoTitle: 'Sultan - Chiot Berger Belge Malinois LOF Lyon | PawElite',
+    seoTitle: 'Sultan - Chiot Berger Belge Malinois LOF Lyon | CaniPrestige',
     seoDescription: 'Sultan, male Berger Belge Malinois de 6 mois a Lyon. Lignee travail LOF, pere titre RINGE 3. Ideal sport canin ou famille active.',
   },
   {
@@ -690,7 +690,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&auto=format&fit=crop', alt: 'Milo 1' }],
     featured: false,
-    seoTitle: 'Milo - Bouledogue Français - PawElite',
+    seoTitle: 'Milo - Bouledogue Français - CaniPrestige',
     seoDescription: 'Découvrez Milo, chiot Bouledogue Français disponible.'
   },
   {
@@ -730,7 +730,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&auto=format&fit=crop', alt: 'Oscar 1' }],
     featured: false,
-    seoTitle: 'Oscar - Berger Allemand - PawElite',
+    seoTitle: 'Oscar - Berger Allemand - CaniPrestige',
     seoDescription: 'Découvrez Oscar, chiot Berger Allemand disponible.'
   },
   {
@@ -770,7 +770,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&auto=format&fit=crop', alt: 'Ruby 1' }],
     featured: false,
-    seoTitle: 'Ruby - Cavalier King Charles - PawElite',
+    seoTitle: 'Ruby - Cavalier King Charles - CaniPrestige',
     seoDescription: 'Découvrez Ruby, chiot Cavalier King Charles disponible.'
   },
   {
@@ -810,7 +810,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&auto=format&fit=crop', alt: 'Leo 1' }],
     featured: true,
-    seoTitle: 'Leo - Rottweiler - PawElite',
+    seoTitle: 'Leo - Rottweiler - CaniPrestige',
     seoDescription: 'Découvrez Leo, chiot Rottweiler disponible.'
   },
   {
@@ -850,7 +850,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop', alt: 'Simba 1' }],
     featured: false,
-    seoTitle: 'Simba - Golden Retriever - PawElite',
+    seoTitle: 'Simba - Golden Retriever - CaniPrestige',
     seoDescription: 'Découvrez Simba, chiot Golden Retriever disponible.'
   },
   {
@@ -890,7 +890,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&auto=format&fit=crop', alt: 'Lola 1' }],
     featured: false,
-    seoTitle: 'Lola - Bouledogue Français - PawElite',
+    seoTitle: 'Lola - Bouledogue Français - CaniPrestige',
     seoDescription: 'Découvrez Lola, chiot Bouledogue Français disponible.'
   },
   {
@@ -930,7 +930,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&auto=format&fit=crop', alt: 'Charlie 1' }],
     featured: false,
-    seoTitle: 'Charlie - Berger Allemand - PawElite',
+    seoTitle: 'Charlie - Berger Allemand - CaniPrestige',
     seoDescription: 'Découvrez Charlie, chiot Berger Allemand disponible.'
   },
   {
@@ -970,7 +970,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&auto=format&fit=crop', alt: 'Maxime 1' }],
     featured: false,
-    seoTitle: 'Maxime - Cavalier King Charles - PawElite',
+    seoTitle: 'Maxime - Cavalier King Charles - CaniPrestige',
     seoDescription: 'Découvrez Maxime, chiot Cavalier King Charles disponible.'
   },
   {
@@ -1010,7 +1010,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&auto=format&fit=crop', alt: 'Romeo 1' }],
     featured: false,
-    seoTitle: 'Romeo - Rottweiler - PawElite',
+    seoTitle: 'Romeo - Rottweiler - CaniPrestige',
     seoDescription: 'Découvrez Romeo, chiot Rottweiler disponible.'
   },
   {
@@ -1050,7 +1050,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop', alt: 'Hugo 1' }],
     featured: false,
-    seoTitle: 'Hugo - Golden Retriever - PawElite',
+    seoTitle: 'Hugo - Golden Retriever - CaniPrestige',
     seoDescription: 'Découvrez Hugo, chiot Golden Retriever disponible.'
   },
   {
@@ -1090,7 +1090,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&auto=format&fit=crop', alt: 'Maya 1' }],
     featured: true,
-    seoTitle: 'Maya - Bouledogue Français - PawElite',
+    seoTitle: 'Maya - Bouledogue Français - CaniPrestige',
     seoDescription: 'Découvrez Maya, chiot Bouledogue Français disponible.'
   },
   {
@@ -1130,7 +1130,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&auto=format&fit=crop', alt: 'Nala 1' }],
     featured: false,
-    seoTitle: 'Nala - Berger Allemand - PawElite',
+    seoTitle: 'Nala - Berger Allemand - CaniPrestige',
     seoDescription: 'Découvrez Nala, chiot Berger Allemand disponible.'
   },
   {
@@ -1170,7 +1170,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&auto=format&fit=crop', alt: 'Stella 1' }],
     featured: false,
-    seoTitle: 'Stella - Cavalier King Charles - PawElite',
+    seoTitle: 'Stella - Cavalier King Charles - CaniPrestige',
     seoDescription: 'Découvrez Stella, chiot Cavalier King Charles disponible.'
   },
   {
@@ -1210,7 +1210,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&auto=format&fit=crop', alt: 'Nina 1' }],
     featured: false,
-    seoTitle: 'Nina - Rottweiler - PawElite',
+    seoTitle: 'Nina - Rottweiler - CaniPrestige',
     seoDescription: 'Découvrez Nina, chiot Rottweiler disponible.'
   },
   {
@@ -1250,7 +1250,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop', alt: 'Cleo 1' }],
     featured: false,
-    seoTitle: 'Cleo - Golden Retriever - PawElite',
+    seoTitle: 'Cleo - Golden Retriever - CaniPrestige',
     seoDescription: 'Découvrez Cleo, chiot Golden Retriever disponible.'
   },
   {
@@ -1290,7 +1290,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&auto=format&fit=crop', alt: 'Buster 1' }],
     featured: false,
-    seoTitle: 'Buster - Bouledogue Français - PawElite',
+    seoTitle: 'Buster - Bouledogue Français - CaniPrestige',
     seoDescription: 'Découvrez Buster, chiot Bouledogue Français disponible.'
   },
   {
@@ -1330,7 +1330,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&auto=format&fit=crop', alt: 'Dexter 1' }],
     featured: false,
-    seoTitle: 'Dexter - Berger Allemand - PawElite',
+    seoTitle: 'Dexter - Berger Allemand - CaniPrestige',
     seoDescription: 'Découvrez Dexter, chiot Berger Allemand disponible.'
   },
   {
@@ -1370,7 +1370,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&auto=format&fit=crop', alt: 'Bruno 1' }],
     featured: true,
-    seoTitle: 'Bruno - Cavalier King Charles - PawElite',
+    seoTitle: 'Bruno - Cavalier King Charles - CaniPrestige',
     seoDescription: 'Découvrez Bruno, chiot Cavalier King Charles disponible.'
   },
   {
@@ -1410,7 +1410,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&auto=format&fit=crop', alt: 'Winston 1' }],
     featured: false,
-    seoTitle: 'Winston - Rottweiler - PawElite',
+    seoTitle: 'Winston - Rottweiler - CaniPrestige',
     seoDescription: 'Découvrez Winston, chiot Rottweiler disponible.'
   },
   {
@@ -1450,7 +1450,7 @@ export const dogs: Dog[] = [
     parents: null,
     images: [{ url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop', alt: 'Julio 1' }],
     featured: false,
-    seoTitle: 'Julio - Golden Retriever - PawElite',
+    seoTitle: 'Julio - Golden Retriever - CaniPrestige',
     seoDescription: 'Découvrez Julio, chiot Golden Retriever disponible.'
   }
 ];

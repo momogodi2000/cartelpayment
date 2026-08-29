@@ -8,8 +8,8 @@ import { getServerLocale } from "@/lib/serverTranslations";
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const locale = await getServerLocale();
   const message = locale === "en"
-    ? "Hello! I visited PawElite and would like to learn more about your available dogs."
-    : "Bonjour ! J'ai visite PawElite et je souhaite en savoir plus sur vos chiens disponibles.";
+    ? "Hello! I visited CaniPrestige and would like to learn more about your available dogs."
+    : "Bonjour ! J'ai visite CaniPrestige et je souhaite en savoir plus sur vos chiens disponibles.";
   const whatsappUrl = getWhatsAppLink(message);
 
   return (

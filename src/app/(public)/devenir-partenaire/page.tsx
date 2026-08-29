@@ -33,7 +33,7 @@ export default function DevenirPartenairePage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const message = `Bonjour, je souhaite soumettre une demande de partenariat sur PawElite.\n\n` +
+    const message = `Bonjour, je souhaite soumettre une demande de partenariat sur CaniPrestige.\n\n` +
       `👤 Nom : ${formData.prenom} ${formData.nom}\n` +
       `🏢 Élevage : ${formData.elevage} (${formData.type})\n` +
       `🌍 Localisation : ${formData.ville}, ${formData.pays}\n` +
@@ -54,7 +54,7 @@ export default function DevenirPartenairePage() {
           {isFr ? "Espace Professionnels" : "Professionals Area"}
         </div>
         <h1 className="text-4xl sm:text-5xl font-black font-heading text-text-premium tracking-tight">
-          {isFr ? "Devenir Partenaire PawElite" : "Become a PawElite Partner"}
+          {isFr ? "Devenir Partenaire CaniPrestige" : "Become a CaniPrestige Partner"}
         </h1>
         <p className="text-text-premium/70 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
           {isFr 

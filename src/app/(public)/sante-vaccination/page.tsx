@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Santé & Vaccination | PawElite — Protocole Officiel WSAVA",
+  title: "Santé & Vaccination | CaniPrestige — Protocole Officiel WSAVA",
   description:
     "Protocole vaccinal officiel WSAVA, puce électronique ISO, passeport européen et réglementation UE 576/2013. Toutes les garanties sanitaires pour votre chiot.",
 };

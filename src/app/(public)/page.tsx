@@ -35,8 +35,8 @@ export default async function HomePage() {
   const homeFaqs = faqs.slice(0, 4);
 
   const generalMessage = locale === "en"
-    ? "Hello! I visited PawElite and would like to learn more about your available dogs and puppies."
-    : "Bonjour ! J'ai visité PawElite et je souhaite en savoir plus sur vos chiens et chiots disponibles.";
+    ? "Hello! I visited CaniPrestige and would like to learn more about your available dogs and puppies."
+    : "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens et chiots disponibles.";
 
   const generalWhatsapp = getWhatsAppLink(generalMessage);
 
@@ -56,11 +56,11 @@ export default async function HomePage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "PawElite",
+            "name": "CaniPrestige",
             "description": locale === "en"
               ? "Premium purebred dog and puppy selection for the European market."
               : "Sélection premium de chiens et chiots de race pour le marché européen.",
-            "url": process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu",
+            "url": process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu",
             "contactPoint": {
               "@type": "ContactPoint",
               "contactType": "customer service",
@@ -79,13 +79,13 @@ export default async function HomePage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "name": "PawElite",
-            "url": process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu",
+            "name": "CaniPrestige",
+            "url": process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu",
             "potentialAction": {
               "@type": "SearchAction",
               "target": {
                 "@type": "EntryPoint",
-                "urlTemplate": `${process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu"}/catalogue?search={search_term_string}`
+                "urlTemplate": `${process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu"}/catalogue?search={search_term_string}`
               },
               "query-input": "required name=search_term_string"
             }

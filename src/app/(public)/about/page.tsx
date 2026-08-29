@@ -16,9 +16,9 @@ import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "À Propos | PawElite — Théodore de Parin",
+  title: "À Propos | CaniPrestige — Théodore de Parin",
   description:
-    "Découvrez l'histoire de PawElite, fondée par Théodore de Parin, 6 ans d'expérience dans la sélection canine européenne. Basé à Paris.",
+    "Découvrez l'histoire de CaniPrestige, fondée par Théodore de Parin, 6 ans d'expérience dans la sélection canine européenne. Basé à Paris.",
 };
 
 export const revalidate = 86400;
@@ -27,8 +27,8 @@ export default async function AboutPage() {
   const { locale } = await getServerTranslation();
   const whatsappUrl = getWhatsAppLink(
     locale === "en"
-      ? "Hello! I would like to learn more about Théodore de Parin and PawElite."
-      : "Bonjour ! Je souhaite en savoir plus sur Théodore de Parin et PawElite."
+      ? "Hello! I would like to learn more about Théodore de Parin and CaniPrestige."
+      : "Bonjour ! Je souhaite en savoir plus sur Théodore de Parin et CaniPrestige."
   );
 
   const values = [
@@ -73,8 +73,8 @@ export default async function AboutPage() {
   const timeline = [
     {
       year: "2018",
-      labelFr: "Création de PawElite",
-      labelEn: "PawElite Founded",
+      labelFr: "Création de CaniPrestige",
+      labelEn: "CaniPrestige Founded",
       descFr: "Lancement de l'activité de sélection canine à Paris, avec une première sélection de Golden Retrievers et Bergers Allemands.",
       descEn: "Launch of canine selection activity in Paris, with an initial selection of Golden Retrievers and German Shepherds.",
     },
@@ -96,8 +96,8 @@ export default async function AboutPage() {
       year: "2024",
       labelFr: "Plateforme Digitale",
       labelEn: "Digital Platform",
-      descFr: "Lancement de PawElite.eu, vitrine digitale premium pour présenter les meilleurs chiots de race de notre réseau européen.",
-      descEn: "Launch of PawElite.eu, a premium digital showcase to present the finest purebred puppies from our European network.",
+      descFr: "Lancement de CaniPrestige.eu, vitrine digitale premium pour présenter les meilleurs chiots de race de notre réseau européen.",
+      descEn: "Launch of CaniPrestige.eu, a premium digital showcase to present the finest purebred puppies from our European network.",
     },
   ];
 
@@ -116,8 +116,8 @@ export default async function AboutPage() {
         </h1>
         <p className="text-text-premium/70 text-base sm:text-lg leading-relaxed">
           {locale === "fr"
-            ? "PawElite est née de la passion de Théodore de Parin pour les chiens de race. Fort de 6 ans d'expérience, il met en relation des familles avec les meilleurs éleveurs certifiés d'Europe."
-            : "PawElite was born from Théodore de Parin's passion for purebred dogs. With 6 years of experience, he connects families with the finest certified breeders in Europe."}
+            ? "CaniPrestige est née de la passion de Théodore de Parin pour les chiens de race. Fort de 6 ans d'expérience, il met en relation des familles avec les meilleurs éleveurs certifiés d'Europe."
+            : "CaniPrestige was born from Théodore de Parin's passion for purebred dogs. With 6 years of experience, he connects families with the finest certified breeders in Europe."}
         </p>
         <div className="h-1 w-16 bg-primary mx-auto rounded-full" />
       </div>
@@ -135,8 +135,8 @@ export default async function AboutPage() {
           <div className="space-y-3 text-sm text-text-premium/70 leading-relaxed">
             <p>
               {locale === "fr"
-                ? "Passionné de caniculture depuis l'enfance, Théodore a fondé PawElite en 2018 avec un objectif simple : aider les familles à trouver leur compagnon idéal auprès d'éleveurs sérieux et certifiés."
-                : "Passionate about canine breeding since childhood, Théodore founded PawElite in 2018 with a simple goal: helping families find their ideal companion with serious, certified breeders."}
+                ? "Passionné de caniculture depuis l'enfance, Théodore a fondé CaniPrestige en 2018 avec un objectif simple : aider les familles à trouver leur compagnon idéal auprès d'éleveurs sérieux et certifiés."
+                : "Passionate about canine breeding since childhood, Théodore founded CaniPrestige in 2018 with a simple goal: helping families find their ideal companion with serious, certified breeders."}
             </p>
             <p>
               {locale === "fr"
@@ -165,7 +165,7 @@ export default async function AboutPage() {
         <div className="relative h-80 sm:h-96 rounded-3xl overflow-hidden bg-primary/5 border border-primary/10">
           <Image
             src="/logo.jpg"
-            alt="PawElite — Théodore de Parin"
+            alt="CaniPrestige — Théodore de Parin"
             fill
             className="object-contain p-12"
             sizes="(max-width: 1024px) 100vw, 50vw"

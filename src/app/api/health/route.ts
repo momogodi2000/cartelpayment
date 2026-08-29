@@ -6,7 +6,7 @@ export async function GET() {
   return NextResponse.json(
     {
       status: "healthy",
-      service: "PawElite",
+      service: "CaniPrestige",
       environment: process.env.NODE_ENV || "development",
       version: process.env.npm_package_version || "0.1.0",
       timestamp: new Date().toISOString(),
