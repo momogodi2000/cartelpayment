@@ -19,22 +19,22 @@ export const faqs: FaqItem[] = [
   {
     id: 'faq-01',
     order: 1,
-    question: 'Comment contacter un éleveur pour un chien qui m\'intéresse ?',
+    question: 'Comment contacter un éleveur pour un chien ou un chat qui m\'intéresse ?',
     answer:
-      'Vous pouvez contacter directement l\'éleveur via le formulaire de contact disponible sur la fiche de chaque animal. Une fois votre demande soumise, l\'éleveur vous répondra généralement sous 24 à 48 heures pour organiser un premier échange et répondre à toutes vos questions.',
-    questionEn: 'How do I contact a breeder about a dog I am interested in?',
+      'Vous pouvez contacter directement l\'éleveur via WhatsApp depuis la fiche de chaque animal (chien, chiot, chat ou chaton). Un message pré-rempli s\'ouvre avec le nom de l\'animal ; l\'éleveur vous répond généralement sous 24 à 48 heures pour organiser un premier échange.',
+    questionEn: 'How do I contact a breeder about a dog or cat I am interested in?',
     answerEn:
-      'You can contact the breeder directly via the contact form available on each dog\'s profile page. Once your request is submitted, the breeder will typically respond within 24 to 48 hours to arrange an initial conversation and answer all your questions.',
+      'You can contact the breeder directly via WhatsApp from each animal\'s profile page (dog, puppy, cat or kitten). A pre-filled message opens with the animal\'s name; the breeder typically responds within 24 to 48 hours to arrange an initial conversation.',
   },
   {
     id: 'faq-02',
     order: 2,
-    question: 'Les chiens proposés ont-ils leurs vaccinations à jour ?',
+    question: 'Les animaux proposés ont-ils leurs vaccinations à jour ?',
     answer:
-      'Oui, tous les chiots et chiens adultes présentés sur CaniPrestige disposent d\'un carnet de santé complet et de vaccinations conformes aux réglementations européennes en vigueur. Les détails des vaccins administrés sont précisés sur chaque fiche individuelle.',
-    questionEn: 'Are the dogs listed up to date with their vaccinations?',
+      'Oui. Les chiens et chiots suivent le protocole DHPPi et, pour tout mouvement intra-UE, la vaccination antirabique. Les chats et chatons sont vaccinés contre le typhus et le coryza (RCP), et selon les cas contre la leucose féline (FeLV). Chaque animal dispose d\'un carnet de santé et d\'un passeport européen, avec le détail des vaccins sur sa fiche.',
+    questionEn: 'Are the animals listed up to date with their vaccinations?',
     answerEn:
-      'Yes, all puppies and adult dogs featured on CaniPrestige have a complete health record and vaccinations in line with current European regulations. Details of the administered vaccines are specified on each individual profile.',
+      'Yes. Dogs and puppies follow the DHPPi protocol and, for any intra-EU movement, the rabies vaccination. Cats and kittens are vaccinated against feline panleukopenia and cat flu (FVRCP), and where relevant against feline leukaemia (FeLV). Every animal has a health record and a European passport, with the vaccine details on its profile.',
   },
   {
     id: 'faq-03',
@@ -95,6 +95,26 @@ export const faqs: FaqItem[] = [
     questionEn: 'What support is offered after purchasing a dog?',
     answerEn:
       'CaniPrestige\'s partner breeders are available to answer your questions after adoption and guide you through the first weeks of life with your new pet. In addition, our editorial team regularly publishes practical guides on nutrition, health, training, and canine well-being to support you throughout your dog\'s life.',
+  },
+  {
+    id: 'faq-09',
+    order: 9,
+    question: 'Proposez-vous aussi des chats et des chatons de race ?',
+    answer:
+      'Oui. Notre catalogue présente des chats et chatons de race (Maine Coon, Ragdoll, British Shorthair, Sacré de Birmanie, Bengal, Sphynx, Norvégien, Chartreux…), mâles comme femelles. Utilisez l\'onglet « Chats & Chatons » du catalogue pour filtrer uniquement les félins.',
+    questionEn: 'Do you also offer purebred cats and kittens?',
+    answerEn:
+      'Yes. Our catalogue features purebred cats and kittens (Maine Coon, Ragdoll, British Shorthair, Birman, Bengal, Sphynx, Norwegian Forest Cat, Chartreux…), males and females alike. Use the "Cats & Kittens" tab in the catalogue to filter felines only.',
+  },
+  {
+    id: 'faq-10',
+    order: 10,
+    question: 'Les chatons ont-ils un pedigree LOOF et des tests de santé ?',
+    answer:
+      'Oui. Les chatons de race sont enregistrés au LOOF (Livre Officiel des Origines Félines) ou auprès d\'un registre équivalent (FIFe, TICA, WCF). Selon la race, les reproducteurs sont testés pour la HCM (cardiomyopathie hypertrophique) par échographie et pour la PKD (polykystose rénale) par ADN. Les résultats sont communiqués par l\'éleveur sur demande.',
+    questionEn: 'Do the kittens have a LOOF pedigree and health tests?',
+    answerEn:
+      'Yes. Purebred kittens are registered with the LOOF (the French feline studbook) or an equivalent registry (FIFe, TICA, WCF). Depending on the breed, the breeding cats are tested for HCM (hypertrophic cardiomyopathy) by ultrasound and for PKD (polycystic kidney disease) by DNA. Results are shared by the breeder on request.',
   },
 ];
 

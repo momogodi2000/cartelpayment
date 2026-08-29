@@ -1,22 +1,22 @@
 {
   "Meta": {
-    "defaultTitle": "CaniPrestige — Chiens & Chiots de Race | Sélection Européenne",
-    "defaultDescription": "CaniPrestige sélectionne les meilleurs chiens et chiots de race auprès d'éleveurs européens responsables. Profils détaillés, pedigree, carnet de santé à jour. Contact direct via WhatsApp.",
-    "keywords": "chiens de race europe, chiots de race, chiots disponibles france, golden retriever chiot, labrador chiot, berger allemand chiot, élevage canin responsable, chiot pedigree europe, vente chiens france, partenaire élevage chien",
-    "homeTitle": "Chiens & Chiots de Race Premium | Sélection Européenne",
-    "homeDescription": "Découvrez des chiens et chiots de race sélectionnés avec soin auprès d'éleveurs européens responsables. Transparence, bien-être animal et accompagnement WhatsApp.",
-    "catalogueTitle": "Catalogue Chiens & Chiots de Race",
-    "catalogueDescription": "Parcourez notre catalogue complet de chiens et chiots de race disponibles en Europe. Filtrez par race, sexe, âge et localisation.",
+    "defaultTitle": "CaniPrestige — Chiens, Chats, Chiots & Chatons de Race | Sélection Européenne",
+    "defaultDescription": "CaniPrestige sélectionne les meilleurs chiens, chats, chiots et chatons de race auprès d'éleveurs européens responsables. Profils détaillés, pedigree (LOF, LOOF), carnet de santé à jour. Contact direct via WhatsApp.",
+    "keywords": "chiens de race europe, chiots de race, chats de race, chatons de race, chaton pure race, maine coon disponible, ragdoll chaton, british shorthair, chaton loof, golden retriever chiot, labrador chiot, berger allemand chiot, élevage canin responsable, élevage félin, chiot pedigree europe, vente chiens france, vente chats france, partenaire élevage chien, partenaire élevage chat",
+    "homeTitle": "Chiens, Chats, Chiots & Chatons de Race Premium | Sélection Européenne",
+    "homeDescription": "Découvrez des chiens, chats, chiots et chatons de race sélectionnés avec soin auprès d'éleveurs européens responsables. Pedigree LOF et LOOF, transparence, bien-être animal et accompagnement WhatsApp.",
+    "catalogueTitle": "Catalogue Chiens, Chats, Chiots & Chatons de Race",
+    "catalogueDescription": "Parcourez notre catalogue complet de chiens, chats, chiots et chatons de race disponibles en Europe. Filtrez par espèce, race, sexe, âge et localisation.",
     "aboutTitle": "À Propos — Notre Histoire",
-    "aboutDescription": "Découvrez l'histoire de CaniPrestige, la passion des chiens de race et notre réseau d'éleveurs certifiés en Europe.",
+    "aboutDescription": "Découvrez l'histoire de CaniPrestige, la passion des chiens et chats de race et notre réseau d'éleveurs certifiés en Europe.",
     "contactTitle": "Contact",
-    "contactDescription": "Contactez CaniPrestige via WhatsApp pour toute question sur nos chiens et chiots de race disponibles en Europe.",
+    "contactDescription": "Contactez CaniPrestige via WhatsApp pour toute question sur nos chiens, chats, chiots et chatons de race disponibles en Europe.",
     "faqTitle": "FAQ — Questions Fréquentes",
-    "faqDescription": "Toutes les réponses à vos questions sur nos chiens de race, notre processus d'acquisition et nos partenaires éleveurs européens.",
+    "faqDescription": "Toutes les réponses à vos questions sur nos chiens et chats de race, notre processus d'acquisition et nos partenaires éleveurs européens.",
     "healthTitle": "Santé & Vaccination — Protocole Officiel WSAVA",
-    "healthDescription": "Protocole vaccinal officiel WSAVA, puce électronique ISO, passeport européen et réglementation UE 576/2013. Toutes les garanties sanitaires pour votre chiot.",
+    "healthDescription": "Protocole vaccinal officiel WSAVA, puce électronique ISO, passeport européen et réglementation UE 576/2013. Toutes les garanties sanitaires pour votre chiot ou chaton.",
     "deliveryTitle": "Livraison & Transport — Remise en Main Propre & Transport UE",
-    "deliveryDescription": "Modalités de remise en main propre et de transport encadré pour votre chiot. Conformité Règlement (UE) 576/2013, passeport européen, bien-être animal.",
+    "deliveryDescription": "Modalités de remise en main propre et de transport encadré pour votre chiot ou chaton. Conformité Règlement (UE) 576/2013, passeport européen, bien-être animal.",
     "legalTitle": "Mentions Légales",
     "legalDescription": "Mentions légales du site CaniPrestige — informations légales, éditeur du site, hébergeur et conditions d'utilisation.",
     "privacyTitle": "Politique de Confidentialité",
@@ -26,7 +26,7 @@
   },
 
   "Common": {
-    "whatsappGeneralMessage": "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens et chiots disponibles.",
+    "whatsappGeneralMessage": "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens, chats, chiots et chatons disponibles.",
     "whatsappButton": "Contacter via WhatsApp",
     "whatsappButtonShort": "Contact",
     "whatsappChatShort": "Discuter",
@@ -43,7 +43,8 @@
 
   "Nav": {
     "home": "Accueil",
-    "catalog": "Chiens & Chiots",
+    "catalog": "Chiens & Chats",
+    "catalogDesc": "Chiens, chats, chiots et chatons de race",
     "about": "Notre Histoire",
     "contact": "Contact",
     "faq": "FAQ",
@@ -64,8 +65,8 @@
   },
 
   "Footer": {
-    "tagline": "L'Excellence Canine Européenne",
-    "description": "Sélection premium de chiens et chiots de race issus d'élevages européens responsables.",
+    "tagline": "L'Excellence Canine & Féline Européenne",
+    "description": "Sélection premium de chiens, chats, chiots et chatons de race issus d'élevages européens responsables.",
     "navTitle": "Navigation",
     "infoTitle": "Informations",
     "catalog": "Notre Catalogue",
@@ -85,35 +86,42 @@
   },
 
   "Home": {
-    "whatsappMessage": "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens et chiots disponibles.",
-    "schemaDescription": "Sélection premium de chiens et chiots de race pour le marché européen.",
+    "whatsappMessage": "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens, chats, chiots et chatons disponibles.",
+    "schemaDescription": "Sélection premium de chiens, chats, chiots et chatons de race pour le marché européen.",
     "heroImageAlt": "Chien de race sélectionné par CaniPrestige",
     "stats": {
-      "dogs": "Profils de Chiens",
+      "dogs": "Profils d'Animaux",
       "breeds": "Races Disponibles",
       "countries": "Pays Européens",
       "response": "Réponse WhatsApp"
     },
     "hero": {
-      "badge": "Sélection Canine Européenne",
-      "titleLine1": "Chiens & Chiots",
+      "badge": "Sélection Canine & Féline Européenne",
+      "titleLine1": "Chiens, Chats, Chiots & Chatons",
       "titleAccent": "de Race Premium",
-      "subtitle": "Des chiens et chiots de race sélectionnés avec soin, issus d'élevages responsables en Europe. Transparence, bien-être et passion canine.",
-      "cta": "Découvrir les Chiens Disponibles",
+      "subtitle": "Des chiens, chats, chiots et chatons de race sélectionnés avec soin, issus d'élevages responsables en Europe. Pedigree LOF et LOOF, transparence et bien-être animal.",
+      "cta": "Découvrir les Animaux Disponibles",
       "secondary": "Contacter via WhatsApp"
     },
     "credentials": {
       "title": "Notre Engagement d'Excellence",
-      "subtitle": "Chaque chien que nous présentons répond à nos critères rigoureux de santé, de lignée et de bien-être."
+      "subtitle": "Chaque animal que nous présentons répond à nos critères rigoureux de santé, de lignée et de bien-être."
     },
     "featured": {
-      "title": "Chiens en Vedette",
+      "title": "Chiens & Chiots en Vedette",
       "subtitle": "Découvrez notre sélection de chiens et chiots d'exception.",
       "viewAll": "Voir Tous les Chiens"
     },
+    "catsFeatured": {
+      "title": "Chats & Chatons en Vedette",
+      "subtitle": "Des chats et chatons de race, pedigree LOOF, parents testés.",
+      "viewAll": "Voir Tous les Chats"
+    },
     "breeds": {
       "title": "Races Disponibles",
-      "subtitle": "Découvrez nos races sélectionnées — cliquez sur une race pour voir les chiens disponibles."
+      "subtitle": "Nos races canines et félines sélectionnées — cliquez sur une race pour voir les animaux disponibles.",
+      "dogsTitle": "Races de chiens",
+      "catsTitle": "Races de chats"
     },
     "timeline": {
       "title": "Comment Ça Fonctionne",
@@ -125,13 +133,13 @@
     },
     "faq": {
       "title": "Questions Fréquentes",
-      "subtitle": "Réponses aux questions les plus posées sur nos chiens et notre processus.",
+      "subtitle": "Réponses aux questions les plus posées sur nos animaux et notre processus.",
       "viewAll": "Voir Toutes les Questions"
     },
     "cta": {
       "limited": "Disponibilité Limitée",
       "title": "Trouvez Votre Compagnon Idéal",
-      "subtitle": "Parcourez notre sélection complète de chiens et chiots de race disponibles en Europe.",
+      "subtitle": "Parcourez notre sélection complète de chiens, chats, chiots et chatons de race disponibles en Europe.",
       "browseDogs": "Voir Tous les Chiens",
       "whatsapp": "Demande WhatsApp"
     },
@@ -143,7 +151,7 @@
 
   "Process": {
     "step01Title": "Découvrir",
-    "step01Desc": "Parcourez notre catalogue de chiens et chiots disponibles avec tous leurs détails : race, âge, santé, caractère.",
+    "step01Desc": "Parcourez notre catalogue de chiens, chats, chiots et chatons disponibles avec tous leurs détails : race, âge, santé, caractère.",
     "step02Title": "Choisir",
     "step02Desc": "Trouvez le compagnon idéal en filtrant par race, sexe, âge et localisation européenne.",
     "step03Title": "Contacter",
@@ -156,7 +164,7 @@
 
   "WhyChooseUs": {
     "item1Title": "Sélection Rigoureuse",
-    "item1Desc": "Chaque chien est sélectionné selon des critères stricts de santé, de tempérament et de lignée vérifiés par notre équipe.",
+    "item1Desc": "Chaque animal est sélectionné selon des critères stricts de santé, de tempérament et de lignée vérifiés par notre équipe.",
     "item2Title": "Bien-être Animal",
     "item2Desc": "Nos partenaires éleveurs respectent les standards européens de bien-être animal et pratiquent un élevage responsable.",
     "item3Title": "Transparence Totale",
@@ -168,12 +176,12 @@
   "About": {
     "metaTitle": "À Propos | CaniPrestige — Théodore de Parin",
     "badge": "Notre Histoire",
-    "title": "Passion Canine & Excellence Européenne",
-    "subtitle": "CaniPrestige est né de la passion de Théodore de Parin pour les chiens de race. Avec 6 ans d'expérience, il met en relation les familles avec les meilleurs éleveurs certifiés d'Europe.",
-    "founderBadge": "Fondateur & Expert Canin",
+    "title": "Passion Canine, Féline & Excellence Européenne",
+    "subtitle": "CaniPrestige est né de la passion de Théodore de Parin pour les animaux de race. Avec 6 ans d'expérience, il met en relation les familles avec les meilleurs éleveurs de chiens et de chats certifiés d'Europe.",
+    "founderBadge": "Fondateur & Expert Canin et Félin",
     "founderName": "Théodore de Parin",
-    "founderP1": "Passionné d'élevage canin depuis l'enfance, Théodore a fondé CaniPrestige en 2018 avec un objectif simple : aider les familles à trouver leur compagnon idéal auprès d'éleveurs sérieux et certifiés.",
-    "founderP2": "Son réseau couvre aujourd'hui cinq pays européens (France, Belgique, Allemagne, Pays-Bas, Espagne) et regroupe exclusivement des élevages affiliés à la FCI ou à ses registres nationaux membres (LOF, VDH, LOSH…).",
+    "founderP1": "Passionné d'élevage depuis l'enfance, Théodore a fondé CaniPrestige en 2018 avec un objectif simple : aider les familles à trouver leur compagnon idéal — chien ou chat — auprès d'éleveurs sérieux et certifiés.",
+    "founderP2": "Son réseau couvre aujourd'hui cinq pays européens (France, Belgique, Allemagne, Pays-Bas, Espagne) et regroupe exclusivement des élevages affiliés à la FCI/LOF pour les chiens et au LOOF pour les chats, ou à leurs registres nationaux équivalents (VDH, LOSH…).",
     "experience": "6 ans",
     "experienceLabel": "Expérience dans la sélection canine",
     "locationCity": "Paris",
@@ -185,9 +193,9 @@
       "t2020Label": "Réseau Européen",
       "t2020Desc": "Extension du réseau à des éleveurs partenaires en Belgique, en Allemagne et aux Pays-Bas. Première collaboration avec des éleveurs certifiés FCI.",
       "t2022Label": "Certification & Expertise",
-      "t2022Desc": "Approfondissement de l'expertise en santé canine et sur les protocoles de vaccination WSAVA. Partenariats renforcés avec des vétérinaires européens.",
+      "t2022Desc": "Ouverture aux élevages félins (LOOF) et approfondissement de l'expertise en santé animale et protocoles de vaccination. Partenariats renforcés avec des vétérinaires européens.",
       "t2024Label": "Plateforme Digitale",
-      "t2024Desc": "Lancement de CaniPrestige.eu, une vitrine digitale premium pour présenter les plus beaux chiots de race de notre réseau européen."
+      "t2024Desc": "Lancement de CaniPrestige.eu, une vitrine digitale premium pour présenter les plus beaux chiots et chatons de race de notre réseau européen."
     },
     "valuesTitle": "Nos Valeurs",
     "values": {
@@ -213,7 +221,7 @@
     "whatsappTitle": "WhatsApp",
     "whatsappDesc": "Envoyez-nous un message directement. Nous vous répondons rapidement.",
     "openWhatsapp": "Ouvrir WhatsApp",
-    "whatsappMessage": "Bonjour ! J'ai visité CaniPrestige et j'ai quelques questions sur vos chiens disponibles.",
+    "whatsappMessage": "Bonjour ! J'ai visité CaniPrestige et j'ai quelques questions sur vos animaux disponibles.",
     "email": "Email",
     "availability": "Disponibilité",
     "availabilityValue": "Lun–Sam, 9h–19h",
@@ -224,9 +232,12 @@
   },
 
   "Catalogue": {
-    "title": "Catalogue Chiens & Chiots",
-    "subtitle": "Découvrez tous nos chiens et chiots de race disponibles. Filtrez par race, sexe, âge ou localisation.",
-    "dogsAvailable": "{count} chiens disponibles",
+    "title": "Catalogue Chiens, Chats, Chiots & Chatons",
+    "subtitle": "Découvrez tous nos chiens, chats, chiots et chatons de race disponibles. Filtrez par espèce, race, sexe, âge ou localisation.",
+    "dogsAvailable": "{count} animaux disponibles",
+    "speciesAll": "Tous",
+    "speciesDogs": "Chiens & Chiots",
+    "speciesCats": "Chats & Chatons",
     "loading": "Chargement du catalogue…",
     "breadcrumbCatalog": "Catalogue",
     "resultsPrefix": "Affichage de",
@@ -326,7 +337,9 @@
   "Health": {
     "badge": "Santé & Vaccination",
     "title": "Protocole Sanitaire & Vaccination",
-    "intro": "Tous nos chiots suivent le protocole vaccinal officiel WSAVA et sont conformes au Règlement (UE) n° 576/2013 pour les mouvements intra-européens.",
+    "intro": "Tous nos chiots suivent le protocole vaccinal officiel WSAVA et nos chatons le protocole félin (RCP, FeLV). Chiens comme chats sont conformes au Règlement (UE) n° 576/2013 pour les mouvements intra-européens.",
+    "felineTitle": "Vaccination Féline (Chats & Chatons)",
+    "felineDesc": "Chats et chatons : primo-vaccination RCP (typhus / panleucopénie, coryza) dès 8 semaines, deux injections à 3-4 semaines d'intervalle, puis rappel annuel ou triennal. Vaccination leucose féline (FeLV) recommandée après test, et rage obligatoire pour tout déplacement transfrontalier UE (délai de 21 jours). Identification par puce ISO et passeport européen obligatoires.",
     "euTitle": "Réglementation UE — Règlement n° 576/2013",
     "euSource": "Source officielle : EUR-Lex, applicable dans toute l'Union Européenne",
     "chipTitle": "Puce Électronique Obligatoire",
@@ -364,10 +377,10 @@
 
   "Delivery": {
     "badge": "Livraison & Transport",
-    "title": "Remise & Transport de Votre Chiot",
+    "title": "Remise & Transport de Votre Animal",
     "intro": "Nous privilégions le bien-être animal à chaque étape. Nos modalités de remise sont conformes au Règlement (UE) n° 576/2013 et aux standards européens de protection animale.",
     "optionATitle": "Option Recommandée — Remise en Main Propre",
-    "optionAIntro": "La remise en main propre est notre approche privilégiée. Elle permet de rencontrer l'éleveur, de voir le cadre de vie du chiot, et de bénéficier d'un accompagnement personnalisé lors de la première rencontre avec votre nouveau compagnon.",
+    "optionAIntro": "La remise en main propre est notre approche privilégiée. Elle permet de rencontrer l'éleveur, de voir le cadre de vie de l'animal, et de bénéficier d'un accompagnement personnalisé lors de la première rencontre avec votre nouveau compagnon.",
     "optionAItem1": "Rencontre avec l'éleveur et visite de l'élevage",
     "optionAItem2": "Remise du passeport européen, du carnet de santé et du contrat de vente",
     "optionAItem3": "Conseils personnalisés sur l'alimentation, l'éducation et les soins",
@@ -379,15 +392,15 @@
     "docTitle": "Documentation Complète",
     "docDesc": "Certificat sanitaire (valable 10 jours), passeport européen, contrat de vente et garanties sanitaires remis avant le départ.",
     "welfareTitle": "Bien-être Prioritaire",
-    "welfareDesc": "Transport uniquement pour les chiots âgés de plus de 8 semaines. Caisse de transport adaptée, eau disponible, durée limitée.",
+    "welfareDesc": "Transport uniquement pour les chiots de plus de 8 semaines et les chatons de plus de 12 semaines. Caisse de transport adaptée, eau disponible, durée limitée.",
     "conditionsTitle": "Conditions d'Application",
     "conditionsDesc": "Maximum 5 animaux par mouvement non commercial (sauf exceptions documentées pour compétitions ou expositions).",
     "reminderTitle": "Rappel Réglementaire Important",
     "reminderDesc": "Conformément au Règlement (UE) n° 576/2013, tout mouvement non commercial d'animal de compagnie vers ou depuis un autre État membre doit être accompagné d'un passeport pour animal de compagnie valide, d'une puce électronique et, pour les déplacements hors Irlande/Finlande/Malte/Norvège, d'une vaccination antirabique valide.",
-    "ctaTitle": "Organiser la Remise de Votre Chiot",
+    "ctaTitle": "Organiser la Remise de Votre Animal",
     "ctaBody": "Contactez Théodore de Parin directement par WhatsApp pour organiser les modalités de remise adaptées à votre situation.",
     "ctaWhatsapp": "Contacter via WhatsApp",
-    "whatsappMessage": "Bonjour ! J'ai une question sur les modalités de transport et de remise pour un chiot."
+    "whatsappMessage": "Bonjour ! J'ai une question sur les modalités de transport et de remise pour un chiot ou un chaton."
   },
 
   "Legal": {
@@ -396,7 +409,7 @@
     "s1Title": "1. Éditeur du Site",
     "s1Name": "Nom :",
     "s1Activity": "Activité :",
-    "s1ActivityValue": "Sélection et présentation de chiens et chiots de race — activité non commerciale de mise en relation",
+    "s1ActivityValue": "Sélection et présentation de chiens, chats, chiots et chatons de race — activité non commerciale de mise en relation",
     "s1Address": "Adresse :",
     "s1Email": "E-mail :",
     "s1Web": "Site Web :",

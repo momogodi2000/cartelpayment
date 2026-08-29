@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import DogCard from "./DogCard";
 import type { Dog } from "@/data/dogs";
@@ -10,60 +9,77 @@ interface Props {
   dogs: Dog[];
 }
 
+/**
+ * Touch-friendly, scroll-snap carousel.
+ * Mobile: one card fills the width with the next peeking; tablet/desktop: 2–3 up.
+ * Arrows scroll by one card; they hide when there's nothing to scroll to.
+ */
 export default function DogCarousel({ dogs }: Props) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsToShow = 3;
-  const maxIndex = Math.max(0, dogs.length - itemsToShow);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
-  const prev = () => setCurrentIndex((c) => Math.max(0, c - 1));
-  const next = () => setCurrentIndex((c) => Math.min(maxIndex, c + 1));
+  const updateEdges = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    setAtStart(el.scrollLeft <= 4);
+    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    updateEdges();
+    const el = trackRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateEdges, { passive: true });
+    window.addEventListener("resize", updateEdges);
+    return () => {
+      el.removeEventListener("scroll", updateEdges);
+      window.removeEventListener("resize", updateEdges);
+    };
+  }, [updateEdges, dogs.length]);
+
+  const scrollByCard = (dir: 1 | -1) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-card]");
+    const step = card ? card.offsetWidth + 24 : el.clientWidth * 0.85;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
 
   if (dogs.length === 0) return null;
 
+  const showControls = dogs.length > 1;
+
   return (
-    <div className="space-y-6">
-      <div className="overflow-hidden">
-        <motion.div
-          className="flex gap-6"
-          animate={{ x: `-${currentIndex * (100 / itemsToShow)}%` }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          style={{ width: `${(dogs.length / itemsToShow) * 100}%` }}
-        >
-          {dogs.map((dog) => (
-            <div key={dog.id} style={{ width: `${100 / dogs.length}%` }} className="shrink-0">
-              <DogCard dog={dog} />
-            </div>
-          ))}
-        </motion.div>
+    <div className="space-y-4">
+      <div
+        ref={trackRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {dogs.map((dog) => (
+          <div
+            key={dog.id}
+            data-card
+            className="snap-start shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
+          >
+            <DogCard dog={dog} />
+          </div>
+        ))}
       </div>
 
-      {dogs.length > itemsToShow && (
+      {showControls && (
         <div className="flex items-center justify-center gap-3">
           <button
-            onClick={prev}
-            disabled={currentIndex === 0}
+            onClick={() => scrollByCard(-1)}
+            disabled={atStart}
             className="h-10 w-10 rounded-xl border border-black/[0.08] dark:border-white/[0.1] flex items-center justify-center text-text-premium/60 hover:text-text-premium hover:bg-black/[0.02] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             aria-label="Previous"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
-
-          <div className="flex gap-2">
-            {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentIndex(i)}
-                className={`rounded-full transition-all ${
-                  i === currentIndex ? "w-5 h-2 bg-primary" : "w-2 h-2 bg-text-premium/20 hover:bg-text-premium/40"
-                }`}
-                aria-label={`Page ${i + 1}`}
-              />
-            ))}
-          </div>
-
           <button
-            onClick={next}
-            disabled={currentIndex === maxIndex}
+            onClick={() => scrollByCard(1)}
+            disabled={atEnd}
             className="h-10 w-10 rounded-xl border border-black/[0.08] dark:border-white/[0.1] flex items-center justify-center text-text-premium/60 hover:text-text-premium hover:bg-black/[0.02] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             aria-label="Next"
           >

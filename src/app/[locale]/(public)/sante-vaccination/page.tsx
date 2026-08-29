@@ -38,10 +38,10 @@ export default async function SanteVaccinationPage({ params }: { params: Promise
   ];
 
   const registries = [
-    { country: "France", registry: "LOF — Livre des Origines Françaises", body: "Société Centrale Canine (SCC) — FCI" },
+    { country: "France — chiens", registry: "LOF — Livre des Origines Françaises", body: "Société Centrale Canine (SCC) — FCI" },
+    { country: "France — chats", registry: "LOOF — Livre Officiel des Origines Félines", body: "Registre félin français officiel" },
     { country: "Deutschland", registry: "VDH — Verband für das Deutsche Hundewesen", body: "FCI-affiliated" },
-    { country: "Belgique", registry: "LOSH — Livre des Origines Saint-Hubert", body: "Union Royale Cynologique Saint-Hubert" },
-    { country: "Nederland", registry: "NHSB — Nederlands Hondenstamboek", body: "Raad van Beheer" },
+    { country: "International — chats", registry: "FIFe / TICA / WCF", body: "Fédérations félines internationales" },
   ];
 
   return (
@@ -133,6 +133,14 @@ export default async function SanteVaccinationPage({ params }: { params: Promise
               <li>{t("lepto3")}</li>
             </ul>
           </div>
+        </div>
+
+        <div className="p-6 rounded-2xl bg-purple-50 dark:bg-purple-950/20 border border-purple-100 dark:border-purple-900/40 space-y-3">
+          <h3 className="font-extrabold text-text-premium flex items-center gap-2">
+            <Syringe className="h-5 w-5 text-purple-600" />
+            {t("felineTitle")}
+          </h3>
+          <p className="text-xs text-text-premium/70 leading-relaxed">{t("felineDesc")}</p>
         </div>
       </section>
 

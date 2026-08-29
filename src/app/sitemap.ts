@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import dogs from "@/data/dogs";
+import animals from "@/data/animals";
 import { siteConfig } from "@/data/site";
 
 const LOCALES = ["fr", "en"] as const;
@@ -50,8 +50,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  for (const dog of dogs) {
-    const alts = localized(baseUrl, `/catalogue/${dog.slug}`);
+  for (const animal of animals) {
+    const alts = localized(baseUrl, `/catalogue/${animal.slug}`);
     for (const { url } of alts) {
       entries.push({
         url,

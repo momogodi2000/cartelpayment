@@ -5,6 +5,7 @@
 export type SizeCategory = 'petit' | 'moyen' | 'grand';
 export type Sex = 'male' | 'femelle';
 export type Availability = 'disponible' | 'réservé' | 'vendu';
+export type AnimalSpecies = 'dog' | 'cat';
 
 export interface DogImage {
   url: string;
@@ -32,6 +33,8 @@ export interface MarketDetails {
 export interface Dog {
   id: string;
   slug: string;
+  /** Animal species — defaults to 'dog' for legacy entries */
+  species?: AnimalSpecies;
   name: string;
   breed: string;
   breedName: string;

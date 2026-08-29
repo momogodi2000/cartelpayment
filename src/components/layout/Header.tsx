@@ -12,7 +12,6 @@ import {
   ChevronDown,
   Info,
   HelpCircle,
-  FileCheck,
   Phone,
   Handshake,
 } from "lucide-react";

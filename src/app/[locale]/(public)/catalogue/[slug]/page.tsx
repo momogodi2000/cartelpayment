@@ -16,23 +16,24 @@ import {
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { getDogInquiryMessage, getWhatsAppLink, siteConfig } from "@/data/site";
-import dogs from "@/data/dogs";
+import animals from "@/data/animals";
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
 }
 
 export function generateStaticParams() {
-  return dogs.map((d) => ({ slug: d.slug }));
+  return animals.map((d) => ({ slug: d.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug, locale } = await params;
-  const dog = dogs.find((d) => d.slug === slug);
+  const dog = animals.find((d) => d.slug === slug);
   if (!dog) return {};
   const path = `/catalogue/${slug}`;
+  // seoTitle already carries the brand suffix — keep it verbatim.
   return {
-    title: dog.seoTitle,
+    title: { absolute: dog.seoTitle },
     description: dog.seoDescription,
     alternates: {
       canonical: locale === "fr" ? path : `/en${path}`,
@@ -58,7 +59,7 @@ export default async function DogDetailPage({ params }: PageProps) {
   const t = await getTranslations("DogDetail");
   const isEn = (await getLocale()) === "en";
 
-  const dog = dogs.find((d) => d.slug === slug);
+  const dog = animals.find((d) => d.slug === slug);
   if (!dog) notFound();
 
   const name = dog.name;

@@ -1,22 +1,22 @@
 {
   "Meta": {
-    "defaultTitle": "CaniPrestige — Purebred Dogs & Puppies | European Selection",
-    "defaultDescription": "CaniPrestige selects the finest purebred dogs and puppies from responsible European breeders. Detailed profiles, pedigree, up-to-date health records. Direct contact via WhatsApp.",
-    "keywords": "purebred dogs europe, purebred puppies, puppies available france, golden retriever puppy, labrador puppy, german shepherd puppy, responsible dog breeding, pedigree puppy europe, dogs for sale france, dog breeding partner",
-    "homeTitle": "Premium Purebred Dogs & Puppies | European Selection",
-    "homeDescription": "Discover purebred dogs and puppies carefully selected from responsible European breeders. Transparency, animal welfare and WhatsApp support.",
-    "catalogueTitle": "Purebred Dogs & Puppies Catalogue",
-    "catalogueDescription": "Browse our full catalogue of purebred dogs and puppies available across Europe. Filter by breed, sex, age and location.",
+    "defaultTitle": "CaniPrestige — Purebred Dogs, Cats, Puppies & Kittens | European Selection",
+    "defaultDescription": "CaniPrestige selects the finest purebred dogs, cats, puppies and kittens from responsible European breeders. Detailed profiles, pedigree (LOF, LOOF), up-to-date health records. Direct contact via WhatsApp.",
+    "keywords": "purebred dogs europe, purebred puppies, purebred cats, purebred kittens, pedigree kitten, maine coon kitten, ragdoll kitten, british shorthair, golden retriever puppy, labrador puppy, german shepherd puppy, responsible dog breeding, responsible cat breeding, pedigree puppy europe, dogs for sale france, cats for sale france, dog breeding partner, cat breeding partner",
+    "homeTitle": "Premium Purebred Dogs, Cats, Puppies & Kittens | European Selection",
+    "homeDescription": "Discover purebred dogs, cats, puppies and kittens carefully selected from responsible European breeders. LOF and LOOF pedigree, transparency, animal welfare and WhatsApp support.",
+    "catalogueTitle": "Purebred Dogs, Cats, Puppies & Kittens Catalogue",
+    "catalogueDescription": "Browse our full catalogue of purebred dogs, cats, puppies and kittens available across Europe. Filter by species, breed, sex, age and location.",
     "aboutTitle": "About — Our Story",
-    "aboutDescription": "Discover the story of CaniPrestige, a passion for purebred dogs and our network of certified breeders across Europe.",
+    "aboutDescription": "Discover the story of CaniPrestige, a passion for purebred dogs and cats and our network of certified breeders across Europe.",
     "contactTitle": "Contact",
-    "contactDescription": "Contact CaniPrestige via WhatsApp for any question about our purebred dogs and puppies available across Europe.",
+    "contactDescription": "Contact CaniPrestige via WhatsApp for any question about our purebred dogs, cats, puppies and kittens available across Europe.",
     "faqTitle": "FAQ — Frequently Asked Questions",
-    "faqDescription": "All the answers to your questions about our purebred dogs, our acquisition process and our European partner breeders.",
+    "faqDescription": "All the answers to your questions about our purebred dogs and cats, our acquisition process and our European partner breeders.",
     "healthTitle": "Health & Vaccination — Official WSAVA Protocol",
-    "healthDescription": "Official WSAVA vaccination protocol, ISO microchip, European pet passport and EU Regulation 576/2013. All the health guarantees for your puppy.",
+    "healthDescription": "Official WSAVA vaccination protocol, ISO microchip, European pet passport and EU Regulation 576/2013. All the health guarantees for your puppy or kitten.",
     "deliveryTitle": "Delivery & Transport — Direct Handover & EU Transport",
-    "deliveryDescription": "Direct handover and supervised transport arrangements for your puppy. Compliance with EU Regulation 576/2013, European passport, animal welfare.",
+    "deliveryDescription": "Direct handover and supervised transport arrangements for your puppy or kitten. Compliance with EU Regulation 576/2013, European passport, animal welfare.",
     "legalTitle": "Legal Notice",
     "legalDescription": "Legal notice for the CaniPrestige website — legal information, site publisher, host and terms of use.",
     "privacyTitle": "Privacy Policy",
@@ -26,7 +26,7 @@
   },
 
   "Common": {
-    "whatsappGeneralMessage": "Hello! I visited CaniPrestige and would like to learn more about your available dogs and puppies.",
+    "whatsappGeneralMessage": "Hello! I visited CaniPrestige and would like to learn more about your available dogs, cats, puppies and kittens.",
     "whatsappButton": "Contact via WhatsApp",
     "whatsappButtonShort": "Contact",
     "whatsappChatShort": "Chat",
@@ -43,7 +43,8 @@
 
   "Nav": {
     "home": "Home",
-    "catalog": "Dogs & Puppies",
+    "catalog": "Dogs & Cats",
+    "catalogDesc": "Purebred dogs, cats, puppies and kittens",
     "about": "Our Story",
     "contact": "Contact",
     "faq": "FAQ",
@@ -64,8 +65,8 @@
   },
 
   "Footer": {
-    "tagline": "European Canine Excellence",
-    "description": "Premium selection of purebred dogs and puppies from responsible European breeders.",
+    "tagline": "European Canine & Feline Excellence",
+    "description": "Premium selection of purebred dogs, cats, puppies and kittens from responsible European breeders.",
     "navTitle": "Navigation",
     "infoTitle": "Information",
     "catalog": "Our Catalogue",
@@ -85,35 +86,42 @@
   },
 
   "Home": {
-    "whatsappMessage": "Hello! I visited CaniPrestige and would like to learn more about your available dogs and puppies.",
-    "schemaDescription": "Premium purebred dog and puppy selection for the European market.",
+    "whatsappMessage": "Hello! I visited CaniPrestige and would like to learn more about your available dogs, cats, puppies and kittens.",
+    "schemaDescription": "Premium purebred dog, cat, puppy and kitten selection for the European market.",
     "heroImageAlt": "Purebred dog selected by CaniPrestige",
     "stats": {
-      "dogs": "Dog Profiles",
+      "dogs": "Animal Profiles",
       "breeds": "Breeds Available",
       "countries": "European Countries",
       "response": "WhatsApp Response"
     },
     "hero": {
-      "badge": "European Purebred Selection",
+      "badge": "European Purebred Dog & Cat Selection",
       "titleLine1": "Premium Purebred",
-      "titleAccent": "Dogs & Puppies",
-      "subtitle": "Carefully selected purebred dogs and puppies from responsible European breeders. Transparency, well-being and passion for dogs.",
-      "cta": "Explore Available Dogs",
+      "titleAccent": "Dogs, Cats, Puppies & Kittens",
+      "subtitle": "Carefully selected purebred dogs, cats, puppies and kittens from responsible European breeders. LOF and LOOF pedigree, transparency and animal welfare.",
+      "cta": "Explore Available Animals",
       "secondary": "Contact via WhatsApp"
     },
     "credentials": {
       "title": "Our Commitment to Excellence",
-      "subtitle": "Every dog we present meets our rigorous standards of health, lineage and well-being."
+      "subtitle": "Every animal we present meets our rigorous standards of health, lineage and well-being."
     },
     "featured": {
-      "title": "Featured Dogs",
+      "title": "Featured Dogs & Puppies",
       "subtitle": "Discover our highlighted selection of exceptional dogs and puppies.",
       "viewAll": "View All Dogs"
     },
+    "catsFeatured": {
+      "title": "Featured Cats & Kittens",
+      "subtitle": "Purebred cats and kittens, LOOF pedigree, tested parents.",
+      "viewAll": "View All Cats"
+    },
     "breeds": {
       "title": "Available Breeds",
-      "subtitle": "Discover our selected breeds — click a breed to see available dogs."
+      "subtitle": "Our selected dog and cat breeds — click a breed to see available animals.",
+      "dogsTitle": "Dog breeds",
+      "catsTitle": "Cat breeds"
     },
     "timeline": {
       "title": "How It Works",
@@ -125,13 +133,13 @@
     },
     "faq": {
       "title": "Frequently Asked Questions",
-      "subtitle": "Answers to the most common questions about our dogs and process.",
+      "subtitle": "Answers to the most common questions about our animals and process.",
       "viewAll": "View All Questions"
     },
     "cta": {
       "limited": "Limited Availability",
       "title": "Find Your Perfect Companion",
-      "subtitle": "Browse our full selection of purebred dogs and puppies available across Europe.",
+      "subtitle": "Browse our full selection of purebred dogs, cats, puppies and kittens available across Europe.",
       "browseDogs": "Browse All Dogs",
       "whatsapp": "WhatsApp Inquiry"
     },
@@ -143,7 +151,7 @@
 
   "Process": {
     "step01Title": "Discover",
-    "step01Desc": "Browse our catalogue of available dogs and puppies with full details: breed, age, health, temperament.",
+    "step01Desc": "Browse our catalogue of available dogs, cats, puppies and kittens with full details: breed, age, health, temperament.",
     "step02Title": "Choose",
     "step02Desc": "Find your ideal companion by filtering by breed, sex, age and European location.",
     "step03Title": "Contact",
@@ -156,7 +164,7 @@
 
   "WhyChooseUs": {
     "item1Title": "Rigorous Selection",
-    "item1Desc": "Every dog is selected according to strict health, temperament and lineage criteria verified by our team.",
+    "item1Desc": "Every animal is selected according to strict health, temperament and lineage criteria verified by our team.",
     "item2Title": "Animal Welfare",
     "item2Desc": "Our partner breeders comply with European animal welfare standards and responsible breeding practices.",
     "item3Title": "Full Transparency",
@@ -168,12 +176,12 @@
   "About": {
     "metaTitle": "About | CaniPrestige — Théodore de Parin",
     "badge": "Our Story",
-    "title": "Canine Passion & European Excellence",
-    "subtitle": "CaniPrestige was born from Théodore de Parin's passion for purebred dogs. With 6 years of experience, he connects families with the finest certified breeders in Europe.",
-    "founderBadge": "Founder & Canine Expert",
+    "title": "Canine & Feline Passion, European Excellence",
+    "subtitle": "CaniPrestige was born from Théodore de Parin's passion for purebred animals. With 6 years of experience, he connects families with the finest certified dog and cat breeders in Europe.",
+    "founderBadge": "Founder & Canine and Feline Expert",
     "founderName": "Théodore de Parin",
-    "founderP1": "Passionate about canine breeding since childhood, Théodore founded CaniPrestige in 2018 with a simple goal: helping families find their ideal companion with serious, certified breeders.",
-    "founderP2": "His network now covers five European countries (France, Belgium, Germany, the Netherlands, Spain) and exclusively includes breeding facilities affiliated with the FCI or its national member registries (LOF, VDH, LOSH…).",
+    "founderP1": "Passionate about breeding since childhood, Théodore founded CaniPrestige in 2018 with a simple goal: helping families find their ideal companion — dog or cat — with serious, certified breeders.",
+    "founderP2": "His network now covers five European countries (France, Belgium, Germany, the Netherlands, Spain) and exclusively includes breeding facilities affiliated with the FCI/LOF for dogs and the LOOF for cats, or their equivalent national registries (VDH, LOSH…).",
     "experience": "6 years",
     "experienceLabel": "Experience in canine selection",
     "locationCity": "Paris",
@@ -185,9 +193,9 @@
       "t2020Label": "European Network",
       "t2020Desc": "Network extension to partner breeders in Belgium, Germany and the Netherlands. First collaboration with FCI-certified breeders.",
       "t2022Label": "Certification & Expertise",
-      "t2022Desc": "Deepening expertise in canine health and WSAVA vaccination protocols. Strengthened partnerships with European veterinarians.",
+      "t2022Desc": "Opening up to feline breeders (LOOF) and deepening expertise in animal health and vaccination protocols. Strengthened partnerships with European veterinarians.",
       "t2024Label": "Digital Platform",
-      "t2024Desc": "Launch of CaniPrestige.eu, a premium digital showcase to present the finest purebred puppies from our European network."
+      "t2024Desc": "Launch of CaniPrestige.eu, a premium digital showcase to present the finest purebred puppies and kittens from our European network."
     },
     "valuesTitle": "Our Values",
     "values": {
@@ -213,7 +221,7 @@
     "whatsappTitle": "WhatsApp",
     "whatsappDesc": "Send us a message directly. We'll reply quickly.",
     "openWhatsapp": "Open WhatsApp",
-    "whatsappMessage": "Hello! I visited CaniPrestige and would like to ask some questions about your available dogs.",
+    "whatsappMessage": "Hello! I visited CaniPrestige and would like to ask some questions about your available animals.",
     "email": "Email",
     "availability": "Availability",
     "availabilityValue": "Mon–Sat, 9am–7pm",
@@ -224,9 +232,12 @@
   },
 
   "Catalogue": {
-    "title": "Dogs & Puppies Catalogue",
-    "subtitle": "Discover all our available purebred dogs and puppies. Filter by breed, sex, age or location.",
-    "dogsAvailable": "{count} dogs available",
+    "title": "Dogs, Cats, Puppies & Kittens Catalogue",
+    "subtitle": "Discover all our available purebred dogs, cats, puppies and kittens. Filter by species, breed, sex, age or location.",
+    "dogsAvailable": "{count} animals available",
+    "speciesAll": "All",
+    "speciesDogs": "Dogs & Puppies",
+    "speciesCats": "Cats & Kittens",
     "loading": "Loading catalogue…",
     "breadcrumbCatalog": "Catalogue",
     "resultsPrefix": "Showing",
@@ -316,7 +327,7 @@
 
   "Faq": {
     "title": "Frequently Asked Questions",
-    "subtitle": "Find answers to the most common questions about our purebred dogs and our process.",
+    "subtitle": "Find answers to the most common questions about our purebred dogs and cats and our process.",
     "notListedTitle": "Your question not listed?",
     "notListedBody": "Contact us directly via WhatsApp. We respond within 2 hours.",
     "askWhatsapp": "Ask My Question on WhatsApp",
@@ -326,7 +337,9 @@
   "Health": {
     "badge": "Health & Vaccination",
     "title": "Health Protocol & Vaccination",
-    "intro": "All our puppies follow the official WSAVA vaccination protocol and comply with EU Regulation 576/2013 for intra-European movements.",
+    "intro": "All our puppies follow the official WSAVA vaccination protocol and our kittens the feline protocol (FVRCP, FeLV). Both dogs and cats comply with EU Regulation 576/2013 for intra-European movements.",
+    "felineTitle": "Feline Vaccination (Cats & Kittens)",
+    "felineDesc": "Cats and kittens: primary FVRCP vaccination (panleukopenia, cat flu) from 8 weeks, two injections 3-4 weeks apart, then an annual or triennial booster. Feline leukaemia (FeLV) vaccination recommended after testing, and rabies mandatory for any cross-border EU movement (21-day period). ISO microchip identification and a European passport are mandatory.",
     "euTitle": "EU Regulation — Regulation 576/2013",
     "euSource": "Official source: EUR-Lex, applicable across the entire European Union",
     "chipTitle": "Mandatory Microchip",
@@ -364,10 +377,10 @@
 
   "Delivery": {
     "badge": "Delivery & Transport",
-    "title": "Puppy Handover & Transport",
+    "title": "Animal Handover & Transport",
     "intro": "We prioritise animal welfare at every step. Our handover procedures comply with EU Regulation 576/2013 and European animal protection standards.",
     "optionATitle": "Recommended Option — Direct Handover",
-    "optionAIntro": "Direct handover is our preferred approach. It allows you to meet the breeder, see the puppy's living environment, and benefit from personalised guidance during the first meeting with your new companion.",
+    "optionAIntro": "Direct handover is our preferred approach. It allows you to meet the breeder, see the animal's living environment, and benefit from personalised guidance during the first meeting with your new companion.",
     "optionAItem1": "Meeting the breeder and visiting the breeding facility",
     "optionAItem2": "Handover of European passport, health record and sales contract",
     "optionAItem3": "Personalised advice on nutrition, training and care",
@@ -379,15 +392,15 @@
     "docTitle": "Complete Documentation",
     "docDesc": "Health certificate (valid 10 days), European passport, sales contract and health guarantees provided before departure.",
     "welfareTitle": "Welfare Priority",
-    "welfareDesc": "Transport only for puppies over 8 weeks old. Appropriate transport crate, water available, limited duration.",
+    "welfareDesc": "Transport only for puppies over 8 weeks and kittens over 12 weeks old. Appropriate transport crate, water available, limited duration.",
     "conditionsTitle": "Conditions of Application",
     "conditionsDesc": "Maximum 5 animals per non-commercial movement (except documented exceptions for competitions or shows).",
     "reminderTitle": "Important Regulatory Reminder",
     "reminderDesc": "In accordance with EU Regulation 576/2013, any non-commercial movement of a pet to or from another Member State must be accompanied by a valid pet passport, electronic chip and, for travel outside Ireland/Finland/Malta/Norway, a valid rabies vaccination.",
-    "ctaTitle": "Arrange Your Puppy Handover",
+    "ctaTitle": "Arrange Your Animal Handover",
     "ctaBody": "Contact Théodore de Parin directly via WhatsApp to arrange handover terms suited to your situation.",
     "ctaWhatsapp": "Contact via WhatsApp",
-    "whatsappMessage": "Hello! I have a question about transport and delivery options for a puppy."
+    "whatsappMessage": "Hello! I have a question about transport and delivery options for a puppy or kitten."
   },
 
   "Legal": {
@@ -396,7 +409,7 @@
     "s1Title": "1. Site Publisher",
     "s1Name": "Name:",
     "s1Activity": "Activity:",
-    "s1ActivityValue": "Selection and presentation of purebred dogs and puppies — non-commercial introduction service",
+    "s1ActivityValue": "Selection and presentation of purebred dogs, cats, puppies and kittens — non-commercial introduction service",
     "s1Address": "Address:",
     "s1Email": "Email:",
     "s1Web": "Website:",

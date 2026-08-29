@@ -39,7 +39,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // Internationalization middleware
-  let response = intlMiddleware(request);
+  const response = intlMiddleware(request);
 
   // Security headers
   response.headers.set("X-DNS-Prefetch-Control", "on");

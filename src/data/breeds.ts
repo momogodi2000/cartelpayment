@@ -3,6 +3,7 @@
 // ============================================================
 
 export type BreedCategory = 'petit' | 'moyen' | 'grand';
+export type BreedSpecies = 'dog' | 'cat';
 
 export interface Breed {
   id: string;
@@ -11,6 +12,8 @@ export interface Breed {
   name: string;
   /** English name */
   nameEn: string;
+  /** Animal species — defaults to 'dog' for legacy entries */
+  species?: BreedSpecies;
   category: BreedCategory;
   /** Country of origin */
   origin: string;
@@ -211,6 +214,181 @@ export const breeds: Breed[] = [
     image: 'https://images.unsplash.com/photo-1543466835011-5a25bf1444de?w=800&auto=format&fit=crop',
     featured: false,
   },
+  {
+    id: 'breed-11',
+    slug: 'berger-belge-malinois',
+    name: 'Berger Belge Malinois',
+    nameEn: 'Belgian Malinois',
+    category: 'grand',
+    origin: 'Belgique',
+    temperament: 'Vif, protecteur, travailleur, très attaché à son maître',
+    lifespan: '12-14 ans',
+    weight: '20-30 kg',
+    height: '56-66 cm',
+    description:
+      "Le Berger Belge Malinois est un chien de travail par excellence, plébiscité par les unités cynophiles de police et de l'armée en Europe. Extrêmement énergique et intelligent, il demande une activité quotidienne soutenue et une éducation cohérente.",
+    descriptionEn:
+      'The Belgian Malinois is a working dog par excellence, favoured by police and military K9 units across Europe. Extremely energetic and intelligent, it needs sustained daily activity and consistent training.',
+    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&auto=format&fit=crop',
+    featured: false,
+  },
+
+  // ── Chats de race / Purebred cats ──────────────────────────────────────
+  {
+    id: 'breed-cat-01',
+    slug: 'maine-coon',
+    name: 'Maine Coon',
+    nameEn: 'Maine Coon',
+    species: 'cat',
+    category: 'grand',
+    origin: 'États-Unis',
+    temperament: 'Doux, sociable, joueur, "chien-chat"',
+    lifespan: '12-15 ans',
+    weight: '4-9 kg',
+    height: '25-40 cm',
+    description:
+      "Le Maine Coon est le plus grand chat domestique. Réputé pour sa sociabilité et son attachement à sa famille, il possède un pelage mi-long imperméable et une queue en panache. Une race idéale pour les foyers avec enfants et autres animaux.",
+    descriptionEn:
+      'The Maine Coon is the largest domestic cat breed. Known for its sociability and attachment to its family, it has a semi-long water-resistant coat and a plumed tail. An ideal breed for households with children and other pets.',
+    image: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=800&auto=format&fit=crop',
+    featured: true,
+  },
+  {
+    id: 'breed-cat-02',
+    slug: 'ragdoll',
+    name: 'Ragdoll',
+    nameEn: 'Ragdoll',
+    species: 'cat',
+    category: 'grand',
+    origin: 'États-Unis',
+    temperament: 'Calme, câlin, docile, "poupée de chiffon"',
+    lifespan: '12-17 ans',
+    weight: '4-9 kg',
+    height: '23-28 cm',
+    description:
+      "Le Ragdoll doit son nom à sa tendance à se détendre complètement dans les bras. Chat colourpoint aux yeux bleus intenses, il est extrêmement affectueux, peu bavard et parfaitement adapté à la vie en intérieur.",
+    descriptionEn:
+      'The Ragdoll owes its name to its tendency to go completely limp when picked up. A colourpoint cat with intense blue eyes, it is extremely affectionate, quiet and perfectly suited to indoor living.',
+    image: 'https://images.unsplash.com/photo-1615497001839-b0a0eac3274c?w=800&auto=format&fit=crop',
+    featured: true,
+  },
+  {
+    id: 'breed-cat-03',
+    slug: 'british-shorthair',
+    name: 'British Shorthair',
+    nameEn: 'British Shorthair',
+    species: 'cat',
+    category: 'moyen',
+    origin: 'Royaume-Uni',
+    temperament: 'Placide, indépendant, équilibré, affectueux sans être envahissant',
+    lifespan: '12-17 ans',
+    weight: '4-8 kg',
+    height: '30-35 cm',
+    description:
+      "Le British Shorthair séduit par sa silhouette ronde, son pelage dense « peluche » et son célèbre coloris bleu. Calme et posé, il convient parfaitement à la vie en appartement et aux personnes recherchant un compagnon serein.",
+    descriptionEn:
+      'The British Shorthair charms with its round silhouette, dense plush coat and famous blue colour. Calm and composed, it is perfectly suited to apartment living and to anyone seeking a serene companion.',
+    image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=800&auto=format&fit=crop',
+    featured: true,
+  },
+  {
+    id: 'breed-cat-04',
+    slug: 'sacre-de-birmanie',
+    name: 'Sacré de Birmanie',
+    nameEn: 'Birman',
+    species: 'cat',
+    category: 'moyen',
+    origin: 'Birmanie / France',
+    temperament: 'Doux, sociable, communicatif, équilibré',
+    lifespan: '13-16 ans',
+    weight: '3-6 kg',
+    height: '20-25 cm',
+    description:
+      "Le Sacré de Birmanie se reconnaît à ses « gants » blancs immaculés et ses yeux bleu saphir. Chat de compagnie par excellence, il suit son humain de pièce en pièce et s'entend avec tout le monde.",
+    descriptionEn:
+      'The Birman is recognised by its immaculate white "gloves" and sapphire-blue eyes. A companion cat par excellence, it follows its human from room to room and gets along with everyone.',
+    image: 'https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?w=800&auto=format&fit=crop',
+    featured: false,
+  },
+  {
+    id: 'breed-cat-05',
+    slug: 'bengal',
+    name: 'Bengal',
+    nameEn: 'Bengal',
+    species: 'cat',
+    category: 'moyen',
+    origin: 'États-Unis',
+    temperament: 'Vif, athlétique, joueur, curieux',
+    lifespan: '12-16 ans',
+    weight: '4-7 kg',
+    height: '20-25 cm',
+    description:
+      "Le Bengal arbore une robe tachetée ou marbrée rappelant le léopard. Extrêmement actif et intelligent, il a besoin de stimulation, aime l'eau et convient aux familles disponibles et joueuses.",
+    descriptionEn:
+      'The Bengal displays a spotted or marbled coat reminiscent of a leopard. Extremely active and intelligent, it needs stimulation, enjoys water and suits available, playful families.',
+    image: 'https://images.unsplash.com/photo-1561948955-570b270e7c36?w=800&auto=format&fit=crop',
+    featured: false,
+  },
+  {
+    id: 'breed-cat-06',
+    slug: 'sphynx',
+    name: 'Sphynx',
+    nameEn: 'Sphynx',
+    species: 'cat',
+    category: 'moyen',
+    origin: 'Canada',
+    temperament: 'Extraverti, collant, chaleureux, joueur',
+    lifespan: '12-15 ans',
+    weight: '3-6 kg',
+    height: '20-25 cm',
+    description:
+      "Le Sphynx, chat « nu », recherche en permanence le contact et la chaleur. Très attaché à sa famille, il demande des soins de peau réguliers et un environnement intérieur tempéré.",
+    descriptionEn:
+      'The Sphynx, a "hairless" cat, constantly seeks contact and warmth. Very attached to its family, it requires regular skin care and a temperate indoor environment.',
+    image: 'https://images.unsplash.com/photo-1606214174585-fe31582dc6ee?w=800&auto=format&fit=crop',
+    featured: false,
+  },
+  {
+    id: 'breed-cat-07',
+    slug: 'norvegien',
+    name: 'Norvégien',
+    nameEn: 'Norwegian Forest Cat',
+    species: 'cat',
+    category: 'grand',
+    origin: 'Norvège',
+    temperament: 'Robuste, indépendant, doux, bon grimpeur',
+    lifespan: '14-16 ans',
+    weight: '4-9 kg',
+    height: '30-40 cm',
+    description:
+      "Le Chat des forêts norvégiennes possède un double pelage épais adapté aux climats froids et une allure sauvage. Sociable mais discret, c'est un excellent compagnon pour les familles avec accès extérieur sécurisé.",
+    descriptionEn:
+      'The Norwegian Forest Cat has a thick double coat adapted to cold climates and a wild appearance. Sociable but discreet, it is an excellent companion for families with secure outdoor access.',
+    image: 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=800&auto=format&fit=crop',
+    featured: false,
+  },
+  {
+    id: 'breed-cat-08',
+    slug: 'chartreux',
+    name: 'Chartreux',
+    nameEn: 'Chartreux',
+    species: 'cat',
+    category: 'moyen',
+    origin: 'France',
+    temperament: 'Silencieux, fidèle, observateur, doux',
+    lifespan: '12-15 ans',
+    weight: '3-7 kg',
+    height: '23-28 cm',
+    description:
+      "Race française ancienne, le Chartreux se distingue par sa robe bleue uniforme, ses yeux cuivre et son fameux « sourire ». Discret et très attaché à un maître, il s'adapte parfaitement à la vie en intérieur.",
+    descriptionEn:
+      'An ancient French breed, the Chartreux stands out with its uniform blue coat, copper eyes and famous "smile". Discreet and deeply attached to one owner, it adapts perfectly to indoor life.',
+    image: 'https://images.unsplash.com/photo-1568152950566-c1bf43f4ab28?w=800&auto=format&fit=crop',
+    featured: false,
+  },
 ];
 
 export default breeds;
+
+export const dogBreeds = breeds.filter((b) => (b.species ?? 'dog') === 'dog');
+export const catBreeds = breeds.filter((b) => b.species === 'cat');

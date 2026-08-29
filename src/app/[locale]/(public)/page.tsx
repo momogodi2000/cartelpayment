@@ -5,8 +5,8 @@ import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { ArrowRight, Award, CheckCircle2, MessageSquare, Handshake } from "lucide-react";
 import { getWhatsAppLink, siteConfig } from "@/data/site";
-import dogs from "@/data/dogs";
-import breeds from "@/data/breeds";
+import animals, { dogs, cats } from "@/data/animals";
+import breeds, { dogBreeds, catBreeds } from "@/data/breeds";
 import { faqs } from "@/data/faq";
 import { testimonials } from "@/data/testimonials";
 
@@ -44,12 +44,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const isEn = (await getLocale()) === "en";
 
   const featuredDogs = dogs.filter((d) => d.featured);
+  const featuredCats = cats.filter((c) => c.featured);
   const homeFaqs = faqs.slice(0, 4);
   const base = siteConfig.siteUrl;
   const generalWhatsapp = getWhatsAppLink(t("whatsappMessage"));
 
   const stats = [
-    { value: `${dogs.length}+`, label: t("stats.dogs") },
+    { value: `${animals.length}+`, label: t("stats.dogs") },
     { value: `${breeds.length}`, label: t("stats.breeds") },
     { value: "5+", label: t("stats.countries") },
     { value: "< 2h", label: t("stats.response") },
@@ -192,6 +193,28 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </section>
       )}
 
+      {/* Featured cats */}
+      {featuredCats.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-black/[0.04] dark:border-white/[0.04] pb-4">
+            <div className="space-y-2 text-left">
+              <h2 className="text-3xl sm:text-4xl font-black font-heading text-text-premium tracking-tight">
+                {t("catsFeatured.title")}
+              </h2>
+              <p className="text-text-premium/70 text-xs sm:text-sm">{t("catsFeatured.subtitle")}</p>
+            </div>
+            <Link
+              href="/catalogue?species=cat"
+              className="text-primary hover:text-primary-hover font-extrabold text-xs sm:text-sm flex items-center gap-1 shrink-0"
+            >
+              {t("catsFeatured.viewAll")}
+              <ArrowRight className="h-4 w-4 shrink-0" />
+            </Link>
+          </div>
+          <DogCarousel dogs={featuredCats} />
+        </section>
+      )}
+
       {/* Breeds */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-3">
@@ -201,7 +224,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <p className="text-text-premium/70 text-xs sm:text-sm leading-relaxed">{t("breeds.subtitle")}</p>
           <div className="h-1 w-16 bg-primary mx-auto rounded-full mt-3" />
         </div>
-        <BreedSection breeds={breeds} />
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <p className="text-xs font-extrabold uppercase tracking-widest text-text-premium/50">
+              {t("breeds.dogsTitle")}
+            </p>
+            <BreedSection breeds={dogBreeds} />
+          </div>
+          <div className="space-y-4">
+            <p className="text-xs font-extrabold uppercase tracking-widest text-text-premium/50">
+              {t("breeds.catsTitle")}
+            </p>
+            <BreedSection breeds={catBreeds} />
+          </div>
+        </div>
       </section>
 
       {/* Timeline */}

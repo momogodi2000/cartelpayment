@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { Handshake } from "lucide-react";
 import { siteConfig } from "@/data/site";
-import dogs from "@/data/dogs";
+import animals from "@/data/animals";
 import breeds from "@/data/breeds";
 import CatalogClient from "./CatalogClient";
 
@@ -37,7 +37,7 @@ export default async function CatalogPage({
   setRequestLocale(locale);
   const t = await getTranslations("Catalogue");
   const tNav = await getTranslations("Nav");
-  const dogCount = dogs.filter((d) => d.availability === "disponible").length;
+  const dogCount = animals.filter((d) => d.availability === "disponible").length;
   const base = siteConfig.siteUrl;
 
   return (
@@ -77,7 +77,7 @@ export default async function CatalogPage({
           <div className="text-center py-20 text-text-premium/50 font-bold animate-pulse">{t("loading")}</div>
         }
       >
-        <CatalogClient initialDogs={dogs} breeds={breeds} />
+        <CatalogClient initialDogs={animals} breeds={breeds} />
       </Suspense>
 
       {/* Partner CTA */}

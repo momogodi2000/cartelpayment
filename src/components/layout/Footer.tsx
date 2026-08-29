@@ -11,7 +11,6 @@ import { siteConfig, getWhatsAppLink } from "@/data/site";
  */
 export default function Footer() {
   const t = useTranslations("Footer");
-  const tNav = useTranslations("Nav");
   const tc = useTranslations("Common");
   const currentYear = new Date().getFullYear();
 
