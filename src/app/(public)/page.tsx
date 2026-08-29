@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
@@ -169,7 +169,7 @@ export default async function HomePage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {stats.map((stat) => (
             <div
-              key={stat.value}
+              key={stat.labelFr}
               className="text-center p-6 rounded-2xl bg-primary/5 border border-primary/10 hover:bg-primary/8 hover:border-primary/20 transition-all duration-300 group"
             >
               <p className="text-3xl sm:text-4xl font-black font-heading text-primary group-hover:scale-105 transition-transform duration-300 inline-block">

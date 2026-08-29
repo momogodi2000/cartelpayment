@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -75,6 +75,8 @@ export default function Header() {
 
   const discoverLinks = [
     { href: "/a-propos", icon: Info, label: t("nav.about"), desc: language === "fr" ? "Notre histoire et nos valeurs" : "Our story and values" },
+    { href: "/sante-vaccination", icon: HelpCircle, label: language === "fr" ? "Santé & Vaccination" : "Health & Vaccination", desc: language === "fr" ? "Protocole WSAVA, passeport européen" : "WSAVA protocol, European passport" },
+    { href: "/livraison-transport", icon: Phone, label: language === "fr" ? "Livraison & Transport" : "Delivery & Transport", desc: language === "fr" ? "Remise en main propre, transport UE" : "Direct handover, EU transport" },
     { href: "/faq", icon: HelpCircle, label: t("nav.faq"), desc: language === "fr" ? "Réponses à vos questions" : "Answers to your questions" },
     { href: "/contact", icon: Phone, label: t("nav.contact"), desc: language === "fr" ? "Contactez-nous via WhatsApp" : "Contact us via WhatsApp" },
   ];
@@ -95,7 +97,7 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group shrink-0">
               <div className="relative h-9 w-9 rounded-xl overflow-hidden ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all">
-                <Image src="/logo.png" alt="PawElite Logo" fill className="object-cover" priority />
+                <Image src="/logo.jpg" alt="PawElite Logo" fill sizes="40px" className="object-cover" priority />
               </div>
               <div>
                 <span className="text-lg font-black font-heading text-text-premium group-hover:text-primary transition-colors">

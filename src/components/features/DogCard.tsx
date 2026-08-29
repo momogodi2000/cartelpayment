@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Image from "next/image";
@@ -77,7 +77,7 @@ export default function DogCard({ dog }: DogCardProps) {
               Pedigree
             </span>
           )}
-          {dog.vaccination && (
+          {(dog.vaccinations && dog.vaccinations.length > 0) && (
             <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/95 text-emerald-700 shadow-sm border border-black/[0.04]">
               <CheckCircle className="h-2.5 w-2.5" />
               {language === "fr" ? "Vacciné" : "Vaccinated"}

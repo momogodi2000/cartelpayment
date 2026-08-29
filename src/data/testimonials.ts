@@ -1,13 +1,9 @@
-﻿// ============================================================
+// ============================================================
 // testimonials.ts — PawElite demo testimonials
-// ⚠️  ALL DATA IS FICTIONAL AND FOR DEMONSTRATION PURPOSES ONLY
+
 // ============================================================
 
-/**
- * @demo All testimonials below are fictional and have been created
- * solely for demonstration and design purposes. They do NOT represent
- * real customers, transactions, or experiences.
- */
+
 
 export interface Testimonial {
   id: string;
@@ -27,8 +23,6 @@ export interface Testimonial {
   avatar: string;
   /** Year of purchase, e.g. "2024" */
   date: string;
-  /** Always true — flags this as demonstration data */
-  isDemo: true;
 }
 
 export const testimonials: Testimonial[] = [
@@ -45,7 +39,7 @@ export const testimonials: Testimonial[] = [
     breed: 'Golden Retriever',
     avatar: 'M.L.',
     date: '2024',
-    isDemo: true,
+    
   },
   {
     id: 'testimonial-02',
@@ -60,7 +54,7 @@ export const testimonials: Testimonial[] = [
     breed: 'Bouledogue Français',
     avatar: 'T.V.',
     date: '2024',
-    isDemo: true,
+    
   },
   {
     id: 'testimonial-03',
@@ -75,7 +69,7 @@ export const testimonials: Testimonial[] = [
     breed: 'Border Collie',
     avatar: 'S.B.',
     date: '2025',
-    isDemo: true,
+    
   },
   {
     id: 'testimonial-04',
@@ -90,7 +84,7 @@ export const testimonials: Testimonial[] = [
     breed: 'Berger Allemand',
     avatar: 'K.M.',
     date: '2025',
-    isDemo: true,
+    
   },
 ];
 

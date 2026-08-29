@@ -1,42 +1,92 @@
-﻿import React from "react";
+import React from "react";
 import Link from "next/link";
-import { MessageSquare, Heart, Mail } from "lucide-react";
+import Image from "next/image";
+import { MessageSquare, Heart, Mail, MapPin, Award } from "lucide-react";
 
-const footerLinks = {
-  main: [
-    { href: "/catalogue", labelFr: "Nos Chiens", labelEn: "Our Dogs" },
-    { href: "/a-propos", labelFr: "Notre Histoire", labelEn: "Our Story" },
-    { href: "/faq", labelFr: "FAQ", labelEn: "FAQ" },
-    { href: "/contact", labelFr: "Contact", labelEn: "Contact" },
-  ],
-  legal: [
-    { href: "/mentions-legales", labelFr: "Mentions Légales", labelEn: "Legal Notice" },
-    { href: "/confidentialite", labelFr: "Confidentialité", labelEn: "Privacy" },
-  ],
-};
+// ─── Data ────────────────────────────────────────────────────────────────────
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "33600000000";
+const OWNER_NAME = "Théodore de Parin";
+const ADDRESS = "77 Boulevard Saint-Jacques, 75014 Paris, France";
+const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "contact@pawelite.eu";
+const EXPERIENCE = "6 ans d'expérience";
+
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "33600000000";
 const cleanPhone = whatsappNumber.replace(/\D/g, "");
-const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Bonjour ! Je souhaite en savoir plus sur vos chiens disponibles.")}`;
+const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(
+  "Bonjour ! Je souhaite en savoir plus sur vos chiens disponibles."
+)}`;
 
+const navLinks: { href: string; labelFr: string }[] = [
+  { href: "/catalogue", labelFr: "Notre Catalogue" },
+  { href: "/a-propos", labelFr: "À Propos" },
+  { href: "/sante-vaccination", labelFr: "Santé & Vaccination" },
+  { href: "/livraison-transport", labelFr: "Transport & Livraison" },
+  { href: "/faq", labelFr: "FAQ" },
+  { href: "/contact", labelFr: "Contact" },
+];
+
+const legalLinks: { href: string; labelFr: string }[] = [
+  { href: "/mentions-legales", labelFr: "Mentions Légales" },
+  { href: "/politique-de-confidentialite", labelFr: "Politique de Confidentialité" },
+];
+
+// ─── Component ───────────────────────────────────────────────────────────────
+
+/**
+ * Footer — always rendered on a deep-forest-green background (#1F3A2E).
+ * All colors are explicit white/cream tokens so they never invert in dark mode.
+ */
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-text-premium text-white/80 mt-auto">
-      {/* Main Footer */}
+    <footer
+      className="mt-auto"
+      style={{ backgroundColor: "#1F3A2E" }}
+    >
+      {/* ── Main grid ──────────────────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
-        {/* Brand */}
-        <div className="space-y-4">
-          <div>
-            <h2 className="text-xl font-black font-heading text-white">PawElite</h2>
-            <p className="text-xs font-semibold text-white/50 uppercase tracking-widest mt-0.5">
-              L'Excellence Canine Européenne
-            </p>
+
+        {/* ── Col 1 · Brand ─────────────────────────────────────────────── */}
+        <div className="space-y-5">
+          {/* Logo + name */}
+          <div className="flex items-center gap-3">
+            <Image
+              src="/logo.jpg"
+              alt="PawElite logo"
+              width={40}
+              height={40}
+              className="rounded-full object-cover shrink-0"
+            />
+            <div>
+              <h2 className="text-xl font-black font-heading text-white leading-none">
+                PawElite
+              </h2>
+              <p className="text-[10px] font-semibold text-white/50 uppercase tracking-widest mt-0.5">
+                L&apos;Excellence Canine Européenne
+              </p>
+            </div>
           </div>
-          <p className="text-sm leading-relaxed text-white/60 max-w-xs">
-            Sélection premium de chiens et chiots de race issus d'élevages européens responsables.
+
+          {/* Tagline */}
+          <p className="text-sm leading-relaxed text-white/70 max-w-xs">
+            Sélection premium de chiens et chiots de race issus d&apos;élevages
+            européens responsables.
           </p>
+
+          {/* Experience badge */}
+          <div className="flex items-center gap-2 text-xs text-white/60">
+            <Award className="h-4 w-4 text-amber-400 shrink-0" />
+            {EXPERIENCE}
+          </div>
+
+          {/* Address */}
+          <div className="flex items-start gap-2 text-xs text-white/60">
+            <MapPin className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+            <span>{ADDRESS}</span>
+          </div>
+
+          {/* WhatsApp CTA */}
           <a
             href={whatsappUrl}
             target="_blank"
@@ -48,15 +98,17 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Navigation */}
+        {/* ── Col 2 · Navigation ────────────────────────────────────────── */}
         <div className="space-y-4">
-          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">Navigation</h3>
+          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">
+            Navigation
+          </h3>
           <ul className="space-y-2">
-            {footerLinks.main.map(({ href, labelFr }) => (
+            {navLinks.map(({ href, labelFr }) => (
               <li key={href}>
                 <Link
                   href={href}
-                  className="text-sm text-white/60 hover:text-white transition-colors"
+                  className="text-sm text-white/70 hover:text-white transition-colors"
                 >
                   {labelFr}
                 </Link>
@@ -65,49 +117,71 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Contact */}
+        {/* ── Col 3 · Légal & coordonnées ──────────────────────────────── */}
         <div className="space-y-4">
-          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">Contact</h3>
-          <div className="space-y-3">
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
-            >
-              <MessageSquare className="h-4 w-4 text-emerald-400 shrink-0" />
-              WhatsApp — Contact Direct
-            </a>
-            <a
-              href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelite.eu"}`}
-              className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
-            >
-              <Mail className="h-4 w-4 text-primary shrink-0" />
-              {process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelite.eu"}
-            </a>
+          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">
+            Informations
+          </h3>
+
+          {/* Owner */}
+          <p className="text-sm font-semibold text-white/90">{OWNER_NAME}</p>
+
+          {/* Address */}
+          <div className="flex items-start gap-2 text-sm text-white/70">
+            <MapPin className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+            <span>77 Bd Saint-Jacques, 75014 Paris</span>
           </div>
 
-          <div className="pt-4 p-4 rounded-xl bg-white/5 border border-white/10">
-            <p className="text-xs text-white/40 leading-relaxed">
-              <strong className="text-white/60">Démonstration :</strong> Ce site présente du contenu illustratif. Les données seront mises à jour avec les informations réelles de l'éleveur.
-            </p>
+          {/* Email */}
+          <a
+            href={`mailto:${EMAIL}`}
+            className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
+          >
+            <Mail className="h-4 w-4 text-emerald-400 shrink-0" />
+            {EMAIL}
+          </a>
+
+          {/* WhatsApp */}
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
+          >
+            <MessageSquare className="h-4 w-4 text-emerald-400 shrink-0" />
+            WhatsApp — Contact Direct
+          </a>
+
+          {/* Legal links (desktop) */}
+          <div className="pt-2 border-t border-white/10 space-y-2">
+            {legalLinks.map(({ href, labelFr }) => (
+              <div key={href}>
+                <Link
+                  href={href}
+                  className="text-xs text-white/50 hover:text-white/80 transition-colors"
+                >
+                  {labelFr}
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
+      {/* ── Bottom bar ─────────────────────────────────────────────────────── */}
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-white/40 flex items-center gap-1">
             © {currentYear} PawElite. Tous droits réservés. Fait avec{" "}
-            <Heart className="h-3 w-3 text-accent inline" /> pour les amoureux des chiens.
+            <Heart className="h-3 w-3 text-rose-400 inline" /> pour les
+            amoureux des chiens.
           </p>
           <div className="flex items-center gap-4">
-            {footerLinks.legal.map(({ href, labelFr }) => (
+            {legalLinks.map(({ href, labelFr }) => (
               <Link
                 key={href}
                 href={href}
-                className="text-xs text-white/40 hover:text-white/60 transition-colors"
+                className="text-xs text-white/40 hover:text-white/70 transition-colors"
               >
                 {labelFr}
               </Link>

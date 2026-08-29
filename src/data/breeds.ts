@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // breeds.ts — PawElite breed catalogue (static data)
 // ============================================================
 
@@ -64,7 +64,7 @@ export const breeds: Breed[] = [
       'Le Labrador Retriever est apprécié pour sa nature conviviale et son adaptabilité. Utilisé comme chien guide, chien de sauvetage ou simplement comme compagnon de famille, il s\'intègre parfaitement dans tout foyer européen.',
     descriptionEn:
       'The Labrador Retriever is celebrated for its friendly nature and adaptability. Used as a guide dog, search-and-rescue dog, or simply a family companion, it fits perfectly into any European home.',
-    image: 'https://images.unsplash.com/photo-1591769225440-811ad7d6eab2?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1596492784531-6e6ebf19a0c2?w=800&auto=format&fit=crop',
     featured: true,
   },
   {
@@ -82,7 +82,7 @@ export const breeds: Breed[] = [
       'Le Berger Allemand est une race polyvalente et intelligente, largement utilisée par la police et l\'armée en Europe. Sa loyauté sans faille et son instinct de protection en font un gardien remarquable.',
     descriptionEn:
       'The German Shepherd is a versatile and intelligent breed, widely used by police and military forces across Europe. Its unwavering loyalty and protective instinct make it a remarkable guardian.',
-    image: 'https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&auto=format&fit=crop',
     featured: false,
   },
   {
@@ -118,7 +118,7 @@ export const breeds: Breed[] = [
       'Souvent considéré comme le chien le plus intelligent du monde, le Border Collie excelle dans les sports canins, l\'agility et le travail de troupeau. Il a besoin de stimulation mentale et physique quotidienne.',
     descriptionEn:
       'Often regarded as the world\'s most intelligent dog, the Border Collie excels in canine sports, agility, and herding. It requires daily mental and physical stimulation.',
-    image: 'https://images.unsplash.com/photo-1503256207526-0d5523f31580?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&auto=format&fit=crop',
     featured: false,
   },
   {
@@ -136,7 +136,7 @@ export const breeds: Breed[] = [
       'Le Cavalier King Charles Spaniel est un compagnon idéal pour les familles et les personnes âgées. Son caractère doux et sa beauté naturelle en font une race très prisée dans toute l\'Europe.',
     descriptionEn:
       'The Cavalier King Charles Spaniel is an ideal companion for families and the elderly alike. Its gentle character and natural beauty make it a highly prized breed across Europe.',
-    image: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=800&auto=format&fit=crop',
     featured: false,
   },
   {
@@ -190,7 +190,7 @@ export const breeds: Breed[] = [
       'Le Husky Sibérien est une race nordique magnifique, reconnaissable à ses yeux bleus perçants et son pelage épais. Grégaire par nature, il s\'épanouit en compagnie d\'autres chiens et d\'une famille active.',
     descriptionEn:
       'The Siberian Husky is a stunning Nordic breed, recognisable by its piercing blue eyes and thick coat. Gregarious by nature, it thrives in the company of other dogs and an active family.',
-    image: 'https://images.unsplash.com/photo-1547833400-6e3822b3a91c?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1617897903246-719242758050?w=800&auto=format&fit=crop',
     featured: false,
   },
   {
@@ -208,7 +208,7 @@ export const breeds: Breed[] = [
       'Le Caniche est l\'une des races les plus intelligentes et les plus polyvalentes au monde. Disponible en plusieurs tailles (toy, nain, moyen, grand), il s\'adapte aussi bien à la vie en appartement qu\'à la campagne.',
     descriptionEn:
       'The Poodle is one of the most intelligent and versatile breeds in the world. Available in several sizes (toy, miniature, medium, standard), it adapts equally well to apartment life and the countryside.',
-    image: 'https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop',
     featured: false,
   },
 ];

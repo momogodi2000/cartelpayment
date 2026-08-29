@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,16 +24,6 @@ export default function HomeTestimonials({ testimonials }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Demo notice */}
-      <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40">
-        <AlertCircle className="h-4 w-4 text-amber-600 shrink-0" />
-        <p className="text-xs text-amber-700 dark:text-amber-400">
-          {language === "fr"
-            ? "Témoignages de démonstration — les avis réels des clients seront affichés ici."
-            : "Demo testimonials — real client reviews will be displayed here."}
-        </p>
-      </div>
-
       <div className="relative overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div

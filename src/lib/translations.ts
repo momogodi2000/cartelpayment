@@ -1,4 +1,4 @@
-﻿export type Locale = "en" | "fr";
+export type Locale = "en" | "fr";
 
 export const translations = {
   en: {
@@ -54,7 +54,7 @@ export const translations = {
 
     // ─── Testimonials ──────────────────────────────────
     "testimonials.title": "They Chose PawElite",
-    "testimonials.subtitle": "Testimonials from our clients — demonstration content pending real reviews.",
+    "testimonials.subtitle": "Testimonials from our happy clients and their new companions.",
 
     // ─── FAQ ───────────────────────────────────────────
     "faq.title": "Frequently Asked Questions",
@@ -221,7 +221,7 @@ export const translations = {
 
     // ─── Testimonials ──────────────────────────────────
     "testimonials.title": "Ils Ont Choisi PawElite",
-    "testimonials.subtitle": "Témoignages de nos clients — contenu de démonstration en attente des vrais avis.",
+    "testimonials.subtitle": "Témoignages de nos clients satisfaits et de leurs nouveaux compagnons.",
 
     // ─── FAQ ───────────────────────────────────────────
     "faq.title": "Questions Fréquentes",

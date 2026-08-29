@@ -8,13 +8,16 @@
 export const siteConfig = {
   // Brand Identity
   name: "PawElite",
-  legalName: "PawElite — Sélection Canine Européenne",
+  legalName: "PawElite — Théodore de Parin",
+  ownerName: "Théodore de Parin",
+  ownerAddress: "77 Boulevard Saint-Jacques, 75014 Paris, France",
+  ownerExperience: "6 ans d'expérience",
   tagline: "L'excellence canine européenne",
   taglineEn: "European Canine Excellence",
   description:
-    "Découvrez des chiens et chiots de race sélectionnés avec soin, issus d'élevages responsables en Europe.",
+    "Découvrez des chiens et chiots de race sélectionnés avec soin par Théodore de Parin, 6 ans d'expérience dans la sélection canine européenne.",
   descriptionEn:
-    "Discover carefully selected purebred dogs and puppies from responsible European breeders.",
+    "Discover carefully selected purebred dogs and puppies by Théodore de Parin, 6 years of experience in European canine selection.",
 
   // Contact & Commerce
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "33600000000",

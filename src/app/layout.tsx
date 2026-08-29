@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
@@ -49,32 +49,36 @@ export const metadata: Metadata = {
     "purebred dogs",
   ],
   icons: {
-    icon: [{ url: "/logo.png", type: "image/png" }],
-    shortcut: "/logo.png",
-    apple: "/logo.png",
+    icon: [{ url: "/logo.jpg", type: "image/jpeg" }],
+    shortcut: "/logo.jpg",
+    apple: "/logo.jpg",
   },
   openGraph: {
-    type: "website",
-    url: "/",
-    siteName,
-    title: `${siteName} — Chiens & Chiots de Race Premium`,
+    title: {
+      template: "%s | PawElite",
+      default: "PawElite | L'excellence canine européenne",
+    },
     description:
-      "Découvrez des chiens et chiots de race sélectionnés avec soin, issus d'élevages responsables en Europe. Transparence, bien-être et passion canine.",
+      "PawElite sélectionne les meilleurs chiots de race auprès d'éleveurs européens certifiés.",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://pawelite.eu",
+    siteName: "PawElite",
     images: [
       {
-        url: "/logo.png",
-        width: 512,
-        height: 512,
-        alt: `${siteName} — Sélection Canine Européenne`,
+        url: "/logo.jpg",
+        width: 1200,
+        height: 630,
+        alt: "PawElite - Chiots d'exception",
       },
     ],
+    locale: "fr_FR",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteName} — Chiens & Chiots de Race`,
+    title: "PawElite | Chiots d'exception",
     description:
-      "Sélection premium de chiens et chiots de race en Europe. Contact direct via WhatsApp.",
-    images: ["/logo.png"],
+      "Découvrez notre sélection de chiots européens avec pedigree, carnet de santé à jour et garanties complètes.",
+    images: ["/logo.jpg"],
   },
   alternates: {
     canonical: siteUrl.toString(),

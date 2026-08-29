@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -110,15 +110,6 @@ export default async function DogDetailPage({ params }: PageProps) {
         {locale === "fr" ? "Retour au Catalogue" : "Back to Catalog"}
       </Link>
 
-      <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40">
-        <AlertCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-        <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
-          {locale === "fr"
-            ? "Fiche de demonstration. Les donnees sont fictives et fournies a titre illustratif uniquement."
-            : "Demo profile. All data is fictional and provided for illustration purposes only."}
-        </p>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
         <div className="space-y-3">
           <div className="relative aspect-[4/3] w-full rounded-3xl overflow-hidden bg-bg-premium">
@@ -183,7 +174,7 @@ export default async function DogDetailPage({ params }: PageProps) {
 
           {temperament.length > 0 && (
             <div className="space-y-2">
-              <h2 className="text-sm font-extrabold text-text-premium uppercase tracking-wider">{locale === "fr" ? "Temperament" : "Temperament"}</h2>
+              <h2 className="text-sm font-extrabold text-text-premium uppercase tracking-wider">{locale === "fr" ? "Tempérament" : "Temperament"}</h2>
               <div className="flex flex-wrap gap-2">
                 {temperament.map((trait) => (
                   <span key={trait} className="px-3 py-1.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/15">{trait}</span>
@@ -192,13 +183,43 @@ export default async function DogDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          <div className="flex flex-wrap gap-3">
-            {dog.vaccination && (
-              <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/60">
-                <Check className="h-4 w-4 text-emerald-600" />
-                <span className="text-xs font-bold text-emerald-700">{locale === "fr" ? "Vaccine" : "Vaccinated"}</span>
+          {dog.marketDetails && (
+            <div className="space-y-3 pt-4 border-t border-black/[0.04] dark:border-white/[0.04]">
+              <h2 className="text-sm font-extrabold text-text-premium uppercase tracking-wider">{locale === "fr" ? "Détails du Marché & Élevage" : "Market & Breeding Details"}</h2>
+              <div className="space-y-2">
+                <div className="text-sm"><span className="font-bold text-text-premium/80">{locale === "fr" ? "Prix Moyen Européen :" : "Average European Price:"}</span> <span className="text-text-premium/60">{dog.marketDetails.averageEuropeanPrice}</span></div>
+                <div className="text-sm"><span className="font-bold text-text-premium/80">{locale === "fr" ? "Lignée :" : "Lineage:"}</span> <span className="text-text-premium/60">{dog.marketDetails.breedingLineage}</span></div>
+                <div className="text-sm"><span className="font-bold text-text-premium/80">{locale === "fr" ? "Garanties :" : "Guarantees:"}</span> <span className="text-text-premium/60">{dog.marketDetails.healthGuarantee}</span></div>
               </div>
-            )}
+            </div>
+          )}
+
+          {dog.vaccinations && dog.vaccinations.length > 0 && (
+            <div className="space-y-3 pt-4 border-t border-black/[0.04] dark:border-white/[0.04]">
+              <h2 className="text-sm font-extrabold text-text-premium uppercase tracking-wider">{locale === "fr" ? "Carnet de Vaccination" : "Vaccination Record"}</h2>
+              <ul className="space-y-2">
+                {dog.vaccinations.map((vac, idx) => (
+                  <li key={idx} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Check className="h-4 w-4 text-emerald-600" />
+                        <span className="text-sm font-bold text-emerald-800 dark:text-emerald-300">{vac.disease}</span>
+                      </div>
+                      <div className="text-xs text-emerald-700/70 dark:text-emerald-400/70 mt-1 ml-6">
+                        {locale === "fr" ? "Vétérinaire :" : "Veterinarian:"} {vac.veterinarian}
+                      </div>
+                    </div>
+                    <div className="mt-2 sm:mt-0 ml-6 sm:ml-0 text-xs font-medium text-emerald-700 dark:text-emerald-400 text-left sm:text-right">
+                      <div>{locale === "fr" ? "Fait le :" : "Done on:"} {vac.date}</div>
+                      <div>{locale === "fr" ? "Rappel :" : "Next due:"} {vac.nextDueDate}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-3">
             {dog.microchip && (
               <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200/60">
                 <Check className="h-4 w-4 text-blue-600" />

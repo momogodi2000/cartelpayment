@@ -1,24 +1,25 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 // Premium dog photography from Unsplash — demonstration images
-const heroImages = [
+// URL format: w=1920&auto=format&fit=crop (no q= param to avoid Next.js quality config warnings)
+const heroImages: { url: string; alt: string }[] = [
   {
-    url: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=1920&q=85&auto=format&fit=crop",
+    url: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=1920&auto=format&fit=crop",
     alt: "Golden Retriever élégant dans un cadre naturel européen",
   },
   {
-    url: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1920&q=85&auto=format&fit=crop",
+    url: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1920&auto=format&fit=crop",
     alt: "Chiot de race dans un jardin fleuri",
   },
   {
-    url: "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1920&q=85&auto=format&fit=crop",
+    url: "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1920&auto=format&fit=crop",
     alt: "Labrador Retriever majestueux — sélection premium",
   },
   {
-    url: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1920&q=85&auto=format&fit=crop",
+    url: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1920&auto=format&fit=crop",
     alt: "Deux chiens de race courant ensemble dans la nature",
   },
 ];
@@ -44,7 +45,7 @@ export default function HeroBackground() {
             key={img.url}
             className={`absolute inset-0 transition-opacity duration-1000 ${
               i === currentIndex ? "opacity-100" : "opacity-0"
-            }`}
+            } ${!isLoaded && i === 0 ? "opacity-100" : ""}`}
           >
             <Image
               src={img.url}
@@ -53,7 +54,6 @@ export default function HeroBackground() {
               className="object-cover"
               priority={i === 0}
               sizes="100vw"
-              quality={85}
             />
           </div>
         ))}
