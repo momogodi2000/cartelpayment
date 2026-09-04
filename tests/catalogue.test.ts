@@ -46,7 +46,9 @@ describe("catalogue data integrity", () => {
       expect(["petit", "moyen", "grand"]).toContain(a.size);
       expect(["male", "femelle"]).toContain(a.sex);
       expect(a.images.length).toBeGreaterThan(0);
-      expect(a.images[0].url).toMatch(/^https?:\/\//);
+      // Imagery is first-party now: local /public paths (or absolute URLs if ever re-added).
+      expect(a.images[0].url).toMatch(/^(https?:\/\/|\/)/);
+      expect(a.images.every((i) => i.url.startsWith("/images/"))).toBe(true);
       expect(a.descriptionEn.length).toBeGreaterThan(0);
       expect(a.temperamentEn.length).toBeGreaterThan(0);
       expect(a.seoTitle.length).toBeGreaterThan(0);
@@ -63,5 +65,22 @@ describe("catalogue data integrity", () => {
   it("has at least one featured dog and one featured cat", () => {
     expect(dogs.some((d) => d.featured)).toBe(true);
     expect(cats.some((c) => c.featured)).toBe(true);
+  });
+
+  it("applies the -35% promotion consistently", () => {
+    for (const a of animals) {
+      expect(a.originalPrice).toBeGreaterThan(a.price);
+      // price is originalPrice * 0.65 rounded to the nearest 10
+      expect(a.price).toBe(Math.round((a.originalPrice * 0.65) / 10) * 10);
+    }
+  });
+
+  it("only lists breeds we hold real photos for", () => {
+    const withPhotos = new Set([
+      "golden-retriever", "labrador-retriever", "bouledogue-francais",
+      "cavalier-king-charles", "chihuahua", "caniche", "teckel",
+      "maine-coon", "ragdoll", "british-shorthair", "bengal", "siamois",
+    ]);
+    for (const b of breeds) expect(withPhotos.has(b.slug)).toBe(true);
   });
 });

@@ -16,6 +16,7 @@ import {
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { getDogInquiryMessage, getWhatsAppLink, siteConfig } from "@/data/site";
+import { DISCOUNT_LABEL, PLACEHOLDER_IMAGE } from "@/data/dogs";
 import animals from "@/data/animals";
 
 interface PageProps {
@@ -151,7 +152,7 @@ export default async function DogDetailPage({ params }: PageProps) {
         <div className="space-y-3">
           <div className="relative aspect-[4/3] w-full rounded-3xl overflow-hidden bg-bg-premium">
             <Image
-              src={dog.images[0]?.url || "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800"}
+              src={dog.images[0]?.url || PLACEHOLDER_IMAGE}
               alt={dog.images[0]?.alt || `${name} - ${breedName}`}
               fill
               className="object-cover"
@@ -174,6 +175,17 @@ export default async function DogDetailPage({ params }: PageProps) {
               ))}
             </div>
           )}
+          {dog.video && (
+            <video
+              controls
+              preload="none"
+              playsInline
+              poster={dog.images[0]?.url || PLACEHOLDER_IMAGE}
+              className="w-full rounded-2xl border border-black/[0.04] dark:border-white/[0.06]"
+            >
+              <source src={dog.video} type="video/mp4" />
+            </video>
+          )}
         </div>
 
         <div className="space-y-6">
@@ -195,9 +207,21 @@ export default async function DogDetailPage({ params }: PageProps) {
             </div>
             <h1 className="text-3xl sm:text-4xl font-black font-heading text-text-premium">{name}</h1>
             <p className="text-lg text-primary font-semibold italic">{breedName}</p>
-            <p className="text-3xl font-black text-primary">
-              {dog.price.toLocaleString(isEn ? "en-GB" : "fr-FR")} {dog.currency}
-            </p>
+            <div className="flex items-baseline gap-3 flex-wrap">
+              <p className="text-3xl font-black text-primary">
+                {dog.price.toLocaleString(isEn ? "en-GB" : "fr-FR")} {dog.currency}
+              </p>
+              {typeof dog.originalPrice === "number" && dog.originalPrice > dog.price && (
+                <>
+                  <span className="text-lg font-semibold text-text-premium/40 line-through">
+                    {dog.originalPrice.toLocaleString(isEn ? "en-GB" : "fr-FR")} {dog.currency}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full text-xs font-extrabold bg-red-600 text-white">
+                    {DISCOUNT_LABEL}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">

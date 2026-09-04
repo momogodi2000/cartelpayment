@@ -63,10 +63,10 @@ export const testimonials: Testimonial[] = [
     location: 'Amsterdam, Pays-Bas',
     rating: 4,
     content:
-      'Notre Border Collie Loki est maintenant le centre de notre vie ! Grâce à CaniPrestige, nous avons pu comparer plusieurs élevages sérieux et faire un choix éclairé. L\'éleveur nous a également donné de précieux conseils pour les premières semaines à la maison.',
+      'Notre chaton Maine Coon Loki est maintenant le centre de notre vie ! Grâce à CaniPrestige, nous avons pu comparer plusieurs chatteries sérieuses et faire un choix éclairé. L\'éleveur nous a également donné de précieux conseils pour les premières semaines à la maison.',
     contentEn:
-      'Our Border Collie Loki is now the centre of our lives! Thanks to CaniPrestige, we were able to compare several reputable breeders and make an informed choice. The breeder also gave us invaluable advice for the first weeks at home.',
-    breed: 'Border Collie',
+      'Our Maine Coon kitten Loki is now the centre of our lives! Thanks to CaniPrestige, we were able to compare several reputable catteries and make an informed choice. The breeder also gave us invaluable advice for the first weeks at home.',
+    breed: 'Maine Coon',
     avatar: 'S.B.',
     date: '2025',
     
@@ -78,10 +78,10 @@ export const testimonials: Testimonial[] = [
     location: 'Munich, Allemagne',
     rating: 5,
     content:
-      'J\'ai adopté un magnifique Berger Allemand grâce à CaniPrestige. La plateforme est intuitive, les fiches sont très complètes et le service client a été réactif pour répondre à mes questions. Je recommande CaniPrestige à tous les amoureux de chiens de race.',
+      'J\'ai adopté un magnifique Labrador Retriever grâce à CaniPrestige. La plateforme est intuitive, les fiches sont très complètes et le service client a été réactif pour répondre à mes questions. Je recommande CaniPrestige à tous les amoureux de chiens de race.',
     contentEn:
-      'I adopted a magnificent German Shepherd thanks to CaniPrestige. The platform is intuitive, the profiles are very comprehensive, and the customer service was responsive in answering my questions. I recommend CaniPrestige to all purebred dog lovers.',
-    breed: 'Berger Allemand',
+      'I adopted a magnificent Labrador Retriever thanks to CaniPrestige. The platform is intuitive, the profiles are very comprehensive, and the customer service was responsive in answering my questions. I recommend CaniPrestige to all purebred dog lovers.',
+    breed: 'Labrador Retriever',
     avatar: 'K.M.',
     date: '2025',
     

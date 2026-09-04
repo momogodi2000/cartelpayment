@@ -48,14 +48,16 @@ export const siteConfig = {
     keywords: [
       "chiens de race europe",
       "chiots de race",
-      "chiots disponibles france",
+      "chats de race europe",
+      "chatons de race",
       "golden retriever chiot",
       "labrador chiot",
-      "berger allemand chiot",
+      "bouledogue français chiot",
+      "maine coon chaton",
       "élevage canin responsable",
       "chiot pedigree europe",
     ],
-    ogImage: "/og-image.jpg",
+    ogImage: "/logo.jpg",
   },
 } as const;
 

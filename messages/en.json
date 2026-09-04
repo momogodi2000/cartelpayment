@@ -2,7 +2,7 @@
   "Meta": {
     "defaultTitle": "CaniPrestige — Purebred Dogs, Cats, Puppies & Kittens | European Selection",
     "defaultDescription": "CaniPrestige selects the finest purebred dogs, cats, puppies and kittens from responsible European breeders. Detailed profiles, pedigree (LOF, LOOF), up-to-date health records. Direct contact via WhatsApp.",
-    "keywords": "purebred dogs europe, purebred puppies, purebred cats, purebred kittens, pedigree kitten, maine coon kitten, ragdoll kitten, british shorthair, golden retriever puppy, labrador puppy, german shepherd puppy, responsible dog breeding, responsible cat breeding, pedigree puppy europe, dogs for sale france, cats for sale france, dog breeding partner, cat breeding partner",
+    "keywords": "purebred dogs europe, purebred puppies, purebred cats, purebred kittens, pedigree kitten, maine coon kitten, ragdoll kitten, british shorthair, bengal kitten, siamese kitten, golden retriever puppy, labrador puppy, french bulldog puppy, cavalier king charles puppy, chihuahua puppy, poodle puppy, dachshund puppy, responsible dog breeding, responsible cat breeding, pedigree puppy europe, dogs for sale france, cats for sale france, dog breeding partner, cat breeding partner",
     "homeTitle": "Premium Purebred Dogs, Cats, Puppies & Kittens | European Selection",
     "homeDescription": "Discover purebred dogs, cats, puppies and kittens carefully selected from responsible European breeders. LOF and LOOF pedigree, transparency, animal welfare and WhatsApp support.",
     "catalogueTitle": "Purebred Dogs, Cats, Puppies & Kittens Catalogue",
@@ -24,7 +24,6 @@
     "partnerTitle": "Become a Partner — Breeders & Professionals",
     "partnerDescription": "Are you a breeder of dogs, puppies, cats or kittens in Europe? Propose your animals for sale and grow your visibility with our European clientele."
   },
-
   "Common": {
     "whatsappGeneralMessage": "Hello! I visited CaniPrestige and would like to learn more about your available dogs, cats, puppies and kittens.",
     "whatsappButton": "Contact via WhatsApp",
@@ -34,13 +33,11 @@
     "home": "Home",
     "dogs": "Dogs"
   },
-
   "Theme": {
     "light": "Light",
     "dark": "Night",
     "exotic": "Ivory Gold"
   },
-
   "Nav": {
     "home": "Home",
     "catalog": "Dogs & Cats",
@@ -63,7 +60,6 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
   },
-
   "Footer": {
     "tagline": "European Canine & Feline Excellence",
     "description": "Premium selection of purebred dogs, cats, puppies and kittens from responsible European breeders.",
@@ -84,7 +80,6 @@
     "madeWith": "Made with passion for animal lovers.",
     "experience": "6 years of experience in canine selection"
   },
-
   "Home": {
     "whatsappMessage": "Hello! I visited CaniPrestige and would like to learn more about your available dogs, cats, puppies and kittens.",
     "schemaDescription": "Premium purebred dog, cat, puppy and kitten selection for the European market.",
@@ -148,7 +143,6 @@
       "cta": "Become a partner"
     }
   },
-
   "Process": {
     "step01Title": "Discover",
     "step01Desc": "Browse our catalogue of available dogs, cats, puppies and kittens with full details: breed, age, health, temperament.",
@@ -161,7 +155,6 @@
     "step05Title": "Welcome",
     "step05Desc": "Arrange the arrival of your new companion in the best possible conditions."
   },
-
   "WhyChooseUs": {
     "item1Title": "Rigorous Selection",
     "item1Desc": "Every animal is selected according to strict health, temperament and lineage criteria verified by our team.",
@@ -172,7 +165,6 @@
     "item4Title": "Direct WhatsApp Contact",
     "item4Desc": "Direct, fast and personalised WhatsApp exchanges to answer all your questions."
   },
-
   "About": {
     "metaTitle": "About | CaniPrestige — Théodore de Parin",
     "badge": "Our Story",
@@ -189,7 +181,7 @@
     "journeyTitle": "Our Journey",
     "timeline": {
       "t2018Label": "CaniPrestige Founded",
-      "t2018Desc": "Launch of the canine selection activity in Paris, with an initial selection of Golden Retrievers and German Shepherds.",
+      "t2018Desc": "Launch of the canine selection activity in Paris, with an initial selection of Golden Retrievers and French Bulldogs.",
       "t2020Label": "European Network",
       "t2020Desc": "Network extension to partner breeders in Belgium, Germany and the Netherlands. First collaboration with FCI-certified breeders.",
       "t2022Label": "Certification & Expertise",
@@ -214,7 +206,6 @@
     "viewCatalogue": "View Catalogue",
     "whatsappMessage": "Hello! I would like to learn more about Théodore de Parin and CaniPrestige."
   },
-
   "Contact": {
     "title": "Contact Us",
     "subtitle": "The fastest way to reach us is via WhatsApp. We usually respond within 2 hours.",
@@ -230,7 +221,6 @@
     "faqText": "Before contacting us, check our FAQ which answers the most common questions.",
     "faqLink": "View FAQ →"
   },
-
   "Catalogue": {
     "title": "Dogs, Cats, Puppies & Kittens Catalogue",
     "subtitle": "Discover all our available purebred dogs, cats, puppies and kittens. Filter by species, breed, sex, age or location.",
@@ -246,9 +236,9 @@
     "emptyTitle": "No results found",
     "emptyBody": "Try adjusting your filters to find the perfect dog for you.",
     "resetFilters": "Reset filters",
-    "partnerCta": "Are you a breeder? Become a partner"
+    "partnerCta": "Are you a breeder? Become a partner",
+    "promoBanner": "Launch offer: -35% on every puppy and kitten. Prices below are already discounted."
   },
-
   "Filters": {
     "title": "Filter",
     "reset": "Reset",
@@ -276,7 +266,6 @@
     "sortLowHigh": "Price: low to high",
     "sortHighLow": "Price: high to low"
   },
-
   "DogCard": {
     "viewProfile": "View Profile",
     "inquire": "WhatsApp",
@@ -291,7 +280,6 @@
     "medium": "Medium",
     "large": "Large"
   },
-
   "DogDetail": {
     "backToCatalog": "Back to Catalogue",
     "available": "Available",
@@ -324,7 +312,6 @@
     "prefilledNote": "A pre-filled message will open in WhatsApp to make getting in touch easier.",
     "breadcrumbDogs": "Dogs"
   },
-
   "Faq": {
     "title": "Frequently Asked Questions",
     "subtitle": "Find answers to the most common questions about our purebred dogs and cats and our process.",
@@ -333,7 +320,6 @@
     "askWhatsapp": "Ask My Question on WhatsApp",
     "whatsappMessage": "Hello! I have a question about CaniPrestige dogs."
   },
-
   "Health": {
     "badge": "Health & Vaccination",
     "title": "Health Protocol & Vaccination",
@@ -374,7 +360,6 @@
     "ctaCatalogue": "See Our Puppies",
     "whatsappMessage": "Hello! I have a question about vaccination requirements and health guarantees."
   },
-
   "Delivery": {
     "badge": "Delivery & Transport",
     "title": "Animal Handover & Transport",
@@ -402,7 +387,6 @@
     "ctaWhatsapp": "Contact via WhatsApp",
     "whatsappMessage": "Hello! I have a question about transport and delivery options for a puppy or kitten."
   },
-
   "Legal": {
     "title": "Legal Notice",
     "lastUpdate": "Last updated: August 2026",
@@ -432,7 +416,6 @@
     "s7Title": "7. Contact",
     "s7P1": "For any question relating to this legal notice, you may contact the publisher by email or by post at the address indicated above."
   },
-
   "Privacy": {
     "title": "Privacy Policy",
     "lastUpdate": "Last updated: August 2026 — Compliant with Regulation (EU) 2016/679 (GDPR)",
@@ -460,7 +443,6 @@
     "s6Title": "6. Security",
     "s6P1": "The site is served over HTTPS. No sensitive data is stored in the browser. WhatsApp exchanges benefit from the end-to-end encryption provided by WhatsApp/Meta."
   },
-
   "Offline": {
     "title": "You Are Offline",
     "body": "We are unable to reach CaniPrestige right now. Please check your connection and try again.",
@@ -468,7 +450,6 @@
     "whatsappLine": "Via WhatsApp",
     "tryReconnect": "Try Reconnecting"
   },
-
   "Partner": {
     "hero": {
       "badge": "European Partner Programme",
@@ -590,7 +571,6 @@
       "submit": "Confirm & Open WhatsApp",
       "required": "Required field",
       "optional": "optional",
-
       "profileTitle": "Your profile",
       "prenom": "First name",
       "nom": "Last name",
@@ -614,22 +594,19 @@
       "experience3to5": "3 to 5 years",
       "experience5to10": "5 to 10 years",
       "experienceGt10": "More than 10 years",
-
       "locationTitle": "Breeding facility location",
       "country": "Country of residence / breeding facility location",
       "otherCountry": "Other country",
       "otherCountryPlaceholder": "Specify the country",
       "city": "City",
       "region": "Region",
-
       "animalsTitle": "Animals proposed",
       "animalsDesc": "Select the categories you wish to propose. You will be able to detail each animal with our team via WhatsApp.",
       "breeds": "Breeds raised",
-      "breedsPlaceholder": "e.g. German Shepherd, Maine Coon…",
+      "breedsPlaceholder": "e.g. French Bulldog, Maine Coon…",
       "animalCount": "Number of animals to propose",
       "animalNotes": "Additional information about the animals",
       "animalNotesPlaceholder": "Approximate age, availability, particularities, desired price…",
-
       "documentsTitle": "Available documents and content",
       "hasProPhotos": "I have professional photos",
       "hasRecentPhotos": "I have recent photos",
@@ -639,7 +616,6 @@
       "hasVetDocs": "I have veterinary and health certificates",
       "hasGeneticTests": "I have genetic test results",
       "uploadNote": "After sending your application, our team will indicate via WhatsApp how to transmit the necessary photos, videos and documents. No document is transmitted from this form.",
-
       "conditionsTitle": "Conditions and deposit",
       "recapTitle": "Summary of your application",
       "recapName": "Contact",
@@ -655,7 +631,6 @@
       "privacyLink": "Privacy policy",
       "termsRequired": "Please accept the required conditions to continue.",
       "animalsRequired": "Please select at least one animal category.",
-
       "whatsappTitle": "Finalise via WhatsApp",
       "whatsappBody": "When you confirm, a pre-filled message opens in WhatsApp with your application details. WhatsApp then becomes the main channel to send your documents and communicate with the team.",
       "whatsappIntro": "Hello, I would like to become a partner and propose one or more animals for sale.",

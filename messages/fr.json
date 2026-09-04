@@ -2,7 +2,7 @@
   "Meta": {
     "defaultTitle": "CaniPrestige — Chiens, Chats, Chiots & Chatons de Race | Sélection Européenne",
     "defaultDescription": "CaniPrestige sélectionne les meilleurs chiens, chats, chiots et chatons de race auprès d'éleveurs européens responsables. Profils détaillés, pedigree (LOF, LOOF), carnet de santé à jour. Contact direct via WhatsApp.",
-    "keywords": "chiens de race europe, chiots de race, chats de race, chatons de race, chaton pure race, maine coon disponible, ragdoll chaton, british shorthair, chaton loof, golden retriever chiot, labrador chiot, berger allemand chiot, élevage canin responsable, élevage félin, chiot pedigree europe, vente chiens france, vente chats france, partenaire élevage chien, partenaire élevage chat",
+    "keywords": "chiens de race europe, chiots de race, chats de race, chatons de race, chaton pure race, maine coon disponible, ragdoll chaton, british shorthair, bengal chaton, siamois chaton, chaton loof, golden retriever chiot, labrador chiot, bouledogue français chiot, cavalier king charles chiot, chihuahua chiot, caniche chiot, teckel chiot, élevage canin responsable, élevage félin, chiot pedigree europe, vente chiens france, vente chats france, partenaire élevage chien, partenaire élevage chat",
     "homeTitle": "Chiens, Chats, Chiots & Chatons de Race Premium | Sélection Européenne",
     "homeDescription": "Découvrez des chiens, chats, chiots et chatons de race sélectionnés avec soin auprès d'éleveurs européens responsables. Pedigree LOF et LOOF, transparence, bien-être animal et accompagnement WhatsApp.",
     "catalogueTitle": "Catalogue Chiens, Chats, Chiots & Chatons de Race",
@@ -24,7 +24,6 @@
     "partnerTitle": "Devenir Partenaire — Éleveurs & Professionnels",
     "partnerDescription": "Vous êtes éleveur de chiens, chiots, chats ou chatons en Europe ? Proposez vos animaux à la commercialisation et développez votre visibilité auprès de notre clientèle européenne."
   },
-
   "Common": {
     "whatsappGeneralMessage": "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens, chats, chiots et chatons disponibles.",
     "whatsappButton": "Contacter via WhatsApp",
@@ -34,13 +33,11 @@
     "home": "Accueil",
     "dogs": "Chiens"
   },
-
   "Theme": {
     "light": "Clair",
     "dark": "Nuit",
     "exotic": "Ivoire & Or"
   },
-
   "Nav": {
     "home": "Accueil",
     "catalog": "Chiens & Chats",
@@ -63,7 +60,6 @@
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu"
   },
-
   "Footer": {
     "tagline": "L'Excellence Canine & Féline Européenne",
     "description": "Sélection premium de chiens, chats, chiots et chatons de race issus d'élevages européens responsables.",
@@ -84,7 +80,6 @@
     "madeWith": "Fait avec passion pour les amoureux des animaux.",
     "experience": "6 ans d'expérience en sélection canine"
   },
-
   "Home": {
     "whatsappMessage": "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens, chats, chiots et chatons disponibles.",
     "schemaDescription": "Sélection premium de chiens, chats, chiots et chatons de race pour le marché européen.",
@@ -148,7 +143,6 @@
       "cta": "Devenez partenaire"
     }
   },
-
   "Process": {
     "step01Title": "Découvrir",
     "step01Desc": "Parcourez notre catalogue de chiens, chats, chiots et chatons disponibles avec tous leurs détails : race, âge, santé, caractère.",
@@ -161,7 +155,6 @@
     "step05Title": "Accueillir",
     "step05Desc": "Organisez l'arrivée de votre nouveau compagnon dans les meilleures conditions possibles."
   },
-
   "WhyChooseUs": {
     "item1Title": "Sélection Rigoureuse",
     "item1Desc": "Chaque animal est sélectionné selon des critères stricts de santé, de tempérament et de lignée vérifiés par notre équipe.",
@@ -172,7 +165,6 @@
     "item4Title": "Contact Direct WhatsApp",
     "item4Desc": "Un échange direct, rapide et personnalisé par WhatsApp pour répondre à toutes vos questions."
   },
-
   "About": {
     "metaTitle": "À Propos | CaniPrestige — Théodore de Parin",
     "badge": "Notre Histoire",
@@ -189,7 +181,7 @@
     "journeyTitle": "Notre Parcours",
     "timeline": {
       "t2018Label": "Création de CaniPrestige",
-      "t2018Desc": "Lancement de l'activité de sélection canine à Paris, avec une première sélection de Golden Retrievers et de Bergers Allemands.",
+      "t2018Desc": "Lancement de l'activité de sélection canine à Paris, avec une première sélection de Golden Retrievers et de Bouledogues Français.",
       "t2020Label": "Réseau Européen",
       "t2020Desc": "Extension du réseau à des éleveurs partenaires en Belgique, en Allemagne et aux Pays-Bas. Première collaboration avec des éleveurs certifiés FCI.",
       "t2022Label": "Certification & Expertise",
@@ -214,7 +206,6 @@
     "viewCatalogue": "Voir le Catalogue",
     "whatsappMessage": "Bonjour ! Je souhaite en savoir plus sur Théodore de Parin et CaniPrestige."
   },
-
   "Contact": {
     "title": "Contactez-Nous",
     "subtitle": "Le moyen le plus rapide de nous joindre est WhatsApp. Nous répondons généralement en moins de 2 heures.",
@@ -230,7 +221,6 @@
     "faqText": "Avant de nous contacter, consultez notre FAQ qui répond aux questions les plus fréquentes.",
     "faqLink": "Voir la FAQ →"
   },
-
   "Catalogue": {
     "title": "Catalogue Chiens, Chats, Chiots & Chatons",
     "subtitle": "Découvrez tous nos chiens, chats, chiots et chatons de race disponibles. Filtrez par espèce, race, sexe, âge ou localisation.",
@@ -246,9 +236,9 @@
     "emptyTitle": "Aucun résultat",
     "emptyBody": "Essayez d'ajuster vos filtres pour trouver le chien idéal.",
     "resetFilters": "Réinitialiser les filtres",
-    "partnerCta": "Vous êtes éleveur ? Devenez partenaire"
+    "partnerCta": "Vous êtes éleveur ? Devenez partenaire",
+    "promoBanner": "Offre de lancement : -35 % sur tous nos chiots et chatons. Prix déjà remisés ci-dessous."
   },
-
   "Filters": {
     "title": "Filtrer",
     "reset": "Réinitialiser",
@@ -276,7 +266,6 @@
     "sortLowHigh": "Prix croissant",
     "sortHighLow": "Prix décroissant"
   },
-
   "DogCard": {
     "viewProfile": "Voir le Profil",
     "inquire": "WhatsApp",
@@ -291,7 +280,6 @@
     "medium": "Moyen",
     "large": "Grand"
   },
-
   "DogDetail": {
     "backToCatalog": "Retour au Catalogue",
     "available": "Disponible",
@@ -324,7 +312,6 @@
     "prefilledNote": "Un message pré-rempli s'ouvrira dans WhatsApp pour faciliter la prise de contact.",
     "breadcrumbDogs": "Chiens"
   },
-
   "Faq": {
     "title": "Questions Fréquentes",
     "subtitle": "Retrouvez les réponses aux questions les plus courantes sur nos chiens de race et notre processus.",
@@ -333,7 +320,6 @@
     "askWhatsapp": "Poser ma Question sur WhatsApp",
     "whatsappMessage": "Bonjour ! J'ai une question concernant les chiens de CaniPrestige."
   },
-
   "Health": {
     "badge": "Santé & Vaccination",
     "title": "Protocole Sanitaire & Vaccination",
@@ -374,7 +360,6 @@
     "ctaCatalogue": "Voir Nos Chiots",
     "whatsappMessage": "Bonjour ! J'ai une question sur les exigences de vaccination et les garanties sanitaires."
   },
-
   "Delivery": {
     "badge": "Livraison & Transport",
     "title": "Remise & Transport de Votre Animal",
@@ -402,7 +387,6 @@
     "ctaWhatsapp": "Contacter via WhatsApp",
     "whatsappMessage": "Bonjour ! J'ai une question sur les modalités de transport et de remise pour un chiot ou un chaton."
   },
-
   "Legal": {
     "title": "Mentions Légales",
     "lastUpdate": "Dernière mise à jour : Août 2026",
@@ -432,7 +416,6 @@
     "s7Title": "7. Contact",
     "s7P1": "Pour toute question relative aux présentes mentions légales, vous pouvez contacter l'éditeur par e-mail ou par courrier à l'adresse indiquée ci-dessus."
   },
-
   "Privacy": {
     "title": "Politique de Confidentialité",
     "lastUpdate": "Dernière mise à jour : Août 2026 — Conforme au Règlement (UE) 2016/679 (RGPD)",
@@ -460,7 +443,6 @@
     "s6Title": "6. Sécurité",
     "s6P1": "Le site est servi en HTTPS. Aucune donnée sensible n'est stockée dans le navigateur. Les échanges WhatsApp bénéficient du chiffrement de bout en bout fourni par WhatsApp/Meta."
   },
-
   "Offline": {
     "title": "Vous êtes Hors Ligne",
     "body": "Nous ne parvenons pas à joindre CaniPrestige pour le moment. Vérifiez votre connexion et réessayez.",
@@ -468,7 +450,6 @@
     "whatsappLine": "Via WhatsApp",
     "tryReconnect": "Réessayer la connexion"
   },
-
   "Partner": {
     "hero": {
       "badge": "Programme Partenaire Européen",
@@ -590,7 +571,6 @@
       "submit": "Valider & Ouvrir WhatsApp",
       "required": "Champ obligatoire",
       "optional": "facultatif",
-
       "profileTitle": "Votre profil",
       "prenom": "Prénom",
       "nom": "Nom",
@@ -614,22 +594,19 @@
       "experience3to5": "3 à 5 ans",
       "experience5to10": "5 à 10 ans",
       "experienceGt10": "Plus de 10 ans",
-
       "locationTitle": "Localisation de l'élevage",
       "country": "Pays de résidence / localisation de l'élevage",
       "otherCountry": "Autre pays",
       "otherCountryPlaceholder": "Précisez le pays",
       "city": "Ville",
       "region": "Région",
-
       "animalsTitle": "Animaux proposés",
       "animalsDesc": "Sélectionnez les catégories que vous souhaitez proposer. Vous pourrez préciser chaque animal avec notre équipe via WhatsApp.",
       "breeds": "Races élevées",
-      "breedsPlaceholder": "Ex. : Berger Allemand, Maine Coon…",
+      "breedsPlaceholder": "Ex. : Bouledogue Français, Maine Coon…",
       "animalCount": "Nombre d'animaux à proposer",
       "animalNotes": "Informations complémentaires sur les animaux",
       "animalNotesPlaceholder": "Âge approximatif, disponibilité, particularités, prix souhaité…",
-
       "documentsTitle": "Documents et contenu disponibles",
       "hasProPhotos": "Je dispose de photos professionnelles",
       "hasRecentPhotos": "Je dispose de photos récentes",
@@ -639,7 +616,6 @@
       "hasVetDocs": "Je dispose des certificats vétérinaires et sanitaires",
       "hasGeneticTests": "Je dispose de résultats de tests génétiques",
       "uploadNote": "Après l'envoi de votre candidature, notre équipe vous indiquera via WhatsApp comment transmettre les photos, vidéos et documents nécessaires. Aucun document n'est transmis depuis ce formulaire.",
-
       "conditionsTitle": "Conditions et acompte",
       "recapTitle": "Récapitulatif de votre candidature",
       "recapName": "Contact",
@@ -655,7 +631,6 @@
       "privacyLink": "Politique de confidentialité",
       "termsRequired": "Veuillez accepter les conditions obligatoires pour continuer.",
       "animalsRequired": "Veuillez sélectionner au moins une catégorie d'animal.",
-
       "whatsappTitle": "Finaliser via WhatsApp",
       "whatsappBody": "En validant, un message pré-rempli s'ouvre dans WhatsApp avec les informations de votre candidature. WhatsApp devient ensuite le canal principal pour transmettre vos documents et échanger avec l'équipe.",
       "whatsappIntro": "Bonjour, je souhaite devenir partenaire et proposer un ou plusieurs animaux à la commercialisation.",

@@ -69,6 +69,9 @@ export default async function CatalogPage({
         </span>
         <h1 className="text-4xl sm:text-5xl font-extrabold font-heading text-text-premium tracking-tight">{t("title")}</h1>
         <p className="text-sm sm:text-base text-text-premium/70 leading-relaxed max-w-2xl mx-auto">{t("subtitle")}</p>
+        <p className="inline-flex items-center gap-2 rounded-full bg-red-600/10 text-red-600 px-4 py-1.5 text-xs sm:text-sm font-extrabold">
+          {t("promoBanner")}
+        </p>
         <div className="h-1 w-20 bg-primary mx-auto rounded-full" />
       </div>
 

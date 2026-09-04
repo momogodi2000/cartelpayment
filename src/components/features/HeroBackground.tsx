@@ -4,12 +4,12 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
-// Premium dog photography — demonstration images.
+// Real client photography (served from /public/images).
 const heroImageUrls = [
-  "https://images.unsplash.com/photo-1552053831-71594a27632d?w=1920&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1920&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1920&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1920&auto=format&fit=crop",
+  "/images/chien/golden-retriever-1.jpeg",
+  "/images/chien/bouledogue-francais-1.jpeg",
+  "/images/chats/maine-coon-2.jpeg",
+  "/images/chien/labrador-retriever-2.jpeg",
 ];
 
 export default function HeroBackground() {

@@ -6,7 +6,7 @@ import { MessageSquare, MapPin, Heart, Shield, CheckCircle } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { getDogInquiryMessage, getWhatsAppLink } from "@/data/site";
-import type { Dog } from "@/data/dogs";
+import { DISCOUNT_LABEL, PLACEHOLDER_IMAGE, type Dog } from "@/data/dogs";
 
 interface DogCardProps {
   dog: Dog;
@@ -19,8 +19,10 @@ export default function DogCard({ dog }: DogCardProps) {
   const name = dog.name;
   const breedName = locale === "en" ? dog.breedNameEn : dog.breedName;
   const description = locale === "en" ? dog.descriptionEn : dog.description;
-  const primaryImage = dog.images?.[0]?.url || "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&q=80";
+  const primaryImage = dog.images?.[0]?.url || PLACEHOLDER_IMAGE;
   const primaryAlt = dog.images?.[0]?.alt || `${name} - ${breedName}`;
+  const priceLocale = locale === "en" ? "en-GB" : "fr-FR";
+  const hasDiscount = typeof dog.originalPrice === "number" && dog.originalPrice > dog.price;
 
   const whatsappLink = getWhatsAppLink(
     getDogInquiryMessage(name, breedName, dog.slug, locale as "fr" | "en")
@@ -58,6 +60,11 @@ export default function DogCard({ dog }: DogCardProps) {
           <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold shadow-sm ${availabilityClass()}`}>
             {availabilityLabel()}
           </span>
+          {hasDiscount && (
+            <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-red-600 text-white shadow-sm">
+              {DISCOUNT_LABEL}
+            </span>
+          )}
           {dog.featured && (
             <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-primary text-white shadow-sm">
               <Heart className="h-2.5 w-2.5" />
@@ -91,8 +98,15 @@ export default function DogCard({ dog }: DogCardProps) {
               </h3>
               <p className="text-xs text-primary font-semibold italic">{breedName}</p>
             </div>
-            <span className="font-black text-primary text-base whitespace-nowrap">
-              {dog.price.toLocaleString(locale === "en" ? "en-GB" : "fr-FR")} {dog.currency}
+            <span className="flex flex-col items-end leading-tight whitespace-nowrap">
+              {hasDiscount && (
+                <span className="text-[11px] font-semibold text-text-premium/40 line-through">
+                  {dog.originalPrice.toLocaleString(priceLocale)} {dog.currency}
+                </span>
+              )}
+              <span className="font-black text-primary text-base">
+                {dog.price.toLocaleString(priceLocale)} {dog.currency}
+              </span>
             </span>
           </div>
 

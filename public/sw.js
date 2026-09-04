@@ -1,11 +1,11 @@
-const CACHE_NAME = "arahaven-cache-v1";
+const CACHE_NAME = "caniprestige-cache-v2";
 const OFFLINE_URL = "/offline.html";
 
 const ASSETS_TO_CACHE = [
   "/",
   OFFLINE_URL,
-  "/favicon.ico",
   "/manifest.json",
+  "/logo.jpg",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png"
 ];

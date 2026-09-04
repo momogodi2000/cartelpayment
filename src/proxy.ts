@@ -6,9 +6,19 @@ import { routing } from './i18n/routing';
 const intlMiddleware = createMiddleware(routing);
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+let lastSweep = 0;
 
 function isRateLimited(ip: string, limit: number, windowMs: number): boolean {
   const now = Date.now();
+
+  // Periodically drop expired entries so the map can't grow unbounded.
+  if (now - lastSweep > windowMs) {
+    for (const [key, rec] of rateLimitMap) {
+      if (now > rec.resetTime) rateLimitMap.delete(key);
+    }
+    lastSweep = now;
+  }
+
   const record = rateLimitMap.get(ip);
 
   if (!record || now > record.resetTime) {
@@ -45,17 +55,26 @@ export async function proxy(request: NextRequest) {
   response.headers.set("X-DNS-Prefetch-Control", "on");
   response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
   response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Frame-Options", "SAMEORIGIN");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  response.headers.set("X-Permitted-Cross-Domain-Policies", "none");
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
   response.headers.set(
     "Content-Security-Policy",
-    "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-      "font-src 'self' https://fonts.gstatic.com; " +
-      "img-src 'self' data: blob: https://images.unsplash.com https://source.unsplash.com; " +
-      "connect-src 'self' ws: wss:;"
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' data: blob:",
+      "media-src 'self'",
+      "connect-src 'self' ws: wss:",
+      "frame-ancestors 'self'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "object-src 'none'",
+    ].join("; ")
   );
 
   return response;
