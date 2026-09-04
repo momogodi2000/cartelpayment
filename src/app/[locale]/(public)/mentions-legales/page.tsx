@@ -55,6 +55,10 @@ export default async function MentionsLegalesPage({ params }: { params: Promise<
             <strong className="text-text-premium">{t("s1Address")}</strong> {siteConfig.ownerAddress}
           </p>
           <p>
+            <strong className="text-text-premium">{t("s1Siren")}</strong>{" "}
+            {siteConfig.legalSiren || t("s1SirenPending")}
+          </p>
+          <p>
             <strong className="text-text-premium">{t("s1Email")}</strong> {siteConfig.email}
           </p>
           <p>

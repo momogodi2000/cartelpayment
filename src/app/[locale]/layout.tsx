@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -68,18 +67,11 @@ export async function generateMetadata({
       apple: "/logo.jpg",
     },
     openGraph: {
+      // Card image comes from src/app/opengraph-image.tsx (per-listing pages override it).
       title: t("defaultTitle"),
       description: t("defaultDescription"),
       url: locale === "fr" ? siteUrl.toString() : `${siteUrl.toString()}en`,
       siteName,
-      images: [
-        {
-          url: "/logo.jpg",
-          width: 1200,
-          height: 630,
-          alt: siteName,
-        },
-      ],
       locale: locale === "fr" ? "fr_FR" : "en_GB",
       type: "website",
     },
@@ -87,7 +79,6 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: t("defaultTitle"),
       description: t("defaultDescription"),
-      images: ["/logo.jpg"],
     },
     alternates: {
       canonical: locale === "fr" ? "/" : "/en",
@@ -102,6 +93,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
 };
+
+// Runs before first paint so the theme is applied without a flash and without
+// reading cookies on the server (which would force every route to render dynamically).
+const themeInit = `(function(){try{var t=localStorage.getItem('pawelium_theme');if(t!=='light'&&t!=='dark'&&t!=='exotic'){var m=document.cookie.match(/(?:^|;\\s*)theme=(light|dark|exotic)/);t=m?m[1]:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
 
 export default async function LocaleLayout({
   children,
@@ -118,22 +113,16 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
-  const cookieStore = await cookies();
-  const theme = (cookieStore.get("theme")?.value || "light") as
-    | "light"
-    | "dark"
-    | "exotic";
-
   return (
     <html
       lang={locale}
-      data-theme={theme}
       className={`h-full scroll-smooth antialiased ${playfair.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans">
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
         <NextIntlClientProvider>
-          <AppProvider initialTheme={theme}>
+          <AppProvider>
             <PWARegister />
             {children}
           </AppProvider>

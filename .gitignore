@@ -40,3 +40,6 @@ dev-server.log
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local-only reference material (agent skills, guides)
+/docs/

@@ -23,6 +23,11 @@ export const siteConfig = {
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "+33641325328",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelium.fyi",
 
+  // Legal — French business registration. Displayed on /mentions-legales once set.
+  // Selling animals with listed prices is a commercial activity in France and
+  // requires a SIREN/SIRET on the legal notice.
+  legalSiren: process.env.NEXT_PUBLIC_LEGAL_SIREN || "",
+
   // URLs
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://pawelium.fyi",
 

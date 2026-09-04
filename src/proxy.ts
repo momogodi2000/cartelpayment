@@ -81,5 +81,10 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|logo.png|.*\\..*).*)" ],
+  // Skip API routes, Next internals, the metadata routes (opengraph-image,
+  // twitter-image, icon, apple-icon), and anything with a file extension
+  // (robots.txt, sitemap.xml, sw.js, images, …).
+  matcher: [
+    "/((?!api|_next/static|_next/image|opengraph-image|twitter-image|icon|apple-icon|manifest|.*\\..*).*)",
+  ],
 };
