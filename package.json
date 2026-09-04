@@ -1,5 +1,5 @@
 {
-    "name": "caniprestige",
+    "name": "pawelium",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -12,8 +12,8 @@
         "test:watch": "vitest",
         "test:coverage": "vitest run --coverage",
         "test:e2e": "playwright test",
-        "docker:build": "docker build -t caniprestige .",
-        "docker:run": "docker run --env-file .env -p 3000:3000 caniprestige"
+        "docker:build": "docker build -t pawelium .",
+        "docker:run": "docker run --env-file .env -p 3000:3000 pawelium"
     },
     "overrides": {
         "effect": "^3.21.2",

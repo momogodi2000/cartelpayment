@@ -95,11 +95,11 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
             <div className="relative h-9 w-9 rounded-xl overflow-hidden ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all">
-              <Image src="/logo.jpg" alt="CaniPrestige Logo" fill sizes="40px" className="object-cover" priority />
+              <Image src="/logo.jpg" alt="pawelium Logo" fill sizes="40px" className="object-cover" priority />
             </div>
             <div>
               <span className="text-lg font-black font-heading text-text-premium group-hover:text-primary transition-colors">
-                CaniPrestige
+                pawelium
               </span>
               <p className="text-[9px] font-semibold text-text-premium/50 uppercase tracking-widest leading-none">
                 {t("brandSubtitle")}

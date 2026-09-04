@@ -13,11 +13,13 @@ import { siteConfig } from "@/data/site";
 const siteUrl = new URL(siteConfig.siteUrl || "http://localhost:3000");
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || siteConfig.name;
 
+// Headings are set in `font-black` — load the weights actually used and no more.
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
-  weight: ["400", "600", "700", "800"],
+  weight: ["700", "800", "900"],
   display: "swap",
+  preload: true,
 });
 
 const inter = Inter({

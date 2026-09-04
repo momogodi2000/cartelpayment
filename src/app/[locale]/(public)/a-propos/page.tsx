@@ -89,7 +89,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="relative h-80 sm:h-96 rounded-3xl overflow-hidden bg-primary/5 border border-primary/10">
           <Image
             src="/logo.jpg"
-            alt={`CaniPrestige — ${t("founderName")}`}
+            alt={`pawelium — ${t("founderName")}`}
             fill
             className="object-contain p-12"
             sizes="(max-width: 1024px) 100vw, 50vw"

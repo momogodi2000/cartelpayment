@@ -4,7 +4,7 @@ description: Always adapt complex backend feature requests into static WhatsApp 
 ---
 
 # Context
-When working on a purely static frontend showcase site (like CaniPrestige), users might sometimes copy-paste massive prompts requesting complex backend features (e.g., user authentication, partner portals, file uploads, payment gateways, and databases). 
+When working on a purely static frontend showcase site (like pawelium), users might sometimes copy-paste massive prompts requesting complex backend features (e.g., user authentication, partner portals, file uploads, payment gateways, and databases). 
 
 # Rule
 1. **Never build a backend**: Do not install databases (Prisma, Postgres), do not create API routes (`app/api`), and do not configure payment gateways (Stripe) if the project is explicitly a static vitrine.

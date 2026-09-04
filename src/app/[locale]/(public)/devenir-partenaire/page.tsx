@@ -63,7 +63,7 @@ export default async function DevenirPartenairePage({ params }: { params: Promis
             "@type": "Service",
             name: t("hero.title"),
             serviceType: "Breeder partnership programme",
-            provider: { "@type": "Organization", name: "CaniPrestige", url: base },
+            provider: { "@type": "Organization", name: "pawelium", url: base },
             areaServed: "Europe",
             description: t("hero.subtitle"),
           }),

@@ -1,16 +1,16 @@
 {
   "Meta": {
-    "defaultTitle": "CaniPrestige — Purebred Dogs, Cats, Puppies & Kittens | European Selection",
-    "defaultDescription": "CaniPrestige selects the finest purebred dogs, cats, puppies and kittens from responsible European breeders. Detailed profiles, pedigree (LOF, LOOF), up-to-date health records. Direct contact via WhatsApp.",
+    "defaultTitle": "pawelium — Purebred Dogs, Cats, Puppies & Kittens | European Selection",
+    "defaultDescription": "pawelium selects the finest purebred dogs, cats, puppies and kittens from responsible European breeders. Detailed profiles, pedigree (LOF, LOOF), up-to-date health records. Direct contact via WhatsApp.",
     "keywords": "purebred dogs europe, purebred puppies, purebred cats, purebred kittens, pedigree kitten, maine coon kitten, ragdoll kitten, british shorthair, bengal kitten, siamese kitten, golden retriever puppy, labrador puppy, french bulldog puppy, cavalier king charles puppy, chihuahua puppy, poodle puppy, dachshund puppy, responsible dog breeding, responsible cat breeding, pedigree puppy europe, dogs for sale france, cats for sale france, dog breeding partner, cat breeding partner",
     "homeTitle": "Premium Purebred Dogs, Cats, Puppies & Kittens | European Selection",
     "homeDescription": "Discover purebred dogs, cats, puppies and kittens carefully selected from responsible European breeders. LOF and LOOF pedigree, transparency, animal welfare and WhatsApp support.",
     "catalogueTitle": "Purebred Dogs, Cats, Puppies & Kittens Catalogue",
     "catalogueDescription": "Browse our full catalogue of purebred dogs, cats, puppies and kittens available across Europe. Filter by species, breed, sex, age and location.",
     "aboutTitle": "About — Our Story",
-    "aboutDescription": "Discover the story of CaniPrestige, a passion for purebred dogs and cats and our network of certified breeders across Europe.",
+    "aboutDescription": "Discover the story of pawelium, a passion for purebred dogs and cats and our network of certified breeders across Europe.",
     "contactTitle": "Contact",
-    "contactDescription": "Contact CaniPrestige via WhatsApp for any question about our purebred dogs, cats, puppies and kittens available across Europe.",
+    "contactDescription": "Contact pawelium via WhatsApp for any question about our purebred dogs, cats, puppies and kittens available across Europe.",
     "faqTitle": "FAQ — Frequently Asked Questions",
     "faqDescription": "All the answers to your questions about our purebred dogs and cats, our acquisition process and our European partner breeders.",
     "healthTitle": "Health & Vaccination — Official WSAVA Protocol",
@@ -18,14 +18,14 @@
     "deliveryTitle": "Delivery & Transport — Direct Handover & EU Transport",
     "deliveryDescription": "Direct handover and supervised transport arrangements for your puppy or kitten. Compliance with EU Regulation 576/2013, European passport, animal welfare.",
     "legalTitle": "Legal Notice",
-    "legalDescription": "Legal notice for the CaniPrestige website — legal information, site publisher, host and terms of use.",
+    "legalDescription": "Legal notice for the pawelium website — legal information, site publisher, host and terms of use.",
     "privacyTitle": "Privacy Policy",
-    "privacyDescription": "Personal data protection policy for the CaniPrestige website — GDPR, data collection, user rights.",
+    "privacyDescription": "Personal data protection policy for the pawelium website — GDPR, data collection, user rights.",
     "partnerTitle": "Become a Partner — Breeders & Professionals",
     "partnerDescription": "Are you a breeder of dogs, puppies, cats or kittens in Europe? Propose your animals for sale and grow your visibility with our European clientele."
   },
   "Common": {
-    "whatsappGeneralMessage": "Hello! I visited CaniPrestige and would like to learn more about your available dogs, cats, puppies and kittens.",
+    "whatsappGeneralMessage": "Hello! I visited pawelium and would like to learn more about your available dogs, cats, puppies and kittens.",
     "whatsappButton": "Contact via WhatsApp",
     "whatsappButtonShort": "Contact",
     "whatsappChatShort": "Chat",
@@ -81,9 +81,9 @@
     "experience": "6 years of experience in canine selection"
   },
   "Home": {
-    "whatsappMessage": "Hello! I visited CaniPrestige and would like to learn more about your available dogs, cats, puppies and kittens.",
+    "whatsappMessage": "Hello! I visited pawelium and would like to learn more about your available dogs, cats, puppies and kittens.",
     "schemaDescription": "Premium purebred dog, cat, puppy and kitten selection for the European market.",
-    "heroImageAlt": "Purebred dog selected by CaniPrestige",
+    "heroImageAlt": "Purebred dog selected by pawelium",
     "stats": {
       "dogs": "Animal Profiles",
       "breeds": "Breeds Available",
@@ -123,7 +123,7 @@
       "subtitle": "A simple, transparent and guided process to find your perfect companion."
     },
     "testimonials": {
-      "title": "They Chose CaniPrestige",
+      "title": "They Chose pawelium",
       "subtitle": "Testimonials from our happy clients and their new companions."
     },
     "faq": {
@@ -166,13 +166,13 @@
     "item4Desc": "Direct, fast and personalised WhatsApp exchanges to answer all your questions."
   },
   "About": {
-    "metaTitle": "About | CaniPrestige — Théodore de Parin",
+    "metaTitle": "About | pawelium — Théodore de Parin",
     "badge": "Our Story",
     "title": "Canine & Feline Passion, European Excellence",
-    "subtitle": "CaniPrestige was born from Théodore de Parin's passion for purebred animals. With 6 years of experience, he connects families with the finest certified dog and cat breeders in Europe.",
+    "subtitle": "pawelium was born from Théodore de Parin's passion for purebred animals. With 6 years of experience, he connects families with the finest certified dog and cat breeders in Europe.",
     "founderBadge": "Founder & Canine and Feline Expert",
     "founderName": "Théodore de Parin",
-    "founderP1": "Passionate about breeding since childhood, Théodore founded CaniPrestige in 2018 with a simple goal: helping families find their ideal companion — dog or cat — with serious, certified breeders.",
+    "founderP1": "Passionate about breeding since childhood, Théodore founded pawelium in 2018 with a simple goal: helping families find their ideal companion — dog or cat — with serious, certified breeders.",
     "founderP2": "His network now covers five European countries (France, Belgium, Germany, the Netherlands, Spain) and exclusively includes breeding facilities affiliated with the FCI/LOF for dogs and the LOOF for cats, or their equivalent national registries (VDH, LOSH…).",
     "experience": "6 years",
     "experienceLabel": "Experience in canine selection",
@@ -180,14 +180,14 @@
     "locationAddress": "77 Bd Saint-Jacques, 75014",
     "journeyTitle": "Our Journey",
     "timeline": {
-      "t2018Label": "CaniPrestige Founded",
+      "t2018Label": "pawelium Founded",
       "t2018Desc": "Launch of the canine selection activity in Paris, with an initial selection of Golden Retrievers and French Bulldogs.",
       "t2020Label": "European Network",
       "t2020Desc": "Network extension to partner breeders in Belgium, Germany and the Netherlands. First collaboration with FCI-certified breeders.",
       "t2022Label": "Certification & Expertise",
       "t2022Desc": "Opening up to feline breeders (LOOF) and deepening expertise in animal health and vaccination protocols. Strengthened partnerships with European veterinarians.",
       "t2024Label": "Digital Platform",
-      "t2024Desc": "Launch of CaniPrestige.eu, a premium digital showcase to present the finest purebred puppies and kittens from our European network."
+      "t2024Desc": "Launch of pawelium.fyi, a premium digital showcase to present the finest purebred puppies and kittens from our European network."
     },
     "valuesTitle": "Our Values",
     "values": {
@@ -204,7 +204,7 @@
     "ctaSubtitle": "Contact Théodore directly via WhatsApp. He will guide you in finding your ideal companion.",
     "contactTheodore": "Contact Théodore",
     "viewCatalogue": "View Catalogue",
-    "whatsappMessage": "Hello! I would like to learn more about Théodore de Parin and CaniPrestige."
+    "whatsappMessage": "Hello! I would like to learn more about Théodore de Parin and pawelium."
   },
   "Contact": {
     "title": "Contact Us",
@@ -212,7 +212,7 @@
     "whatsappTitle": "WhatsApp",
     "whatsappDesc": "Send us a message directly. We'll reply quickly.",
     "openWhatsapp": "Open WhatsApp",
-    "whatsappMessage": "Hello! I visited CaniPrestige and would like to ask some questions about your available animals.",
+    "whatsappMessage": "Hello! I visited pawelium and would like to ask some questions about your available animals.",
     "email": "Email",
     "availability": "Availability",
     "availabilityValue": "Mon–Sat, 9am–7pm",
@@ -318,7 +318,7 @@
     "notListedTitle": "Your question not listed?",
     "notListedBody": "Contact us directly via WhatsApp. We respond within 2 hours.",
     "askWhatsapp": "Ask My Question on WhatsApp",
-    "whatsappMessage": "Hello! I have a question about CaniPrestige dogs."
+    "whatsappMessage": "Hello! I have a question about pawelium dogs."
   },
   "Health": {
     "badge": "Health & Vaccination",
@@ -407,10 +407,10 @@
     "s3P1": "All content on this site (text, images, structure, layout) is protected by French and international intellectual property law. Any reproduction, representation or distribution, in whole or in part, is prohibited without the prior written authorisation of the publisher.",
     "s3P2": "The photographs illustrating the dogs and breeds are sourced from royalty-free image libraries or provided directly by partner breeders and remain their respective property.",
     "s4Title": "4. Liability",
-    "s4P1": "CaniPrestige is a showcase website providing an introduction service. Information presented about the dogs (price, availability, characteristics) is provided by partner breeders. The publisher strives to ensure its accuracy but cannot be held responsible for any inaccuracies. Any purchase or transaction takes place directly between the buyer and the breeder.",
+    "s4P1": "pawelium is a showcase website providing an introduction service. Information presented about the dogs (price, availability, characteristics) is provided by partner breeders. The publisher strives to ensure its accuracy but cannot be held responsible for any inaccuracies. Any purchase or transaction takes place directly between the buyer and the breeder.",
     "s4P2": "Displayed prices are indicative and may change. The availability of animals is only guaranteed at the time of direct contact with the breeder.",
     "s5Title": "5. Regulations on Dangerous Dogs",
-    "s5P1": "In accordance with article L.211-12 of the French Rural Code and the decree of 27 April 1999, certain dog breeds are subject to specific regulations in France. If the catalogue includes category 1 or 2 breeds, buyers will be informed of the legal obligations: ownership permit, civil liability insurance and declaration to the town hall. CaniPrestige undertakes to systematically inform potential buyers of these obligations before any introduction.",
+    "s5P1": "In accordance with article L.211-12 of the French Rural Code and the decree of 27 April 1999, certain dog breeds are subject to specific regulations in France. If the catalogue includes category 1 or 2 breeds, buyers will be informed of the legal obligations: ownership permit, civil liability insurance and declaration to the town hall. pawelium undertakes to systematically inform potential buyers of these obligations before any introduction.",
     "s6Title": "6. Applicable Law",
     "s6P1": "This site is governed by French law. Any dispute relating to the use of this site will be subject to the exclusive jurisdiction of the French courts.",
     "s7Title": "7. Contact",
@@ -424,7 +424,7 @@
     "s1Address": "Address:",
     "s1Email": "Email:",
     "s2Title": "2. Data Collected",
-    "s2P1": "CaniPrestige is a static showcase website. We do not collect personal data through server-stored forms. The only direct interaction takes place via WhatsApp (a third-party app subject to the WhatsApp/Meta privacy policy) or by email.",
+    "s2P1": "pawelium is a static showcase website. We do not collect personal data through server-stored forms. The only direct interaction takes place via WhatsApp (a third-party app subject to the WhatsApp/Meta privacy policy) or by email.",
     "s2P2": "The information you voluntarily provide to us (name, question, contact details) via WhatsApp or email is used solely to respond to your request. It is neither shared with third parties nor used for commercial purposes.",
     "s3Title": "3. Technical Data (Analytics & Cookies)",
     "s3P1": "This site uses technical cookies strictly necessary for operation (language preference, theme). These cookies do not require consent under article 82 of the French Data Protection Act.",
@@ -445,7 +445,7 @@
   },
   "Offline": {
     "title": "You Are Offline",
-    "body": "We are unable to reach CaniPrestige right now. Please check your connection and try again.",
+    "body": "We are unable to reach pawelium right now. Please check your connection and try again.",
     "contactTitle": "Contact us directly",
     "whatsappLine": "Via WhatsApp",
     "tryReconnect": "Try Reconnecting"

@@ -1,5 +1,5 @@
 // ============================================================
-// cats.ts — CaniPrestige purebred cat & kitten profiles
+// cats.ts — pawelium purebred cat & kitten profiles
 // Photos: /public/images/chats (real client media).
 // Structure mirrors dogs.ts (shared `Dog` shape) with species: 'cat'.
 // Prices carry the same site-wide -35% promotion.
@@ -56,7 +56,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/maine-coon-3.jpeg', alt: 'Iris — Maine Coon (photo 3)' },
     ],
     featured: true,
-    seoTitle: 'Iris — Chaton Maine Coon LOOF | CaniPrestige',
+    seoTitle: 'Iris — Chaton Maine Coon LOOF | pawelium',
     seoDescription: 'Iris, chaton Maine Coon de 4 mois à Nantes (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1140 € au lieu de 1750 €.',
   },
   {
@@ -103,7 +103,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/maine-coon-5.jpeg', alt: 'Léo — Maine Coon (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Léo — Chaton Maine Coon LOOF | CaniPrestige',
+    seoTitle: 'Léo — Chaton Maine Coon LOOF | pawelium',
     seoDescription: 'Léo, chaton Maine Coon de 5 mois à Munich (Allemagne). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1170 € au lieu de 1800 €.',
   },
   {
@@ -150,7 +150,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/ragdoll-2.jpeg', alt: 'Noah — Ragdoll (photo 2)' },
     ],
     featured: true,
-    seoTitle: 'Noah — Chaton Ragdoll LOOF | CaniPrestige',
+    seoTitle: 'Noah — Chaton Ragdoll LOOF | pawelium',
     seoDescription: 'Noah, chaton Ragdoll de 4 mois à Bruxelles (Belgique). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1110 € au lieu de 1700 €.',
   },
   {
@@ -197,7 +197,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/ragdoll.jpeg', alt: 'Maya — Ragdoll (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Maya — Chaton Ragdoll LOOF | CaniPrestige',
+    seoTitle: 'Maya — Chaton Ragdoll LOOF | pawelium',
     seoDescription: 'Maya, chaton Ragdoll de 5 mois à Amsterdam (Pays-Bas). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1040 € au lieu de 1600 €.',
   },
   {
@@ -244,7 +244,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/british-shorthair-2.jpeg', alt: 'Lou — British Shorthair (photo 2)' },
     ],
     featured: true,
-    seoTitle: 'Lou — Chaton British Shorthair LOOF | CaniPrestige',
+    seoTitle: 'Lou — Chaton British Shorthair LOOF | pawelium',
     seoDescription: 'Lou, chaton British Shorthair de 3 mois à Lyon (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1010 € au lieu de 1550 €.',
   },
   {
@@ -291,7 +291,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/british-shorthair.jpeg', alt: 'Milo — British Shorthair (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Milo — Chaton British Shorthair LOOF | CaniPrestige',
+    seoTitle: 'Milo — Chaton British Shorthair LOOF | pawelium',
     seoDescription: 'Milo, chaton British Shorthair de 4 mois à Paris (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1040 € au lieu de 1600 €.',
   },
   {
@@ -338,7 +338,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/bengal-2.jpeg', alt: 'Jade — Bengal (photo 2)' },
     ],
     featured: true,
-    seoTitle: 'Jade — Chaton Bengal LOOF | CaniPrestige',
+    seoTitle: 'Jade — Chaton Bengal LOOF | pawelium',
     seoDescription: 'Jade, chaton Bengal de 4 mois à Genève (Suisse). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1270 € au lieu de 1950 €.',
   },
   {
@@ -385,7 +385,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/bengal.jpeg', alt: 'Simba — Bengal (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Simba — Chaton Bengal LOOF | CaniPrestige',
+    seoTitle: 'Simba — Chaton Bengal LOOF | pawelium',
     seoDescription: 'Simba, chaton Bengal de 5 mois à Madrid (Espagne). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1300 € au lieu de 2000 €.',
   },
   {
@@ -432,7 +432,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/siamois-2.jpeg', alt: 'Suki — Siamois (photo 2)' },
     ],
     featured: true,
-    seoTitle: 'Suki — Chaton Siamois LOOF | CaniPrestige',
+    seoTitle: 'Suki — Chaton Siamois LOOF | pawelium',
     seoDescription: 'Suki, chaton Siamois de 4 mois à Toulouse (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 880 € au lieu de 1350 €.',
   },
   {
@@ -479,7 +479,7 @@ export const cats: Cat[] = [
       { url: '/images/chats/siamois.jpeg', alt: 'Ziggy — Siamois (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Ziggy — Chaton Siamois LOOF | CaniPrestige',
+    seoTitle: 'Ziggy — Chaton Siamois LOOF | pawelium',
     seoDescription: 'Ziggy, chaton Siamois de 5 mois à Bordeaux (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 810 € au lieu de 1250 €.',
   },
 ];

@@ -64,7 +64,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            name: "CaniPrestige",
+            name: "pawelium",
             description: t("schemaDescription"),
             url: base,
             logo: `${base}/logo.jpg`,
@@ -84,7 +84,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "CaniPrestige",
+            name: "pawelium",
             url: base,
             inLanguage: isEn ? "en" : "fr",
             potentialAction: {

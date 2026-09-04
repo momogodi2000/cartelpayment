@@ -1,16 +1,16 @@
 {
   "Meta": {
-    "defaultTitle": "CaniPrestige — Chiens, Chats, Chiots & Chatons de Race | Sélection Européenne",
-    "defaultDescription": "CaniPrestige sélectionne les meilleurs chiens, chats, chiots et chatons de race auprès d'éleveurs européens responsables. Profils détaillés, pedigree (LOF, LOOF), carnet de santé à jour. Contact direct via WhatsApp.",
+    "defaultTitle": "pawelium — Chiens, Chats, Chiots & Chatons de Race | Sélection Européenne",
+    "defaultDescription": "pawelium sélectionne les meilleurs chiens, chats, chiots et chatons de race auprès d'éleveurs européens responsables. Profils détaillés, pedigree (LOF, LOOF), carnet de santé à jour. Contact direct via WhatsApp.",
     "keywords": "chiens de race europe, chiots de race, chats de race, chatons de race, chaton pure race, maine coon disponible, ragdoll chaton, british shorthair, bengal chaton, siamois chaton, chaton loof, golden retriever chiot, labrador chiot, bouledogue français chiot, cavalier king charles chiot, chihuahua chiot, caniche chiot, teckel chiot, élevage canin responsable, élevage félin, chiot pedigree europe, vente chiens france, vente chats france, partenaire élevage chien, partenaire élevage chat",
     "homeTitle": "Chiens, Chats, Chiots & Chatons de Race Premium | Sélection Européenne",
     "homeDescription": "Découvrez des chiens, chats, chiots et chatons de race sélectionnés avec soin auprès d'éleveurs européens responsables. Pedigree LOF et LOOF, transparence, bien-être animal et accompagnement WhatsApp.",
     "catalogueTitle": "Catalogue Chiens, Chats, Chiots & Chatons de Race",
     "catalogueDescription": "Parcourez notre catalogue complet de chiens, chats, chiots et chatons de race disponibles en Europe. Filtrez par espèce, race, sexe, âge et localisation.",
     "aboutTitle": "À Propos — Notre Histoire",
-    "aboutDescription": "Découvrez l'histoire de CaniPrestige, la passion des chiens et chats de race et notre réseau d'éleveurs certifiés en Europe.",
+    "aboutDescription": "Découvrez l'histoire de pawelium, la passion des chiens et chats de race et notre réseau d'éleveurs certifiés en Europe.",
     "contactTitle": "Contact",
-    "contactDescription": "Contactez CaniPrestige via WhatsApp pour toute question sur nos chiens, chats, chiots et chatons de race disponibles en Europe.",
+    "contactDescription": "Contactez pawelium via WhatsApp pour toute question sur nos chiens, chats, chiots et chatons de race disponibles en Europe.",
     "faqTitle": "FAQ — Questions Fréquentes",
     "faqDescription": "Toutes les réponses à vos questions sur nos chiens et chats de race, notre processus d'acquisition et nos partenaires éleveurs européens.",
     "healthTitle": "Santé & Vaccination — Protocole Officiel WSAVA",
@@ -18,14 +18,14 @@
     "deliveryTitle": "Livraison & Transport — Remise en Main Propre & Transport UE",
     "deliveryDescription": "Modalités de remise en main propre et de transport encadré pour votre chiot ou chaton. Conformité Règlement (UE) 576/2013, passeport européen, bien-être animal.",
     "legalTitle": "Mentions Légales",
-    "legalDescription": "Mentions légales du site CaniPrestige — informations légales, éditeur du site, hébergeur et conditions d'utilisation.",
+    "legalDescription": "Mentions légales du site pawelium — informations légales, éditeur du site, hébergeur et conditions d'utilisation.",
     "privacyTitle": "Politique de Confidentialité",
-    "privacyDescription": "Politique de protection des données personnelles du site CaniPrestige — RGPD, collecte des données, droits des utilisateurs.",
+    "privacyDescription": "Politique de protection des données personnelles du site pawelium — RGPD, collecte des données, droits des utilisateurs.",
     "partnerTitle": "Devenir Partenaire — Éleveurs & Professionnels",
     "partnerDescription": "Vous êtes éleveur de chiens, chiots, chats ou chatons en Europe ? Proposez vos animaux à la commercialisation et développez votre visibilité auprès de notre clientèle européenne."
   },
   "Common": {
-    "whatsappGeneralMessage": "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens, chats, chiots et chatons disponibles.",
+    "whatsappGeneralMessage": "Bonjour ! J'ai visité pawelium et je souhaite en savoir plus sur vos chiens, chats, chiots et chatons disponibles.",
     "whatsappButton": "Contacter via WhatsApp",
     "whatsappButtonShort": "Contact",
     "whatsappChatShort": "Discuter",
@@ -81,9 +81,9 @@
     "experience": "6 ans d'expérience en sélection canine"
   },
   "Home": {
-    "whatsappMessage": "Bonjour ! J'ai visité CaniPrestige et je souhaite en savoir plus sur vos chiens, chats, chiots et chatons disponibles.",
+    "whatsappMessage": "Bonjour ! J'ai visité pawelium et je souhaite en savoir plus sur vos chiens, chats, chiots et chatons disponibles.",
     "schemaDescription": "Sélection premium de chiens, chats, chiots et chatons de race pour le marché européen.",
-    "heroImageAlt": "Chien de race sélectionné par CaniPrestige",
+    "heroImageAlt": "Chien de race sélectionné par pawelium",
     "stats": {
       "dogs": "Profils d'Animaux",
       "breeds": "Races Disponibles",
@@ -123,7 +123,7 @@
       "subtitle": "Un processus simple, transparent et guidé pour trouver votre compagnon idéal."
     },
     "testimonials": {
-      "title": "Ils Ont Choisi CaniPrestige",
+      "title": "Ils Ont Choisi pawelium",
       "subtitle": "Témoignages de nos clients satisfaits et de leurs nouveaux compagnons."
     },
     "faq": {
@@ -166,13 +166,13 @@
     "item4Desc": "Un échange direct, rapide et personnalisé par WhatsApp pour répondre à toutes vos questions."
   },
   "About": {
-    "metaTitle": "À Propos | CaniPrestige — Théodore de Parin",
+    "metaTitle": "À Propos | pawelium — Théodore de Parin",
     "badge": "Notre Histoire",
     "title": "Passion Canine, Féline & Excellence Européenne",
-    "subtitle": "CaniPrestige est né de la passion de Théodore de Parin pour les animaux de race. Avec 6 ans d'expérience, il met en relation les familles avec les meilleurs éleveurs de chiens et de chats certifiés d'Europe.",
+    "subtitle": "pawelium est né de la passion de Théodore de Parin pour les animaux de race. Avec 6 ans d'expérience, il met en relation les familles avec les meilleurs éleveurs de chiens et de chats certifiés d'Europe.",
     "founderBadge": "Fondateur & Expert Canin et Félin",
     "founderName": "Théodore de Parin",
-    "founderP1": "Passionné d'élevage depuis l'enfance, Théodore a fondé CaniPrestige en 2018 avec un objectif simple : aider les familles à trouver leur compagnon idéal — chien ou chat — auprès d'éleveurs sérieux et certifiés.",
+    "founderP1": "Passionné d'élevage depuis l'enfance, Théodore a fondé pawelium en 2018 avec un objectif simple : aider les familles à trouver leur compagnon idéal — chien ou chat — auprès d'éleveurs sérieux et certifiés.",
     "founderP2": "Son réseau couvre aujourd'hui cinq pays européens (France, Belgique, Allemagne, Pays-Bas, Espagne) et regroupe exclusivement des élevages affiliés à la FCI/LOF pour les chiens et au LOOF pour les chats, ou à leurs registres nationaux équivalents (VDH, LOSH…).",
     "experience": "6 ans",
     "experienceLabel": "Expérience dans la sélection canine",
@@ -180,14 +180,14 @@
     "locationAddress": "77 Bd Saint-Jacques, 75014",
     "journeyTitle": "Notre Parcours",
     "timeline": {
-      "t2018Label": "Création de CaniPrestige",
+      "t2018Label": "Création de pawelium",
       "t2018Desc": "Lancement de l'activité de sélection canine à Paris, avec une première sélection de Golden Retrievers et de Bouledogues Français.",
       "t2020Label": "Réseau Européen",
       "t2020Desc": "Extension du réseau à des éleveurs partenaires en Belgique, en Allemagne et aux Pays-Bas. Première collaboration avec des éleveurs certifiés FCI.",
       "t2022Label": "Certification & Expertise",
       "t2022Desc": "Ouverture aux élevages félins (LOOF) et approfondissement de l'expertise en santé animale et protocoles de vaccination. Partenariats renforcés avec des vétérinaires européens.",
       "t2024Label": "Plateforme Digitale",
-      "t2024Desc": "Lancement de CaniPrestige.eu, une vitrine digitale premium pour présenter les plus beaux chiots et chatons de race de notre réseau européen."
+      "t2024Desc": "Lancement de pawelium.fyi, une vitrine digitale premium pour présenter les plus beaux chiots et chatons de race de notre réseau européen."
     },
     "valuesTitle": "Nos Valeurs",
     "values": {
@@ -204,7 +204,7 @@
     "ctaSubtitle": "Contactez Théodore directement via WhatsApp. Il vous guidera dans la recherche de votre compagnon idéal.",
     "contactTheodore": "Contacter Théodore",
     "viewCatalogue": "Voir le Catalogue",
-    "whatsappMessage": "Bonjour ! Je souhaite en savoir plus sur Théodore de Parin et CaniPrestige."
+    "whatsappMessage": "Bonjour ! Je souhaite en savoir plus sur Théodore de Parin et pawelium."
   },
   "Contact": {
     "title": "Contactez-Nous",
@@ -212,7 +212,7 @@
     "whatsappTitle": "WhatsApp",
     "whatsappDesc": "Envoyez-nous un message directement. Nous vous répondons rapidement.",
     "openWhatsapp": "Ouvrir WhatsApp",
-    "whatsappMessage": "Bonjour ! J'ai visité CaniPrestige et j'ai quelques questions sur vos animaux disponibles.",
+    "whatsappMessage": "Bonjour ! J'ai visité pawelium et j'ai quelques questions sur vos animaux disponibles.",
     "email": "Email",
     "availability": "Disponibilité",
     "availabilityValue": "Lun–Sam, 9h–19h",
@@ -318,7 +318,7 @@
     "notListedTitle": "Votre question n'est pas listée ?",
     "notListedBody": "Contactez-nous directement via WhatsApp. Nous répondons dans les 2 heures.",
     "askWhatsapp": "Poser ma Question sur WhatsApp",
-    "whatsappMessage": "Bonjour ! J'ai une question concernant les chiens de CaniPrestige."
+    "whatsappMessage": "Bonjour ! J'ai une question concernant les chiens de pawelium."
   },
   "Health": {
     "badge": "Santé & Vaccination",
@@ -407,10 +407,10 @@
     "s3P1": "L'ensemble du contenu de ce site (textes, images, structure, mise en page) est protégé par les lois françaises et internationales relatives à la propriété intellectuelle. Toute reproduction, représentation ou diffusion, totale ou partielle, est interdite sans autorisation préalable écrite de l'éditeur.",
     "s3P2": "Les photographies illustrant les chiens et les races sont issues de banques d'images sous licence libre ou fournies directement par les éleveurs partenaires et restent leur propriété respective.",
     "s4Title": "4. Responsabilité",
-    "s4P1": "CaniPrestige est un site vitrine de mise en relation. Les informations présentées sur les chiens (prix, disponibilité, caractéristiques) sont fournies par les éleveurs partenaires. L'éditeur s'efforce d'en garantir l'exactitude mais ne peut être tenu responsable d'éventuelles inexactitudes. Tout achat ou transaction se fait directement entre l'acheteur et l'éleveur.",
+    "s4P1": "pawelium est un site vitrine de mise en relation. Les informations présentées sur les chiens (prix, disponibilité, caractéristiques) sont fournies par les éleveurs partenaires. L'éditeur s'efforce d'en garantir l'exactitude mais ne peut être tenu responsable d'éventuelles inexactitudes. Tout achat ou transaction se fait directement entre l'acheteur et l'éleveur.",
     "s4P2": "Les prix affichés sont indicatifs et peuvent évoluer. La disponibilité des animaux n'est garantie qu'au moment de la prise de contact directe avec l'éleveur.",
     "s5Title": "5. Réglementation sur les Chiens Dangereux",
-    "s5P1": "Conformément à l'article L.211-12 du Code rural et à l'arrêté du 27 avril 1999, certaines races de chiens sont soumises à une réglementation spécifique en France. Si le catalogue comprend des races de 1ère ou 2ème catégorie, les acheteurs seront informés des obligations légales : permis de détention, assurance responsabilité civile et déclaration en mairie. CaniPrestige s'engage à informer systématiquement les acquéreurs potentiels de ces obligations avant toute mise en relation.",
+    "s5P1": "Conformément à l'article L.211-12 du Code rural et à l'arrêté du 27 avril 1999, certaines races de chiens sont soumises à une réglementation spécifique en France. Si le catalogue comprend des races de 1ère ou 2ème catégorie, les acheteurs seront informés des obligations légales : permis de détention, assurance responsabilité civile et déclaration en mairie. pawelium s'engage à informer systématiquement les acquéreurs potentiels de ces obligations avant toute mise en relation.",
     "s6Title": "6. Droit Applicable",
     "s6P1": "Le présent site est soumis au droit français. Tout litige relatif à l'utilisation de ce site sera soumis à la compétence exclusive des tribunaux français.",
     "s7Title": "7. Contact",
@@ -424,7 +424,7 @@
     "s1Address": "Adresse :",
     "s1Email": "E-mail :",
     "s2Title": "2. Données Collectées",
-    "s2P1": "CaniPrestige est un site vitrine statique. Nous ne collectons pas de données personnelles via des formulaires stockés sur un serveur. La seule interaction directe se fait via WhatsApp (application tierce soumise à la politique de confidentialité de WhatsApp/Meta) ou par e-mail.",
+    "s2P1": "pawelium est un site vitrine statique. Nous ne collectons pas de données personnelles via des formulaires stockés sur un serveur. La seule interaction directe se fait via WhatsApp (application tierce soumise à la politique de confidentialité de WhatsApp/Meta) ou par e-mail.",
     "s2P2": "Les informations que vous nous communiquez volontairement (nom, question, coordonnées) via WhatsApp ou e-mail sont utilisées uniquement pour répondre à votre demande. Elles ne sont ni partagées avec des tiers, ni utilisées à des fins commerciales.",
     "s3Title": "3. Données Techniques (Analytics & Cookies)",
     "s3P1": "Ce site utilise des cookies techniques strictement nécessaires au fonctionnement (préférence de langue, thème). Ces cookies ne nécessitent pas de consentement au titre de l'article 82 de la loi Informatique et Libertés.",
@@ -445,7 +445,7 @@
   },
   "Offline": {
     "title": "Vous êtes Hors Ligne",
-    "body": "Nous ne parvenons pas à joindre CaniPrestige pour le moment. Vérifiez votre connexion et réessayez.",
+    "body": "Nous ne parvenons pas à joindre pawelium pour le moment. Vérifiez votre connexion et réessayez.",
     "contactTitle": "Contactez-nous directement",
     "whatsappLine": "Via WhatsApp",
     "tryReconnect": "Réessayer la connexion"

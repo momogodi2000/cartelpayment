@@ -1,5 +1,5 @@
 // ============================================================
-// breeds.ts — CaniPrestige breed catalogue (static data)
+// breeds.ts — pawelium breed catalogue (static data)
 // Hero images use real client media from /public/images.
 // Only breeds we actually have animals & photos for are listed.
 // ============================================================

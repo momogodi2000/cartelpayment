@@ -1,38 +1,16 @@
-version: "3.8"
-
+# pawelium — local production run. Static vitrine, no database or backend services.
 services:
-  db:
-    image: postgres:15-alpine
-    container_name: arahaven_db
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: localpassword123
-      POSTGRES_DB: elvis_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: arahaven_web
-    restart: always
+    container_name: pawelium_web
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:localpassword123@db:5432/elvis_db?schema=public
-      - JWT_SECRET=local_dev_only_jwt_secret_key_change_in_production
-      - NEXT_PUBLIC_WHATSAPP_NUMBER=50688888888
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_USER=nursery@arahaven.com
-      - SMTP_PASS=app_password_here
-      - SMTP_FROM=nursery@arahaven.com
-    depends_on:
-      - db
-
-volumes:
-  pgdata:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://pawelium.fyi}
+      - NEXT_PUBLIC_SITE_NAME=${NEXT_PUBLIC_SITE_NAME:-pawelium}
+      - NEXT_PUBLIC_WHATSAPP_NUMBER=${NEXT_PUBLIC_WHATSAPP_NUMBER:-+33641325328}
+      - NEXT_PUBLIC_CONTACT_EMAIL=${NEXT_PUBLIC_CONTACT_EMAIL:-contact@pawelium.fyi}

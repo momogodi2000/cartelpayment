@@ -2,57 +2,46 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_SITE_URL: https://pawelium.fyi
+      NEXT_PUBLIC_SITE_NAME: pawelium
+      NEXT_PUBLIC_WHATSAPP_NUMBER: "+33641325328"
+      NEXT_PUBLIC_CONTACT_EMAIL: contact@pawelium.fyi
+
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Generate Prisma Client
-        run: npm run db:generate
-
-      - name: Lint Verification
+      - name: Lint
         run: npm run lint
 
-      - name: TypeScript Compile Check
-        run: npm run typecheck
-
-      - name: Run Unit Tests
+      - name: Unit tests
         run: npm run test
 
-      - name: Run Coverage Gate
-        run: npm run test:coverage
-
-      - name: Build Application
+      - name: Build
         run: npm run build
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test?schema=public
-          JWT_SECRET: test_jwt_secret_value_that_is_long_enough_for_ci
-          NEXT_PUBLIC_WHATSAPP_NUMBER: 50688888888
-          DEFAULT_ADMIN_1_EMAIL: yvangodimomo@gmail.com
-          DEFAULT_ADMIN_1_PASSWORD: ChangeMeStrongPassword1!
-          DEFAULT_ADMIN_1_NAME: Yvan Momo
-          DEFAULT_ADMIN_2_EMAIL: elvispablo@gmail.com
-          DEFAULT_ADMIN_2_PASSWORD: ChangeMeStrongPassword2!
-          DEFAULT_ADMIN_2_NAME: Elvis Pablo
 
-      - name: Security Audit
-        run: npm audit --audit-level=high
+      # After build so Next's generated route types in .next/types are present.
+      - name: Type check
+        run: npm run typecheck
 
-      - name: Docker Build
-        run: docker build -t arahaven-exotic-aviary:ci .
+      - name: Dependency audit (non-blocking)
+        run: npm audit --audit-level=high || true

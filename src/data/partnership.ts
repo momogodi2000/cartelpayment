@@ -97,4 +97,4 @@ export const ANIMAL_CATEGORIES: AnimalCategory[] = [
 ];
 
 /** localStorage key for the auto-saved draft (no sensitive documents stored). */
-export const PARTNER_DRAFT_KEY = "caniprestige_partner_draft_v1";
+export const PARTNER_DRAFT_KEY = "pawelium_partner_draft_v1";

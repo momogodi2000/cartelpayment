@@ -1,5 +1,5 @@
 // ============================================================
-// dogs.ts — CaniPrestige real dog profiles
+// dogs.ts — pawelium real dog profiles
 // Photos: /public/images/chien (real client media).
 // Prices carry a site-wide -35% promotion: price = round(originalPrice * 0.65).
 // Generated from a fixed spec — edit values here directly.
@@ -129,7 +129,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/golden-retriever-3.jpeg', alt: 'Maë — Golden Retriever (photo 2)' },
     ],
     featured: true,
-    seoTitle: 'Maë — Chiot Golden Retriever LOF | CaniPrestige',
+    seoTitle: 'Maë — Chiot Golden Retriever LOF | pawelium',
     seoDescription: 'Maë, chiot Golden Retriever de 3 mois à Lyon (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1400 € au lieu de 2150 €.',
   },
   {
@@ -175,7 +175,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/golden-retriever-1.jpeg', alt: 'Ulysse — Golden Retriever (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Ulysse — Chiot Golden Retriever LOF | CaniPrestige',
+    seoTitle: 'Ulysse — Chiot Golden Retriever LOF | pawelium',
     seoDescription: 'Ulysse, chiot Golden Retriever de 4 mois à Genève (Suisse). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1430 € au lieu de 2200 €.',
   },
   {
@@ -222,7 +222,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/labrador-retriever-3.jpeg', alt: 'Rio — Labrador Retriever (photo 3)' },
     ],
     featured: true,
-    seoTitle: 'Rio — Chiot Labrador Retriever LOF | CaniPrestige',
+    seoTitle: 'Rio — Chiot Labrador Retriever LOF | pawelium',
     seoDescription: 'Rio, chiot Labrador Retriever de 3 mois à Amsterdam (Pays-Bas). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1300 € au lieu de 2000 €.',
   },
   {
@@ -268,7 +268,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/labrador-retriever-3.jpeg', alt: 'Nala — Labrador Retriever (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Nala — Chiot Labrador Retriever LOF | CaniPrestige',
+    seoTitle: 'Nala — Chiot Labrador Retriever LOF | pawelium',
     seoDescription: 'Nala, chiot Labrador Retriever de 4 mois à Paris (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1240 € au lieu de 1900 €.',
   },
   {
@@ -315,7 +315,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/bouledogue-francais-3.jpeg', alt: 'Gaston — Bouledogue Français (photo 3)' },
     ],
     featured: true,
-    seoTitle: 'Gaston — Chiot Bouledogue Français LOF | CaniPrestige',
+    seoTitle: 'Gaston — Chiot Bouledogue Français LOF | pawelium',
     seoDescription: 'Gaston, chiot Bouledogue Français de 4 mois à Bruxelles (Belgique). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 2020 € au lieu de 3100 €.',
   },
   {
@@ -361,7 +361,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/bouledogue-francais-5.jpeg', alt: 'Lola — Bouledogue Français (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Lola — Chiot Bouledogue Français LOF | CaniPrestige',
+    seoTitle: 'Lola — Chiot Bouledogue Français LOF | pawelium',
     seoDescription: 'Lola, chiot Bouledogue Français de 5 mois à Paris (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 2050 € au lieu de 3150 €.',
   },
   {
@@ -407,7 +407,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/cavalier-king-charles-2.jpeg', alt: 'Archie — Cavalier King Charles Spaniel (photo 2)' },
     ],
     featured: true,
-    seoTitle: 'Archie — Chiot Cavalier King Charles Spaniel LOF | CaniPrestige',
+    seoTitle: 'Archie — Chiot Cavalier King Charles Spaniel LOF | pawelium',
     seoDescription: 'Archie, chiot Cavalier King Charles Spaniel de 4 mois à Bruxelles (Belgique). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1590 € au lieu de 2450 €.',
   },
   {
@@ -453,7 +453,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/cavalier-king-charles.jpeg', alt: 'Rosie — Cavalier King Charles Spaniel (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Rosie — Chiot Cavalier King Charles Spaniel LOF | CaniPrestige',
+    seoTitle: 'Rosie — Chiot Cavalier King Charles Spaniel LOF | pawelium',
     seoDescription: 'Rosie, chiot Cavalier King Charles Spaniel de 5 mois à Amsterdam (Pays-Bas). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1630 € au lieu de 2500 €.',
   },
   {
@@ -499,7 +499,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/chihuahua-2.jpeg', alt: 'Paco — Chihuahua (photo 2)' },
     ],
     featured: true,
-    seoTitle: 'Paco — Chiot Chihuahua LOF | CaniPrestige',
+    seoTitle: 'Paco — Chiot Chihuahua LOF | pawelium',
     seoDescription: 'Paco, chiot Chihuahua de 4 mois à Madrid (Espagne). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1330 € au lieu de 2050 €.',
   },
   {
@@ -545,7 +545,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/chihuahua.jpeg', alt: 'Bella — Chihuahua (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Bella — Chiot Chihuahua LOF | CaniPrestige',
+    seoTitle: 'Bella — Chiot Chihuahua LOF | pawelium',
     seoDescription: 'Bella, chiot Chihuahua de 5 mois à Lyon (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1270 € au lieu de 1950 €.',
   },
   {
@@ -592,7 +592,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/caniche-3.jpeg', alt: 'Coco — Caniche (photo 3)' },
     ],
     featured: true,
-    seoTitle: 'Coco — Chiot Caniche LOF | CaniPrestige',
+    seoTitle: 'Coco — Chiot Caniche LOF | pawelium',
     seoDescription: 'Coco, chiot Caniche de 4 mois à Genève (Suisse). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1460 € au lieu de 2250 €.',
   },
   {
@@ -638,7 +638,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/caniche-6.jpeg', alt: 'Jazz — Caniche (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Jazz — Chiot Caniche LOF | CaniPrestige',
+    seoTitle: 'Jazz — Chiot Caniche LOF | pawelium',
     seoDescription: 'Jazz, chiot Caniche de 3 mois à Bordeaux (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1500 € au lieu de 2300 €.',
   },
   {
@@ -684,7 +684,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/teckel-2.jpeg', alt: 'Oscar — Teckel (photo 2)' },
     ],
     featured: true,
-    seoTitle: 'Oscar — Chiot Teckel LOF | CaniPrestige',
+    seoTitle: 'Oscar — Chiot Teckel LOF | pawelium',
     seoDescription: 'Oscar, chiot Teckel de 3 mois à Berlin (Allemagne). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1070 € au lieu de 1650 €.',
   },
   {
@@ -730,7 +730,7 @@ export const dogs: Dog[] = [
       { url: '/images/chien/teckel-4.jpeg', alt: 'Frida — Teckel (photo 2)' },
     ],
     featured: false,
-    seoTitle: 'Frida — Chiot Teckel LOF | CaniPrestige',
+    seoTitle: 'Frida — Chiot Teckel LOF | pawelium',
     seoDescription: 'Frida, chiot Teckel de 4 mois à Munich (Allemagne). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1110 € au lieu de 1700 €.',
   },
 ];

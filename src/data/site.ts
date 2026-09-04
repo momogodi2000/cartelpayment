@@ -1,5 +1,5 @@
 /**
- * CaniPrestige — Central Site Configuration
+ * pawelium — Central Site Configuration
  *
  * Single source of truth for all site-wide settings.
  * Update whatsappNumber, siteName, and siteUrl for production.
@@ -7,24 +7,24 @@
 
 export const siteConfig = {
   // Brand Identity
-  name: "CaniPrestige",
-  legalName: "CaniPrestige — Persin Thibaut",
-  ownerName: "Persin Thibaut",
+  name: "pawelium",
+  legalName: "pawelium — Théodore de Parin",
+  ownerName: "Théodore de Parin",
   ownerAddress: "77 Boulevard Saint-Jacques, 75014 Paris, France",
   ownerExperience: "6 ans d'expérience",
-  tagline: "L'excellence canine européenne",
-  taglineEn: "European Canine Excellence",
+  tagline: "L'excellence canine et féline européenne",
+  taglineEn: "European Canine & Feline Excellence",
   description:
-    "Découvrez des chiens et chiots de race sélectionnés avec soin par Persin Thibaut, 6 ans d'expérience dans la sélection canine européenne.",
+    "pawelium sélectionne des chiens, chats, chiots et chatons de race auprès d'éleveurs européens responsables. Pedigree LOF/LOOF, carnet de santé à jour, contact direct via WhatsApp.",
   descriptionEn:
-    "Discover carefully selected purebred dogs and puppies by Persin Thibaut, 6 years of experience in European canine selection.",
+    "pawelium selects purebred dogs, cats, puppies and kittens from responsible European breeders. LOF/LOOF pedigree, up-to-date health records, direct contact via WhatsApp.",
 
   // Contact & Commerce
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "+33641325328",
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "persinthibaut@gmail.com",
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelium.fyi",
 
   // URLs
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://caniprestige.eu",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://pawelium.fyi",
 
   // Currency & Region
   currency: "EUR",
@@ -41,10 +41,10 @@ export const siteConfig = {
 
   // SEO Defaults
   seo: {
-    titleSuffix: "| CaniPrestige",
-    defaultTitle: "CaniPrestige — Chiens & Chiots de Race | Sélection Européenne",
+    titleSuffix: "| pawelium",
+    defaultTitle: "pawelium — Chiens, Chats, Chiots & Chatons de Race | Sélection Européenne",
     defaultDescription:
-      "CaniPrestige sélectionne les meilleurs chiens et chiots de race pour vous accompagner. Découvrez nos profils détaillés, contactez-nous via WhatsApp.",
+      "pawelium sélectionne des chiens, chats, chiots et chatons de race auprès d'éleveurs européens responsables. Profils détaillés, pedigree LOF/LOOF, contact direct via WhatsApp.",
     keywords: [
       "chiens de race europe",
       "chiots de race",

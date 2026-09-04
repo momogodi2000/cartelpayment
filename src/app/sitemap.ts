@@ -13,7 +13,7 @@ function localized(baseUrl: string, path: string) {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = siteConfig.siteUrl || "https://caniprestige.eu";
+  const baseUrl = siteConfig.siteUrl || "https://pawelium.fyi";
   const now = new Date();
 
   const staticRoutes: { path: string; priority: number; changeFreq: MetadataRoute.Sitemap[number]["changeFrequency"] }[] =

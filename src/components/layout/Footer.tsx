@@ -39,9 +39,9 @@ export default function Footer() {
         {/* Col 1 · Brand */}
         <div className="space-y-5">
           <div className="flex items-center gap-3">
-            <Image src="/logo.jpg" alt="CaniPrestige logo" width={40} height={40} className="rounded-full object-cover shrink-0" />
+            <Image src="/logo.jpg" alt="pawelium logo" width={40} height={40} className="rounded-full object-cover shrink-0" />
             <div>
-              <h2 className="text-xl font-black font-heading text-white leading-none">CaniPrestige</h2>
+              <h2 className="text-xl font-black font-heading text-white leading-none">pawelium</h2>
               <p className="text-[10px] font-semibold text-white/50 uppercase tracking-widest mt-0.5">{t("tagline")}</p>
             </div>
           </div>
@@ -123,7 +123,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-white/40 flex items-center gap-1">
-            © {currentYear} CaniPrestige. {t("rights")} {t("madeWith")}
+            © {currentYear} pawelium. {t("rights")} {t("madeWith")}
             <Heart className="h-3 w-3 text-rose-400 inline" />
           </p>
           <div className="flex items-center gap-4">

@@ -1,57 +1,47 @@
-# Stage 1: Install dependencies
+# syntax=docker/dockerfile:1
+# pawelium — static Next.js vitrine (no backend, no database).
+# Uses Next.js `output: "standalone"` for a minimal runtime image.
+
+# ── deps ────────────────────────────────────────────────────────────────
 FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Stage 2: Rebuild the source code only when needed
+# ── builder ─────────────────────────────────────────────────────────────
 FROM node:20-alpine AS builder
 WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-ARG DATABASE_URL="postgresql://postgres:postgres@localhost:5432/arahaven?schema=public"
-ARG JWT_SECRET="docker_build_secret_that_is_not_used_at_runtime"
-ARG NEXT_PUBLIC_WHATSAPP_NUMBER="50688888888"
-ENV DATABASE_URL=$DATABASE_URL
-ENV JWT_SECRET=$JWT_SECRET
-ENV NEXT_PUBLIC_WHATSAPP_NUMBER=$NEXT_PUBLIC_WHATSAPP_NUMBER
-
-# Generate Prisma Client
-RUN npx prisma generate
-
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Disable telemetry during the build phase
-ENV NEXT_TELEMETRY_DISABLED 1
-
-# Run build
+# Public NEXT_PUBLIC_* values are baked at build time; override at build with --build-arg.
+ARG NEXT_PUBLIC_SITE_URL="https://pawelium.fyi"
+ARG NEXT_PUBLIC_SITE_NAME="pawelium"
+ARG NEXT_PUBLIC_WHATSAPP_NUMBER="+33641325328"
+ARG NEXT_PUBLIC_CONTACT_EMAIL="contact@pawelium.fyi"
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
+    NEXT_PUBLIC_SITE_NAME=$NEXT_PUBLIC_SITE_NAME \
+    NEXT_PUBLIC_WHATSAPP_NUMBER=$NEXT_PUBLIC_WHATSAPP_NUMBER \
+    NEXT_PUBLIC_CONTACT_EMAIL=$NEXT_PUBLIC_CONTACT_EMAIL
 RUN npm run build
 
-# Stage 3: Runner
+# ── runner ──────────────────────────────────────────────────────────────
 FROM node:20-alpine AS runner
 WORKDIR /app
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000 \
+    HOSTNAME="0.0.0.0"
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+RUN addgroup --system --gid 1001 nodejs \
+ && adduser --system --uid 1001 nextjs
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Copy built assets
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
-
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-
-CMD ["npx", "next", "start"]
+CMD ["node", "server.js"]
