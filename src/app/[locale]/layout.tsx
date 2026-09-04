@@ -11,6 +11,9 @@ import { siteConfig } from "@/data/site";
 
 const siteUrl = new URL(siteConfig.siteUrl || "http://localhost:3000");
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || siteConfig.name;
+// Google Search Console. Primary verification is the /google8ba7d4ac32edda16.html
+// file in /public; set this to the "HTML tag" token to also verify via <meta>.
+const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 
 // Headings are set in `font-black` — load the weights actually used and no more.
 const playfair = Playfair_Display({
@@ -84,6 +87,9 @@ export async function generateMetadata({
       canonical: locale === "fr" ? "/" : "/en",
       languages,
     },
+    ...(googleSiteVerification
+      ? { verification: { google: googleSiteVerification } }
+      : {}),
   };
 }
 
