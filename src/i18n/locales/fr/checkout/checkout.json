@@ -1,7 +1,7 @@
 {
   "Checkout": {
     "title": "Finaliser l'Adoption",
-    "subtitle": "Réservation officielle avec paiement sécurisé par carte bancaire 3D-Secure via GeniusPay.",
+    "subtitle": "Réservation officielle avec paiement sécurisé par carte bancaire 3D-Secure (Visa, Mastercard).",
     "holdNotice": "Votre compagnon est réservé exclusivement pendant 15 minutes.",
     "holdExpired": "Le temps de réservation de 15 minutes est écoulé. Veuillez relancer la commande.",
     "contactSection": "1. Coordonnées de l'Adoptant",
@@ -39,8 +39,8 @@
     "termsCheckbox": "Je reconnais et j'accepte sans réserve les Conditions Générales de Vente et la Politique de Confidentialité. Je comprends que cette action enclenche un protocole de préparation vétérinaire officiel.",
     "termsError": "Vous devez accepter les conditions générales de vente pour continuer.",
     "submitButton": "Procéder au Paiement Sécurisé",
-    "processingButton": "Connexion sécurisée à GeniusPay...",
-    "secureBadge": "Paiement 100% sécurisé avec 3D-Secure opéré par GeniusPay.",
+    "processingButton": "Connexion sécurisée au terminal de paiement...",
+    "secureBadge": "Paiement 100% sécurisé par carte bancaire avec protocole 3D-Secure (Visa, Mastercard).",
     "fullPaymentNote": "Paiement intégral obligatoire. Aucun acompte ou facilité de paiement n'est accepté."
   }
 }

@@ -20,7 +20,7 @@
     "trust": {
       "trackOrder": "Suivre une Commande",
       "paymentTitle": "Paiement Bancaire EUR",
-      "paymentDesc": "Règlement 100% sécurisé par carte bancaire via GeniusPay",
+      "paymentDesc": "Règlement 100% sécurisé par carte bancaire (Visa, Mastercard)",
       "holdTitle": "Blocage Anti-Doublon",
       "holdDesc": "Réservation exclusive pendant le passage en caisse",
       "transportTitle": "Transport Agréé Dédié",

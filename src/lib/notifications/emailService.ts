@@ -129,7 +129,7 @@ export class EmailNotificationService {
             100% Full Payment Received
           </div>
           <h2 style="color: #202823; font-size: 22px; margin-top: 0;">Congratulations, ${order.customerName}!</h2>
-          <p style="color: #4A5568; line-height: 1.6;">Your bank card payment of <strong>${formattedPrice} EUR</strong> has been successfully processed via GeniusPay & Stripe. <strong>${order.animalName}</strong> has been officially confirmed as your purchase and permanently marked as <strong>SOLD</strong> in our registry.</p>
+          <p style="color: #4A5568; line-height: 1.6;">Your bank card payment of <strong>${formattedPrice} EUR</strong> has been successfully processed with 3D-Secure protection. <strong>${order.animalName}</strong> has been officially confirmed as your purchase and permanently marked as <strong>SOLD</strong> in our registry.</p>
 
           <h3 style="color: #183C32; font-size: 16px; margin-top: 24px;">Next Steps in the Pawelium Concierge Journey:</h3>
           <ol style="color: #4A5568; line-height: 1.7; padding-left: 20px;">

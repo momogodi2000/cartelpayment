@@ -165,6 +165,14 @@ describe("Unit Tests — Core Domain & Security Suite", () => {
       const expiredTimestamp = (parseInt(nowSec, 10) - 360).toString();
       const isExpiredValid = geniusPay.verifyWebhookSignature(rawBody, validSig, expiredTimestamp);
       expect(isExpiredValid).toBe(false);
+
+      // Missing signature -> MUST FAIL
+      expect(geniusPay.verifyWebhookSignature(rawBody, null, nowSec)).toBe(false);
+      expect(geniusPay.verifyWebhookSignature(rawBody, "", nowSec)).toBe(false);
+    });
+
+    it("ensures webhook event processing rejects null or empty event payloads", () => {
+      expect(geniusPay.verifyWebhookSignature("", "some-sig", "12345")).toBe(false);
     });
   });
 });

@@ -20,7 +20,7 @@
     "trust": {
       "trackOrder": "Track an Order",
       "paymentTitle": "Card Payment in EUR",
-      "paymentDesc": "100% full payment via Visa & Mastercard (GeniusPay)",
+      "paymentDesc": "100% full payment via credit card (Visa, Mastercard, Amex)",
       "holdTitle": "Anti-Double Booking",
       "holdDesc": "Atomic 15-minute hold upon initiating checkout",
       "transportTitle": "Dedicated Pet Transport",

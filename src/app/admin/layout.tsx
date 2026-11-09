@@ -34,8 +34,11 @@ export default async function AdminRootLayout({
   // If no active admin session, render public slot for login
   if (!admin) {
     return (
-      <html lang="en">
-        <body className="bg-zinc-50 min-h-screen text-zinc-900 antialiased font-sans">
+      <html lang="en" suppressHydrationWarning>
+        <body
+          suppressHydrationWarning
+          className="bg-zinc-50 min-h-screen text-zinc-900 antialiased font-sans"
+        >
           {children}
         </body>
       </html>
@@ -54,8 +57,11 @@ export default async function AdminRootLayout({
   ];
 
   return (
-    <html lang="en">
-      <body className="bg-zinc-100 min-h-screen text-zinc-900 antialiased font-sans flex">
+    <html lang="en" suppressHydrationWarning>
+      <body
+        suppressHydrationWarning
+        className="bg-zinc-100 min-h-screen text-zinc-900 antialiased font-sans flex"
+      >
         {/* Sidebar */}
         <aside className="w-64 bg-[#183C32] text-white flex flex-col shrink-0 border-r border-emerald-950">
           <div className="p-6 border-b border-emerald-900/50 flex items-center justify-between">

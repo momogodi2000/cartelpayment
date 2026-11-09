@@ -1,7 +1,7 @@
 {
   "Payment": {
     "redirectTitle": "Redirecting to Secure Payment",
-    "redirectSubtitle": "You are being securely redirected to the GeniusPay payment gateway to complete your adoption.",
+    "redirectSubtitle": "You are being securely redirected to the encrypted credit card payment gateway to complete your adoption.",
     "doNotClose": "Please do not refresh or close this browser window.",
     "securityNotice": "Transactions are encrypted with TLS 1.3 and protected by mandatory 3D-Secure card verification."
   }

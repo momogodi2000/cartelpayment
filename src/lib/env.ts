@@ -30,6 +30,7 @@ const envSchema = z
     GENIUSPAY_WEBHOOK_SECRET: z.string().min(1, "GENIUSPAY_WEBHOOK_SECRET is required"),
     GENIUSPAY_AMOUNT_UNIT: z.enum(["major", "minor"]).default("major"),
     GENIUSPAY_PAYMENT_METHOD: z.string().default("card"),
+    GENIUSPAY_GATEWAY: z.string().optional().default("stripe"),
     
     // Inventory Rules
     HOLD_MINUTES: z.coerce.number().int().positive().default(30),

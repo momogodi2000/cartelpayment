@@ -7,6 +7,7 @@ export interface CreateGeniusPayPaymentInput {
   orderRef: string;
   amountCents: number;
   currency?: string;
+  gateway?: string;
   customer: {
     name: string;
     email: string;
@@ -54,6 +55,8 @@ export class GeniusPayProvider {
   private getHeaders(): Record<string, string> {
     return {
       "Content-Type": "application/json",
+      Accept: "application/json",
+      "User-Agent": "Pawelium-European-Concierge/2.0 (Live Pet Registry)",
       "X-API-Key": this.apiKey,
       "X-API-Secret": this.apiSecret,
     };
@@ -66,8 +69,9 @@ export class GeniusPayProvider {
     const amount = formatForGeniusPay(input.amountCents);
     const currency = input.currency || "EUR";
     const paymentMethod = getEnv().GENIUSPAY_PAYMENT_METHOD || "card";
+    const gateway = input.gateway || getEnv().GENIUSPAY_GATEWAY || "stripe";
 
-    const payload = {
+    const payload: Record<string, any> = {
       amount,
       currency,
       payment_method: paymentMethod,
@@ -87,28 +91,48 @@ export class GeniusPayProvider {
       },
     };
 
-    const res = await fetch(`${this.baseUrl}/payments`, {
+    if (gateway) {
+      payload.gateway = gateway;
+    }
+
+    let res = await fetch(`${this.baseUrl}/payments`, {
       method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify(payload),
     });
 
-    const data = await res.json().catch(() => null);
+    let data = await res.json().catch(() => null);
+
+    // If a forced gateway (such as "stripe") is rejected with validation.in because the merchant
+    // account has not yet had Stripe activated by GeniusPay support, gracefully fall back
+    // to default card processing so live adoptions do not fail.
+    if (!res.ok && data?.error?.errors?.gateway && payload.gateway) {
+      console.warn(
+        `[GeniusPay] Gateway '${payload.gateway}' rejected with validation.in (awaiting Stripe activation on merchant account). Retrying with default card routing...`
+      );
+      delete payload.gateway;
+      res = await fetch(`${this.baseUrl}/payments`, {
+        method: "POST",
+        headers: this.getHeaders(),
+        body: JSON.stringify(payload),
+      });
+      data = await res.json().catch(() => null);
+    }
 
     if (!res.ok || !data) {
       console.error("[GeniusPay] Payment creation failed:", res.status, data);
-      throw new Error(`GeniusPay API error: ${data?.message || res.statusText || res.status}`);
+      throw new Error(`Payment gateway error: ${data?.message || res.statusText || res.status}`);
     }
 
     const paymentData = data.data || data;
     const checkoutUrl = paymentData.checkout_url || paymentData.payment_url || paymentData.url;
 
     if (!checkoutUrl) {
-      throw new Error("No checkout URL returned from GeniusPay payment session.");
+      throw new Error("No checkout URL returned from payment session.");
     }
 
     return {
-      id: paymentData.id || paymentData.reference,
+      id: String(paymentData.id || paymentData.reference),
       reference: paymentData.reference,
       status: paymentData.status || "pending",
       checkoutUrl,

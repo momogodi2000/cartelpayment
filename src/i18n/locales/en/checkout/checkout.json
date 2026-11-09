@@ -1,7 +1,7 @@
 {
   "Checkout": {
     "title": "Complete Your Adoption",
-    "subtitle": "Official reservation with secure 3D-Secure payment via GeniusPay.",
+    "subtitle": "Official reservation with secure 3D-Secure credit card payment (Visa, Mastercard).",
     "holdNotice": "Your selected companion is held exclusively for 15 minutes.",
     "holdExpired": "Your 15-minute reservation hold has expired. Please restart checkout.",
     "contactSection": "1. Adopter Contact Information",
@@ -39,8 +39,8 @@
     "termsCheckbox": "I acknowledge and accept without reservation the Terms of Sale and the Privacy Policy. I understand this initiates an official veterinary preparation protocol.",
     "termsError": "You must accept the terms of service to proceed.",
     "submitButton": "Proceed to Secure Payment",
-    "processingButton": "Connecting to GeniusPay Gateway...",
-    "secureBadge": "100% Secure 3D-Secure Payment Processed by GeniusPay.",
+    "processingButton": "Connecting to Secure Payment Gateway...",
+    "secureBadge": "100% Secure 3D-Secure Credit Card Payment (Visa, Mastercard, Amex).",
     "fullPaymentNote": "Full payment required. Pawelium does not offer deposits or installment loans."
   }
 }

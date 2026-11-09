@@ -63,7 +63,7 @@ export default async function TermsOfSalePage({
             </p>
             <div className="pt-2 flex items-center gap-2 text-xs font-bold text-[#183C32] dark:text-emerald-400">
               <Lock className="w-4 h-4 text-[#B69A65]" />
-              <span>3D-Secure • GeniusPay PCI-DSS • EUR Only</span>
+              <span>3D-Secure • Carte Bancaire PCI-DSS • EUR Only</span>
             </div>
           </section>
 
