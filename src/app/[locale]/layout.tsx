@@ -128,7 +128,10 @@ export default async function LocaleLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
-      <body className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans"
+      >
         <NextIntlClientProvider>
           <AppProvider>
             <PWARegister />

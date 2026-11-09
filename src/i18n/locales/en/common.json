@@ -59,7 +59,8 @@
     "welfareLabel": "Animal Welfare",
     "trackingLabel": "Track Order",
     "supportLabel": "Concierge & Support",
-    "adminPortal": "Admin Portal"
+    "adminPortal": "Admin Portal",
+    "login": "Login"
   },
   "Footer": {
     "tagline": "European Canine & Feline Excellence",

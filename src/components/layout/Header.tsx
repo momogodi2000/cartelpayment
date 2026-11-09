@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import NextLink from "next/link";
 import {
   Menu,
   X,
-  MessageSquare,
+  LogIn,
   Sun,
   Moon,
   Palette,
@@ -18,13 +19,11 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/routing";
-import { getWhatsAppLink } from "@/data/site";
 import { useApp } from "@/context/AppContext";
 import LocaleSwitcher from "@/components/common/LocaleSwitcher";
 
 export default function Header() {
   const t = useTranslations("Nav");
-  const tc = useTranslations("Common");
   const tTheme = useTranslations("Theme");
   const { theme, toggleTheme } = useApp();
   const [isOpen, setIsOpen] = useState(false);
@@ -37,8 +36,6 @@ export default function Header() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const whatsappUrl = getWhatsAppLink(tc("whatsappGeneralMessage"));
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -204,15 +201,13 @@ export default function Header() {
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-2">
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+            <NextLink
+              href="/admin/login"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              <MessageSquare className="h-4 w-4" />
-              WhatsApp
-            </a>
+              <LogIn className="h-4 w-4" />
+              <span>{t("login")}</span>
+            </NextLink>
 
             {mounted && <LocaleSwitcher />}
 
@@ -230,15 +225,13 @@ export default function Header() {
 
           {/* Mobile Controls */}
           <div className="lg:hidden flex items-center gap-2">
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors"
+            <NextLink
+              href="/admin/login"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold transition-colors"
             >
-              <MessageSquare className="h-3.5 w-3.5" />
-              WhatsApp
-            </a>
+              <LogIn className="h-3.5 w-3.5" />
+              <span>{t("login")}</span>
+            </NextLink>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-xl border border-black/[0.06] dark:border-white/[0.08] text-text-premium/70 hover:text-text-premium transition-colors"
@@ -274,6 +267,14 @@ export default function Header() {
                   {label}
                 </Link>
               ))}
+
+              <NextLink
+                href="/admin/login"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold text-text-premium/70 hover:text-text-premium hover:bg-black/[0.03] transition-colors"
+              >
+                <LogIn className="h-4 w-4 text-primary" />
+                <span>{t("login")}</span>
+              </NextLink>
 
               <div className="pt-3 flex items-center gap-2 border-t border-black/[0.04] dark:border-white/[0.04]">
                 {mounted && (
