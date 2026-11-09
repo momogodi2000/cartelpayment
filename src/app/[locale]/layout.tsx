@@ -65,9 +65,14 @@ export async function generateMetadata({
     keywords: t("keywords").split(",").map((k) => k.trim()),
     authors: [{ name: siteName }],
     icons: {
-      icon: [{ url: "/logo.jpg", type: "image/jpeg" }],
-      shortcut: "/logo.jpg",
-      apple: "/logo.jpg",
+      icon: [
+        { url: "/favicon.ico", sizes: "32x32" },
+        { url: "/icon.png", type: "image/png", sizes: "512x512" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: [
+        { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      ],
     },
     openGraph: {
       // Card image comes from src/app/opengraph-image.tsx (per-listing pages override it).

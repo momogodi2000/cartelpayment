@@ -26,6 +26,7 @@
         "db:studio": "tsx scripts/db.ts studio",
         "admin:bootstrap": "tsx scripts/admin-bootstrap.ts",
         "cron:run": "tsx scripts/cron-runner.ts",
+        "icons:generate": "node scripts/generate-app-icons.js",
         "docker:build": "docker build -t pawelium .",
         "docker:run": "docker run --env-file .env -p 3000:3000 pawelium"
     },
