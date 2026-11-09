@@ -125,8 +125,10 @@ export default async function LocaleLayout({
       className={`h-full scroll-smooth antialiased ${playfair.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans">
+      <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+      </head>
+      <body className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans">
         <NextIntlClientProvider>
           <AppProvider>
             <PWARegister />

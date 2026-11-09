@@ -81,6 +81,39 @@ export type Env = z.infer<typeof envSchema>;
 let parsedEnv: Env | null = null;
 
 export function getEnv(): Env {
+  // If running in browser, avoid throwing on server-only secrets
+  if (typeof window !== "undefined") {
+    return (parsedEnv || {
+      NODE_ENV: (process.env.NODE_ENV as any) || "development",
+      NEXT_PUBLIC_SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME || "Pawelium",
+      NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+      NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@pawelium.fyi",
+      NEXT_PUBLIC_WHATSAPP_NUMBER: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "+33641325328",
+      NEXT_PUBLIC_PARTNER_WHATSAPP_NUMBER: process.env.NEXT_PUBLIC_PARTNER_WHATSAPP_NUMBER || "33641325328",
+      NEXT_PUBLIC_LEGAL_SIREN: process.env.NEXT_PUBLIC_LEGAL_SIREN || "",
+      NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+      DATABASE_PROVIDER: "sqlite",
+      DATABASE_URL: "",
+      DIRECT_DATABASE_URL: "",
+      GENIUSPAY_BASE_URL: "https://geniuspay.ci/api/v1/merchant",
+      GENIUSPAY_ENVIRONMENT: "sandbox",
+      GENIUSPAY_API_KEY: "",
+      GENIUSPAY_API_SECRET: "",
+      GENIUSPAY_WEBHOOK_SECRET: "",
+      GENIUSPAY_AMOUNT_UNIT: "major",
+      GENIUSPAY_PAYMENT_METHOD: "card",
+      HOLD_MINUTES: 30,
+      ENCRYPTION_KEY: "",
+      CRON_SECRET: "",
+      ADMIN_BOOTSTRAP_PASSWORD: "",
+      RESEND_API_KEY: "",
+      EMAIL_FROM: "contact@pawelium.fyi",
+      CLOUDINARY_CLOUD_NAME: "",
+      CLOUDINARY_API_KEY: "",
+      CLOUDINARY_API_SECRET: "",
+    }) as Env;
+  }
+
   if (parsedEnv) return parsedEnv;
 
   const result = envSchema.safeParse(process.env);
@@ -93,4 +126,4 @@ export function getEnv(): Env {
   return parsedEnv;
 }
 
-export const env = getEnv();
+export const env = typeof window === "undefined" ? getEnv() : ({} as Env);

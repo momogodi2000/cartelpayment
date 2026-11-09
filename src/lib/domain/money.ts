@@ -1,4 +1,10 @@
-import { getEnv } from "../env";
+/**
+ * src/lib/domain/money.ts
+ *
+ * Isomorphic monetary calculation & formatting utilities for Pawelium 2.0.
+ * Operates purely on minor units (cents) to avoid floating-point errors.
+ * Safe to import in both Server and Client Components.
+ */
 
 /**
  * Formats an amount in minor units (cents) to a localized currency string.
@@ -34,8 +40,10 @@ export function toMajorUnits(cents: number): number {
  * Converts an internal minor-unit amount (cents) to the format expected by GeniusPay API
  * based on the GENIUSPAY_AMOUNT_UNIT configuration ('major' or 'minor').
  */
-export function formatForGeniusPay(cents: number): number {
-  const unit = getEnv().GENIUSPAY_AMOUNT_UNIT;
+export function formatForGeniusPay(
+  cents: number,
+  unit: "major" | "minor" = (process.env.GENIUSPAY_AMOUNT_UNIT as any) || "major"
+): number {
   if (unit === "minor") {
     return cents;
   }
@@ -46,8 +54,10 @@ export function formatForGeniusPay(cents: number): number {
 /**
  * Parses an amount returned from GeniusPay into internal minor units (cents).
  */
-export function parseFromGeniusPay(amount: number): number {
-  const unit = getEnv().GENIUSPAY_AMOUNT_UNIT;
+export function parseFromGeniusPay(
+  amount: number,
+  unit: "major" | "minor" = (process.env.GENIUSPAY_AMOUNT_UNIT as any) || "major"
+): number {
   if (unit === "minor") {
     return Math.round(amount);
   }
