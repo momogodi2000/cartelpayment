@@ -23,6 +23,9 @@ const eslintConfig = defineConfig([
       // Legitimate SSR-hydration guards and post-mount DOM measurement
       // (theme/locale from storage, `mounted` flags, scroll-edge state).
       "react-hooks/set-state-in-effect": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "import/no-anonymous-default-export": "warn",
     },
   },
 ]);

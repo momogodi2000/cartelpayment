@@ -40,7 +40,7 @@ export default function BreedSection({ breeds }: Props) {
         return (
           <motion.div key={breed.id} variants={item}>
             <Link
-              href={`/catalogue?species=${breed.species ?? "dog"}&breed=${breed.slug}`}
+              href={{ pathname: "/animals", query: { species: breed.species ?? "dog", breed: breed.slug } }}
               className="group flex flex-col items-center gap-3 p-4 rounded-2xl border border-black/[0.05] dark:border-white/[0.05] bg-white dark:bg-black/10 hover:border-primary/30 hover:shadow-md hover:-translate-y-1 transition-all duration-300 text-center"
             >
               <div className="relative h-16 w-16 rounded-2xl overflow-hidden ring-2 ring-black/[0.04] group-hover:ring-primary/20 transition-all">

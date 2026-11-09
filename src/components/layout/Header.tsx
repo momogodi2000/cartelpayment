@@ -63,7 +63,9 @@ export default function Header() {
 
   const navLinks = [
     { href: "/", label: t("home") },
-    { href: "/catalogue", label: t("catalog") },
+    { href: "/animals", label: t("catalog") },
+    { href: "/track-order", label: "Track Order" },
+    { href: "/support", label: "Support" },
     { href: "/a-propos", label: t("about") },
     { href: "/devenir-partenaire", label: t("partner") },
     { href: "/faq", label: t("faq") },
@@ -121,14 +123,36 @@ export default function Header() {
             </Link>
 
             <Link
-              href="/catalogue"
+              href="/animals"
               className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                pathname.startsWith("/catalogue")
+                pathname.startsWith("/animals") || pathname.startsWith("/animaux")
                   ? "text-primary bg-primary/8"
                   : "text-text-premium/70 hover:text-text-premium hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
               }`}
             >
               {t("catalog")}
+            </Link>
+
+            <Link
+              href="/track-order"
+              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                pathname.startsWith("/track-order")
+                  ? "text-primary bg-primary/8"
+                  : "text-text-premium/70 hover:text-text-premium hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
+              }`}
+            >
+              Track Order
+            </Link>
+
+            <Link
+              href="/support"
+              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                pathname.startsWith("/support")
+                  ? "text-primary bg-primary/8"
+                  : "text-text-premium/70 hover:text-text-premium hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
+              }`}
+            >
+              Support
             </Link>
 
             <Link

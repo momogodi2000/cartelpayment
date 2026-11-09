@@ -4,24 +4,69 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
-  output: "standalone",
-  typescript: { ignoreBuildErrors: true },
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
   productionBrowserSourceMaps: false,
   experimental: {
-    // Tree-shake barrel imports so only the icons / motion primitives used ship.
     optimizePackageImports: ["framer-motion", "lucide-react"],
   },
   images: {
-    // All imagery is now first-party (served from /public) — no remote hosts allowed.
     qualities: [75, 85],
     formats: ["image/avif", "image/webp"],
     deviceSizes: [375, 640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 2678400, // 31 days
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+    ],
+  },
+  async redirects() {
+    return [
+      {
+        source: "/catalogue/:slug",
+        destination: "/fr/animaux/:slug",
+        permanent: true,
+      },
+      {
+        source: "/en/catalogue/:slug",
+        destination: "/en/animals/:slug",
+        permanent: true,
+      },
+      {
+        source: "/a-propos",
+        destination: "/fr/a-propos",
+        permanent: true,
+      },
+      {
+        source: "/sante-vaccination",
+        destination: "/fr/sante-vaccination",
+        permanent: true,
+      },
+      {
+        source: "/livraison-transport",
+        destination: "/fr/livraison-transport",
+        permanent: true,
+      },
+      {
+        source: "/devenir-partenaire",
+        destination: "/fr/devenir-partenaire",
+        permanent: true,
+      },
+      {
+        source: "/mentions-legales",
+        destination: "/fr/mentions-legales",
+        permanent: true,
+      },
+      {
+        source: "/politique-de-confidentialite",
+        destination: "/fr/politique-de-confidentialite",
+        permanent: true,
+      },
+    ];
   },
   async headers() {
     return [

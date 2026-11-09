@@ -152,7 +152,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             {t("contactTheodore")}
           </a>
           <Link
-            href="/catalogue"
+            href="/animals"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl border-2 border-primary text-primary font-extrabold text-sm transition-all hover:bg-primary hover:text-white hover:scale-[1.02]"
           >
             {t("viewCatalogue")}

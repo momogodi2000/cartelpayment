@@ -1,9 +1,9 @@
 import React from "react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import type { Metadata } from "next";
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { ArrowRight, Award, CheckCircle2, MessageSquare, Handshake } from "lucide-react";
+import { ArrowRight, Award, CheckCircle2, MessageSquare, Handshake, CreditCard, Lock, Truck, FileCheck2, Package } from "lucide-react";
 import { getWhatsAppLink, siteConfig } from "@/data/site";
 import animals, { dogs, cats } from "@/data/animals";
 import breeds, { dogBreeds, catBreeds } from "@/data/breeds";
@@ -13,12 +13,14 @@ import { testimonials } from "@/data/testimonials";
 import HeroBackground from "@/components/features/HeroBackground";
 import HomeTimeline from "@/components/features/HomeTimeline";
 
-const DogCarousel = dynamic(() => import("@/components/features/DogCarousel"));
-const WhyChooseUs = dynamic(() => import("@/components/features/WhyChooseUs"));
-const HomeTestimonials = dynamic(() => import("@/components/features/HomeTestimonials"));
-const BreedSection = dynamic(() => import("@/components/features/BreedSection"));
+const DogCarousel = nextDynamic(() => import("@/components/features/DogCarousel"));
+const WhyChooseUs = nextDynamic(() => import("@/components/features/WhyChooseUs"));
+const HomeTestimonials = nextDynamic(() => import("@/components/features/HomeTestimonials"));
+const BreedSection = nextDynamic(() => import("@/components/features/BreedSection"));
 
-export const revalidate = 86400;
+import { prisma } from "@/lib/db/client";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -43,15 +45,30 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const t = await getTranslations("Home");
   const isEn = (await getLocale()) === "en";
 
-  const featuredDogs = dogs.filter((d) => d.featured);
-  const featuredCats = cats.filter((c) => c.featured);
+  const [featuredDogs, featuredCats, totalAnimalsCount, totalBreedsCount] = await Promise.all([
+    prisma.animal.findMany({
+      where: { species: "DOG", published: true },
+      take: 8,
+      orderBy: { createdAt: "desc" },
+      include: { breed: true, images: { orderBy: { sortOrder: "asc" } } },
+    }),
+    prisma.animal.findMany({
+      where: { species: "CAT", published: true },
+      take: 8,
+      orderBy: { createdAt: "desc" },
+      include: { breed: true, images: { orderBy: { sortOrder: "asc" } } },
+    }),
+    prisma.animal.count({ where: { published: true } }),
+    prisma.breed.count(),
+  ]);
+
   const homeFaqs = faqs.slice(0, 4);
   const base = siteConfig.siteUrl;
   const generalWhatsapp = getWhatsAppLink(t("whatsappMessage"));
 
   const stats = [
-    { value: `${animals.length}+`, label: t("stats.dogs") },
-    { value: `${breeds.length}`, label: t("stats.breeds") },
+    { value: `${totalAnimalsCount}+`, label: t("stats.dogs") },
+    { value: `${totalBreedsCount}`, label: t("stats.breeds") },
     { value: "5+", label: t("stats.countries") },
     { value: "< 2h", label: t("stats.response") },
   ];
@@ -91,7 +108,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               "@type": "SearchAction",
               target: {
                 "@type": "EntryPoint",
-                urlTemplate: `${base}${isEn ? "/en" : ""}/catalogue?search={search_term_string}`,
+                urlTemplate: `${base}${isEn ? "/en" : ""}/animals?search={search_term_string}`,
               },
               "query-input": "required name=search_term_string",
             },
@@ -119,24 +136,83 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </p>
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
-                href="/catalogue"
+                href="/animals"
                 className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-extrabold px-8 py-4 rounded-2xl shadow-lg hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
                 {t("hero.cta")}
                 <ArrowRight className="h-4.5 w-4.5 shrink-0" />
               </Link>
-              <a
-                href={generalWhatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-extrabold px-8 py-4 rounded-2xl border border-white/30 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+              <Link
+                href="/track-order"
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-extrabold px-6 py-4 rounded-2xl border border-white/30 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-sm"
               >
-                <MessageSquare className="h-4.5 w-4.5 text-emerald-300 shrink-0" />
-                {t("hero.secondary")}
-              </a>
+                <Package className="h-4.5 w-4.5 text-[#B69A65] shrink-0" />
+                <span>{isEn ? "Track an Order" : "Suivre une Commande"}</span>
+              </Link>
             </div>
           </div>
           <div className="lg:col-span-5 hidden lg:block" />
+        </div>
+      </section>
+
+      {/* Marketplace Trust Bar */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-30">
+        <div className="bg-white dark:bg-black/40 backdrop-blur-md rounded-2xl border border-[#EDE7DC] dark:border-white/10 shadow-lg p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="flex items-start space-x-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#183C32]/10 text-[#183C32] flex items-center justify-center shrink-0">
+              <CreditCard className="w-5 h-5 text-[#183C32]" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold font-serif text-[#202823] dark:text-white uppercase tracking-wider">
+                {isEn ? "Card Payment in EUR" : "Paiement Bancaire EUR"}
+              </h4>
+              <p className="text-[11px] text-gray-500 mt-1">
+                {isEn ? "100% full payment via Visa & Mastercard (GeniusPay & Stripe)" : "Règlement 100% sécurisé Visa & Mastercard"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#183C32]/10 text-[#183C32] flex items-center justify-center shrink-0">
+              <Lock className="w-5 h-5 text-[#B69A65]" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold font-serif text-[#202823] dark:text-white uppercase tracking-wider">
+                {isEn ? "Anti-Double Booking" : "Blocage Anti-Doublon"}
+              </h4>
+              <p className="text-[11px] text-gray-500 mt-1">
+                {isEn ? "Atomic 15-minute hold upon initiating checkout" : "Réservation exclusive pendant le passage en caisse"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#183C32]/10 text-[#183C32] flex items-center justify-center shrink-0">
+              <Truck className="w-5 h-5 text-[#183C32]" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold font-serif text-[#202823] dark:text-white uppercase tracking-wider">
+                {isEn ? "Dedicated Pet Transport" : "Transport Agréé Dédié"}
+              </h4>
+              <p className="text-[11px] text-gray-500 mt-1">
+                {isEn ? "Doorstep delivery in climate-controlled European vehicles" : "Véhicules climatisés et convoyeurs certifiés"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#183C32]/10 text-[#183C32] flex items-center justify-center shrink-0">
+              <FileCheck2 className="w-5 h-5 text-emerald-600" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold font-serif text-[#202823] dark:text-white uppercase tracking-wider">
+                {isEn ? "Official EU Documentation" : "Passeport & Puce ISO"}
+              </h4>
+              <p className="text-[11px] text-gray-500 mt-1">
+                {isEn ? "Verified LOF/LOOF pedigree & European pet passports" : "Certificat vétérinaire et carnet de santé à jour"}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -182,7 +258,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <p className="text-text-premium/70 text-xs sm:text-sm">{t("featured.subtitle")}</p>
             </div>
             <Link
-              href="/catalogue"
+              href="/animals"
               className="text-primary hover:text-primary-hover font-extrabold text-xs sm:text-sm flex items-center gap-1 shrink-0"
             >
               {t("featured.viewAll")}
@@ -204,7 +280,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <p className="text-text-premium/70 text-xs sm:text-sm">{t("catsFeatured.subtitle")}</p>
             </div>
             <Link
-              href="/catalogue?species=cat"
+              href={{ pathname: "/animals", query: { species: "cat" } }}
               className="text-primary hover:text-primary-hover font-extrabold text-xs sm:text-sm flex items-center gap-1 shrink-0"
             >
               {t("catsFeatured.viewAll")}
@@ -345,7 +421,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="/catalogue"
+              href="/animals"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-primary font-extrabold text-sm shadow-lg hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
             >
               {t("cta.browseDogs")}

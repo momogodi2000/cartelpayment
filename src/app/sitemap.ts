@@ -1,71 +1,96 @@
 import { MetadataRoute } from "next";
-import animals from "@/data/animals";
+import { prisma } from "@/lib/db/client";
 import { siteConfig } from "@/data/site";
 
-const LOCALES = ["fr", "en"] as const;
+export const dynamic = "force-dynamic";
 
-/** Build the /en-prefixed and unprefixed URL pair for a path. */
-function localized(baseUrl: string, path: string) {
-  return LOCALES.map((locale) => ({
-    locale,
-    url: `${baseUrl}${locale === "fr" ? "" : "/en"}${path}`,
-  }));
-}
-
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.siteUrl || "https://pawelium.fyi";
   const now = new Date();
 
-  const staticRoutes: { path: string; priority: number; changeFreq: MetadataRoute.Sitemap[number]["changeFrequency"] }[] =
-    [
-      { path: "", priority: 1.0, changeFreq: "weekly" },
-      { path: "/catalogue", priority: 0.9, changeFreq: "daily" },
-      { path: "/devenir-partenaire", priority: 0.8, changeFreq: "monthly" },
-      { path: "/a-propos", priority: 0.7, changeFreq: "monthly" },
-      { path: "/sante-vaccination", priority: 0.8, changeFreq: "monthly" },
-      { path: "/livraison-transport", priority: 0.7, changeFreq: "monthly" },
-      { path: "/faq", priority: 0.8, changeFreq: "monthly" },
-      { path: "/contact", priority: 0.7, changeFreq: "monthly" },
-      { path: "/mentions-legales", priority: 0.3, changeFreq: "yearly" },
-      { path: "/politique-de-confidentialite", priority: 0.3, changeFreq: "yearly" },
-    ];
+  const staticPages = [
+    { en: "/en", fr: "/fr", priority: 1.0, freq: "weekly" as const },
+    { en: "/en/animals", fr: "/fr/animaux", priority: 0.9, freq: "daily" as const },
+    { en: "/en/about", fr: "/fr/a-propos", priority: 0.7, freq: "monthly" as const },
+    { en: "/en/health-guarantee", fr: "/fr/sante-vaccination", priority: 0.8, freq: "monthly" as const },
+    { en: "/en/transport", fr: "/fr/livraison-transport", priority: 0.8, freq: "monthly" as const },
+    { en: "/en/faq", fr: "/fr/faq", priority: 0.7, freq: "monthly" as const },
+    { en: "/en/terms", fr: "/fr/conditions-generales-de-vente", priority: 0.5, freq: "yearly" as const },
+    { en: "/en/privacy", fr: "/fr/politique-de-confidentialite", priority: 0.5, freq: "yearly" as const },
+    { en: "/en/partner", fr: "/fr/devenir-partenaire", priority: 0.6, freq: "monthly" as const },
+  ];
 
   const entries: MetadataRoute.Sitemap = [];
 
-  for (const route of staticRoutes) {
-    const alts = localized(baseUrl, route.path);
-    for (const { url } of alts) {
-      entries.push({
-        url,
-        lastModified: now,
-        changeFrequency: route.changeFreq,
-        priority: route.priority,
-        alternates: {
-          languages: {
-            fr: alts.find((a) => a.locale === "fr")!.url,
-            en: alts.find((a) => a.locale === "en")!.url,
-          },
+  for (const page of staticPages) {
+    entries.push({
+      url: `${baseUrl}${page.en}`,
+      lastModified: now,
+      changeFrequency: page.freq,
+      priority: page.priority,
+      alternates: {
+        languages: {
+          en: `${baseUrl}${page.en}`,
+          fr: `${baseUrl}${page.fr}`,
         },
-      });
-    }
+      },
+    });
+    entries.push({
+      url: `${baseUrl}${page.fr}`,
+      lastModified: now,
+      changeFrequency: page.freq,
+      priority: page.priority,
+      alternates: {
+        languages: {
+          en: `${baseUrl}${page.en}`,
+          fr: `${baseUrl}${page.fr}`,
+        },
+      },
+    });
   }
 
-  for (const animal of animals) {
-    const alts = localized(baseUrl, `/catalogue/${animal.slug}`);
-    for (const { url } of alts) {
+  // Fetch published animals from DB (excluding ARCHIVED; SOLD remains indexable)
+  try {
+    const animals = await prisma.animal.findMany({
+      where: {
+        published: true,
+        status: { not: "ARCHIVED" },
+      },
+      select: { slug: true, updatedAt: true },
+    });
+
+    for (const a of animals) {
+      const enUrl = `${baseUrl}/en/animals/${a.slug}`;
+      const frUrl = `${baseUrl}/fr/animaux/${a.slug}`;
+
       entries.push({
-        url,
-        lastModified: now,
+        url: enUrl,
+        lastModified: a.updatedAt,
         changeFrequency: "weekly",
         priority: 0.8,
         alternates: {
           languages: {
-            fr: alts.find((a) => a.locale === "fr")!.url,
-            en: alts.find((a) => a.locale === "en")!.url,
+            en: enUrl,
+            fr: frUrl,
+          },
+        },
+      });
+
+      entries.push({
+        url: frUrl,
+        lastModified: a.updatedAt,
+        changeFrequency: "weekly",
+        priority: 0.8,
+        alternates: {
+          languages: {
+            en: enUrl,
+            fr: frUrl,
           },
         },
       });
     }
+  } catch (err) {
+    console.error("[Sitemap] Failed to fetch database animals:", err);
   }
 
   return entries;

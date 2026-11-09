@@ -1,0 +1,741 @@
+// AUTO-GENERATED FILE — DO NOT EDIT DIRECTLY.
+// Generated from prisma/schema.base.prisma via scripts/prisma-schemas.ts
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma Base Schema — Shared Models & Enums for Pawelium 2.0
+// ==============================================================================
+
+enum AdminStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum Species {
+  DOG
+  CAT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Size {
+  SMALL
+  MEDIUM
+  LARGE
+  GIANT
+}
+
+enum AnimalStatus {
+  AVAILABLE
+  HELD
+  SOLD
+  UNAVAILABLE
+  ARCHIVED
+}
+
+enum HealthDocStatus {
+  NONE
+  PENDING
+  VERIFIED
+  UNVERIFIED
+}
+
+enum ImageKind {
+  IMAGE
+  VIDEO
+}
+
+enum DocType {
+  VACCINATION
+  PEDIGREE
+  HEALTH_CERT
+  MICROCHIP
+  OTHER
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  VERIFIED
+  SUSPENDED
+}
+
+enum DocStatus {
+  NONE
+  SUBMITTED
+  VERIFIED
+}
+
+enum VerificationPurpose {
+  TRACKING
+  TICKET
+}
+
+enum GuestScope {
+  ORDER
+  TICKET
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAYMENT_PROCESSING
+  PAID
+  DOCUMENTATION_REVIEW
+  PREPARING
+  TRANSPORT_SCHEDULED
+  IN_TRANSIT
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  REFUND_PENDING
+  REFUNDED
+  DISPUTED
+}
+
+enum ReservationStatus {
+  ACTIVE
+  CONVERTED
+  RELEASED
+  EXPIRED
+}
+
+enum ActorType {
+  ADMIN
+  SYSTEM
+  PROVIDER
+}
+
+enum PaymentProviderType {
+  GENIUSPAY
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCESSFUL
+  FAILED
+  CANCELLED
+  EXPIRED
+  REFUNDED
+}
+
+enum PaymentEnv {
+  SANDBOX
+  LIVE
+}
+
+enum RefundStatus {
+  REQUESTED
+  PENDING_PROVIDER
+  COMPLETED
+  FAILED
+}
+
+enum ExceptionKind {
+  LATE_PAYMENT_AFTER_SALE
+  AMOUNT_MISMATCH
+  CURRENCY_MISMATCH
+  UNKNOWN_REFERENCE
+}
+
+enum ExceptionStatus {
+  OPEN
+  RESOLVED
+}
+
+enum TicketCategory {
+  GENERAL
+  ORDER
+  TRANSPORT
+  HEALTH
+  BREEDER
+  REFUND
+  OTHER
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+enum MessageAuthorType {
+  CUSTOMER
+  ADMIN
+}
+
+enum EmailStatus {
+  QUEUED
+  SENT
+  FAILED
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NewsletterStatus {
+  PENDING
+  CONFIRMED
+  UNSUBSCRIBED
+}
+
+// ─── Admin Models ─────────────────────────────────────────────────────────────
+
+model AdminUser {
+  id                String       @id @default(uuid())
+  email             String       @unique
+  name              String
+  passwordHash      String
+  totpSecretEnc     String?
+  totpEnabled       Boolean      @default(false)
+  recoveryCodesHash String? // JSON array of hashed recovery codes
+  status            AdminStatus  @default(ACTIVE)
+  failedLogins      Int          @default(0)
+  lockedUntil       DateTime?
+  passwordChangedAt DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  sessions          AdminSession[]
+  passwordResets    AdminPasswordReset[]
+  statusHistories   OrderStatusHistory[]
+  ticketMessages    TicketMessage[]
+  auditLogs         AuditLog[]
+}
+
+model AdminSession {
+  id          String    @id @default(uuid())
+  tokenHash   String    @unique
+  adminId     String
+  admin       AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  ip          String?
+  userAgent   String?
+  expiresAt   DateTime
+  lastSeenAt  DateTime  @default(now())
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([adminId])
+}
+
+model AdminPasswordReset {
+  id         String    @id @default(uuid())
+  tokenHash  String    @unique
+  adminId    String
+  admin      AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([adminId])
+}
+
+// ─── Catalogue Models ─────────────────────────────────────────────────────────
+
+model Breed {
+  id            String   @id @default(uuid())
+  slug          String   @unique
+  species       Species
+  nameEn        String
+  nameFr        String
+  descriptionEn String
+  descriptionFr String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  animals       Animal[]
+
+  @@index([species])
+}
+
+model Breeder {
+  id                  String             @id @default(uuid())
+  slug                String             @unique
+  name                String
+  city                String
+  country             String
+  contact             String
+  descriptionEn       String
+  descriptionFr       String
+  verificationStatus  VerificationStatus @default(UNVERIFIED)
+  documentationStatus DocStatus          @default(NONE)
+  isDemo              Boolean            @default(false)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  animals             Animal[]
+}
+
+model Animal {
+  id              String          @id @default(uuid())
+  slug            String          @unique
+  name            String
+  species         Species
+  breedId         String
+  breed           Breed           @relation(fields: [breedId], references: [id])
+  breederId       String?
+  breeder         Breeder?        @relation(fields: [breederId], references: [id], onDelete: SetNull)
+  gender          Gender
+  dateOfBirth     DateTime
+  size            Size
+  weightKg        Float?
+  coat            String
+  color           String
+  country         String
+  city            String
+  priceCents      Int
+  currency        String          @default("EUR")
+  status          AnimalStatus    @default(AVAILABLE)
+  published       Boolean         @default(true)
+  featured        Boolean         @default(false)
+  descriptionEn   String
+  descriptionFr   String
+  temperamentEn   String // JSON array of temperament traits
+  temperamentFr   String // JSON array of temperament traits
+  socializationEn String
+  socializationFr String
+  pedigree        String?
+  microchip       String?
+  transportInfo   String?
+  healthDocStatus HealthDocStatus @default(UNVERIFIED)
+  seoTitle        String?
+  seoDescription  String?
+  isDemo          Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  images          AnimalImage[]
+  documents       AnimalDocument[]
+  reservations    Reservation[]
+  orderItems      OrderItem[]
+  reviews         Review[]
+
+  @@index([status, species])
+  @@index([breedId])
+  @@index([priceCents])
+  @@index([country])
+}
+
+model AnimalImage {
+  id        String    @id @default(uuid())
+  animalId  String
+  animal    Animal    @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  url       String
+  publicId  String?
+  altEn     String?
+  altFr     String?
+  kind      ImageKind @default(IMAGE)
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+
+  @@index([animalId])
+}
+
+model AnimalDocument {
+  id              String    @id @default(uuid())
+  animalId        String
+  animal          Animal    @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  type            DocType
+  title           String
+  storageKey      String // private path / key
+  isPublicSummary Boolean   @default(false)
+  verifiedAt      DateTime?
+  verifiedBy      String?
+  createdAt       DateTime  @default(now())
+
+  @@index([animalId])
+}
+
+// ─── Customer & Order Models ──────────────────────────────────────────────────
+
+model Customer {
+  id              String    @id @default(uuid())
+  email           String
+  name            String
+  phone           String
+  country         String
+  billingAddress  String? // JSON object
+  deliveryAddress String? // JSON object
+  locale          String    @default("en")
+  anonymizedAt    DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  orders          Order[]
+
+  @@index([email])
+}
+
+model GuestVerification {
+  id         String              @id @default(uuid())
+  purpose    VerificationPurpose
+  targetRef  String // Order reference or ticket reference
+  email      String
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int                 @default(0)
+  consumedAt DateTime?
+  lastSentAt DateTime            @default(now())
+  createdAt  DateTime            @default(now())
+
+  @@index([targetRef, email])
+}
+
+model GuestSession {
+  id        String     @id @default(uuid())
+  tokenHash String     @unique
+  scope     GuestScope
+  targetId  String // orderId or ticketId
+  expiresAt DateTime
+  createdAt DateTime   @default(now())
+
+  @@index([tokenHash])
+}
+
+model Order {
+  id                  String             @id @default(uuid())
+  reference           String             @unique // PW- + 10 base32 Crockford chars
+  customerId          String
+  customer            Customer           @relation(fields: [customerId], references: [id])
+  status              OrderStatus        @default(PENDING_PAYMENT)
+  locale              String             @default("en")
+  subtotalCents       Int
+  transportCents      Int
+  taxCents            Int
+  feesCents           Int
+  totalCents          Int
+  currency            String             @default("EUR")
+  termsAcceptedAt     DateTime
+  termsVersion        String
+  notesInternal       String?
+  deliveryPreferences String? // JSON object
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  item                OrderItem?
+  reservation         Reservation?
+  statusHistory       OrderStatusHistory[]
+  payments            Payment[]
+  delivery            Delivery?
+  tickets             SupportTicket[]
+  exceptions          ReconciliationException[]
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String   @unique
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  animalId    String
+  animal      Animal   @relation(fields: [animalId], references: [id])
+  priceCents  Int
+  animalName  String
+  breedName   String
+  createdAt   DateTime @default(now())
+
+  @@index([animalId])
+}
+
+model OrderStatusHistory {
+  id         String      @id @default(uuid())
+  orderId    String
+  order      Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fromStatus OrderStatus?
+  toStatus   OrderStatus
+  actorType  ActorType
+  adminId    String?
+  admin      AdminUser?  @relation(fields: [adminId], references: [id])
+  reason     String?
+  createdAt  DateTime    @default(now())
+
+  @@index([orderId])
+}
+
+model Reservation {
+  id             String            @id @default(uuid())
+  animalId       String
+  animal         Animal            @relation(fields: [animalId], references: [id])
+  orderId        String            @unique
+  order          Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status         ReservationStatus @default(ACTIVE)
+  expiresAt      DateTime
+  releasedAt     DateTime?
+  activeAnimalId String?           @unique // Unique guarantee: only one ACTIVE hold per animal at DB level
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([animalId])
+  @@index([status, expiresAt])
+}
+
+// ─── Payments & Reconciliation ───────────────────────────────────────────────
+
+model Payment {
+  id                String              @id @default(uuid())
+  orderId           String
+  order             Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider          PaymentProviderType @default(GENIUSPAY)
+  providerReference String?             @unique
+  amountCents       Int
+  currency          String              @default("EUR")
+  method            String              @default("card")
+  status            PaymentStatus       @default(PENDING)
+  checkoutUrl       String?
+  expiresAt         DateTime?
+  environment       PaymentEnv          @default(SANDBOX)
+  isSeedDemo        Boolean             @default(false)
+  rawLast           String? // JSON snapshot of last response
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  events            PaymentEvent[]
+  refunds           Refund[]
+  exceptions        ReconciliationException[]
+
+  @@index([orderId])
+}
+
+model PaymentEvent {
+  id              String    @id @default(uuid())
+  providerEventId String    @unique // Unique webhook event id for idempotency
+  paymentId       String?
+  payment         Payment?  @relation(fields: [paymentId], references: [id])
+  eventType       String
+  signatureValid  Boolean
+  payload         String // JSON payload string
+  receivedAt      DateTime  @default(now())
+  processedAt     DateTime?
+  outcome         String?
+
+  @@index([paymentId])
+}
+
+model Refund {
+  id          String       @id @default(uuid())
+  paymentId   String
+  payment     Payment      @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  amountCents Int
+  reason      String
+  status      RefundStatus @default(REQUESTED)
+  providerRef String?
+  adminId     String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([paymentId])
+}
+
+model ReconciliationException {
+  id         String          @id @default(uuid())
+  orderId    String?
+  order      Order?          @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  paymentId  String?
+  payment    Payment?        @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  kind       ExceptionKind
+  status     ExceptionStatus @default(OPEN)
+  notes      String?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([orderId])
+  @@index([paymentId])
+  @@index([status])
+}
+
+// ─── Delivery & Support ───────────────────────────────────────────────────────
+
+model Delivery {
+  id           String    @id @default(uuid())
+  orderId      String    @unique
+  order        Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  method       String
+  carrier      String?
+  scheduledAt  DateTime?
+  estimatedAt  DateTime?
+  confirmedAt  DateTime?
+  deliveredAt  DateTime?
+  address      String // JSON string
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model SupportTicket {
+  id              String         @id @default(uuid())
+  reference       String         @unique // TK- + random base32 Crockford
+  orderId         String?
+  order           Order?         @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  customerEmail   String
+  name            String
+  category        TicketCategory @default(GENERAL)
+  subject         String
+  priority        TicketPriority @default(MEDIUM)
+  status          TicketStatus   @default(OPEN)
+  accessTokenHash String         @unique // SHA256 of access token
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  messages        TicketMessage[]
+
+  @@index([customerEmail])
+  @@index([status])
+}
+
+model TicketMessage {
+  id             String            @id @default(uuid())
+  ticketId       String
+  ticket         SupportTicket     @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorType     MessageAuthorType
+  isInternalNote Boolean           @default(false)
+  body           String
+  adminId        String?
+  admin          AdminUser?        @relation(fields: [adminId], references: [id])
+  createdAt      DateTime          @default(now())
+
+  attachments    TicketAttachment[]
+
+  @@index([ticketId])
+}
+
+model TicketAttachment {
+  id         String        @id @default(uuid())
+  messageId  String
+  message    TicketMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  storageKey String // private Cloudinary / secure key
+  filename   String
+  mime       String
+  size       Int
+  createdAt  DateTime      @default(now())
+
+  @@index([messageId])
+}
+
+// ─── Email & Outbox ───────────────────────────────────────────────────────────
+
+model EmailNotification {
+  id             String            @id @default(uuid())
+  idempotencyKey String            @unique
+  template       String
+  locale         String            @default("en")
+  toEmail        String
+  payload        String // JSON payload string
+  status         EmailStatus       @default(QUEUED)
+  attempts       Int               @default(0)
+  nextAttemptAt  DateTime          @default(now())
+  lastError      String?
+  sentAt         DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  deliveryLogs   EmailDeliveryLog[]
+
+  @@index([status, nextAttemptAt])
+}
+
+model EmailDeliveryLog {
+  id             String            @id @default(uuid())
+  notificationId String
+  notification   EmailNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  providerId     String?
+  status         String
+  error          String?
+  createdAt      DateTime          @default(now())
+
+  @@index([notificationId])
+}
+
+// ─── Platform & Content ───────────────────────────────────────────────────────
+
+model Review {
+  id               String       @id @default(uuid())
+  animalId         String?
+  animal           Animal?      @relation(fields: [animalId], references: [id], onDelete: SetNull)
+  orderId          String?
+  author           String
+  rating           Int
+  body             String
+  status           ReviewStatus @default(PENDING)
+  isDemo           Boolean      @default(false)
+  verifiedPurchase Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@index([status])
+}
+
+model AuditLog {
+  id        String    @id @default(uuid())
+  actorType ActorType
+  adminId   String?
+  admin     AdminUser? @relation(fields: [adminId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  ip        String?
+  diff      String? // JSON diff
+  createdAt DateTime  @default(now())
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
+model SiteSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String // JSON representation
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NewsletterSubscriber {
+  id               String           @id @default(uuid())
+  email            String           @unique
+  locale           String           @default("en")
+  status           NewsletterStatus @default(PENDING)
+  confirmTokenHash String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model ContentBlock {
+  id        String   @id @default(uuid())
+  key       String
+  locale    String
+  title     String?
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key, locale])
+}
+
+model RateLimitBucket {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  count       Int      @default(1)
+  windowStart DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([key, windowStart])
+}

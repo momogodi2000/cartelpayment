@@ -180,7 +180,7 @@ export default async function SanteVaccinationPage({ params }: { params: Promise
             {t("ctaWhatsapp")}
           </a>
           <Link
-            href="/catalogue"
+            href="/animals"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-text-premium text-white font-extrabold text-sm shadow-lg transition-all hover:scale-[1.02] hover:bg-text-premium/90"
           >
             {t("ctaCatalogue")}

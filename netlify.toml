@@ -1,0 +1,14 @@
+[build]
+  command = "npm run db:generate && next build"
+  publish = ".next"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+  DATABASE_PROVIDER = "postgresql"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"

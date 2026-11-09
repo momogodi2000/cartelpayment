@@ -1,54 +1,19 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import createMiddleware from 'next-intl/middleware';
-import { routing } from './i18n/routing';
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
 
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-let lastSweep = 0;
-
-function isRateLimited(ip: string, limit: number, windowMs: number): boolean {
-  const now = Date.now();
-
-  // Periodically drop expired entries so the map can't grow unbounded.
-  if (now - lastSweep > windowMs) {
-    for (const [key, rec] of rateLimitMap) {
-      if (now > rec.resetTime) rateLimitMap.delete(key);
-    }
-    lastSweep = now;
-  }
-
-  const record = rateLimitMap.get(ip);
-
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
-    return false;
-  }
-
-  record.count += 1;
-  return record.count > limit;
-}
-
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const ip =
-    request.headers.get("x-forwarded-for") ||
-    request.headers.get("x-real-ip") ||
-    "127.0.0.1";
 
-  // Rate limit API and contact routes
-  if (pathname.startsWith("/api/") || pathname === "/contact") {
-    const limited = isRateLimited(ip, 100, 60 * 1000);
-    if (limited) {
-      return NextResponse.json(
-        { success: false, error: "Too many requests. Please try again later." },
-        { status: 429 }
-      );
-    }
+  // Let admin and internal API pass directly to their respective handlers
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api")) {
+    return NextResponse.next();
   }
 
-  // Internationalization middleware
+  // Internationalization middleware for public routes
   const response = intlMiddleware(request);
 
   // Security headers
@@ -67,12 +32,12 @@ export async function proxy(request: NextRequest) {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob:",
-      "media-src 'self'",
-      "connect-src 'self' ws: wss:",
+      "img-src 'self' data: blob: https://res.cloudinary.com",
+      "media-src 'self' https://res.cloudinary.com",
+      "connect-src 'self' ws: wss: https://res.cloudinary.com https://geniuspay.ci",
       "frame-ancestors 'self'",
       "base-uri 'self'",
-      "form-action 'self'",
+      "form-action 'self' https://geniuspay.ci",
       "object-src 'none'",
     ].join("; ")
   );
@@ -81,10 +46,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip API routes, Next internals, the metadata routes (opengraph-image,
-  // twitter-image, icon, apple-icon), and anything with a file extension
-  // (robots.txt, sitemap.xml, sw.js, images, …).
+  // Exclude admin, api, Next internals, metadata routes and static assets
   matcher: [
-    "/((?!api|_next/static|_next/image|opengraph-image|twitter-image|icon|apple-icon|manifest|.*\\..*).*)",
+    "/((?!api|admin|_next/static|_next/image|opengraph-image|twitter-image|icon|apple-icon|manifest|.*\\..*).*)",
   ],
 };

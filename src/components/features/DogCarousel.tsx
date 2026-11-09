@@ -2,11 +2,10 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import DogCard from "./DogCard";
-import type { Dog } from "@/data/dogs";
+import DogCard, { type UnifiedAnimalItem } from "./DogCard";
 
 interface Props {
-  dogs: Dog[];
+  dogs: UnifiedAnimalItem[];
 }
 
 /**

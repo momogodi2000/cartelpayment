@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/common/WhatsAppButton";
+import CookieConsent from "@/components/common/CookieConsent";
 import { getWhatsAppLink } from "@/data/site";
 
 export default async function PublicLayout({
@@ -22,6 +23,7 @@ export default async function PublicLayout({
       <Header />
       <main className="flex-grow">{children}</main>
       <WhatsAppButton href={whatsappUrl} />
+      <CookieConsent />
       <Footer />
     </>
   );
