@@ -1,0 +1,14 @@
+{
+  "AdminCustomers": {
+    "title": "Adoptants & Registre Clients",
+    "subtitle": "Consultez les fiches adoptants, appliquez le droit à l'oubli RGPD et exportez les données personnelles.",
+    "tableColName": "Nom de l'Adoptant",
+    "tableColEmail": "Adresse Email",
+    "tableColPhone": "Téléphone",
+    "tableColOrders": "Total Commandes",
+    "tableColGdpr": "Statut RGPD",
+    "tableColActions": "Actions",
+    "exportGdprBtn": "Exporter Données (JSON)",
+    "anonymizeGdprBtn": "Anonymiser Fiche"
+  }
+}

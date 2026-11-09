@@ -1,0 +1,14 @@
+{
+  "AdminCustomers": {
+    "title": "Adopters & Customer Registry",
+    "subtitle": "Review guest adopter records, enforce GDPR right-to-be-forgotten, and export personal data.",
+    "tableColName": "Customer Name",
+    "tableColEmail": "Email Address",
+    "tableColPhone": "Phone",
+    "tableColOrders": "Total Orders",
+    "tableColGdpr": "GDPR Status",
+    "tableColActions": "Actions",
+    "exportGdprBtn": "Export Data (JSON)",
+    "anonymizeGdprBtn": "Anonymize Records"
+  }
+}

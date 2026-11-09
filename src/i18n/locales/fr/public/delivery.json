@@ -1,0 +1,29 @@
+{
+  "Delivery": {
+    "badge": "Livraison & Transport",
+    "title": "Remise & Transport de Votre Animal",
+    "intro": "Nous privilégions le bien-être animal à chaque étape. Nos modalités de remise sont conformes au Règlement (UE) n° 576/2013 et aux standards européens de protection animale.",
+    "optionATitle": "Option Recommandée — Remise en Main Propre",
+    "optionAIntro": "La remise en main propre est notre approche privilégiée. Elle permet de rencontrer l'éleveur, de voir le cadre de vie de l'animal, et de bénéficier d'un accompagnement personnalisé lors de la première rencontre avec votre nouveau compagnon.",
+    "optionAItem1": "Rencontre avec l'éleveur et visite de l'élevage",
+    "optionAItem2": "Remise du passeport européen, du carnet de santé et du contrat de vente",
+    "optionAItem3": "Conseils personnalisés sur l'alimentation, l'éducation et les soins",
+    "optionAItem4": "Point de remise possible à Paris (77 Bd Saint-Jacques, 75014) sur rendez-vous",
+    "optionBTitle": "Option B — Transport Encadré Intra-UE",
+    "optionBIntro": "Un transport encadré peut être organisé pour les acheteurs situés en dehors de la région parisienne ou dans un autre pays de l'UE. Le transport s'effectue toujours dans le respect des normes de bien-être animal.",
+    "transportComplianceTitle": "Transport Conforme UE",
+    "transportComplianceDesc": "Règlement (UE) n° 576/2013 respecté : puce électronique, passeport européen valide, vaccination antirabique avec délai de 21 jours respecté.",
+    "docTitle": "Documentation Complète",
+    "docDesc": "Certificat sanitaire (valable 10 jours), passeport européen, contrat de vente et garanties sanitaires remis avant le départ.",
+    "welfareTitle": "Bien-être Prioritaire",
+    "welfareDesc": "Transport uniquement pour les chiots de plus de 8 semaines et les chatons de plus de 12 semaines. Caisse de transport adaptée, eau disponible, durée limitée.",
+    "conditionsTitle": "Conditions d'Application",
+    "conditionsDesc": "Maximum 5 animaux par mouvement non commercial (sauf exceptions documentées pour compétitions ou expositions).",
+    "reminderTitle": "Rappel Réglementaire Important",
+    "reminderDesc": "Conformément au Règlement (UE) n° 576/2013, tout mouvement non commercial d'animal de compagnie vers ou depuis un autre État membre doit être accompagné d'un passeport pour animal de compagnie valide, d'une puce électronique et, pour les déplacements hors Irlande/Finlande/Malte/Norvège, d'une vaccination antirabique valide.",
+    "ctaTitle": "Organiser la Remise de Votre Animal",
+    "ctaBody": "Contactez Théodore de Parin directement par WhatsApp pour organiser les modalités de remise adaptées à votre situation.",
+    "ctaWhatsapp": "Contacter via WhatsApp",
+    "whatsappMessage": "Bonjour ! J'ai une question sur les modalités de transport et de remise pour un chiot ou un chaton."
+  }
+}

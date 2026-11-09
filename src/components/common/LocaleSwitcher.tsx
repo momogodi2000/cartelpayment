@@ -8,13 +8,12 @@ import { useParams } from "next/navigation";
 
 interface Props {
   className?: string;
-  /** compact = icon + code only (default). full = shows both language names */
   variant?: "compact" | "full";
 }
 
 /**
- * Switches the active locale while keeping the user on the same page.
- * Relies on next-intl's locale-aware navigation helpers.
+ * Luxury language switcher preserving the current route and route parameters.
+ * Toggles seamlessly between English (EN) and French (FR).
  */
 export default function LocaleSwitcher({ className = "", variant = "compact" }: Props) {
   const locale = useLocale();
@@ -27,7 +26,7 @@ export default function LocaleSwitcher({ className = "", variant = "compact" }: 
 
   const switchTo = () => {
     startTransition(() => {
-      // @ts-expect-error -- route params are passed straight through
+      // @ts-expect-error -- dynamic route params are preserved
       router.replace({ pathname, params }, { locale: target });
     });
   };
@@ -37,19 +36,21 @@ export default function LocaleSwitcher({ className = "", variant = "compact" }: 
       type="button"
       onClick={switchTo}
       disabled={isPending}
-      aria-label={target === "en" ? "Switch to English" : "Passer en français"}
-      title={target === "en" ? "Switch to English" : "Passer en français"}
+      aria-label={target === "en" ? "Switch interface to English" : "Passer l'interface en français"}
+      title={target === "en" ? "English" : "Français"}
       className={
         className ||
-        "flex items-center gap-1.5 px-3 py-2 rounded-xl border border-black/[0.06] dark:border-white/[0.08] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] text-xs font-bold text-text-premium/70 transition-colors disabled:opacity-50"
+        "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-black/[0.08] dark:border-white/[0.1] bg-white/70 dark:bg-zinc-800/70 hover:bg-white dark:hover:bg-zinc-800 text-xs font-bold text-gray-800 dark:text-gray-200 shadow-sm transition-all hover:scale-105 disabled:opacity-50 cursor-pointer"
       }
     >
-      <Globe className="h-3.5 w-3.5 shrink-0" />
-      {variant === "full"
-        ? locale === "fr"
-          ? "English"
-          : "Français"
-        : target.toUpperCase()}
+      <Globe className="h-3.5 w-3.5 text-[#B69A65] shrink-0" />
+      <span className="tracking-wider uppercase">
+        {variant === "full"
+          ? locale === "fr"
+            ? "EN (English)"
+            : "FR (Français)"
+          : `${locale.toUpperCase()} ⇄ ${target.toUpperCase()}`}
+      </span>
     </button>
   );
 }

@@ -1,0 +1,98 @@
+{
+  "Home": {
+    "whatsappMessage": "Hello! I visited pawelium and would like to learn more about your available dogs, cats, puppies and kittens.",
+    "schemaDescription": "Premium purebred dog, cat, puppy and kitten selection for the European market.",
+    "heroImageAlt": "Purebred dog selected by pawelium",
+    "stats": {
+      "dogs": "Animal Profiles",
+      "breeds": "Breeds Available",
+      "countries": "European Countries",
+      "response": "WhatsApp Response"
+    },
+    "hero": {
+      "badge": "European Purebred Dog & Cat Selection",
+      "titleLine1": "Premium Purebred",
+      "titleAccent": "Dogs, Cats, Puppies & Kittens",
+      "subtitle": "Carefully selected purebred dogs, cats, puppies and kittens from responsible European breeders. LOF and LOOF pedigree, transparency and animal welfare.",
+      "cta": "Explore Available Animals",
+      "secondary": "Contact via WhatsApp"
+    },
+    "trust": {
+      "trackOrder": "Track an Order",
+      "paymentTitle": "Card Payment in EUR",
+      "paymentDesc": "100% full payment via Visa & Mastercard (GeniusPay)",
+      "holdTitle": "Anti-Double Booking",
+      "holdDesc": "Atomic 15-minute hold upon initiating checkout",
+      "transportTitle": "Dedicated Pet Transport",
+      "transportDesc": "Doorstep delivery in climate-controlled European vehicles",
+      "docsTitle": "Official EU Documentation",
+      "docsDesc": "Verified LOF/LOOF pedigree & European pet passports"
+    },
+    "credentials": {
+      "title": "Our Commitment to Excellence",
+      "subtitle": "Every animal we present meets our rigorous standards of health, lineage and well-being."
+    },
+    "featured": {
+      "title": "Featured Dogs & Puppies",
+      "subtitle": "Discover our highlighted selection of exceptional dogs and puppies.",
+      "viewAll": "View All Dogs"
+    },
+    "catsFeatured": {
+      "title": "Featured Cats & Kittens",
+      "subtitle": "Purebred cats and kittens, LOOF pedigree, tested parents.",
+      "viewAll": "View All Cats"
+    },
+    "breeds": {
+      "title": "Available Breeds",
+      "subtitle": "Our selected dog and cat breeds — click a breed to see available animals.",
+      "dogsTitle": "Dog breeds",
+      "catsTitle": "Cat breeds"
+    },
+    "timeline": {
+      "title": "How It Works",
+      "subtitle": "A simple, transparent and guided process to find your perfect companion."
+    },
+    "testimonials": {
+      "title": "They Chose pawelium",
+      "subtitle": "Testimonials from our happy clients and their new companions."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Answers to the most common questions about our animals and process.",
+      "viewAll": "View All Questions"
+    },
+    "cta": {
+      "limited": "Limited Availability",
+      "title": "Find Your Perfect Companion",
+      "subtitle": "Browse our full selection of purebred dogs, cats, puppies and kittens available across Europe.",
+      "browseDogs": "Browse All Dogs",
+      "whatsapp": "WhatsApp Inquiry"
+    },
+    "partnerBanner": {
+      "text": "Are you a breeder or professional?",
+      "cta": "Become a partner"
+    }
+  },
+  "Process": {
+    "step01Title": "Discover",
+    "step01Desc": "Browse our catalogue of available dogs, cats, puppies and kittens with full details: breed, age, health, temperament.",
+    "step02Title": "Choose",
+    "step02Desc": "Find your ideal companion by filtering by breed, sex, age and European location.",
+    "step03Title": "Contact",
+    "step03Desc": "Send a WhatsApp message directly from the profile of the dog you're interested in.",
+    "step04Title": "Exchange",
+    "step04Desc": "Discuss all the details: health, documents, transport, logistics.",
+    "step05Title": "Welcome",
+    "step05Desc": "Arrange the arrival of your new companion in the best possible conditions."
+  },
+  "WhyChooseUs": {
+    "item1Title": "Rigorous Selection",
+    "item1Desc": "Every animal is selected according to strict health, temperament and lineage criteria verified by our team.",
+    "item2Title": "Animal Welfare",
+    "item2Desc": "Our partner breeders comply with European animal welfare standards and responsible breeding practices.",
+    "item3Title": "Full Transparency",
+    "item3Desc": "Health records, pedigrees and full history presented clearly for each animal.",
+    "item4Title": "Direct WhatsApp Contact",
+    "item4Desc": "Direct, fast and personalised WhatsApp exchanges to answer all your questions."
+  }
+}

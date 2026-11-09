@@ -1,0 +1,23 @@
+{
+  "AdminAnimals": {
+    "title": "Catalogue & Inventory Management",
+    "subtitle": "Manage purebred animal listings, publish states, pricing, and health documentation status.",
+    "addAnimalBtn": "Add New Animal Listing",
+    "tableColAnimal": "Animal & Breed",
+    "tableColAgeSex": "Age / Sex",
+    "tableColPrice": "Adoption Price",
+    "tableColStatus": "Availability Status",
+    "tableColDocs": "Health Docs",
+    "tableColPublished": "Public State",
+    "tableColActions": "Actions",
+    "statusAvailable": "AVAILABLE",
+    "statusHeld": "HELD",
+    "statusSold": "SOLD",
+    "statusUnavailable": "UNAVAILABLE",
+    "statusArchived": "ARCHIVED",
+    "publishedBadge": "Published",
+    "draftBadge": "Draft / Hidden",
+    "editBtn": "Edit",
+    "viewBtn": "View Listing"
+  }
+}

@@ -108,7 +108,7 @@ export default async function AdminOverviewPage() {
           <div className="text-3xl font-extrabold text-zinc-900">
             {activeHoldsCount}
           </div>
-          <p className="text-[11px] text-zinc-400">30-min inventory holds in flight</p>
+          <p className="text-[11px] text-zinc-400">15-min inventory holds in flight</p>
         </div>
 
         <div className="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm space-y-2">

@@ -1,0 +1,8 @@
+{
+  "NotFound": {
+    "title": "Page Introuvable",
+    "subtitle": "La page ou le profil d'animal que vous recherchez n'existe pas ou a été déplacé.",
+    "homeBtn": "Retour à l'Accueil",
+    "catalogBtn": "Parcourir le Catalogue"
+  }
+}

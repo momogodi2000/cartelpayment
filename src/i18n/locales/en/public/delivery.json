@@ -1,0 +1,29 @@
+{
+  "Delivery": {
+    "badge": "Delivery & Transport",
+    "title": "Animal Handover & Transport",
+    "intro": "We prioritise animal welfare at every step. Our handover procedures comply with EU Regulation 576/2013 and European animal protection standards.",
+    "optionATitle": "Recommended Option — Direct Handover",
+    "optionAIntro": "Direct handover is our preferred approach. It allows you to meet the breeder, see the animal's living environment, and benefit from personalised guidance during the first meeting with your new companion.",
+    "optionAItem1": "Meeting the breeder and visiting the breeding facility",
+    "optionAItem2": "Handover of European passport, health record and sales contract",
+    "optionAItem3": "Personalised advice on nutrition, training and care",
+    "optionAItem4": "Handover point available in Paris (77 Bd Saint-Jacques, 75014) by appointment",
+    "optionBTitle": "Option B — Supervised Intra-EU Transport",
+    "optionBIntro": "Supervised transport can be arranged for buyers located outside the Paris region or in another EU country. Transport always takes place in compliance with animal welfare standards.",
+    "transportComplianceTitle": "EU-Compliant Transport",
+    "transportComplianceDesc": "EU Regulation 576/2013 complied with: microchip, valid European passport, rabies vaccination with 21-day period respected.",
+    "docTitle": "Complete Documentation",
+    "docDesc": "Health certificate (valid 10 days), European passport, sales contract and health guarantees provided before departure.",
+    "welfareTitle": "Welfare Priority",
+    "welfareDesc": "Transport only for puppies over 8 weeks and kittens over 12 weeks old. Appropriate transport crate, water available, limited duration.",
+    "conditionsTitle": "Conditions of Application",
+    "conditionsDesc": "Maximum 5 animals per non-commercial movement (except documented exceptions for competitions or shows).",
+    "reminderTitle": "Important Regulatory Reminder",
+    "reminderDesc": "In accordance with EU Regulation 576/2013, any non-commercial movement of a pet to or from another Member State must be accompanied by a valid pet passport, electronic chip and, for travel outside Ireland/Finland/Malta/Norway, a valid rabies vaccination.",
+    "ctaTitle": "Arrange Your Animal Handover",
+    "ctaBody": "Contact Théodore de Parin directly via WhatsApp to arrange handover terms suited to your situation.",
+    "ctaWhatsapp": "Contact via WhatsApp",
+    "whatsappMessage": "Hello! I have a question about transport and delivery options for a puppy or kitten."
+  }
+}

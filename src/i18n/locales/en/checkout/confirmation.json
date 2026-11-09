@@ -1,0 +1,21 @@
+{
+  "Confirmation": {
+    "successTitle": "Adoption Confirmed!",
+    "successSubtitle": "Your payment has been successfully authorized and confirmed by our secure gateway.",
+    "orderRefLabel": "Order Reference",
+    "orderRefCopy": "Keep this reference for your tracking and customer support requests.",
+    "nextStepsTitle": "Next Steps for Your Companion",
+    "step1Title": "Veterinary Exit Examination",
+    "step1Desc": "Our licensed veterinarian conducts the final pre-travel health check, issues the EU passport, and verifies the ISO microchip.",
+    "step2Title": "Transport Scheduling",
+    "step2Desc": "Our authorized climate-controlled pet courier contacts you with the precise delivery time window.",
+    "step3Title": "Direct Live Tracking",
+    "step3Desc": "Track your companion's transport progress in real time via our Adopter Tracking Portal.",
+    "trackOrderBtn": "Track My Adoption Order",
+    "returnHomeBtn": "Return to Homepage",
+    "cancelTitle": "Payment Not Completed",
+    "cancelSubtitle": "Your transaction was cancelled or interrupted. Your 15-minute temporary reservation hold has been released.",
+    "retryBtn": "Restart Checkout",
+    "browseCatalogBtn": "Browse Catalog"
+  }
+}

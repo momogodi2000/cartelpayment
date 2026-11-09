@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import NextLink from "next/link";
 import { MessageSquare, Heart, Mail, MapPin, Award } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
@@ -21,8 +20,8 @@ export default function Footer() {
 
   const navLinks = [
     { href: "/animals", label: t("catalog") },
-    { href: "/track-order", label: "Track Order (Suivi de commande)" },
-    { href: "/support", label: "Concierge & Support" },
+    { href: "/track-order", label: t("tracking") },
+    { href: "/support", label: t("support") },
     { href: "/a-propos", label: t("about") },
     { href: "/devenir-partenaire", label: t("partner") },
     { href: "/sante-vaccination", label: t("health") },
@@ -32,8 +31,8 @@ export default function Footer() {
   ] as const;
 
   const legalLinks = [
-    { href: "/conditions-generales-de-vente", label: "Conditions de Vente & Paiement" },
-    { href: "/bien-etre-animal", label: "Charte Bien-Être Animal" },
+    { href: "/conditions-generales-de-vente", label: t("terms") },
+    { href: "/bien-etre-animal", label: t("welfare") },
     { href: "/mentions-legales", label: t("legal") },
     { href: "/politique-de-confidentialite", label: t("privacy") },
   ] as const;
@@ -85,11 +84,6 @@ export default function Footer() {
                 </Link>
               </li>
             ))}
-            <li>
-              <NextLink href="/admin" className="text-sm text-white/50 hover:text-white/80 transition-colors">
-                Admin Portal
-              </NextLink>
-            </li>
           </ul>
         </div>
 

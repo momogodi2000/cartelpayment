@@ -1,5 +1,5 @@
 import React from "react";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { prisma } from "@/lib/db/client";
 import { releaseHold } from "@/lib/services/inventory";
@@ -13,9 +13,8 @@ interface PageProps {
 export default async function CheckoutCancelPage({ params, searchParams }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations("Confirmation");
   const { ref } = await searchParams;
-
-  const isEn = locale === "en";
 
   if (ref) {
     const order = await prisma.order.findUnique({
@@ -30,24 +29,22 @@ export default async function CheckoutCancelPage({ params, searchParams }: PageP
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-20 text-center space-y-6">
-      <div className="w-16 h-16 bg-zinc-100 text-zinc-600 rounded-full flex items-center justify-center mx-auto">
+      <div className="w-16 h-16 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 rounded-full flex items-center justify-center mx-auto">
         <XCircle className="h-8 w-8" />
       </div>
       <h1 className="font-serif text-3xl font-bold text-gray-900 dark:text-white">
-        {isEn ? "Reservation Cancelled" : "Paiement interrompu"}
+        {t("cancelTitle")}
       </h1>
-      <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
-        {isEn
-          ? "You cancelled the checkout session. No charges were made, and the temporary reservation hold has been safely released."
-          : "Vous avez interrompu la procédure de règlement. Aucun débit n'a été effectué et la réservation temporaire a été libérée."}
+      <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto text-sm leading-relaxed">
+        {t("cancelSubtitle")}
       </p>
       <div className="pt-4">
         <Link
           href="/animals"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#183C32] text-white font-bold text-sm shadow-sm"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-[#183C32] text-white font-bold text-sm shadow-md hover:bg-[#183C32]/90 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          {isEn ? "Return to Catalogue" : "Revenir au catalogue"}
+          <span>{t("browseCatalogBtn")}</span>
         </Link>
       </div>
     </div>

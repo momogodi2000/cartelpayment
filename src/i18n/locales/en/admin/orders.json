@@ -1,0 +1,23 @@
+{
+  "AdminOrders": {
+    "title": "Order Management & Fulfillment",
+    "subtitle": "Inspect orders, process status transitions, and record authorized manual bank payments.",
+    "tableColRef": "Order Ref",
+    "tableColCustomer": "Customer",
+    "tableColAnimal": "Animal",
+    "tableColTotal": "Total Amount",
+    "tableColStatus": "Order Status",
+    "tableColCreated": "Date",
+    "tableColActions": "Actions",
+    "statusPending": "PENDING_PAYMENT",
+    "statusPaid": "PAID",
+    "statusConfirmed": "CONFIRMED",
+    "statusPreparing": "PREPARING",
+    "statusInTransit": "IN_TRANSIT",
+    "statusDelivered": "DELIVERED",
+    "statusCancelled": "CANCELLED",
+    "statusRefunded": "REFUNDED",
+    "recordManualPaymentBtn": "Record Manual Payment",
+    "updateStatusBtn": "Update Status"
+  }
+}

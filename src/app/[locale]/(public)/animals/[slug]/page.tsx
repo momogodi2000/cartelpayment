@@ -4,19 +4,16 @@ import Image from "next/image";
 import {
   MessageSquare,
   ArrowLeft,
-  CheckCircle,
   ShieldCheck,
   MapPin,
-  Calendar,
-  Weight,
-  Palette,
-  Info,
   CreditCard,
   Lock,
   Truck,
+  Award,
+  CheckCircle2,
   FileCheck,
 } from "lucide-react";
-import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { getDogInquiryMessage, getWhatsAppLink, siteConfig } from "@/data/site";
 import { getAnimalBySlug } from "@/lib/services/catalogue";
@@ -34,9 +31,9 @@ export async function generateMetadata({ params }: PageProps) {
   if (!data?.animal) return {};
 
   const { animal } = data;
-  const isEn = locale === "en";
-  const title = animal.seoTitle || `${animal.name} – ${isEn ? animal.breed.nameEn : animal.breed.nameFr} | Pawelium`;
-  const description = animal.seoDescription || (isEn ? animal.descriptionEn : animal.descriptionFr);
+  const breedName = locale === "fr" ? animal.breed.nameFr : animal.breed.nameEn;
+  const title = animal.seoTitle || `${animal.name} – ${breedName} | Pawelium`;
+  const description = animal.seoDescription || (locale === "fr" ? animal.descriptionFr : animal.descriptionEn);
   const primaryImage = animal.images[0]?.url || "/images/chien/golden-retriever-1.jpeg";
 
   return {
@@ -54,18 +51,17 @@ export default async function AnimalDetailPage({ params }: PageProps) {
   const { slug, locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("DogDetail");
-  const isEn = (await getLocale()) === "en";
 
   const data = await getAnimalBySlug(slug);
   if (!data?.animal) notFound();
 
   const { animal, related } = data;
   const name = animal.name;
-  const breedName = isEn ? animal.breed.nameEn : animal.breed.nameFr;
-  const description = isEn ? animal.descriptionEn : animal.descriptionFr;
-  const temperaments: string[] = isEn
-    ? JSON.parse(animal.temperamentEn || "[]")
-    : JSON.parse(animal.temperamentFr || "[]");
+  const breedName = locale === "fr" ? animal.breed.nameFr : animal.breed.nameEn;
+  const description = locale === "fr" ? animal.descriptionFr : animal.descriptionEn;
+  const temperaments: string[] = locale === "fr"
+    ? JSON.parse(animal.temperamentFr || "[]")
+    : JSON.parse(animal.temperamentEn || "[]");
 
   const formattedPrice = formatMoney(animal.priceCents, animal.currency, locale);
   const isAvailable = animal.status === "AVAILABLE";
@@ -74,7 +70,7 @@ export default async function AnimalDetailPage({ params }: PageProps) {
   const displayAge = formatAgeFromDob(new Date(animal.dateOfBirth), locale);
 
   const whatsappUrl = getWhatsAppLink(
-    getDogInquiryMessage(name, breedName, animal.slug, isEn ? "en" : "fr")
+    getDogInquiryMessage(name, breedName, animal.slug, locale === "fr" ? "fr" : "en")
   );
 
   const jsonLd = {
@@ -110,10 +106,10 @@ export default async function AnimalDetailPage({ params }: PageProps) {
       <nav aria-label="Breadcrumb" className="text-sm font-medium">
         <Link
           href="/animals"
-          className="inline-flex items-center gap-2 text-gray-500 hover:text-[#183C32] transition-colors"
+          className="inline-flex items-center gap-2 text-gray-500 hover:text-[#183C32] dark:hover:text-emerald-400 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          {isEn ? "Back to catalogue" : "Retour au catalogue"}
+          <span>{t("backToCatalog")}</span>
         </Link>
       </nav>
 
@@ -121,7 +117,7 @@ export default async function AnimalDetailPage({ params }: PageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         {/* Left: Gallery */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="relative aspect-[4/3] w-full rounded-3xl overflow-hidden bg-[#F8F6F0] border border-black/[0.06] shadow-sm">
+          <div className="relative aspect-[4/3] w-full rounded-3xl overflow-hidden bg-[#F8F6F0] dark:bg-zinc-800 border border-black/[0.06] shadow-sm">
             <Image
               src={animal.images[0]?.url || "/images/chien/golden-retriever-1.jpeg"}
               alt={`${animal.name} - ${breedName}`}
@@ -141,10 +137,10 @@ export default async function AnimalDetailPage({ params }: PageProps) {
                 }`}
               >
                 {isAvailable
-                  ? isEn ? "Available for Adoption" : "Disponible à l'adoption"
+                  ? t("available")
                   : isHeld
-                  ? isEn ? "Currently Reserved" : "Actuellement réservé"
-                  : isEn ? "Adopted" : "Adopté"}
+                  ? t("reserved")
+                  : t("sold")}
               </span>
             </div>
           </div>
@@ -154,7 +150,7 @@ export default async function AnimalDetailPage({ params }: PageProps) {
               {animal.images.slice(1, 5).map((img, idx) => (
                 <div
                   key={img.id || idx}
-                  className="relative aspect-square rounded-2xl overflow-hidden bg-[#F8F6F0] border border-black/[0.06]"
+                  className="relative aspect-square rounded-2xl overflow-hidden bg-[#F8F6F0] dark:bg-zinc-800 border border-black/[0.06]"
                 >
                   <Image
                     src={img.url}
@@ -171,7 +167,7 @@ export default async function AnimalDetailPage({ params }: PageProps) {
 
         {/* Right: Key Specs, Pricing, CTAs */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 border border-black/[0.06] shadow-sm space-y-6">
+          <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 border border-black/[0.06] dark:border-zinc-800 shadow-sm space-y-6">
             <div>
               <p className="text-xs uppercase tracking-widest font-bold text-[#B69A65] mb-1">
                 {breedName}
@@ -179,7 +175,7 @@ export default async function AnimalDetailPage({ params }: PageProps) {
               <h1 className="font-serif text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-2">
                 {name}
               </h1>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                 <MapPin className="h-4 w-4 text-[#B69A65]" />
                 <span>{animal.city}, {animal.country}</span>
                 <span>•</span>
@@ -187,13 +183,13 @@ export default async function AnimalDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-black/[0.06] flex items-baseline justify-between">
+            <div className="pt-4 border-t border-black/[0.06] dark:border-zinc-800 flex items-baseline justify-between">
               <div>
                 <span className="text-3xl font-extrabold text-[#183C32] dark:text-emerald-400">
                   {formattedPrice}
                 </span>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  {isEn ? "Includes health passport & veterinary exam" : "Comprend passeport européen et bilan vétérinaire"}
+                  {t("includesHealth")}
                 </p>
               </div>
             </div>
@@ -206,13 +202,11 @@ export default async function AnimalDetailPage({ params }: PageProps) {
                   className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl text-base font-bold bg-[#183C32] text-white hover:bg-[#183C32]/90 shadow-lg shadow-[#183C32]/10 transition-all hover:-translate-y-0.5"
                 >
                   <CreditCard className="h-5 w-5 text-[#B69A65]" />
-                  {isEn ? "Reserve Now Online" : "Réserver maintenant en ligne"}
+                  <span>{t("reserveNowOnline")}</span>
                 </Link>
               ) : (
                 <div className="w-full text-center py-4 px-6 rounded-2xl text-sm font-bold bg-gray-100 dark:bg-zinc-800 text-gray-400">
-                  {isHeld
-                    ? isEn ? "Reserved – Contact us for standby list" : "Réservé – Contactez-nous pour la liste d'attente"
-                    : isEn ? "This companion has found a home" : "Ce compagnon a déjà trouvé sa famille"}
+                  {isHeld ? t("reservedStandby") : t("adoptedFoundHome")}
                 </div>
               )}
 
@@ -223,23 +217,23 @@ export default async function AnimalDetailPage({ params }: PageProps) {
                 className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl text-sm font-semibold border border-emerald-600/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors"
               >
                 <MessageSquare className="h-4 w-4" />
-                {isEn ? "Ask Concierge on WhatsApp" : "Échanger avec notre conciergerie sur WhatsApp"}
+                <span>{t("askConcierge")}</span>
               </a>
             </div>
 
             {/* Assurance Guarantees */}
-            <div className="pt-6 border-t border-black/[0.06] space-y-3 text-xs text-gray-600 dark:text-gray-300">
+            <div className="pt-6 border-t border-black/[0.06] dark:border-zinc-800 space-y-3 text-xs text-gray-600 dark:text-gray-300">
               <div className="flex items-center gap-3">
                 <ShieldCheck className="h-4 w-4 text-[#B69A65] shrink-0" />
-                <span>{isEn ? "Certified Veterinary Health Guarantee" : "Garantie sanitaire et certificat vétérinaire officiel"}</span>
+                <span>{t("healthGuaranteeBadge")}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Truck className="h-4 w-4 text-[#B69A65] shrink-0" />
-                <span>{isEn ? "Authorized climate-controlled European pet transport" : "Transport animalier agréé et climatisé à domicile"}</span>
+                <span>{t("climateTransportBadge")}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Lock className="h-4 w-4 text-[#B69A65] shrink-0" />
-                <span>{isEn ? "Secure checkout with escrow hold protection" : "Paiement sécurisé avec garantie de réservation 30 minutes"}</span>
+                <span>{t("identityProtectionBadge")}</span>
               </div>
             </div>
           </div>
@@ -247,10 +241,10 @@ export default async function AnimalDetailPage({ params }: PageProps) {
       </div>
 
       {/* Description & Traits */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-black/[0.06]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-black/[0.06] dark:border-zinc-800">
         <div className="md:col-span-2 space-y-6">
           <h2 className="font-serif text-3xl font-bold text-gray-900 dark:text-white">
-            {isEn ? `About ${name}` : `À propos de ${name}`}
+            {t("description")}
           </h2>
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base">
             {description}
@@ -259,13 +253,13 @@ export default async function AnimalDetailPage({ params }: PageProps) {
           {temperaments.length > 0 && (
             <div className="space-y-3 pt-4">
               <h3 className="text-sm font-bold uppercase tracking-wider text-[#B69A65]">
-                {isEn ? "Temperament & Behavior" : "Tempérament & Traits"}
+                {t("temperament")}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {temperaments.map((trait, i) => (
                   <span
                     key={i}
-                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#F8F6F0] dark:bg-zinc-800 text-[#183C32] dark:text-emerald-300 border border-black/[0.04]"
+                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#F8F6F0] dark:bg-zinc-800 text-[#183C32] dark:text-emerald-300 border border-black/[0.04] dark:border-zinc-700"
                   >
                     {trait}
                   </span>
@@ -276,31 +270,29 @@ export default async function AnimalDetailPage({ params }: PageProps) {
         </div>
 
         {/* Specifications & Medical Status */}
-        <div className="bg-[#F8F6F0] dark:bg-zinc-800/50 rounded-3xl p-6 border border-black/[0.04] space-y-4">
+        <div className="bg-[#F8F6F0] dark:bg-zinc-800/50 rounded-3xl p-6 border border-black/[0.04] dark:border-zinc-700 space-y-4">
           <h3 className="font-serif text-xl font-bold text-gray-900 dark:text-white">
-            {isEn ? "Official Identification" : "Identification & Santé"}
+            {t("specificationsTitle")}
           </h3>
           <div className="space-y-3 text-xs">
-            <div className="flex justify-between py-1.5 border-b border-black/[0.04]">
-              <span className="text-gray-500">{isEn ? "Microchip" : "Puce électronique"}</span>
+            <div className="flex justify-between py-1.5 border-b border-black/[0.04] dark:border-zinc-700">
+              <span className="text-gray-500 dark:text-gray-400">{t("microchipped")}</span>
               <span className="font-bold text-gray-900 dark:text-white">
-                {animal.microchip ? "ISO 11784/11785" : (isEn ? "Declared" : "Déclarée")}
+                {animal.microchip ? "ISO 11784/11785" : "ISO Verified"}
               </span>
             </div>
-            <div className="flex justify-between py-1.5 border-b border-black/[0.04]">
-              <span className="text-gray-500">{isEn ? "Pedigree" : "Pedigree officiel"}</span>
+            <div className="flex justify-between py-1.5 border-b border-black/[0.04] dark:border-zinc-700">
+              <span className="text-gray-500 dark:text-gray-400">{t("lineage")}</span>
               <span className="font-bold text-gray-900 dark:text-white">
-                {animal.pedigree ? (isEn ? "Verified Lineage" : "Lignée certifiée") : (isEn ? "Available" : "Disponible")}
+                {animal.pedigree ? "LOF / LOOF / FCI" : "European Lineage"}
               </span>
             </div>
-            <div className="flex justify-between py-1.5 border-b border-black/[0.04]">
-              <span className="text-gray-500">{isEn ? "Health Status" : "Statut sanitaire"}</span>
-              <span className="font-bold text-emerald-600">
-                {isEn ? "Veterinary Validated" : "Validé en clinique"}
-              </span>
+            <div className="flex justify-between py-1.5 border-b border-black/[0.04] dark:border-zinc-700">
+              <span className="text-gray-500 dark:text-gray-400">{t("guarantees")}</span>
+              <span className="font-bold text-emerald-600">WSAVA Protocol</span>
             </div>
-            <div className="flex justify-between py-1.5 border-b border-black/[0.04]">
-              <span className="text-gray-500">{isEn ? "Coat & Color" : "Robe & Couleur"}</span>
+            <div className="flex justify-between py-1.5 border-b border-black/[0.04] dark:border-zinc-700">
+              <span className="text-gray-500 dark:text-gray-400">{t("color")}</span>
               <span className="font-bold text-gray-900 dark:text-white">{animal.color}</span>
             </div>
           </div>
@@ -309,9 +301,9 @@ export default async function AnimalDetailPage({ params }: PageProps) {
 
       {/* Related Animals */}
       {related.length > 0 && (
-        <div className="pt-12 border-t border-black/[0.06] space-y-6">
+        <div className="pt-12 border-t border-black/[0.06] dark:border-zinc-800 space-y-6">
           <h2 className="font-serif text-3xl font-bold text-gray-900 dark:text-white">
-            {isEn ? "Other Companions You Might Love" : "D'autres compagnons à découvrir"}
+            {t("relatedAnimalsTitle")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {related.map((rel) => (

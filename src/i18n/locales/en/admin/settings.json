@@ -1,0 +1,17 @@
+{
+  "AdminSettings": {
+    "title": "Platform Settings & Diagnostics",
+    "subtitle": "Configure transport fees, VAT rates, test email delivery, and inspect system integrity.",
+    "generalSectionTitle": "Operational & Pricing Parameters",
+    "transportFeeLabel": "Standard Transport Fee (€)",
+    "conciergeFeeLabel": "Concierge & Vet Protocol Fee (€)",
+    "vatRateLabel": "Applicable VAT Rate (%)",
+    "holdMinutesLabel": "Reservation Hold Duration (Minutes)",
+    "saveSettingsBtn": "Save Settings",
+    "diagnosticsSectionTitle": "System Diagnostics & Connectivity",
+    "dbStatus": "Database Engine",
+    "geniusPayStatus": "GeniusPay Sandbox/Live Mode",
+    "emailStatus": "Resend API Status",
+    "sendTestEmailBtn": "Send Test Email"
+  }
+}

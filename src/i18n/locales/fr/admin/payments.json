@@ -1,0 +1,22 @@
+{
+  "AdminPayments": {
+    "title": "Règlements & Journal des Webhooks",
+    "subtitle": "Auditez les transactions GeniusPay, vérifiez les signatures cryptographiques et le statut des paiements.",
+    "tableColRef": "Réf. Transaction",
+    "tableColOrder": "Réf. Commande",
+    "tableColAmount": "Montant",
+    "tableColMethod": "Mode",
+    "tableColStatus": "Statut",
+    "tableColDate": "Horodatage",
+    "statusPending": "En attente",
+    "statusProcessing": "En traitement",
+    "statusCompleted": "Validé",
+    "statusFailed": "Échoué",
+    "statusCancelled": "Annulé",
+    "statusRefunded": "Remboursé",
+    "webhookLedgerTitle": "Journal d'Audit des Webhooks Entrants",
+    "tableColEvent": "Type d'Événement",
+    "tableColDelivery": "ID Livraison",
+    "tableColValidSig": "Signature Valide"
+  }
+}

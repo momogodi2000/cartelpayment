@@ -1,0 +1,43 @@
+{
+  "About": {
+    "metaTitle": "À Propos | pawelium — Théodore de Parin",
+    "badge": "Notre Histoire",
+    "title": "Passion Canine, Féline & Excellence Européenne",
+    "subtitle": "pawelium est né de la passion de Théodore de Parin pour les animaux de race. Avec 6 ans d'expérience, il met en relation les familles avec les meilleurs éleveurs de chiens et de chats certifiés d'Europe.",
+    "founderBadge": "Fondateur & Expert Canin et Félin",
+    "founderName": "Théodore de Parin",
+    "founderP1": "Passionné d'élevage depuis l'enfance, Théodore a fondé pawelium en 2018 avec un objectif simple : aider les familles à trouver leur compagnon idéal — chien ou chat — auprès d'éleveurs sérieux et certifiés.",
+    "founderP2": "Son réseau couvre aujourd'hui cinq pays européens (France, Belgique, Allemagne, Pays-Bas, Espagne) et regroupe exclusivement des élevages affiliés à la FCI/LOF pour les chiens et au LOOF pour les chats, ou à leurs registres nationaux équivalents (VDH, LOSH…).",
+    "experience": "6 ans",
+    "experienceLabel": "Expérience dans la sélection canine",
+    "locationCity": "Paris",
+    "locationAddress": "77 Bd Saint-Jacques, 75014",
+    "journeyTitle": "Notre Parcours",
+    "timeline": {
+      "t2018Label": "Création de pawelium",
+      "t2018Desc": "Lancement de l'activité de sélection canine à Paris, avec une première sélection de Golden Retrievers et de Bouledogues Français.",
+      "t2020Label": "Réseau Européen",
+      "t2020Desc": "Extension du réseau à des éleveurs partenaires en Belgique, en Allemagne et aux Pays-Bas. Première collaboration avec des éleveurs certifiés FCI.",
+      "t2022Label": "Certification & Expertise",
+      "t2022Desc": "Ouverture aux élevages félins (LOOF) et approfondissement de l'expertise en santé animale et protocoles de vaccination. Partenariats renforcés avec des vétérinaires européens.",
+      "t2024Label": "Plateforme Digitale",
+      "t2024Desc": "Lancement de pawelium.fyi, une vitrine digitale premium pour présenter les plus beaux chiots et chatons de race de notre réseau européen."
+    },
+    "valuesTitle": "Nos Valeurs",
+    "values": {
+      "selectionTitle": "Sélection Rigoureuse",
+      "selectionDesc": "Chaque chien présenté est sélectionné selon des critères stricts de santé, de tempérament et de lignée FCI/LOF.",
+      "welfareTitle": "Bien-être Animal",
+      "welfareDesc": "Nos éleveurs partenaires respectent les standards européens de bien-être animal et les recommandations WSAVA.",
+      "transparencyTitle": "Transparence Totale",
+      "transparencyDesc": "Toutes les informations — santé, pedigree, vaccination, lignée — sont présentées clairement et sans ambiguïté.",
+      "supportTitle": "Accompagnement Personnalisé",
+      "supportDesc": "Contact direct par WhatsApp pour répondre à toutes vos questions, avant et après l'acquisition."
+    },
+    "ctaTitle": "Parlons de Votre Projet",
+    "ctaSubtitle": "Contactez Théodore directement via WhatsApp. Il vous guidera dans la recherche de votre compagnon idéal.",
+    "contactTheodore": "Contacter Théodore",
+    "viewCatalogue": "Voir le Catalogue",
+    "whatsappMessage": "Bonjour ! Je souhaite en savoir plus sur Théodore de Parin et pawelium."
+  }
+}

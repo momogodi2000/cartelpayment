@@ -1,0 +1,20 @@
+{
+  "AdminDashboard": {
+    "title": "Tableau de Bord Opérationnel SUPER_ADMIN",
+    "subtitle": "Indicateurs clés, réservations actives, règlements et anomalies de réconciliation en temps réel.",
+    "roleBadge": "SUPER_ADMIN",
+    "statAnimals": "Total Animaux au Catalogue",
+    "statAvailable": "Disponibles à l'Adoption",
+    "statHeld": "Réservations en Cours (15 min)",
+    "statOrders": "Total Commandes",
+    "statRevenue": "Chiffre d'Affaires Encaissé",
+    "statTickets": "Tickets Support Ouverts",
+    "exceptionCenterTitle": "Centre de Réconciliation & Anomalies",
+    "noExceptionsNotice": "Toutes les transactions et réservations sont parfaitement réconciliées. Aucune anomalie en attente.",
+    "exceptionsWarning": "Des anomalies de paiement ou d'expiration de réservation requièrent votre intervention immédiate.",
+    "recentOrdersTitle": "Dernières Commandes d'Adoption",
+    "viewAllOrdersBtn": "Voir toutes les commandes",
+    "recentPaymentsTitle": "Dernières Transactions GeniusPay",
+    "viewAllPaymentsBtn": "Voir tous les paiements"
+  }
+}

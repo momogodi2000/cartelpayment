@@ -1,0 +1,21 @@
+{
+  "Confirmation": {
+    "successTitle": "Adoption Confirmée !",
+    "successSubtitle": "Votre paiement a été validé avec succès par notre passerelle sécurisée.",
+    "orderRefLabel": "Numéro de Commande",
+    "orderRefCopy": "Conservez précieusement cette référence pour votre suivi d'adoption.",
+    "nextStepsTitle": "Les Prochaines Étapes de votre Compagnon",
+    "step1Title": "Bilan Vétérinaire & Passeport",
+    "step1Desc": "Notre vétérinaire partenaire réalise l'examen de santé final, délivre le passeport européen et vérifie la puce.",
+    "step2Title": "Planification du Transport",
+    "step2Desc": "Notre transporteur animalier agréé prend contact avec vous pour définir le créneau précis de livraison.",
+    "step3Title": "Suivi en Direct",
+    "step3Desc": "Suivez chaque étape de l'acheminement en temps réel sur notre portail dédié.",
+    "trackOrderBtn": "Suivre mon Adoption",
+    "returnHomeBtn": "Retour à l'Accueil",
+    "cancelTitle": "Paiement Non Finalisé",
+    "cancelSubtitle": "La transaction a été annulée ou interrompue. Votre réservation temporaire de 15 minutes a été libérée.",
+    "retryBtn": "Recommencer la Commande",
+    "browseCatalogBtn": "Parcourir le Catalogue"
+  }
+}

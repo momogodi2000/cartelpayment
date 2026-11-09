@@ -57,7 +57,7 @@ export default function OpengraphImage() {
             Chiens, chats, chiots &amp; chatons de race
           </div>
           <div style={{ fontSize: 34, color: "#6b5c48", maxWidth: 900 }}>
-            Sélection européenne · pedigree LOF / LOOF · contact direct WhatsApp
+            Sélection éthique européenne · Passeport &amp; ICAD certifiés
           </div>
         </div>
 
@@ -67,15 +67,15 @@ export default function OpengraphImage() {
               display: "flex",
               alignItems: "center",
               gap: 12,
-              background: "#bd5a34",
+              background: "#183C32",
               color: "#fff",
-              fontSize: 30,
+              fontSize: 26,
               fontWeight: 700,
               padding: "10px 24px",
               borderRadius: 999,
             }}
           >
-            −35 % offre de lancement
+            Marché Européen d'Exception
           </div>
           <div style={{ fontSize: 30, color: "#8a7a63" }}>{domain}</div>
         </div>

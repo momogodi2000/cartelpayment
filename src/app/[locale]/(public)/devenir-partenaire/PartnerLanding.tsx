@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
+import { actionSubmitBreederApplication } from "@/app/actions/partner";
 import {
   ANIMAL_CATEGORIES,
   DEPOSIT_INDICATIONS,
@@ -210,6 +211,20 @@ export default function PartnerLanding() {
       setStep(5);
       return;
     }
+    actionSubmitBreederApplication({
+      name: `${data.profile.prenom} ${data.profile.nom}`.trim() || data.profile.elevage || "Breeder Applicant",
+      email: data.profile.email,
+      phone: data.profile.telephone,
+      whatsapp: data.profile.whatsapp,
+      kennelName: data.profile.elevage,
+      city: data.location.city,
+      country: data.location.country,
+      statusType: data.profile.statut,
+      experienceYears: data.profile.experience,
+      notes: data.animals.notes,
+      rawPayload: JSON.stringify(data),
+    }).catch(console.error);
+
     window.open(`https://wa.me/${PARTNERSHIP_WHATSAPP}?text=${buildWhatsAppMessage()}`, "_blank", "noopener");
   };
 

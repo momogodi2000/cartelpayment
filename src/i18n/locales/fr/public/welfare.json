@@ -1,0 +1,29 @@
+{
+  "Welfare": {
+    "badge": "Engagement Éthique Européen",
+    "title": "Charte du Bien-Être Animal & d'Éthique",
+    "subtitle": "Pawelium a été fondé sur des principes stricts de respect, de bientraitance et d'exigence sanitaire.",
+    "pillars": {
+      "pedigreeTitle": "Pedigree Européen Certifié",
+      "pedigreeDesc": "Tous nos animaux sont inscrits ou certifiés au LOF, LOOF ou registres membres de la FCI. La traçabilité généalogique des parents est vérifiable.",
+      "vetTitle": "Supervision Vétérinaire Rigoureuse",
+      "vetDesc": "Examen de santé complet, délivrance du passeport européen, puce électronique ISO 11784/11785 et primovaccinations conformes aux protocoles WSAVA.",
+      "familyTitle": "Élevage Familial & Sociabilisation",
+      "familyDesc": "Nos chiots et chatons grandissent au sein de foyers attentifs, au contact d'enfants et d'autres animaux, garantissant un tempérament équilibré.",
+      "weaningTitle": "Respect de l'Âge Légal de Sevrage",
+      "weaningDesc": "Aucun animal ne quitte sa fratrie avant l'âge légal minimal de 8 à 10 semaines, assurant un sevrage alimentaire et affectif complet."
+    },
+    "audits": {
+      "title": "Nos Critères d'Audit & de Sélection",
+      "p1": "Chaque élevage partenaire de notre réseau européen fait l'objet d'audits stricts. Nous vérifions la densité animale, la propreté des maternités, le repos des femelles entre les portées et l'éveil précoce des petits.",
+      "p2": "Nous refusons catégoriquement les usines à chiots, les négociants et les intermédiaires sans traçabilité. Les reproducteurs disposent de tests génétiques attestant de l'absence de tares héréditaires."
+    },
+    "transport": {
+      "title": "Transport Respectueux & Climatisé",
+      "desc": "L'acheminement est exclusivement assuré par des transporteurs animaliers agréés, titulaires du CAPTAV et déclarés selon le Règlement (CE) n° 1/2005. Les véhicules sont climatisés, désinfectés et équipés de dispositifs d'abreuvement et de premiers soins."
+    },
+    "ctaTitle": "Adoptez en Toute Sérénité",
+    "ctaSubtitle": "Découvrez nos chiots et chatons sélectionnés avec amour et prêts à rejoindre leur famille pour la vie.",
+    "ctaButton": "Découvrir les Animaux Disponibles"
+  }
+}

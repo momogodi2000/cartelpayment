@@ -1,0 +1,8 @@
+{
+  "Payment": {
+    "redirectTitle": "Redirection vers le Paiement Sécurisé",
+    "redirectSubtitle": "Vous allez être redirigé vers la page sécurisée GeniusPay pour finaliser votre adoption.",
+    "doNotClose": "Veuillez ne pas fermer ni actualiser cette fenêtre.",
+    "securityNotice": "Transactions chiffrées en TLS 1.3 avec authentification bancaire 3D-Secure obligatoire."
+  }
+}

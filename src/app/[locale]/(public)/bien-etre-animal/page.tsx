@@ -1,142 +1,141 @@
-import React from 'react';
-import type { Metadata } from 'next';
-import { getLocale, setRequestLocale } from 'next-intl/server';
-import { HeartHandshake, ShieldCheck, CheckCircle2, Award, Stethoscope, Home, Sparkles } from 'lucide-react';
-import Link from 'next/link';
+import React from "react";
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { HeartHandshake, ShieldCheck, Award, Stethoscope, Home, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Link } from "@/i18n/routing";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
   const { locale } = await params;
-  const isEn = locale === 'en';
+  const tMeta = await getTranslations({ locale, namespace: "Meta" });
   return {
-    title: isEn
-      ? 'Animal Welfare & Ethical Breeding Charter | Pawelium Europe'
-      : 'Charte Éthique & Bien-Être Animal | Pawelium Europe',
-    description: isEn
-      ? 'Pawelium’s European Animal Welfare Charter: Strict ethical breeder audits, zero-tolerance puppy farm policy, certified socialization and veterinary health monitoring.'
-      : 'La Charte de Bien-Être Animal Pawelium : sélection rigoureuse d\'éleveurs familiaux, zéro tolérance pour les usines à chiots, sociabilisation et suivi vétérinaire strict.',
+    title: tMeta("welfareTitle"),
+    description: tMeta("welfareDescription"),
   };
 }
 
-export default async function AnimalWelfarePage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function AnimalWelfarePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const isEn = locale === 'en';
+  const t = await getTranslations("Welfare");
 
   const pillars = [
     {
       icon: Award,
-      title: isEn ? 'Certified European Pedigree' : 'Pedigree Européen Certifié',
-      desc: isEn
-        ? 'All listings adhere to official national kennel and feline clubs (LOF in France, LOOF for cats, FCI partner associations). Lineages are documented and verifiable.'
-        : 'Tous nos animaux sont inscrits ou certifiés au LOF, LOOF ou registres membres de la FCI. La traçabilité généalogique des parents est vérifiable.',
+      title: t("pillars.pedigreeTitle"),
+      desc: t("pillars.pedigreeDesc"),
     },
     {
       icon: Stethoscope,
-      title: isEn ? 'Official Veterinary Supervision' : 'Supervision Vétérinaire Rigoureuse',
-      desc: isEn
-        ? 'Mandatory multi-point health check, European pet passport, ISO microchip implantation, and comprehensive core vaccinations prior to departure.'
-        : 'Examen de santé complet, délivrance du passeport européen, puce électronique ISO 11784/11785 et primovaccinations conformes aux protocoles WSAVA.',
+      title: t("pillars.vetTitle"),
+      desc: t("pillars.vetDesc"),
     },
     {
       icon: Home,
-      title: isEn ? 'Family-Raised & Socialized' : 'Élevage Familial & Sociabilisation',
-      desc: isEn
-        ? 'Puppies and kittens grow up in home environments with human interaction, sensory enrichment, and daily care — never industrial breeding facilities.'
-        : 'Nos chiots et chatons grandissent au sein de foyers attentifs, au contact d\'enfants et d\'autres animaux, garantissant un tempérament équilibré.',
+      title: t("pillars.familyTitle"),
+      desc: t("pillars.familyDesc"),
     },
     {
       icon: ShieldCheck,
-      title: isEn ? 'Minimum Legal Age Compliance' : 'Respect de l\'Âge Légal de Sevrage',
-      desc: isEn
-        ? 'No animal leaves their mother before reaching the statutory age of at least 8 to 10 weeks, ensuring biological and psychological weaning.'
-        : 'Aucun animal ne quitte sa fratrie avant l\'âge légal minimal de 8 à 10 semaines, assurant un sevrage alimentaire et affectif complet.',
+      title: t("pillars.weaningTitle"),
+      desc: t("pillars.weaningDesc"),
     },
   ];
 
   return (
-    <div className="bg-[#F8F6F0] min-h-screen py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#183C32]/10 text-[#183C32] text-xs font-bold uppercase tracking-wider mb-3">
+    <div className="bg-[#F8F6F0] dark:bg-zinc-950 min-h-screen py-16 px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="max-w-5xl mx-auto space-y-16">
+        {/* Header Hero */}
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#183C32]/10 dark:bg-emerald-950/40 text-[#183C32] dark:text-emerald-400 text-xs font-bold uppercase tracking-widest">
             <HeartHandshake className="w-4 h-4 text-[#B69A65]" />
-            <span>{isEn ? 'Ethical European Commitment' : 'Engagement Éthique Européen'}</span>
+            <span>{t("badge")}</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif text-[#183C32] font-bold">
-            {isEn ? 'Animal Welfare & Quality Charter' : 'Charte du Bien-Être Animal & d\'Éthique'}
+          <h1 className="text-4xl sm:text-5xl font-serif text-[#183C32] dark:text-white font-bold tracking-tight">
+            {t("title")}
           </h1>
-          <p className="text-gray-600 text-sm mt-3 max-w-xl mx-auto leading-relaxed">
-            {isEn
-              ? 'Pawelium was founded to put animal health, dignity, and European breeding transparency first.'
-              : 'Pawelium a été fondé sur des principes stricts de respect, de bientraitance et d\'exigence sanitaire.'}
+          <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed">
+            {t("subtitle")}
           </p>
+          <div className="h-1 w-20 bg-[#B69A65] mx-auto rounded-full" />
         </div>
 
-        {/* Pillars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          {pillars.map((p, idx) => {
-            const Icon = p.icon;
+        {/* 4 Pillars Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {pillars.map((pillar, idx) => {
+            const Icon = pillar.icon;
             return (
               <div
                 key={idx}
-                className="bg-white p-6 rounded-2xl border border-[#EDE7DC] shadow-sm hover:border-[#183C32]/30 transition-all"
+                className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-[#EDE7DC] dark:border-zinc-800 shadow-sm hover:shadow-md hover:border-[#183C32]/30 transition-all group"
               >
-                <div className="w-10 h-10 rounded-xl bg-[#183C32]/10 text-[#183C32] flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5 text-[#B69A65]" />
+                <div className="w-12 h-12 rounded-2xl bg-[#183C32]/10 dark:bg-emerald-950/60 text-[#183C32] dark:text-emerald-400 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                  <Icon className="w-6 h-6 text-[#B69A65]" />
                 </div>
-                <h3 className="font-serif font-bold text-base text-[#202823] mb-2">{p.title}</h3>
-                <p className="text-xs text-gray-600 leading-relaxed">{p.desc}</p>
+                <h3 className="font-serif font-bold text-xl text-[#202823] dark:text-white mb-3">
+                  {pillar.title}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {pillar.desc}
+                </p>
               </div>
             );
           })}
         </div>
 
-        {/* Deep commitments */}
-        <div className="bg-white rounded-2xl border border-[#EDE7DC] shadow-sm p-8 sm:p-10 space-y-6">
-          <h2 className="text-2xl font-serif text-[#183C32] font-bold">
-            {isEn ? 'Our Zero-Tolerance Breeder Audits' : 'Nos Critères d\'Audit & de Sélection'}
-          </h2>
-
-          <div className="space-y-4 text-xs sm:text-sm text-gray-700 leading-relaxed">
-            <div className="flex items-start space-x-3">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-              <p>
-                <strong>{isEn ? 'Physical Inspection:' : 'Inspection sur site :'}</strong>{' '}
-                {isEn
-                  ? 'We vet breeder facilities, sanitation protocols, maternal rest cycles, and open living spaces.'
-                  : 'Vérification de la propreté des installations, du respect des périodes de repos des reproductrices et de l\'espace de vie.'}
-              </p>
+        {/* Audits & Standards Deep Dive */}
+        <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-[#EDE7DC] dark:border-zinc-800 shadow-sm p-8 sm:p-12 space-y-8">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#B69A65]">
+              <Sparkles className="w-4 h-4" />
+              <span>{t("audits.title")}</span>
             </div>
-            <div className="flex items-start space-x-3">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-              <p>
-                <strong>{isEn ? 'Genetic Health Screening:' : 'Tests génétiques & dépistages :'}</strong>{' '}
-                {isEn
-                  ? 'Breed-specific DNA screenings (e.g., HCM/PKD in Maine Coons, Hip/Elbow dysplasia in Golden Retrievers) are required for breeding pairs.'
-                  : 'Dépistages ADN des tares héréditaires (HCM/PKD chez les chats de race, dysplasie chez les grands chiens) exigés pour les reproducteurs.'}
-              </p>
-            </div>
-            <div className="flex items-start space-x-3">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-              <p>
-                <strong>{isEn ? 'Post-Adoption Assistance:' : 'Accompagnement post-adoption :'}</strong>{' '}
-                {isEn
-                  ? 'Lifetime guidance and nutritional transition advice provided to every adoptive family across Europe.'
-                  : 'Conseils personnalisés de transition alimentaire, éducation bienveillante et suivi d\'adaptation garantis à vie.'}
-              </p>
-            </div>
+            <h2 className="text-3xl font-serif text-[#183C32] dark:text-white font-bold">
+              {t("audits.title")}
+            </h2>
+            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+              {t("audits.p1")}
+            </p>
+            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+              {t("audits.p2")}
+            </p>
           </div>
 
-          <div className="pt-6 border-t border-[#EDE7DC] flex justify-between items-center">
-            <Link href="/catalogue" className="text-xs font-bold text-[#183C32] hover:underline">
-              {isEn ? 'Browse Verified European Companions →' : 'Découvrir nos animaux sélectionnés →'}
-            </Link>
-            <Link
-              href="/checkout"
-              className="bg-[#183C32] hover:bg-[#122e26] text-white px-5 py-2.5 rounded-lg text-xs font-semibold transition-all"
-            >
-              {isEn ? 'Direct Checkout' : 'Passer Commande'}
-            </Link>
+          <div className="p-6 rounded-2xl bg-[#F8F6F0] dark:bg-zinc-800/60 border border-[#EDE7DC] dark:border-zinc-700 space-y-3">
+            <h4 className="font-serif font-bold text-lg text-[#183C32] dark:text-emerald-400">
+              {t("transport.title")}
+            </h4>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+              {t("transport.desc")}
+            </p>
+          </div>
+        </div>
+
+        {/* Call to Action Banner */}
+        <div className="rounded-3xl bg-[#183C32] text-white p-8 sm:p-12 text-center space-y-6 shadow-xl relative overflow-hidden">
+          <div className="relative z-10 max-w-2xl mx-auto space-y-4">
+            <h3 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight">
+              {t("ctaTitle")}
+            </h3>
+            <p className="text-sm sm:text-base text-white/80 leading-relaxed">
+              {t("ctaSubtitle")}
+            </p>
+            <div className="pt-2">
+              <Link
+                href="/animals"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-[#B69A65] text-white font-bold text-sm hover:bg-[#B69A65]/90 shadow-md transition-all hover:scale-105"
+              >
+                <span>{t("ctaButton")}</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

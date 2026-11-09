@@ -130,14 +130,14 @@ export default function DogCard({ dog }: DogCardProps) {
         <div className="absolute top-4 right-4 flex flex-col gap-1.5 pointer-events-none">
           {dog.pedigree && (
             <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/95 text-[#183C32] shadow-sm border border-black/[0.04]">
-              <Shield className="h-2.5 w-2.5" />
-              Pedigree
+              <Shield className="h-2.5 w-2.5 text-[#B69A65]" />
+              LOF / LOOF
             </span>
           )}
           {dog.microchip && (
             <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/95 text-[#183C32] shadow-sm border border-black/[0.04]">
-              <CheckCircle className="h-2.5 w-2.5" />
-              Puce
+              <CheckCircle className="h-2.5 w-2.5 text-emerald-600" />
+              ISO 11784
             </span>
           )}
         </div>
@@ -172,7 +172,7 @@ export default function DogCard({ dog }: DogCardProps) {
             href={{ pathname: "/animals/[slug]", params: { slug: dog.slug } }}
             className="flex-1 text-center py-2.5 px-4 rounded-xl text-xs font-bold bg-[#183C32] text-white hover:bg-[#183C32]/90 shadow-sm transition-colors"
           >
-            {isAvailable ? (locale === "fr" ? "Réserver / Adopter" : "Reserve / Adopt") : t("viewProfile")}
+            {isAvailable ? t("reserveBtn") : t("viewProfile")}
           </Link>
 
           <a

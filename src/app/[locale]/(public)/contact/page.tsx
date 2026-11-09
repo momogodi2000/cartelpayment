@@ -4,6 +4,7 @@ import { MessageCircle, Mail, MapPin, Clock } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { getWhatsAppLink, siteConfig } from "@/data/site";
+import ContactFormClient from "./ContactFormClient";
 
 export const revalidate = 86400;
 
@@ -82,6 +83,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           </div>
         ))}
       </div>
+
+      <ContactFormClient locale={locale} />
 
       <div className="text-center p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
         <p className="text-sm text-text-premium/70">{t("faqText")}</p>

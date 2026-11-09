@@ -1,0 +1,17 @@
+{
+  "AdminSupport": {
+    "title": "Support Conciergerie & Demandes",
+    "subtitle": "Traitez les tickets adoptants, transmettez les réponses officielles et annotez les fiches en notes privées.",
+    "tableColRef": "Réf. Ticket",
+    "tableColCustomer": "Client",
+    "tableColCategory": "Catégorie",
+    "tableColSubject": "Sujet",
+    "tableColStatus": "Statut",
+    "tableColDate": "Créé le",
+    "tableColActions": "Répondre",
+    "replyModalTitle": "Fil d'Échange avec l'Adoptant",
+    "internalNoteLabel": "Note Interne Privée (Visible uniquement par le SUPER_ADMIN)",
+    "publicReplyLabel": "Réponse Publique Adoptant (Envoyée par email)",
+    "sendReplyBtn": "Transmettre la Réponse"
+  }
+}

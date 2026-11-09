@@ -1,0 +1,27 @@
+{
+  "Contact": {
+    "title": "Contact Us",
+    "subtitle": "The fastest way to reach us is via WhatsApp. We usually respond within 2 hours.",
+    "whatsappTitle": "WhatsApp",
+    "whatsappDesc": "Send us a message directly. We'll reply quickly.",
+    "openWhatsapp": "Open WhatsApp",
+    "whatsappMessage": "Hello! I visited pawelium and would like to ask some questions about your available animals.",
+    "email": "Email",
+    "availability": "Availability",
+    "availabilityValue": "Mon–Sat, 9am–7pm",
+    "serviceArea": "Service area",
+    "serviceAreaValue": "Europe",
+    "faqText": "Before contacting us, check our FAQ which answers the most common questions.",
+    "faqLink": "View FAQ →",
+    "formTitle": "Send an Inquiry",
+    "formDesc": "Our concierge team will respond promptly to your inquiry.",
+    "nameLabel": "Full Name",
+    "emailLabel": "Email Address",
+    "subjectLabel": "Subject",
+    "messageLabel": "Your Message",
+    "sendBtn": "Send Message",
+    "sendingBtn": "Sending...",
+    "successTitle": "Message Sent Successfully",
+    "successBody": "Your inquiry has been received (Ref: {ref}). Our concierge will reply by email."
+  }
+}

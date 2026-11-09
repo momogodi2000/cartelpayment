@@ -147,7 +147,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-extrabold px-6 py-4 rounded-2xl border border-white/30 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-sm"
               >
                 <Package className="h-4.5 w-4.5 text-[#B69A65] shrink-0" />
-                <span>{isEn ? "Track an Order" : "Suivre une Commande"}</span>
+                <span>{t("trust.trackOrder")}</span>
               </Link>
             </div>
           </div>
@@ -164,10 +164,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </div>
             <div>
               <h4 className="text-xs font-bold font-serif text-[#202823] dark:text-white uppercase tracking-wider">
-                {isEn ? "Card Payment in EUR" : "Paiement Bancaire EUR"}
+                {t("trust.paymentTitle")}
               </h4>
               <p className="text-[11px] text-gray-500 mt-1">
-                {isEn ? "100% full payment via Visa & Mastercard (GeniusPay & Stripe)" : "Règlement 100% sécurisé Visa & Mastercard"}
+                {t("trust.paymentDesc")}
               </p>
             </div>
           </div>
@@ -178,10 +178,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </div>
             <div>
               <h4 className="text-xs font-bold font-serif text-[#202823] dark:text-white uppercase tracking-wider">
-                {isEn ? "Anti-Double Booking" : "Blocage Anti-Doublon"}
+                {t("trust.holdTitle")}
               </h4>
               <p className="text-[11px] text-gray-500 mt-1">
-                {isEn ? "Atomic 15-minute hold upon initiating checkout" : "Réservation exclusive pendant le passage en caisse"}
+                {t("trust.holdDesc")}
               </p>
             </div>
           </div>
@@ -192,10 +192,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </div>
             <div>
               <h4 className="text-xs font-bold font-serif text-[#202823] dark:text-white uppercase tracking-wider">
-                {isEn ? "Dedicated Pet Transport" : "Transport Agréé Dédié"}
+                {t("trust.transportTitle")}
               </h4>
               <p className="text-[11px] text-gray-500 mt-1">
-                {isEn ? "Doorstep delivery in climate-controlled European vehicles" : "Véhicules climatisés et convoyeurs certifiés"}
+                {t("trust.transportDesc")}
               </p>
             </div>
           </div>
@@ -206,10 +206,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </div>
             <div>
               <h4 className="text-xs font-bold font-serif text-[#202823] dark:text-white uppercase tracking-wider">
-                {isEn ? "Official EU Documentation" : "Passeport & Puce ISO"}
+                {t("trust.docsTitle")}
               </h4>
               <p className="text-[11px] text-gray-500 mt-1">
-                {isEn ? "Verified LOF/LOOF pedigree & European pet passports" : "Certificat vétérinaire et carnet de santé à jour"}
+                {t("trust.docsDesc")}
               </p>
             </div>
           </div>

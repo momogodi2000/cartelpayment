@@ -23,3 +23,24 @@ export async function subscribeNewsletter(email: string, locale = "en") {
 
   return subscriber;
 }
+
+export async function confirmNewsletterSubscription(token: string) {
+  const tokenHash = hashToken(token);
+  const subscriber = await prisma.newsletterSubscriber.findFirst({
+    where: { confirmTokenHash: tokenHash },
+  });
+
+  if (!subscriber) {
+    return { success: false, error: "INVALID_OR_EXPIRED_TOKEN" };
+  }
+
+  await prisma.newsletterSubscriber.update({
+    where: { id: subscriber.id },
+    data: {
+      status: NewsletterStatus.CONFIRMED,
+      confirmTokenHash: null,
+    },
+  });
+
+  return { success: true, email: subscriber.email };
+}

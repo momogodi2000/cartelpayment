@@ -5,24 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { startCheckout } from "@/app/actions/checkout";
-import { Loader2, Lock, ShieldCheck, Check } from "lucide-react";
+import { Loader2, Lock, ShieldCheck } from "lucide-react";
 import { Link } from "@/i18n/routing";
-
-const formSchema = z.object({
-  name: z.string().min(2, "Nom complet requis / Full name required"),
-  email: z.string().email("Adresse email valide requise / Valid email required"),
-  phone: z.string().min(8, "Numéro de téléphone valide requis / Valid phone number required"),
-  street: z.string().min(3, "Adresse postale requise / Street address required"),
-  city: z.string().min(2, "Ville requise / City required"),
-  postalCode: z.string().min(2, "Code postal requis / Postal code required"),
-  country: z.string().min(2, "Pays requis / Country required"),
-  deliveryMethod: z.enum(["standard", "express", "vip"]),
-  termsAccepted: z.boolean().refine((val) => val === true, {
-    message: "Vous devez accepter les conditions générales / You must accept terms",
-  }),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { useTranslations } from "next-intl";
 
 interface Props {
   animalId: string;
@@ -30,9 +15,25 @@ interface Props {
 }
 
 export default function CheckoutClientForm({ animalId, locale }: Props) {
-  const isEn = locale === "en";
+  const t = useTranslations("Checkout");
   const [serverError, setServerError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const formSchema = z.object({
+    name: z.string().min(2, t("fullName")),
+    email: z.string().email(t("email")),
+    phone: z.string().min(8, t("phone")),
+    street: z.string().min(3, t("street")),
+    city: z.string().min(2, t("city")),
+    postalCode: z.string().min(2, t("postalCode")),
+    country: z.string().min(2, t("country")),
+    deliveryMethod: z.enum(["standard", "express", "vip"]),
+    termsAccepted: z.boolean().refine((val) => val === true, {
+      message: t("termsError"),
+    }),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const {
     register,
@@ -73,14 +74,13 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
     try {
       const result = await startCheckout(formData);
       if (result.success && result.checkoutUrl) {
-        // Redirect to GeniusPay hosted checkout
         window.location.assign(result.checkoutUrl);
       } else {
-        setServerError(result.error || "Une erreur est survenue lors de l'initiation du paiement.");
+        setServerError(result.error || t("termsError"));
         setSubmitting(false);
       }
     } catch (err: unknown) {
-      setServerError(err instanceof Error ? err.message : "Erreur réseau.");
+      setServerError(err instanceof Error ? err.message : "Network error");
       setSubmitting(false);
     }
   };
@@ -88,25 +88,25 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {serverError && (
-        <div className="p-4 rounded-2xl bg-red-50 text-red-700 text-xs font-semibold border border-red-200">
+        <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-300 text-xs font-semibold">
           {serverError}
         </div>
       )}
 
-      {/* Customer Info */}
+      {/* Contact Info */}
       <div className="space-y-4">
-        <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-white border-b border-black/[0.06] pb-2">
-          {isEn ? "1. Adopter Identity" : "1. Identité de l'adoptant"}
+        <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-white border-b border-black/[0.06] dark:border-zinc-800 pb-2">
+          {t("contactSection")}
         </h3>
 
         <div>
           <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-            {isEn ? "Full Name" : "Nom et prénom complets"} *
+            {t("fullName")} *
           </label>
           <input
             {...register("name")}
-            placeholder="Claire Dupont"
-            className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
+            placeholder={t("fullNamePlaceholder")}
+            className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
           />
           {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>}
         </div>
@@ -114,25 +114,25 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-              {isEn ? "Email Address" : "Adresse email"} *
+              {t("email")} *
             </label>
             <input
               {...register("email")}
               type="email"
-              placeholder="claire@example.com"
-              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
+              placeholder={t("emailPlaceholder")}
+              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
             />
             {errors.email && <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>}
           </div>
 
           <div>
             <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-              {isEn ? "Phone (with country code)" : "Téléphone (avec indicatif)"} *
+              {t("phone")} *
             </label>
             <input
               {...register("phone")}
-              placeholder="+33 6 12 34 56 78"
-              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
+              placeholder={t("phonePlaceholder")}
+              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
             />
             {errors.phone && <p className="text-red-600 text-xs mt-1">{errors.phone.message}</p>}
           </div>
@@ -141,18 +141,18 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
 
       {/* Delivery Address */}
       <div className="space-y-4 pt-4">
-        <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-white border-b border-black/[0.06] pb-2">
-          {isEn ? "2. Delivery Destination" : "2. Adresse de livraison & transport"}
+        <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-white border-b border-black/[0.06] dark:border-zinc-800 pb-2">
+          {t("deliverySection")}
         </h3>
 
         <div>
           <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-            {isEn ? "Street Address" : "Adresse postale"} *
+            {t("street")} *
           </label>
           <input
             {...register("street")}
-            placeholder="12 rue de la Paix"
-            className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
+            placeholder={t("streetPlaceholder")}
+            className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
           />
           {errors.street && <p className="text-red-600 text-xs mt-1">{errors.street.message}</p>}
         </div>
@@ -160,24 +160,24 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div className="col-span-1">
             <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-              {isEn ? "City" : "Ville"} *
+              {t("city")} *
             </label>
             <input
               {...register("city")}
-              placeholder="Paris"
-              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
+              placeholder={t("cityPlaceholder")}
+              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
             />
             {errors.city && <p className="text-red-600 text-xs mt-1">{errors.city.message}</p>}
           </div>
 
           <div className="col-span-1">
             <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-              {isEn ? "Postal Code" : "Code postal"} *
+              {t("postalCode")} *
             </label>
             <input
               {...register("postalCode")}
-              placeholder="75002"
-              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
+              placeholder={t("postalCodePlaceholder")}
+              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]"
             />
             {errors.postalCode && (
               <p className="text-red-600 text-xs mt-1">{errors.postalCode.message}</p>
@@ -186,21 +186,54 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
 
           <div className="col-span-2 sm:col-span-1">
             <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-              {isEn ? "Country" : "Pays"} *
+              {t("country")} *
             </label>
             <select
               {...register("country")}
-              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32] bg-white"
+              className="w-full px-4 py-2.5 rounded-xl border border-black/[0.1] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32] bg-white"
             >
-              <option value="France">France</option>
-              <option value="Belgium">Belgique / Belgium</option>
-              <option value="Switzerland">Suisse / Switzerland</option>
-              <option value="Luxembourg">Luxembourg</option>
-              <option value="Germany">Allemagne / Germany</option>
-              <option value="Spain">Espagne / Spain</option>
-              <option value="Italy">Italie / Italy</option>
+              <option value="France">{t("countryFrance")}</option>
+              <option value="Belgium">{t("countryBelgium")}</option>
+              <option value="Switzerland">{t("countrySwitzerland")}</option>
+              <option value="Luxembourg">{t("countryLuxembourg")}</option>
+              <option value="Germany">{t("countryGermany")}</option>
+              <option value="Spain">{t("countrySpain")}</option>
+              <option value="Italy">{t("countryItaly")}</option>
             </select>
           </div>
+        </div>
+      </div>
+
+      {/* Transport Method */}
+      <div className="space-y-4 pt-4">
+        <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-white border-b border-black/[0.06] dark:border-zinc-800 pb-2">
+          {t("deliveryMethodSection")}
+        </h3>
+
+        <div className="space-y-2">
+          <label className="flex items-center gap-3 p-4 rounded-2xl border border-black/[0.06] dark:border-zinc-700 bg-white dark:bg-zinc-800 cursor-pointer hover:border-[#183C32]">
+            <input
+              type="radio"
+              value="standard"
+              {...register("deliveryMethod")}
+              className="h-4 w-4 text-[#183C32] focus:ring-[#183C32]"
+            />
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">
+              {t("standardDelivery")}
+            </span>
+          </label>
+
+          <label className="flex items-center gap-3 p-4 rounded-2xl border border-black/[0.06] dark:border-zinc-700 bg-white dark:bg-zinc-800 cursor-pointer hover:border-[#183C32]">
+            <input
+              type="radio"
+              value="express"
+              {...register("deliveryMethod")}
+              className="h-4 w-4 text-[#183C32] focus:ring-[#183C32]"
+            />
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">
+              {t("expressDelivery")}
+            </span>
+          </label>
         </div>
       </div>
 
@@ -213,31 +246,14 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
             className="mt-1 h-4 w-4 rounded border-gray-300 text-[#183C32] focus:ring-[#183C32]"
           />
           <span className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
-            {isEn ? (
-              <>
-                I acknowledge and accept the{" "}
-                <Link href="/conditions-generales-de-vente" target="_blank" className="underline font-bold text-[#183C32]">
-                  Terms and Conditions of Sale
-                </Link>{" "}
-                and the{" "}
-                <Link href="/politique-de-confidentialite" target="_blank" className="underline font-bold text-[#183C32]">
-                  Privacy Policy
-                </Link>
-                . I understand this initiates an official veterinary preparation protocol.
-              </>
-            ) : (
-              <>
-                Je reconnais avoir pris connaissance et j&apos;accepte sans réserve les{" "}
-                <Link href="/conditions-generales-de-vente" target="_blank" className="underline font-bold text-[#183C32]">
-                  Conditions Générales de Vente
-                </Link>{" "}
-                et la{" "}
-                <Link href="/politique-de-confidentialite" target="_blank" className="underline font-bold text-[#183C32]">
-                  Politique de Confidentialité
-                </Link>
-                . Je comprends que cet acte engage le protocole sanitaire vétérinaire officiel.
-              </>
-            )}
+            {t("termsCheckbox")}{" "}
+            <Link href="/conditions-generales-de-vente" target="_blank" className="underline font-bold text-[#183C32] dark:text-emerald-400">
+              [CGV]
+            </Link>{" "}
+            &amp;{" "}
+            <Link href="/politique-de-confidentialite" target="_blank" className="underline font-bold text-[#183C32] dark:text-emerald-400">
+              [RGPD]
+            </Link>
           </span>
         </label>
         {errors.termsAccepted && (
@@ -249,25 +265,23 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
       <button
         type="submit"
         disabled={submitting}
-        className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl bg-[#183C32] hover:bg-[#183C32]/90 text-white font-bold text-base shadow-lg shadow-[#183C32]/10 transition-all disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl bg-[#183C32] hover:bg-[#183C32]/90 text-white font-bold text-base shadow-lg shadow-[#183C32]/10 transition-all disabled:opacity-50 cursor-pointer"
       >
         {submitting ? (
           <>
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span>{isEn ? "Initializing Secure Checkout..." : "Initialisation du paiement sécurisé..."}</span>
+            <span>{t("processingButton")}</span>
           </>
         ) : (
           <>
             <Lock className="h-5 w-5 text-[#B69A65]" />
-            <span>{isEn ? "Proceed to Secure Payment (GeniusPay)" : "Valider et régler en ligne (GeniusPay)"}</span>
+            <span>{t("submitButton")}</span>
           </>
         )}
       </button>
 
       <p className="text-[11px] text-center text-gray-400">
-        {isEn
-          ? "Encrypted SSL transaction powered by GeniusPay merchant gateway. Real-time hold placed."
-          : "Transaction chiffrée SSL assurée par la passerelle agréée GeniusPay. Réservation instantanée."}
+        {t("secureBadge")}
       </p>
     </form>
   );

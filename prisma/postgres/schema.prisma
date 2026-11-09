@@ -288,6 +288,27 @@ model Breeder {
   animals             Animal[]
 }
 
+model BreederApplication {
+  id              String   @id @default(uuid())
+  name            String
+  email           String
+  phone           String?
+  whatsapp        String?
+  kennelName      String?
+  city            String?
+  country         String?
+  statusType      String?
+  experienceYears String?
+  notes           String?
+  rawPayload      String?
+  status          String   @default("PENDING")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+}
+
 model Animal {
   id              String          @id @default(uuid())
   slug            String          @unique
@@ -739,4 +760,18 @@ model RateLimitBucket {
   updatedAt   DateTime @updatedAt
 
   @@index([key, windowStart])
+}
+
+model TranslationOverride {
+  id        String   @id @default(uuid())
+  locale    String
+  namespace String
+  key       String
+  value     String
+  authorId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([locale, namespace, key])
+  @@index([locale, namespace])
 }

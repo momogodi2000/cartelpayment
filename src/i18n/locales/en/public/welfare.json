@@ -1,0 +1,29 @@
+{
+  "Welfare": {
+    "badge": "Ethical European Commitment",
+    "title": "Animal Welfare & Quality Charter",
+    "subtitle": "Pawelium was founded to put animal health, dignity, and European breeding transparency first.",
+    "pillars": {
+      "pedigreeTitle": "Certified European Pedigree",
+      "pedigreeDesc": "All listings adhere to official national kennel and feline clubs (LOF in France, LOOF for cats, FCI partner associations). Lineages are documented and verifiable.",
+      "vetTitle": "Official Veterinary Supervision",
+      "vetDesc": "Mandatory multi-point health check, European pet passport, ISO microchip implantation, and comprehensive core vaccinations prior to departure.",
+      "familyTitle": "Family-Raised & Socialized",
+      "familyDesc": "Puppies and kittens grow up in home environments with human interaction, sensory enrichment, and daily care — never industrial breeding facilities.",
+      "weaningTitle": "Minimum Legal Age Compliance",
+      "weaningDesc": "No animal leaves their mother before reaching the statutory age of at least 8 to 10 weeks, ensuring biological and psychological weaning."
+    },
+    "audits": {
+      "title": "Our Zero-Tolerance Breeder Audits",
+      "p1": "Every partner breeder in our European network is subjected to multi-point compliance audits. We evaluate breeding density, maternity hygiene, maternal rest cycles between litters, and early puppy/kitten sensory exposure.",
+      "p2": "We strictly bar commercial brokerages, third-party intermediaries, and industrial breeding mills. All parents have verifiable genetic clearances against breed-specific hereditary conditions."
+    },
+    "transport": {
+      "title": "Humane & Climate-Controlled Transport",
+      "desc": "Transport is conducted exclusively by licensed European pet couriers operating under EU Regulation 1/2005 on the protection of animals during transport. Vehicles are air-conditioned, sanitized, and equipped with fresh water systems and veterinary first-aid supplies."
+    },
+    "ctaTitle": "Adopt with Complete Peace of Mind",
+    "ctaSubtitle": "Browse our carefully selected, healthy companions ready for loving homes.",
+    "ctaButton": "Explore Available Animals"
+  }
+}

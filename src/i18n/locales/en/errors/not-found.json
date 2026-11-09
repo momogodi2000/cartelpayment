@@ -1,0 +1,8 @@
+{
+  "NotFound": {
+    "title": "Page Not Found",
+    "subtitle": "The page or animal profile you requested does not exist or has been relocated.",
+    "homeBtn": "Return to Homepage",
+    "catalogBtn": "Browse Catalog"
+  }
+}

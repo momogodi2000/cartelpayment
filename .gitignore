@@ -44,6 +44,6 @@ dev-server.log
 next-env.d.ts
 
 # local-only reference material (agent skills, guides)
-/docs/
+/docs/Ai-agents-rule/
 .pawelium_data/
 

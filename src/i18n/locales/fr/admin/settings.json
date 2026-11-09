@@ -1,0 +1,17 @@
+{
+  "AdminSettings": {
+    "title": "Paramètres de la Plateforme & Diagnostics",
+    "subtitle": "Configurez les frais de transport, le taux de TVA, testez l'envoi d'emails et vérifiez l'intégrité du système.",
+    "generalSectionTitle": "Paramètres Opérationnels & Tarifs",
+    "transportFeeLabel": "Frais de Transport Standard (€)",
+    "conciergeFeeLabel": "Frais de Conciergerie & Vétérinaire (€)",
+    "vatRateLabel": "Taux de TVA Applicable (%)",
+    "holdMinutesLabel": "Durée de Réservation Exclusive (Minutes)",
+    "saveSettingsBtn": "Enregistrer les Paramètres",
+    "diagnosticsSectionTitle": "Diagnostics Système & Connectivité",
+    "dbStatus": "Moteur de Base de Données",
+    "geniusPayStatus": "Mode GeniusPay Sandbox / Production",
+    "emailStatus": "Statut API Resend",
+    "sendTestEmailBtn": "Envoyer un Email de Test"
+  }
+}

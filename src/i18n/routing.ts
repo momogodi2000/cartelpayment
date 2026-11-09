@@ -19,6 +19,14 @@ export const routing = defineRouting({
       en: "/checkout",
       fr: "/paiement",
     },
+    "/checkout/return": {
+      en: "/checkout/return",
+      fr: "/checkout/return",
+    },
+    "/checkout/cancel": {
+      en: "/checkout/cancel",
+      fr: "/checkout/cancel",
+    },
     "/track-order": {
       en: "/track-order",
       fr: "/suivi-commande",
@@ -70,6 +78,18 @@ export const routing = defineRouting({
     "/contact": {
       en: "/contact",
       fr: "/contact",
+    },
+    "/newsletter/confirm": {
+      en: "/newsletter/confirm",
+      fr: "/newsletter/confirmation",
+    },
+    "/breeds/[slug]": {
+      en: "/breeds/[slug]",
+      fr: "/races/[slug]",
+    },
+    "/breeders/[slug]": {
+      en: "/breeders/[slug]",
+      fr: "/eleveurs/[slug]",
     },
   },
 });

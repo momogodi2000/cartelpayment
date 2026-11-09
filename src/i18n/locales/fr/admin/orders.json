@@ -1,0 +1,23 @@
+{
+  "AdminOrders": {
+    "title": "Gestion & Suivi des Commandes",
+    "subtitle": "Consultez les commandes, faites évoluer les étapes de traitement et enregistrez les règlements manuels.",
+    "tableColRef": "Réf. Commande",
+    "tableColCustomer": "Client",
+    "tableColAnimal": "Animal",
+    "tableColTotal": "Montant Total",
+    "tableColStatus": "Statut Commande",
+    "tableColCreated": "Date",
+    "tableColActions": "Actions",
+    "statusPending": "EN ATTENTE",
+    "statusPaid": "PAYÉ",
+    "statusConfirmed": "CONFIRMÉ",
+    "statusPreparing": "PRÉPARATION",
+    "statusInTransit": "EN ACHEMINEMENT",
+    "statusDelivered": "LIVRÉ",
+    "statusCancelled": "ANNULÉ",
+    "statusRefunded": "REMBOURSÉ",
+    "recordManualPaymentBtn": "Enregistrer Paiement Manuel",
+    "updateStatusBtn": "Changer Statut"
+  }
+}

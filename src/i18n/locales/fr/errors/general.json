@@ -1,0 +1,15 @@
+{
+  "GeneralError": {
+    "title": "Une Erreur Inattendue est Survenue",
+    "subtitle": "Notre système a rencontré une difficulté lors du traitement de votre demande. Veuillez réessayer.",
+    "tryAgainBtn": "Réessayer",
+    "homeBtn": "Retour à l'Accueil"
+  },
+  "Offline": {
+    "title": "Vous êtes Hors Ligne",
+    "body": "Nous ne parvenons pas à joindre pawelium pour le moment. Vérifiez votre connexion et réessayez.",
+    "contactTitle": "Contactez-nous directement",
+    "whatsappLine": "Via WhatsApp",
+    "tryReconnect": "Réessayer la connexion"
+  }
+}

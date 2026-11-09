@@ -1,0 +1,17 @@
+{
+  "AdminSupport": {
+    "title": "Support Desk & Inquiries",
+    "subtitle": "Manage incoming adopter tickets, dispatch official responses, and attach confidential internal notes.",
+    "tableColRef": "Ticket Ref",
+    "tableColCustomer": "Customer",
+    "tableColCategory": "Category",
+    "tableColSubject": "Subject",
+    "tableColStatus": "Status",
+    "tableColDate": "Created",
+    "tableColActions": "Reply",
+    "replyModalTitle": "Ticket Discussion Thread",
+    "internalNoteLabel": "Internal Private Note (Visible only to SUPER_ADMIN)",
+    "publicReplyLabel": "Public Adopter Response (Dispatched via email)",
+    "sendReplyBtn": "Send Response"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "GeneralError": {
+    "title": "An Unexpected Error Occurred",
+    "subtitle": "Our system encountered an issue while processing your request. Please try again.",
+    "tryAgainBtn": "Try Again",
+    "homeBtn": "Return to Homepage"
+  },
+  "Offline": {
+    "title": "You Are Offline",
+    "body": "We are unable to reach pawelium right now. Please check your connection and try again.",
+    "contactTitle": "Contact us directly",
+    "whatsappLine": "Via WhatsApp",
+    "tryReconnect": "Try Reconnecting"
+  }
+}

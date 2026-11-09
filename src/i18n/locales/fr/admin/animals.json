@@ -1,0 +1,23 @@
+{
+  "AdminAnimals": {
+    "title": "Gestion du Catalogue & Inventaire",
+    "subtitle": "Gérez les annonces d'animaux de race, les états de publication, les tarifs et les documents de santé.",
+    "addAnimalBtn": "Ajouter une Nouvelle Annonce",
+    "tableColAnimal": "Animal & Race",
+    "tableColAgeSex": "Âge / Sexe",
+    "tableColPrice": "Prix d'Adoption",
+    "tableColStatus": "Disponibilité",
+    "tableColDocs": "Docs Vétérinaires",
+    "tableColPublished": "État Public",
+    "tableColActions": "Actions",
+    "statusAvailable": "DISPONIBLE",
+    "statusHeld": "RÉSERVÉ (HOLD)",
+    "statusSold": "ADOPTÉ",
+    "statusUnavailable": "INDISPONIBLE",
+    "statusArchived": "ARCHIVÉ",
+    "publishedBadge": "Publié",
+    "draftBadge": "Brouillon / Masqué",
+    "editBtn": "Modifier",
+    "viewBtn": "Voir l'annonce"
+  }
+}

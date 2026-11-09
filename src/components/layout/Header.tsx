@@ -64,8 +64,8 @@ export default function Header() {
   const navLinks = [
     { href: "/", label: t("home") },
     { href: "/animals", label: t("catalog") },
-    { href: "/track-order", label: "Track Order" },
-    { href: "/support", label: "Support" },
+    { href: "/track-order", label: t("trackingLabel") },
+    { href: "/support", label: t("supportLabel") },
     { href: "/a-propos", label: t("about") },
     { href: "/devenir-partenaire", label: t("partner") },
     { href: "/faq", label: t("faq") },
@@ -141,7 +141,7 @@ export default function Header() {
                   : "text-text-premium/70 hover:text-text-premium hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
               }`}
             >
-              Track Order
+              {t("trackingLabel")}
             </Link>
 
             <Link
@@ -152,7 +152,7 @@ export default function Header() {
                   : "text-text-premium/70 hover:text-text-premium hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
               }`}
             >
-              Support
+              {t("supportLabel")}
             </Link>
 
             <Link

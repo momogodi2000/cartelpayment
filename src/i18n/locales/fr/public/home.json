@@ -1,0 +1,98 @@
+{
+  "Home": {
+    "whatsappMessage": "Bonjour ! J'ai visité pawelium et je souhaite en savoir plus sur vos chiens, chats, chiots et chatons disponibles.",
+    "schemaDescription": "Sélection premium de chiens, chats, chiots et chatons de race pour le marché européen.",
+    "heroImageAlt": "Chien de race sélectionné par pawelium",
+    "stats": {
+      "dogs": "Profils d'Animaux",
+      "breeds": "Races Disponibles",
+      "countries": "Pays Européens",
+      "response": "Réponse WhatsApp"
+    },
+    "hero": {
+      "badge": "Sélection Canine & Féline Européenne",
+      "titleLine1": "Chiens, Chats, Chiots & Chatons",
+      "titleAccent": "de Race Premium",
+      "subtitle": "Des chiens, chats, chiots et chatons de race sélectionnés avec soin, issus d'élevages responsables en Europe. Pedigree LOF et LOOF, transparence et bien-être animal.",
+      "cta": "Découvrir les Animaux Disponibles",
+      "secondary": "Contacter via WhatsApp"
+    },
+    "trust": {
+      "trackOrder": "Suivre une Commande",
+      "paymentTitle": "Paiement Bancaire EUR",
+      "paymentDesc": "Règlement 100% sécurisé par carte bancaire via GeniusPay",
+      "holdTitle": "Blocage Anti-Doublon",
+      "holdDesc": "Réservation exclusive pendant le passage en caisse",
+      "transportTitle": "Transport Agréé Dédié",
+      "transportDesc": "Véhicules climatisés et convoyeurs certifiés à domicile",
+      "docsTitle": "Passeport & Puce ISO",
+      "docsDesc": "Certificat vétérinaire, puce ISO et carnet de santé à jour"
+    },
+    "credentials": {
+      "title": "Notre Engagement d'Excellence",
+      "subtitle": "Chaque animal que nous présentons répond à nos critères rigoureux de santé, de lignée et de bien-être."
+    },
+    "featured": {
+      "title": "Chiens & Chiots en Vedette",
+      "subtitle": "Découvrez notre sélection de chiens et chiots d'exception.",
+      "viewAll": "Voir Tous les Chiens"
+    },
+    "catsFeatured": {
+      "title": "Chats & Chatons en Vedette",
+      "subtitle": "Des chats et chatons de race, pedigree LOOF, parents testés.",
+      "viewAll": "Voir Tous les Chats"
+    },
+    "breeds": {
+      "title": "Races Disponibles",
+      "subtitle": "Nos races canines et félines sélectionnées — cliquez sur une race pour voir les animaux disponibles.",
+      "dogsTitle": "Races de chiens",
+      "catsTitle": "Races de chats"
+    },
+    "timeline": {
+      "title": "Comment Ça Fonctionne",
+      "subtitle": "Un processus simple, transparent et guidé pour trouver votre compagnon idéal."
+    },
+    "testimonials": {
+      "title": "Ils Ont Choisi pawelium",
+      "subtitle": "Témoignages de nos clients satisfaits et de leurs nouveaux compagnons."
+    },
+    "faq": {
+      "title": "Questions Fréquentes",
+      "subtitle": "Réponses aux questions les plus posées sur nos animaux et notre processus.",
+      "viewAll": "Voir Toutes les Questions"
+    },
+    "cta": {
+      "limited": "Disponibilité Limitée",
+      "title": "Trouvez Votre Compagnon Idéal",
+      "subtitle": "Parcourez notre sélection complète de chiens, chats, chiots et chatons de race disponibles en Europe.",
+      "browseDogs": "Voir Tous les Chiens",
+      "whatsapp": "Demande WhatsApp"
+    },
+    "partnerBanner": {
+      "text": "Vous êtes éleveur ou professionnel ?",
+      "cta": "Devenez partenaire"
+    }
+  },
+  "Process": {
+    "step01Title": "Découvrir",
+    "step01Desc": "Parcourez notre catalogue de chiens, chats, chiots et chatons disponibles avec tous leurs détails : race, âge, santé, caractère.",
+    "step02Title": "Choisir",
+    "step02Desc": "Trouvez le compagnon idéal en filtrant par race, sexe, âge et localisation européenne.",
+    "step03Title": "Contacter",
+    "step03Desc": "Envoyez un message WhatsApp directement depuis la fiche du chien qui vous intéresse.",
+    "step04Title": "Échanger",
+    "step04Desc": "Discutez de tous les détails : santé, documents, transport, logistique.",
+    "step05Title": "Accueillir",
+    "step05Desc": "Organisez l'arrivée de votre nouveau compagnon dans les meilleures conditions possibles."
+  },
+  "WhyChooseUs": {
+    "item1Title": "Sélection Rigoureuse",
+    "item1Desc": "Chaque animal est sélectionné selon des critères stricts de santé, de tempérament et de lignée vérifiés par notre équipe.",
+    "item2Title": "Bien-être Animal",
+    "item2Desc": "Nos partenaires éleveurs respectent les standards européens de bien-être animal et pratiquent un élevage responsable.",
+    "item3Title": "Transparence Totale",
+    "item3Desc": "Informations de santé, pedigree et historique complet présentés clairement pour chaque animal.",
+    "item4Title": "Contact Direct WhatsApp",
+    "item4Desc": "Un échange direct, rapide et personnalisé par WhatsApp pour répondre à toutes vos questions."
+  }
+}

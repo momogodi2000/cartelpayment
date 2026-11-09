@@ -1,0 +1,13 @@
+{
+  "AdminAudit": {
+    "title": "Journal d'Audit & Sécurité Immuable",
+    "subtitle": "Registre cryptographique chronologique de toutes les connexions admin, modifications de prix et exports.",
+    "tableColTimestamp": "Horodatage",
+    "tableColAction": "Action",
+    "tableColEntity": "Entité Cible",
+    "tableColEntityId": "ID Enregistrement",
+    "tableColAdmin": "Identité Admin",
+    "tableColIp": "Adresse IP",
+    "tableColDetails": "Détails (JSON)"
+  }
+}

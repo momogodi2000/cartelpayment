@@ -1,43 +1,20 @@
 import { describe, expect, it } from "vitest";
-import fr from "../messages/fr.json";
-import en from "../messages/en.json";
+import { runI18nCheck } from "../scripts/i18n-check";
+import { loadModularTranslations } from "../src/i18n/load-translations";
 
-type Json = Record<string, unknown>;
-
-function flatten(obj: Json, prefix = ""): string[] {
-  return Object.entries(obj).flatMap(([key, value]) => {
-    const path = prefix ? `${prefix}.${key}` : key;
-    return value && typeof value === "object" && !Array.isArray(value)
-      ? flatten(value as Json, path)
-      : [path];
-  });
-}
-
-describe("i18n message catalogs", () => {
-  const frKeys = flatten(fr as Json).sort();
-  const enKeys = flatten(en as Json).sort();
-
-  it("fr and en have identical key sets", () => {
-    expect(frKeys.filter((k) => !enKeys.includes(k))).toEqual([]);
-    expect(enKeys.filter((k) => !frKeys.includes(k))).toEqual([]);
-  });
-
-  it("no message value is an empty string", () => {
-    const emptyIn = (obj: Json, prefix = ""): string[] =>
-      Object.entries(obj).flatMap(([key, value]) => {
-        const path = prefix ? `${prefix}.${key}` : key;
-        if (value && typeof value === "object") return emptyIn(value as Json, path);
-        return typeof value === "string" && value.trim() === "" ? [path] : [];
-      });
-    expect(emptyIn(fr as Json)).toEqual([]);
-    expect(emptyIn(en as Json)).toEqual([]);
+describe("i18n modular message catalogs", () => {
+  it("passes full i18n check with 100% key and ICU placeholder parity", () => {
+    const isPassing = runI18nCheck();
+    expect(isPassing).toBe(true);
   });
 
   it("mentions cats/kittens in the key SEO fields", () => {
-    const meta = (fr as { Meta: Record<string, string> }).Meta;
-    expect(meta.defaultDescription.toLowerCase()).toMatch(/chat|chaton/);
-    expect(meta.keywords.toLowerCase()).toMatch(/chat/);
-    const metaEn = (en as { Meta: Record<string, string> }).Meta;
-    expect(metaEn.defaultDescription.toLowerCase()).toMatch(/cat|kitten/);
+    const fr = loadModularTranslations("fr");
+    const en = loadModularTranslations("en");
+
+    expect(fr.Meta?.defaultDescription?.toLowerCase()).toMatch(/chat|chaton/);
+    expect(fr.Meta?.keywords?.toLowerCase()).toMatch(/chat/);
+
+    expect(en.Meta?.defaultDescription?.toLowerCase()).toMatch(/cat|kitten/);
   });
 });
