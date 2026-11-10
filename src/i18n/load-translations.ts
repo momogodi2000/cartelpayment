@@ -47,6 +47,12 @@ import enAdminAccount from "./locales/en/admin/account.json";
 import enAdminAuth from "./locales/en/admin/auth.json";
 
 import enNsAdminCommon from "./locales/en/admin/common.json";
+import enNsAdminReservations from "./locales/en/admin/reservations.json";
+import enNsAdminRefunds from "./locales/en/admin/refunds.json";
+import enNsAdminDeliveries from "./locales/en/admin/deliveries.json";
+import enNsAdminInventory from "./locales/en/admin/inventory.json";
+import enNsAdminBreeds from "./locales/en/admin/breeds.json";
+import enNsAdminBreeders from "./locales/en/admin/breeders.json";
 import enErrorsNotFound from "./locales/en/errors/not-found.json";
 import enErrorsGeneral from "./locales/en/errors/general.json";
 
@@ -87,6 +93,12 @@ import frAdminAccount from "./locales/fr/admin/account.json";
 import frAdminAuth from "./locales/fr/admin/auth.json";
 
 import frNsAdminCommon from "./locales/fr/admin/common.json";
+import frNsAdminReservations from "./locales/fr/admin/reservations.json";
+import frNsAdminRefunds from "./locales/fr/admin/refunds.json";
+import frNsAdminDeliveries from "./locales/fr/admin/deliveries.json";
+import frNsAdminInventory from "./locales/fr/admin/inventory.json";
+import frNsAdminBreeds from "./locales/fr/admin/breeds.json";
+import frNsAdminBreeders from "./locales/fr/admin/breeders.json";
 import frErrorsNotFound from "./locales/fr/errors/not-found.json";
 import frErrorsGeneral from "./locales/fr/errors/general.json";
 
@@ -132,6 +144,12 @@ const enMessages = assembleLocale([
   enAdminAccount,
   enAdminAuth,
   enNsAdminCommon,
+  enNsAdminReservations,
+  enNsAdminRefunds,
+  enNsAdminDeliveries,
+  enNsAdminInventory,
+  enNsAdminBreeds,
+  enNsAdminBreeders,
   enErrorsNotFound,
   enErrorsGeneral,
 ]);
@@ -168,6 +186,12 @@ const frMessages = assembleLocale([
   frAdminAccount,
   frAdminAuth,
   frNsAdminCommon,
+  frNsAdminReservations,
+  frNsAdminRefunds,
+  frNsAdminDeliveries,
+  frNsAdminInventory,
+  frNsAdminBreeds,
+  frNsAdminBreeders,
   frErrorsNotFound,
   frErrorsGeneral,
 ]);

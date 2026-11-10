@@ -1,0 +1,61 @@
+{
+  "AdminBreeders": {
+    "title": "Breeders",
+    "subtitle": "Breeder profiles and partner applications. A breeder is only shown as verified after you have checked their registration and documents.",
+    "add": "New breeder",
+    "editTitle": "Edit {name}",
+    "breedersTitle": "Breeders",
+    "applicationsTitle": "Partner applications",
+    "cols": {
+      "name": "Breeder",
+      "location": "Location",
+      "verification": "Verification",
+      "documentation": "Documentation",
+      "animals": "Listings",
+      "actions": "Actions"
+    },
+    "appCols": {
+      "created": "Received",
+      "applicant": "Applicant",
+      "kennel": "Kennel",
+      "location": "Location",
+      "experience": "Experience",
+      "status": "Status",
+      "actions": "Decision"
+    },
+    "slug": "URL slug",
+    "name": "Name",
+    "city": "City",
+    "country": "Country",
+    "contact": "Contact (email / phone)",
+    "descriptionEn": "Description (English)",
+    "descriptionFr": "Description (French)",
+    "verificationStatus": "Verification status",
+    "documentationStatus": "Documentation status",
+    "docStatus": {
+      "NONE": "No documents",
+      "SUBMITTED": "Submitted",
+      "VERIFIED": "Verified"
+    },
+    "verificationHelp": "Set “Verified” only after checking the official registration (e.g. SIREN / LOF / LOOF) and documents.",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Breeder saved.",
+    "approve": "Approve (create unverified breeder)",
+    "reject": "Reject",
+    "approveConfirm": "Create an unverified breeder profile from this application?",
+    "rejectConfirm": "Reject this application?",
+    "appStatus": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected"
+    },
+    "errors": {
+      "VALIDATION": "Please check the fields.",
+      "SLUG_TAKEN": "This slug is already used.",
+      "ALREADY_DECIDED": "This application has already been decided."
+    },
+    "empty": "No breeder yet.",
+    "noApplications": "No application."
+  }
+}

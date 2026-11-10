@@ -1,140 +1,107 @@
 import React from "react";
+import { z } from "zod";
+import { getLocale, getTranslations } from "next-intl/server";
+import { ReservationStatus } from "@prisma/client";
 import { requireSuperAdmin } from "@/lib/services/admin-auth";
 import { prisma } from "@/lib/db/client";
 import { formatMoney } from "@/lib/domain/money";
-import ReservationActions from "./ReservationActions";
-import { Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { formatDateTime } from "@/lib/format";
+import { actionForceReleaseReservation } from "@/app/actions/admin";
+import { PageHeader, DataTable, Td, Badge, Empty, Pagination } from "@/components/admin/ui";
+import ActionButton from "@/components/admin/ActionButton";
 
 export const dynamic = "force-dynamic";
+const PAGE_SIZE = 30;
+const filters = z.object({
+  status: z.nativeEnum(ReservationStatus).optional().catch(undefined),
+  page: z.coerce.number().int().min(1).max(1000).default(1).catch(1),
+});
 
-export default async function AdminReservationsPage() {
+export default async function AdminReservationsPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   await requireSuperAdmin();
-
-  const reservations = await prisma.reservation.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      animal: {
-        select: {
-          id: true,
-          name: true,
-          species: true,
-          priceCents: true,
-          currency: true,
-          status: true,
-        },
+  const f = filters.parse(await searchParams);
+  const [t, tc, locale] = await Promise.all([getTranslations("AdminReservations"), getTranslations("AdminCommon"), getLocale()]);
+  const where = f.status ? { status: f.status } : {};
+  const [total, activeCount, rows] = await Promise.all([
+    prisma.reservation.count({ where }),
+    prisma.reservation.count({ where: { status: ReservationStatus.ACTIVE } }),
+    prisma.reservation.findMany({
+      where,
+      orderBy: [{ status: "asc" }, { createdAt: "desc" }],
+      skip: (f.page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+      include: {
+        animal: { select: { name: true, priceCents: true, currency: true } },
+        order: { select: { reference: true, isTest: true, customer: { select: { email: true, phone: true } } } },
       },
-      order: {
-        select: {
-          id: true,
-          reference: true,
-          customer: {
-            select: {
-              email: true,
-              phone: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  const now = new Date();
-  const activeCount = reservations.filter(
-    (r) => r.status === "ACTIVE" && new Date(r.expiresAt) > now
-  ).length;
+    }),
+  ]);
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const errors = Object.fromEntries(["NOT_ACTIVE", "ALREADY_PAID", "PAYMENT_IN_PROGRESS", "PROVIDER_UNREACHABLE"].map((k) => [k, t(`errors.${k}`)]));
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-            Reservations & Temporary Holds
-          </h1>
-          <p className="text-xs text-zinc-500 mt-1">
-            Real-time lock timers, checkout cart holds, and manual inventory de-escalation.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="px-3 py-1.5 rounded-xl bg-amber-500/10 text-amber-700 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-900/30">
-            {activeCount} Active Holds
-          </span>
-          <span className="px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-bold border border-zinc-200 dark:border-zinc-700">
-            {reservations.length} Total Records
-          </span>
-        </div>
-      </div>
+      <PageHeader title={t("title")} subtitle={t("subtitle")}>
+        <Badge tone="warning">{t("active", { count: activeCount })}</Badge>
+        <form method="get" className="flex items-center gap-2 text-sm">
+          <label className="sr-only" htmlFor="res-status">{t("filterStatus")}</label>
+          <select id="res-status" name="status" defaultValue={f.status ?? ""} className="rounded-lg border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-800">
+            <option value="">{tc("all")}</option>
+            {Object.values(ReservationStatus).map((s) => <option key={s} value={s}>{tc(`reservationStatus.${s}`)}</option>)}
+          </select>
+          <button className="rounded-lg bg-[#183C32] px-3 py-1.5 font-semibold text-white">{tc("apply")}</button>
+        </form>
+      </PageHeader>
 
-      <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden p-6">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-zinc-50 dark:bg-zinc-800/50 border-y border-zinc-200 dark:border-zinc-800 uppercase font-bold text-zinc-500 tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Order Ref</th>
-                <th className="py-3 px-4">Animal</th>
-                <th className="py-3 px-4">Customer</th>
-                <th className="py-3 px-4">Value</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Expires / Released At</th>
-                <th className="py-3 px-4 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {reservations.map((res) => {
-                const isHoldActive =
-                  res.status === "ACTIVE" && new Date(res.expiresAt) > now;
-                return (
-                  <tr key={res.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30">
-                    <td className="py-3 px-4 font-mono font-bold text-zinc-900 dark:text-zinc-100">
-                      {res.order?.reference || res.orderId.slice(0, 8)}
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="font-bold text-zinc-900 dark:text-zinc-100">
-                        {res.animal?.name || "Unknown"}
-                      </div>
-                      <div className="text-[11px] text-zinc-500">
-                        {res.animal?.species}
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                      <div>{res.order?.customer?.email || "Concierge Adopter"}</div>
-                      <div className="text-[11px] text-zinc-400">{res.order?.customer?.phone || ""}</div>
-                    </td>
-                    <td className="py-3 px-4 font-bold text-zinc-900 dark:text-zinc-100">
-                      {res.animal
-                        ? formatMoney(res.animal.priceCents, res.animal.currency, "en")
-                        : "—"}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                          isHoldActive
-                            ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
-                            : res.status === "CONVERTED"
-                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300"
-                            : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-                        }`}
-                      >
-                        {isHoldActive ? "ACTIVE HOLD" : res.status}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                      {res.releasedAt
-                        ? `Released: ${new Date(res.releasedAt).toLocaleTimeString("en-GB")}`
-                        : `Expires: ${new Date(res.expiresAt).toLocaleTimeString("en-GB")}`}
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <ReservationActions
-                        reservationId={res.id}
-                        isHoldActive={isHoldActive}
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {rows.length === 0 ? (
+        <Empty>{t("empty")}</Empty>
+      ) : (
+        <DataTable columns={[t("cols.order"), t("cols.animal"), t("cols.customer"), t("cols.value"), t("cols.status"), t("cols.expires"), t("cols.actions")]}>
+          {rows.map((r) => (
+            <tr key={r.id}>
+              <Td className="font-mono font-semibold">
+                {r.order.reference}
+                {r.order.isTest && <span className="ml-2"><Badge tone="info">{t("testBadge")}</Badge></span>}
+              </Td>
+              <Td>{r.animal.name}</Td>
+              <Td>
+                <span className="block">{r.order.customer.email}</span>
+                <span className="block text-xs text-zinc-500">{r.order.customer.phone}</span>
+              </Td>
+              <Td className="tabular-nums">{formatMoney(r.animal.priceCents, r.animal.currency, locale)}</Td>
+              <Td>
+                <Badge tone={r.status === "ACTIVE" ? "warning" : r.status === "CONVERTED" ? "success" : "neutral"}>{tc(`reservationStatus.${r.status}`)}</Badge>
+              </Td>
+              <Td className="whitespace-nowrap text-zinc-600 dark:text-zinc-300">
+                {r.releasedAt
+                  ? t("released", { time: formatDateTime(r.releasedAt, locale) })
+                  : r.status === "ACTIVE"
+                    ? t("expires", { time: formatDateTime(r.expiresAt, locale) })
+                    : t("expired", { time: formatDateTime(r.expiresAt, locale) })}
+              </Td>
+              <Td>
+                {r.status === "ACTIVE" ? (
+                  <ActionButton
+                    action={actionForceReleaseReservation.bind(null, r.id)}
+                    label={t("release")}
+                    confirmText={t("releaseConfirm")}
+                    errors={errors}
+                    fallbackError={tc("error")}
+                  />
+                ) : (
+                  "—"
+                )}
+              </Td>
+            </tr>
+          ))}
+        </DataTable>
+      )}
+      <Pagination
+        page={f.page}
+        pages={pages}
+        href={(p) => `?${new URLSearchParams({ ...(f.status ? { status: f.status } : {}), page: String(p) })}`}
+        labels={{ previous: tc("previous"), next: tc("next"), pageOf: tc("pageOf", { page: f.page, pages }) }}
+      />
     </div>
   );
 }

@@ -1,0 +1,23 @@
+{
+  "AdminRefunds": {
+    "title": "Refunds",
+    "subtitle": "GeniusPay offers no refund API: issue the refund in the GeniusPay dashboard, then record each step here. A provider “payment.refunded” notification completes it automatically.",
+    "open": "{count} to process",
+    "cols": {
+      "created": "Requested",
+      "order": "Order",
+      "customer": "Customer",
+      "amount": "Amount",
+      "reason": "Reason",
+      "status": "Status",
+      "providerRef": "Provider reference",
+      "actions": "Actions"
+    },
+    "markSubmitted": "Mark as issued at the provider",
+    "markCompleted": "Confirm refund completed",
+    "markFailed": "Mark as failed",
+    "providerRefPrompt": "Provider refund reference (from the GeniusPay dashboard)",
+    "empty": "No refund request.",
+    "failedAction": "The refund could not be updated (it may already be closed)."
+  }
+}

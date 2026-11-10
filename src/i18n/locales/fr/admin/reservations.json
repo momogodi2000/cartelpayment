@@ -1,0 +1,30 @@
+{
+  "AdminReservations": {
+    "title": "Réservations",
+    "subtitle": "Réservations temporaires créées lors du paiement. Une réservation est libérée automatiquement à son expiration, après vérification auprès du prestataire de paiement.",
+    "active": "{count} active(s)",
+    "filterStatus": "Statut",
+    "cols": {
+      "order": "Commande",
+      "animal": "Animal",
+      "customer": "Client",
+      "value": "Prix de l'animal",
+      "status": "Statut",
+      "expires": "Expiration / libération",
+      "actions": "Actions"
+    },
+    "expires": "Expire le {time}",
+    "released": "Libérée le {time}",
+    "expired": "Expirée le {time}",
+    "release": "Libérer maintenant",
+    "releaseConfirm": "Libérer cette réservation ? Le prestataire est vérifié d'abord ; un paiement réussi ou en cours n'est jamais libéré.",
+    "errors": {
+      "NOT_ACTIVE": "Cette réservation n'est plus active.",
+      "ALREADY_PAID": "Le paiement a réussi : la réservation a été convertie en vente.",
+      "PAYMENT_IN_PROGRESS": "Un paiement est en cours chez le prestataire. Réessayez plus tard.",
+      "PROVIDER_UNREACHABLE": "Le prestataire de paiement est injoignable. La réservation a été conservée par sécurité."
+    },
+    "empty": "Aucune réservation pour le moment.",
+    "testBadge": "TEST"
+  }
+}

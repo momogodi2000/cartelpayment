@@ -1,0 +1,33 @@
+{
+  "AdminInventory": {
+    "title": "Inventaire",
+    "subtitle": "Disponibilité de toutes les annonces (l'animal de test interne est exclu) et publication groupée.",
+    "metrics": {
+      "total": "Annonces",
+      "available": "Disponibles",
+      "held": "Réservés",
+      "sold": "Vendus",
+      "unavailable": "Indisponibles",
+      "archived": "Archivés",
+      "availableValue": "Valeur disponible",
+      "soldValue": "Valeur vendue"
+    },
+    "filters": "Filtres",
+    "species": "Espèce",
+    "status": "Statut",
+    "breed": "Race",
+    "select": "Sélectionner",
+    "selectAll": "Tout sélectionner sur cette page",
+    "publish": "Publier la sélection",
+    "unpublish": "Dépublier la sélection",
+    "bulkDone": "{count} annonce(s) mise(s) à jour.",
+    "cols": {
+      "name": "Animal",
+      "breed": "Race",
+      "status": "Statut",
+      "price": "Prix",
+      "published": "Publié"
+    },
+    "empty": "Aucune annonce ne correspond à ces filtres."
+  }
+}

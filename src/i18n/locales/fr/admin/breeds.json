@@ -1,0 +1,33 @@
+{
+  "AdminBreeds": {
+    "title": "Races",
+    "subtitle": "Noms et descriptions des races dans les deux langues.",
+    "count": "{count} race(s)",
+    "add": "Nouvelle race",
+    "editTitle": "Modifier {name}",
+    "cols": {
+      "name": "Nom (EN / FR)",
+      "slug": "Identifiant",
+      "species": "Espèce",
+      "animals": "Annonces",
+      "actions": "Actions"
+    },
+    "slug": "Identifiant d'URL",
+    "species": "Espèce",
+    "nameEn": "Nom (anglais)",
+    "nameFr": "Nom (français)",
+    "descriptionEn": "Description (anglais)",
+    "descriptionFr": "Description (français)",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Race enregistrée.",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer cette race ?",
+    "errors": {
+      "VALIDATION": "Merci de vérifier les champs.",
+      "SLUG_TAKEN": "Cet identifiant est déjà utilisé.",
+      "BREED_IN_USE": "Cette race est utilisée par des annonces et ne peut pas être supprimée."
+    },
+    "empty": "Aucune race pour le moment."
+  }
+}

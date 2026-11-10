@@ -1,182 +1,107 @@
 import React from "react";
 import Link from "next/link";
+import { z } from "zod";
+import { getLocale, getTranslations } from "next-intl/server";
+import { AnimalStatus, Prisma, Species } from "@prisma/client";
 import { requireSuperAdmin } from "@/lib/services/admin-auth";
 import { prisma } from "@/lib/db/client";
 import { formatMoney } from "@/lib/domain/money";
-import { PawPrint, CheckCircle2, Clock, DollarSign, ArrowUpRight } from "lucide-react";
+import { PageHeader, Card, Empty } from "@/components/admin/ui";
+import ScopedIntl from "@/i18n/ScopedIntl";
+import InventoryBulkTable from "./InventoryBulkTable";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminInventoryPage() {
+const filters = z.object({
+  species: z.nativeEnum(Species).optional().catch(undefined),
+  status: z.nativeEnum(AnimalStatus).optional().catch(undefined),
+  breed: z.string().uuid().optional().catch(undefined),
+});
+
+export default async function AdminInventoryPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   await requireSuperAdmin();
+  const f = filters.parse(await searchParams);
+  const [t, tc, locale] = await Promise.all([getTranslations("AdminInventory"), getTranslations("AdminCommon"), getLocale()]);
 
-  const animals = await prisma.animal.findMany({
-    include: {
-      breed: true,
-      images: { take: 1, orderBy: { sortOrder: "asc" } },
-    },
-  });
-
-  const total = animals.length;
-  const available = animals.filter((a) => a.status === "AVAILABLE");
-  const held = animals.filter((a) => a.status === "HELD");
-  const sold = animals.filter((a) => a.status === "SOLD");
-
-  const dogs = animals.filter((a) => a.species === "DOG");
-  const cats = animals.filter((a) => a.species === "CAT");
-
-  const totalInventoryValueCents = available.reduce((acc, a) => acc + a.priceCents, 0);
-  const totalSoldValueCents = sold.reduce((acc, a) => acc + a.priceCents, 0);
+  const base: Prisma.AnimalWhereInput = { isPaymentTest: false };
+  const [groups, valueAvailable, valueSold, breeds, animals] = await Promise.all([
+    prisma.animal.groupBy({ by: ["status"], where: base, _count: { _all: true } }),
+    prisma.animal.aggregate({ where: { ...base, status: AnimalStatus.AVAILABLE }, _sum: { priceCents: true } }),
+    prisma.animal.aggregate({ where: { ...base, status: AnimalStatus.SOLD }, _sum: { priceCents: true } }),
+    prisma.breed.findMany({ orderBy: { slug: "asc" }, select: { id: true, nameEn: true, nameFr: true } }),
+    prisma.animal.findMany({
+      where: { ...base, ...(f.species ? { species: f.species } : {}), ...(f.status ? { status: f.status } : {}), ...(f.breed ? { breedId: f.breed } : {}) },
+      orderBy: { name: "asc" },
+      take: 300,
+      include: { breed: { select: { nameEn: true, nameFr: true } } },
+    }),
+  ]);
+  const count = (s: string) => groups.find((g) => g.status === s)?._count._all ?? 0;
+  const metrics = [
+    ["total", String(groups.reduce((n, g) => n + g._count._all, 0))],
+    ["available", String(count("AVAILABLE"))],
+    ["held", String(count("HELD"))],
+    ["sold", String(count("SOLD"))],
+    ["unavailable", String(count("UNAVAILABLE"))],
+    ["archived", String(count("ARCHIVED"))],
+    ["availableValue", formatMoney(valueAvailable._sum.priceCents ?? 0, "EUR", locale)],
+    ["soldValue", formatMoney(valueSold._sum.priceCents ?? 0, "EUR", locale)],
+  ] as const;
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-            Catalogue & Inventory Analytics
-          </h1>
-          <p className="text-xs text-zinc-500 mt-1">
-            Real-time stock valuation, availability ratios, and species distribution across Europe.
-          </p>
-        </div>
-        <Link
-          href="/admin/animals/new"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#183C32] hover:bg-[#122e26] text-white text-xs font-bold transition-colors shadow-sm"
-        >
-          Add Companion Listing
-        </Link>
-      </div>
+    <div className="space-y-6">
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {metrics.map(([k, v]) => (
+          <div key={k} className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+            <p className="text-xs font-semibold text-zinc-500">{t(`metrics.${k}`)}</p>
+            <p className="text-2xl font-bold tabular-nums">{v}</p>
+          </div>
+        ))}
+      </section>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <div className="text-xs text-zinc-500 font-medium">Available Portfolio Value</div>
-          <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mt-1">
-            {formatMoney(totalInventoryValueCents, "EUR", "en")}
-          </div>
-          <div className="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
-            <CheckCircle2 className="h-3 w-3" />
-            {available.length} active listings
-          </div>
-        </div>
+      <form method="get" aria-label={t("filters")} className="flex flex-wrap items-end gap-3 rounded-2xl border border-zinc-200 bg-white p-4 text-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <label className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500">{t("species")}</span>
+          <select name="species" defaultValue={f.species ?? ""} className="rounded-lg border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-800">
+            <option value="">{tc("all")}</option>
+            {Object.values(Species).map((s) => <option key={s} value={s}>{tc(`species.${s}`)}</option>)}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500">{t("status")}</span>
+          <select name="status" defaultValue={f.status ?? ""} className="rounded-lg border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-800">
+            <option value="">{tc("all")}</option>
+            {Object.values(AnimalStatus).map((s) => <option key={s} value={s}>{tc(`animalStatus.${s}`)}</option>)}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500">{t("breed")}</span>
+          <select name="breed" defaultValue={f.breed ?? ""} className="rounded-lg border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-800">
+            <option value="">{tc("all")}</option>
+            {breeds.map((b) => <option key={b.id} value={b.id}>{locale === "fr" ? b.nameFr : b.nameEn}</option>)}
+          </select>
+        </label>
+        <button className="rounded-lg bg-[#183C32] px-3 py-1.5 font-semibold text-white">{tc("apply")}</button>
+        <Link href="/admin/inventory" className="rounded-lg border border-zinc-300 px-3 py-1.5 dark:border-zinc-700">{tc("reset")}</Link>
+      </form>
 
-        <div className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <div className="text-xs text-zinc-500 font-medium">Total Acquired (Sold)</div>
-          <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mt-1">
-            {formatMoney(totalSoldValueCents, "EUR", "en")}
-          </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
-            {sold.length} successful placements
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <div className="text-xs text-zinc-500 font-medium">Temporary Holds</div>
-          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">
-            {held.length}
-          </div>
-          <div className="text-[11px] text-zinc-500 mt-1 flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            In active checkout process
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <div className="text-xs text-zinc-500 font-medium">Species Breakdown</div>
-          <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mt-1">
-            {dogs.length} Dogs / {cats.length} Cats
-          </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
-            {total} total catalogue profiles
-          </div>
-        </div>
-      </div>
-
-      {/* Species & Status Breakdown Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-4">
-          <h3 className="font-serif text-base font-bold text-zinc-900 dark:text-zinc-100">
-            Inventory Health & Status
-          </h3>
-          <div className="space-y-3">
-            <div>
-              <div className="flex justify-between text-xs mb-1 font-semibold">
-                <span className="text-emerald-700 dark:text-emerald-400">Available ({available.length})</span>
-                <span>{total > 0 ? Math.round((available.length / total) * 100) : 0}%</span>
-              </div>
-              <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-2.5 rounded-full overflow-hidden">
-                <div
-                  className="bg-emerald-600 h-full rounded-full transition-all"
-                  style={{ width: `${total > 0 ? (available.length / total) * 100 : 0}%` }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs mb-1 font-semibold">
-                <span className="text-amber-700 dark:text-amber-400">In Checkout Hold ({held.length})</span>
-                <span>{total > 0 ? Math.round((held.length / total) * 100) : 0}%</span>
-              </div>
-              <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-2.5 rounded-full overflow-hidden">
-                <div
-                  className="bg-amber-500 h-full rounded-full transition-all"
-                  style={{ width: `${total > 0 ? (held.length / total) * 100 : 0}%` }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs mb-1 font-semibold">
-                <span className="text-zinc-600 dark:text-zinc-400">Sold / Completed ({sold.length})</span>
-                <span>{total > 0 ? Math.round((sold.length / total) * 100) : 0}%</span>
-              </div>
-              <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-2.5 rounded-full overflow-hidden">
-                <div
-                  className="bg-zinc-400 dark:bg-zinc-600 h-full rounded-full transition-all"
-                  style={{ width: `${total > 0 ? (sold.length / total) * 100 : 0}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-4">
-          <h3 className="font-serif text-base font-bold text-zinc-900 dark:text-zinc-100">
-            Quick Stock Management
-          </h3>
-          <p className="text-xs text-zinc-500">
-            Direct shortcuts to inventory management, catalogue publishing, and pricing updates.
-          </p>
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <Link
-              href="/admin/animals"
-              className="p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all flex flex-col justify-between"
-            >
-              <div className="font-bold text-xs text-zinc-900 dark:text-zinc-100 flex items-center justify-between">
-                Animals Registry
-                <ArrowUpRight className="h-4 w-4 text-zinc-400" />
-              </div>
-              <div className="text-[11px] text-zinc-500 mt-2">
-                View & toggle status of all {animals.length} animals.
-              </div>
-            </Link>
-
-            <Link
-              href="/admin/reservations"
-              className="p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all flex flex-col justify-between"
-            >
-              <div className="font-bold text-xs text-zinc-900 dark:text-zinc-100 flex items-center justify-between">
-                Holds & Locks
-                <ArrowUpRight className="h-4 w-4 text-zinc-400" />
-              </div>
-              <div className="text-[11px] text-zinc-500 mt-2">
-                Release expired checkout holds immediately.
-              </div>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <Card>
+        {animals.length === 0 ? (
+          <Empty>{t("empty")}</Empty>
+        ) : (
+          <ScopedIntl namespaces={["AdminInventory", "AdminCommon"]}>
+            <InventoryBulkTable
+              rows={animals.map((a) => ({
+                id: a.id,
+                name: a.name,
+                href: `/admin/animals/${a.id}`,
+                breed: locale === "fr" ? a.breed.nameFr : a.breed.nameEn,
+                status: a.status,
+                price: formatMoney(a.priceCents, a.currency, locale),
+                published: a.published,
+              }))}
+            />
+          </ScopedIntl>
+        )}
+      </Card>
     </div>
   );
 }

@@ -1,0 +1,33 @@
+{
+  "AdminBreeds": {
+    "title": "Breeds",
+    "subtitle": "Breed names and descriptions in both languages.",
+    "count": "{count} breed(s)",
+    "add": "New breed",
+    "editTitle": "Edit {name}",
+    "cols": {
+      "name": "Name (EN / FR)",
+      "slug": "Slug",
+      "species": "Species",
+      "animals": "Listings",
+      "actions": "Actions"
+    },
+    "slug": "URL slug",
+    "species": "Species",
+    "nameEn": "Name (English)",
+    "nameFr": "Name (French)",
+    "descriptionEn": "Description (English)",
+    "descriptionFr": "Description (French)",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Breed saved.",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this breed?",
+    "errors": {
+      "VALIDATION": "Please check the fields.",
+      "SLUG_TAKEN": "This slug is already used.",
+      "BREED_IN_USE": "This breed is used by listings and cannot be deleted."
+    },
+    "empty": "No breed yet."
+  }
+}

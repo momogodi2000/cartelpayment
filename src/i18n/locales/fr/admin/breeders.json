@@ -1,0 +1,61 @@
+{
+  "AdminBreeders": {
+    "title": "Éleveurs",
+    "subtitle": "Profils d'éleveurs et candidatures de partenaires. Un éleveur n'est affiché comme vérifié qu'après contrôle de son immatriculation et de ses documents.",
+    "add": "Nouvel éleveur",
+    "editTitle": "Modifier {name}",
+    "breedersTitle": "Éleveurs",
+    "applicationsTitle": "Candidatures de partenaires",
+    "cols": {
+      "name": "Éleveur",
+      "location": "Localisation",
+      "verification": "Vérification",
+      "documentation": "Documents",
+      "animals": "Annonces",
+      "actions": "Actions"
+    },
+    "appCols": {
+      "created": "Reçue le",
+      "applicant": "Candidat",
+      "kennel": "Élevage",
+      "location": "Localisation",
+      "experience": "Expérience",
+      "status": "Statut",
+      "actions": "Décision"
+    },
+    "slug": "Identifiant d'URL",
+    "name": "Nom",
+    "city": "Ville",
+    "country": "Pays",
+    "contact": "Contact (e-mail / téléphone)",
+    "descriptionEn": "Description (anglais)",
+    "descriptionFr": "Description (français)",
+    "verificationStatus": "Statut de vérification",
+    "documentationStatus": "Statut des documents",
+    "docStatus": {
+      "NONE": "Aucun document",
+      "SUBMITTED": "Transmis",
+      "VERIFIED": "Vérifiés"
+    },
+    "verificationHelp": "Ne choisissez « Vérifié » qu'après contrôle de l'immatriculation officielle (ex. SIREN / LOF / LOOF) et des documents.",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Éleveur enregistré.",
+    "approve": "Accepter (créer un éleveur non vérifié)",
+    "reject": "Refuser",
+    "approveConfirm": "Créer un profil d'éleveur non vérifié à partir de cette candidature ?",
+    "rejectConfirm": "Refuser cette candidature ?",
+    "appStatus": {
+      "PENDING": "En attente",
+      "APPROVED": "Acceptée",
+      "REJECTED": "Refusée"
+    },
+    "errors": {
+      "VALIDATION": "Merci de vérifier les champs.",
+      "SLUG_TAKEN": "Cet identifiant est déjà utilisé.",
+      "ALREADY_DECIDED": "Une décision a déjà été prise pour cette candidature."
+    },
+    "empty": "Aucun éleveur pour le moment.",
+    "noApplications": "Aucune candidature."
+  }
+}

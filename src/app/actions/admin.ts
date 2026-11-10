@@ -29,6 +29,7 @@ import { CardPaymentUnavailableError } from "@/lib/services/payments/payment-ini
 import { applyProviderStatus } from "@/lib/services/payments/settlement";
 import {
   AnimalStatus,
+  PaymentStatus,
   OrderStatus,
   RefundStatus,
   ExceptionStatus,
@@ -210,100 +211,64 @@ export async function actionAdminRevokeSession(sessionId: string) {
 
 
 
-export async function actionSaveBreed(formData: FormData) {
-  await requireSuperAdmin();
-  const id = formData.get("id") as string | null;
-  const nameEn = formData.get("nameEn") as string;
-  const nameFr = formData.get("nameFr") as string;
-  const slug = formData.get("slug") as string;
-  const species = (formData.get("species") as Species) || Species.DOG;
 
-  const data = {
-    nameEn,
-    nameFr,
-    slug: slug.toLowerCase().trim(),
-    species,
-    descriptionEn: (formData.get("descriptionEn") as string) || "",
-    descriptionFr: (formData.get("descriptionFr") as string) || "",
-  };
 
-  if (id) {
-    await prisma.breed.update({ where: { id }, data });
-  } else {
-    await prisma.breed.create({ data });
-  }
-
-  revalidatePath("/admin/breeds");
-  return { success: true };
-}
-
-export async function actionSaveBreeder(formData: FormData) {
-  await requireSuperAdmin();
-  const id = formData.get("id") as string | null;
-  const name = formData.get("name") as string;
-  const email = (formData.get("email") as string) || "";
-  const phone = (formData.get("phone") as string) || "";
-  const contact = email && phone ? `${email} | ${phone}` : (email || phone || "concierge@pawelium.com");
-  const city = formData.get("city") as string;
-  const country = formData.get("country") as string;
-  const slug = formData.get("slug") as string;
-
-  const data = {
-    name,
-    contact,
-    city,
-    country,
-    slug: slug.toLowerCase().trim(),
-    verificationStatus: VerificationStatus.VERIFIED,
-    descriptionEn: (formData.get("descriptionEn") as string) || "",
-    descriptionFr: (formData.get("descriptionFr") as string) || "",
-  };
-
-  if (id) {
-    await prisma.breeder.update({ where: { id }, data });
-  } else {
-    await prisma.breeder.create({ data });
-  }
-
-  revalidatePath("/admin/breeders");
-  return { success: true };
-}
-
-export async function actionForceReleaseReservation(reservationId: string) {
-  await requireSuperAdmin();
+/**
+ * SUPER_ADMIN force-release of an active hold. The provider is asked first: a settled or
+ * in-flight payment is never released from under the customer.
+ */
+export async function actionForceReleaseReservation(reservationId: string): Promise<{ success: boolean; errorCode?: string }> {
+  const { admin } = await requireSuperAdmin();
   const res = await prisma.reservation.findUnique({
     where: { id: reservationId },
+    include: { order: { include: { payments: { orderBy: { createdAt: "desc" }, take: 1 } } } },
   });
+  if (!res || res.status !== ReservationStatus.ACTIVE) return { success: false, errorCode: "NOT_ACTIVE" };
 
-  if (res) {
-    await prisma.reservation.update({
-      where: { id: reservationId },
-      data: { status: ReservationStatus.RELEASED, releasedAt: new Date(), activeAnimalId: null },
-    });
-
-    if (res.animalId) {
-      await prisma.animal.updateMany({
-        where: { id: res.animalId, status: AnimalStatus.HELD },
-        data: { status: AnimalStatus.AVAILABLE },
-      });
+  const latest = res.order.payments[0];
+  if (latest?.providerReference) {
+    const result = await applyProviderStatus(latest.providerReference).catch(() => null);
+    if (!result) return { success: false, errorCode: "PROVIDER_UNREACHABLE" };
+    if (result.paymentStatus === "SUCCESSFUL") return { success: false, errorCode: "ALREADY_PAID" };
+    if (result.paymentStatus === "PROCESSING" || result.paymentStatus === "REQUIRES_ACTION") {
+      return { success: false, errorCode: "PAYMENT_IN_PROGRESS" };
     }
   }
-
+  await releaseHold(reservationId, `Released by SUPER_ADMIN ${admin.email}`);
+  await logAudit({ actorType: "ADMIN", adminId: admin.id, action: "FORCE_RELEASE_RESERVATION", entity: "Reservation", entityId: reservationId, diff: { orderId: res.orderId } });
   revalidatePath("/admin/reservations");
   return { success: true };
 }
 
-export async function actionProcessRefund(refundId: string, notes?: string) {
+/**
+ * Manual refund workflow (GeniusPay exposes no refund API):
+ *   REQUESTED -> PENDING_PROVIDER (refund issued in the GeniusPay dashboard, provider ref noted)
+ *   -> COMPLETED (confirmed by the `payment.refunded` webhook or by the SUPER_ADMIN).
+ */
+export async function actionUpdateRefund(refundId: string, step: "submitted" | "completed" | "failed", providerRef: string) {
   const { admin } = await requireSuperAdmin();
-  await prisma.refund.update({
-    where: { id: refundId },
-    data: {
-      status: RefundStatus.COMPLETED,
-      adminId: admin.id,
-    },
+  const ref = String(providerRef || "").trim().slice(0, 120);
+  if (!ref) throw new Error("A provider reference is required.");
+  const refund = await prisma.refund.findUniqueOrThrow({ where: { id: refundId }, include: { payment: { include: { order: true } } } });
+  const next = step === "submitted" ? RefundStatus.PENDING_PROVIDER : step === "completed" ? RefundStatus.COMPLETED : RefundStatus.FAILED;
+  await prisma.$transaction(async (tx) => {
+    const gate = await tx.refund.updateMany({
+      where: { id: refundId, status: { in: [RefundStatus.REQUESTED, RefundStatus.PENDING_PROVIDER] } },
+      data: { status: next, providerRef: ref, adminId: admin.id },
+    });
+    if (gate.count !== 1) throw new Error("This refund is already closed.");
+    if (next === RefundStatus.COMPLETED && refund.amountCents >= refund.payment.amountCents) {
+      await tx.payment.update({ where: { id: refund.paymentId }, data: { status: PaymentStatus.REFUNDED } });
+      const order = refund.payment.order;
+      if (order.status !== OrderStatus.REFUNDED) {
+        await tx.order.update({ where: { id: order.id }, data: { status: OrderStatus.REFUNDED } });
+        await tx.orderStatusHistory.create({ data: { orderId: order.id, fromStatus: order.status, toStatus: OrderStatus.REFUNDED, actorType: "ADMIN", adminId: admin.id, reason: `Refund confirmed (${ref})` } });
+      }
+    }
+    await logAudit({ actorType: "ADMIN", adminId: admin.id, action: `REFUND_${step.toUpperCase()}`, entity: "Refund", entityId: refundId, diff: { providerRef: ref } }, tx);
   });
-
   revalidatePath("/admin/refunds");
+  revalidatePath("/admin/orders");
   return { success: true };
 }
 

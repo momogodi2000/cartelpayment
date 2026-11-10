@@ -39,6 +39,12 @@ export const NAMESPACES = [
   'admin/account',
   'admin/auth',
   'admin/common',
+  'admin/reservations',
+  'admin/refunds',
+  'admin/deliveries',
+  'admin/inventory',
+  'admin/breeds',
+  'admin/breeders',
   'errors/not-found',
   'errors/general',
 ] as const;
@@ -172,6 +178,30 @@ export const namespaceLoaders: Record<
   'admin/common': {
     en: () => import('./locales/en/admin/common.json'),
     fr: () => import('./locales/fr/admin/common.json'),
+  },
+  'admin/reservations': {
+    en: () => import('./locales/en/admin/reservations.json'),
+    fr: () => import('./locales/fr/admin/reservations.json'),
+  },
+  'admin/refunds': {
+    en: () => import('./locales/en/admin/refunds.json'),
+    fr: () => import('./locales/fr/admin/refunds.json'),
+  },
+  'admin/deliveries': {
+    en: () => import('./locales/en/admin/deliveries.json'),
+    fr: () => import('./locales/fr/admin/deliveries.json'),
+  },
+  'admin/inventory': {
+    en: () => import('./locales/en/admin/inventory.json'),
+    fr: () => import('./locales/fr/admin/inventory.json'),
+  },
+  'admin/breeds': {
+    en: () => import('./locales/en/admin/breeds.json'),
+    fr: () => import('./locales/fr/admin/breeds.json'),
+  },
+  'admin/breeders': {
+    en: () => import('./locales/en/admin/breeders.json'),
+    fr: () => import('./locales/fr/admin/breeders.json'),
   },
   'errors/not-found': {
     en: () => import('./locales/en/errors/not-found.json'),

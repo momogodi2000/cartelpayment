@@ -1,0 +1,33 @@
+{
+  "AdminInventory": {
+    "title": "Inventory",
+    "subtitle": "Availability across all listings (the internal test animal is excluded) and bulk publication.",
+    "metrics": {
+      "total": "Listings",
+      "available": "Available",
+      "held": "Reserved",
+      "sold": "Sold",
+      "unavailable": "Unavailable",
+      "archived": "Archived",
+      "availableValue": "Value available",
+      "soldValue": "Value sold"
+    },
+    "filters": "Filters",
+    "species": "Species",
+    "status": "Status",
+    "breed": "Breed",
+    "select": "Select",
+    "selectAll": "Select all on this page",
+    "publish": "Publish selected",
+    "unpublish": "Unpublish selected",
+    "bulkDone": "{count} listing(s) updated.",
+    "cols": {
+      "name": "Animal",
+      "breed": "Breed",
+      "status": "Status",
+      "price": "Price",
+      "published": "Published"
+    },
+    "empty": "No listing matches these filters."
+  }
+}

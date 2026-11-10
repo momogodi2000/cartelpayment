@@ -59,3 +59,26 @@ export { formatMoney } from "./domain/money";
 export function isInFuture(date: Date | string | number): boolean {
   return new Date(date).getTime() > Date.now();
 }
+
+const PARIS = "Europe/Paris";
+
+function parisOffsetMinutes(at: Date): number {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: PARIS, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }).formatToParts(at);
+  const get = (t: string) => Number(parts.find((p) => p.type === t)?.value);
+  const asUtc = Date.UTC(get("year"), get("month") - 1, get("day"), get("hour"), get("minute"), get("second"));
+  return Math.round((asUtc - at.getTime()) / 60000);
+}
+
+/** Value for <input type="datetime-local">, expressed in Europe/Paris time. */
+export function toParisLocalInput(date: Date | null | undefined): string {
+  if (!date) return "";
+  return new Date(date.getTime() + parisOffsetMinutes(date) * 60000).toISOString().slice(0, 16);
+}
+
+/** Parses a datetime-local value entered in Europe/Paris time into a UTC Date. */
+export function fromParisLocalInput(value: string): Date | null {
+  if (!value) return null;
+  const naive = new Date(`${value}:00Z`);
+  if (Number.isNaN(naive.getTime())) return null;
+  return new Date(naive.getTime() - parisOffsetMinutes(naive) * 60000);
+}

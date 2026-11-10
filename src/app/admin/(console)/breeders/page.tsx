@@ -1,168 +1,113 @@
 import React from "react";
+import { getLocale, getTranslations } from "next-intl/server";
+import { VerificationStatus, DocStatus } from "@prisma/client";
 import { requireSuperAdmin } from "@/lib/services/admin-auth";
 import { prisma } from "@/lib/db/client";
-import BreederModal from "./BreederModal";
-import { Building2, ShieldCheck, Mail, Phone, ExternalLink } from "lucide-react";
+import { formatDateTime } from "@/lib/format";
+import { actionSaveBreeder, actionDecideBreederApplication } from "@/app/actions/admin-ops";
+import { PageHeader, Card, DataTable, Td, Badge, Empty, fieldClass } from "@/components/admin/ui";
+import AdminForm from "@/components/admin/AdminForm";
+import ActionButton from "@/components/admin/ActionButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminBreedersPage() {
   await requireSuperAdmin();
-
+  const [t, tc, locale] = await Promise.all([getTranslations("AdminBreeders"), getTranslations("AdminCommon"), getLocale()]);
   const [breeders, applications] = await Promise.all([
-    prisma.breeder.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        _count: {
-          select: { animals: true },
-        },
-      },
-    }),
-    prisma.breederApplication.findMany({
-      orderBy: { createdAt: "desc" },
-    }),
+    prisma.breeder.findMany({ orderBy: { name: "asc" }, include: { _count: { select: { animals: true } } } }),
+    prisma.breederApplication.findMany({ orderBy: { createdAt: "desc" }, take: 100 }),
   ]);
+  const errors = Object.fromEntries(["VALIDATION", "SLUG_TAKEN", "ALREADY_DECIDED"].map((k) => [k, t(`errors.${k}`)]));
+
+  const form = (b?: (typeof breeders)[number]) => (
+    <AdminForm action={actionSaveBreeder} submitLabel={t("save")} savingLabel={t("saving")} savedText={t("saved")} errors={errors} fallbackError={tc("error")} resetOnSuccess={!b} className="grid gap-3 sm:grid-cols-2">
+      <input type="hidden" name="id" value={b?.id ?? ""} />
+      <label className="text-sm"><span className="mb-1 block font-semibold">{t("name")}</span><input name="name" required defaultValue={b?.name} className={fieldClass} /></label>
+      <label className="text-sm"><span className="mb-1 block font-semibold">{t("slug")}</span><input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" defaultValue={b?.slug} className={`${fieldClass} font-mono`} /></label>
+      <label className="text-sm"><span className="mb-1 block font-semibold">{t("city")}</span><input name="city" defaultValue={b?.city} className={fieldClass} /></label>
+      <label className="text-sm"><span className="mb-1 block font-semibold">{t("country")}</span><input name="country" required defaultValue={b?.country ?? "France"} className={fieldClass} /></label>
+      <label className="text-sm sm:col-span-2"><span className="mb-1 block font-semibold">{t("contact")}</span><input name="contact" defaultValue={b?.contact} className={fieldClass} /></label>
+      <label className="text-sm"><span className="mb-1 block font-semibold">{t("descriptionEn")}</span><textarea name="descriptionEn" rows={3} lang="en" defaultValue={b?.descriptionEn} className={fieldClass} /></label>
+      <label className="text-sm"><span className="mb-1 block font-semibold">{t("descriptionFr")}</span><textarea name="descriptionFr" rows={3} lang="fr" defaultValue={b?.descriptionFr} className={fieldClass} /></label>
+      <label className="text-sm"><span className="mb-1 block font-semibold">{t("verificationStatus")}</span>
+        <select name="verificationStatus" defaultValue={b?.verificationStatus ?? "UNVERIFIED"} aria-describedby="verif-help" className={fieldClass}>
+          {Object.values(VerificationStatus).map((s) => <option key={s} value={s}>{tc(`verification.${s}`)}</option>)}
+        </select>
+      </label>
+      <label className="text-sm"><span className="mb-1 block font-semibold">{t("documentationStatus")}</span>
+        <select name="documentationStatus" defaultValue={b?.documentationStatus ?? "NONE"} className={fieldClass}>
+          {Object.values(DocStatus).map((s) => <option key={s} value={s}>{t(`docStatus.${s}`)}</option>)}
+        </select>
+      </label>
+      <p id="verif-help" className="text-xs text-zinc-500 sm:col-span-2">{t("verificationHelp")}</p>
+    </AdminForm>
+  );
 
   return (
     <div className="space-y-8">
-      {/* Top Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-            Breeders & Partners
-          </h1>
-          <p className="text-xs text-zinc-500 mt-1">
-            Certified European breeding estates, concierge accreditation, and incoming applications.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <BreederModal />
-          <span className="px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-bold border border-zinc-200 dark:border-zinc-700">
-            {breeders.length} Certified Partners
-          </span>
-        </div>
-      </div>
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      <Card>
+        <details>
+          <summary className="cursor-pointer font-semibold text-[#183C32] dark:text-emerald-400">{t("add")}</summary>
+          <div className="mt-4">{form()}</div>
+        </details>
+      </Card>
 
-      {/* Certified Breeders Section */}
-      <div className="space-y-4">
-        <h2 className="font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-          <ShieldCheck className="h-5 w-5 text-emerald-600" />
-          Accredited Breeding Facilities
-        </h2>
-
-        <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden p-6">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-zinc-50 dark:bg-zinc-800/50 border-y border-zinc-200 dark:border-zinc-800 uppercase font-bold text-zinc-500 tracking-wider">
-                <tr>
-                  <th className="py-3 px-4">Breeder / Kennel</th>
-                  <th className="py-3 px-4">Location</th>
-                  <th className="py-3 px-4">Contact</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Live Litters / Animals</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-                {breeders.map((b) => (
-                  <tr key={b.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30">
-                    <td className="py-3 px-4">
-                      <div className="font-bold text-zinc-900 dark:text-zinc-100">{b.name}</div>
-                      <div className="text-[11px] font-mono text-zinc-500">{b.slug}</div>
-                    </td>
-                    <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                      {b.city}, {b.country}
-                    </td>
-                    <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                      {b.contact}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
-                        {b.verificationStatus}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 font-bold text-zinc-900 dark:text-zinc-100">
-                      {b._count.animals}
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <BreederModal breeder={b} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      {/* Pending Applications Section */}
-      <div className="space-y-4">
-        <h2 className="font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-          <Building2 className="h-5 w-5 text-[#B69A65]" />
-          Incoming Partner Applications ({applications.length})
-        </h2>
-
-        {applications.length === 0 ? (
-          <div className="p-8 rounded-3xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-center text-xs text-zinc-500">
-            No pending partner breeder applications at this time.
-          </div>
+      <section className="space-y-3">
+        <h2 className="font-serif text-xl font-bold">{t("breedersTitle")}</h2>
+        {breeders.length === 0 ? (
+          <Empty>{t("empty")}</Empty>
         ) : (
-          <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden p-6">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-zinc-50 dark:bg-zinc-800/50 border-y border-zinc-200 dark:border-zinc-800 uppercase font-bold text-zinc-500 tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Applicant</th>
-                    <th className="py-3 px-4">Email</th>
-                    <th className="py-3 px-4">Phone</th>
-                    <th className="py-3 px-4">Location</th>
-                    <th className="py-3 px-4">Experience</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Applied</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-                  {applications.map((app) => (
-                    <tr key={app.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30">
-                      <td className="py-3 px-4 font-bold text-zinc-900 dark:text-zinc-100">
-                        {app.name}
-                      </td>
-                      <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                        {app.email}
-                      </td>
-                      <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                        {app.phone}
-                      </td>
-                      <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                        {app.city}, {app.country}
-                      </td>
-                      <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                        {app.experienceYears ? `${app.experienceYears} yrs` : "—"}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                            app.status === "APPROVED"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : app.status === "REJECTED"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-amber-100 text-amber-800"
-                          }`}
-                        >
-                          {app.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-zinc-500">
-                        {new Date(app.createdAt).toLocaleDateString("en-GB")}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <DataTable columns={[t("cols.name"), t("cols.location"), t("cols.verification"), t("cols.documentation"), t("cols.animals"), t("cols.actions")]}>
+            {breeders.map((b) => (
+              <tr key={b.id}>
+                <Td><span className="block font-semibold">{b.name}</span><span className="block font-mono text-xs text-zinc-500">{b.slug}</span></Td>
+                <Td>{[b.city, b.country].filter(Boolean).join(", ")}</Td>
+                <Td><Badge tone={b.verificationStatus === "VERIFIED" ? "success" : b.verificationStatus === "SUSPENDED" ? "danger" : "warning"}>{tc(`verification.${b.verificationStatus}`)}</Badge></Td>
+                <Td>{t(`docStatus.${b.documentationStatus}`)}</Td>
+                <Td className="tabular-nums">{b._count.animals}</Td>
+                <Td>
+                  <details>
+                    <summary className="cursor-pointer text-xs font-semibold">{tc("edit")}</summary>
+                    <div className="mt-3 w-[min(90vw,40rem)]">{form(b)}</div>
+                  </details>
+                </Td>
+              </tr>
+            ))}
+          </DataTable>
         )}
-      </div>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="font-serif text-xl font-bold">{t("applicationsTitle")}</h2>
+        {applications.length === 0 ? (
+          <Empty>{t("noApplications")}</Empty>
+        ) : (
+          <DataTable columns={[t("appCols.created"), t("appCols.applicant"), t("appCols.kennel"), t("appCols.location"), t("appCols.experience"), t("appCols.status"), t("appCols.actions")]}>
+            {applications.map((a) => (
+              <tr key={a.id}>
+                <Td className="whitespace-nowrap">{formatDateTime(a.createdAt, locale)}</Td>
+                <Td><span className="block font-semibold">{a.name}</span><span className="block text-xs text-zinc-500">{[a.email, a.phone].filter(Boolean).join(" · ")}</span></Td>
+                <Td>{a.kennelName ?? "—"}</Td>
+                <Td>{[a.city, a.country].filter(Boolean).join(", ") || "—"}</Td>
+                <Td>{a.experienceYears ?? "—"}</Td>
+                <Td><Badge tone={a.status === "APPROVED" ? "success" : a.status === "REJECTED" ? "danger" : "warning"}>{t(`appStatus.${a.status === "APPROVED" || a.status === "REJECTED" ? a.status : "PENDING"}`)}</Badge></Td>
+                <Td>
+                  {a.status === "PENDING" ? (
+                    <div className="flex flex-col gap-1.5">
+                      <ActionButton action={actionDecideBreederApplication.bind(null, a.id, "APPROVED")} label={t("approve")} confirmText={t("approveConfirm")} errors={errors} fallbackError={tc("error")} />
+                      <ActionButton action={actionDecideBreederApplication.bind(null, a.id, "REJECTED")} label={t("reject")} confirmText={t("rejectConfirm")} errors={errors} fallbackError={tc("error")} />
+                    </div>
+                  ) : (
+                    "—"
+                  )}
+                </Td>
+              </tr>
+            ))}
+          </DataTable>
+        )}
+      </section>
     </div>
   );
 }

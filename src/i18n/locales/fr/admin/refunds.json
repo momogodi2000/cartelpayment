@@ -1,0 +1,23 @@
+{
+  "AdminRefunds": {
+    "title": "Remboursements",
+    "subtitle": "GeniusPay ne propose pas d'API de remboursement : effectuez le remboursement dans le tableau de bord GeniusPay, puis enregistrez chaque étape ici. Une notification « payment.refunded » du prestataire le finalise automatiquement.",
+    "open": "{count} à traiter",
+    "cols": {
+      "created": "Demandé le",
+      "order": "Commande",
+      "customer": "Client",
+      "amount": "Montant",
+      "reason": "Motif",
+      "status": "Statut",
+      "providerRef": "Référence prestataire",
+      "actions": "Actions"
+    },
+    "markSubmitted": "Marquer comme émis chez le prestataire",
+    "markCompleted": "Confirmer le remboursement effectué",
+    "markFailed": "Marquer comme échoué",
+    "providerRefPrompt": "Référence du remboursement chez le prestataire (tableau de bord GeniusPay)",
+    "empty": "Aucune demande de remboursement.",
+    "failedAction": "Le remboursement n'a pas pu être mis à jour (il est peut-être déjà clôturé)."
+  }
+}

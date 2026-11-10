@@ -1,0 +1,30 @@
+{
+  "AdminReservations": {
+    "title": "Reservations",
+    "subtitle": "Temporary holds created at checkout. A hold is released automatically at expiry after the payment provider has been checked.",
+    "active": "{count} active",
+    "filterStatus": "Status",
+    "cols": {
+      "order": "Order",
+      "animal": "Animal",
+      "customer": "Customer",
+      "value": "Animal price",
+      "status": "Status",
+      "expires": "Expires / released",
+      "actions": "Actions"
+    },
+    "expires": "Expires {time}",
+    "released": "Released {time}",
+    "expired": "Expired {time}",
+    "release": "Release now",
+    "releaseConfirm": "Release this hold? The provider is checked first; a paid or in-progress payment is never released.",
+    "errors": {
+      "NOT_ACTIVE": "This hold is no longer active.",
+      "ALREADY_PAID": "The payment has succeeded: the hold was converted into a sale.",
+      "PAYMENT_IN_PROGRESS": "A payment is in progress at the provider. Try again later.",
+      "PROVIDER_UNREACHABLE": "The payment provider could not be reached. The hold was kept for safety."
+    },
+    "empty": "No reservation yet.",
+    "testBadge": "TEST"
+  }
+}

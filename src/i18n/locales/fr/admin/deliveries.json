@@ -1,0 +1,34 @@
+{
+  "AdminDeliveries": {
+    "title": "Livraisons",
+    "subtitle": "Organisez le transport des commandes payées. Le client reçoit un e-mail lorsque le transport est planifié puis lorsque la livraison est confirmée.",
+    "awaiting": "Commandes payées sans plan de livraison",
+    "planned": "Plans de livraison",
+    "cols": {
+      "order": "Commande",
+      "animal": "Animal",
+      "customer": "Client",
+      "plan": "Plan",
+      "status": "Statut"
+    },
+    "method": "Mode",
+    "carrier": "Transporteur",
+    "scheduledAt": "Prise en charge / départ",
+    "estimatedAt": "Livraison estimée confirmée",
+    "notes": "Notes internes",
+    "delivered": "Livré (confirmé)",
+    "save": "Enregistrer le plan de livraison",
+    "saving": "Enregistrement…",
+    "saved": "Plan de livraison enregistré.",
+    "noAwaiting": "Toutes les commandes payées ont un plan de livraison.",
+    "noPlanned": "Aucun plan de livraison pour le moment.",
+    "statusDelivered": "Livré le {time}",
+    "statusScheduled": "Planifié le {time}",
+    "statusUnscheduled": "Non planifié",
+    "errors": {
+      "VALIDATION": "Merci de vérifier les champs.",
+      "NOT_FOUND": "Commande introuvable.",
+      "TEST_ORDER": "Les commandes de test internes ne sont jamais livrées."
+    }
+  }
+}

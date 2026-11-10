@@ -1,0 +1,34 @@
+{
+  "AdminDeliveries": {
+    "title": "Deliveries",
+    "subtitle": "Plan transport for paid orders. The customer is emailed when the transport is scheduled and when delivery is confirmed.",
+    "awaiting": "Paid orders without a delivery plan",
+    "planned": "Delivery plans",
+    "cols": {
+      "order": "Order",
+      "animal": "Animal",
+      "customer": "Customer",
+      "plan": "Plan",
+      "status": "Status"
+    },
+    "method": "Method",
+    "carrier": "Carrier",
+    "scheduledAt": "Pick-up / departure",
+    "estimatedAt": "Confirmed estimated delivery",
+    "notes": "Internal notes",
+    "delivered": "Delivered (confirmed)",
+    "save": "Save the delivery plan",
+    "saving": "Saving…",
+    "saved": "Delivery plan saved.",
+    "noAwaiting": "Every paid order has a delivery plan.",
+    "noPlanned": "No delivery plan yet.",
+    "statusDelivered": "Delivered {time}",
+    "statusScheduled": "Scheduled {time}",
+    "statusUnscheduled": "Not scheduled",
+    "errors": {
+      "VALIDATION": "Please check the fields.",
+      "NOT_FOUND": "Order not found.",
+      "TEST_ORDER": "Internal test orders are never delivered."
+    }
+  }
+}

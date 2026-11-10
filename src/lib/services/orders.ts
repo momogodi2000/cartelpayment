@@ -1,4 +1,4 @@
-import { OrderStatus, ActorType, AnimalStatus, ReservationStatus, PaymentStatus } from "@prisma/client";
+import { OrderStatus, ActorType, AnimalStatus, ReservationStatus, PaymentStatus, RefundStatus } from "@prisma/client";
 import { prisma } from "../db/client";
 import { assertValidOrderTransition } from "../domain/order-state";
 import { logAudit } from "./audit";
@@ -40,10 +40,39 @@ export async function transitionOrderStatus(params: TransitionOrderParams): Prom
   assertValidOrderTransition(order.status, toStatus);
 
   await prisma.$transaction(async (tx) => {
-    await tx.order.update({
-      where: { id: orderId },
-      data: { status: toStatus },
-    });
+    // Conditional update: fails if the order changed since it was read (no lost updates).
+    const gate = await tx.order.updateMany({ where: { id: orderId, status: order.status }, data: { status: toStatus } });
+    if (gate.count !== 1) throw new Error("ORDER_CHANGED_CONCURRENTLY");
+
+    const paid = await tx.payment.findFirst({ where: { orderId, status: PaymentStatus.SUCCESSFUL }, orderBy: { createdAt: "desc" } });
+    if (toStatus === OrderStatus.REFUND_PENDING && paid) {
+      const open = await tx.refund.findFirst({ where: { paymentId: paid.id, status: { in: [RefundStatus.REQUESTED, RefundStatus.PENDING_PROVIDER] } } });
+      if (!open) {
+        await tx.refund.create({ data: { paymentId: paid.id, amountCents: paid.amountCents, reason: reason || "Refund requested by SUPER_ADMIN", status: RefundStatus.REQUESTED, adminId: actor.adminId || null } });
+      }
+    }
+    if (toStatus === OrderStatus.REFUNDED && paid) {
+      await tx.refund.updateMany({ where: { paymentId: paid.id, status: { in: [RefundStatus.REQUESTED, RefundStatus.PENDING_PROVIDER] } }, data: { status: RefundStatus.COMPLETED, adminId: actor.adminId || null } });
+      await tx.payment.update({ where: { id: paid.id }, data: { status: PaymentStatus.REFUNDED } });
+    }
+
+    // Customer notification for customer-visible milestones (never for internal tests).
+    const NOTIFY: OrderStatus[] = [OrderStatus.DOCUMENTATION_REVIEW, OrderStatus.PREPARING, OrderStatus.TRANSPORT_SCHEDULED, OrderStatus.IN_TRANSIT, OrderStatus.DELIVERED, OrderStatus.CANCELLED, OrderStatus.REFUND_PENDING, OrderStatus.REFUNDED];
+    if (!order.isTest && NOTIFY.includes(toStatus)) {
+      const customer = await tx.customer.findUnique({ where: { id: order.customerId } });
+      if (customer) {
+        await queueEmail(
+          {
+            idempotencyKey: `order:${orderId}:status:${toStatus}`,
+            template: "order_status_update",
+            locale: order.locale,
+            toEmail: customer.email,
+            payload: { customerName: customer.name, orderRef: order.reference, status: toStatus },
+          },
+          tx
+        );
+      }
+    }
 
     await tx.orderStatusHistory.create({
       data: {
