@@ -5,61 +5,16 @@ import { queueEmail } from "@/lib/services/email/outbox";
 import { createSupportTicket, getTicketForCustomer, getTicketForAdmin, adminReplyTicket } from "@/lib/services/support";
 import { settlePaymentAuthoritative } from "@/lib/services/payments/settlement";
 import { geniusPay } from "@/lib/services/payments/geniuspay";
-import { recordGatewayFailure, recordGatewaySuccess, getGatewayCircuitState } from "@/lib/services/payments/gateway-health";
+import { recordGatewayFailure, recordGatewaySuccess, getGatewayCircuitState, acquireGatewaySlot, moveGatewayToHalfOpen } from "@/lib/services/payments/gateway-health";
+import { hashPassword } from "@/lib/security/password";
+import { createAnimal } from "../fixtures/factory";
 import { TicketCategory, AnimalStatus, ReservationStatus, PaymentStatus, OrderStatus } from "@prisma/client";
 
 describe("Integration Tests — Concurrency, Webhooks & Flow Isolation", () => {
   let testAnimalId: string;
 
   beforeAll(async () => {
-    const breed = await prisma.breed.findFirst();
-    if (!breed) throw new Error("No breed found in database. Run db:seed first.");
-
-    const animal = await prisma.animal.upsert({
-      where: { slug: "integration-test-animal-001" },
-      update: {
-        status: AnimalStatus.AVAILABLE,
-        published: true,
-      },
-      create: {
-        slug: "integration-test-animal-001",
-        name: "Test Hound",
-        species: "DOG",
-        breedId: breed.id,
-        gender: "MALE",
-        dateOfBirth: new Date("2026-01-01"),
-        size: "MEDIUM",
-        coat: "Brown",
-        color: "Brown",
-        country: "France",
-        city: "Paris",
-        priceCents: 120000,
-        currency: "EUR",
-        status: AnimalStatus.AVAILABLE,
-        published: true,
-        descriptionEn: "Test",
-        descriptionFr: "Test",
-        temperamentEn: "[]",
-        temperamentFr: "[]",
-        socializationEn: "Test",
-        socializationFr: "Test",
-        isDemo: false,
-        isPaymentTest: false,
-      },
-    });
-
-    testAnimalId = animal.id;
-
-    // Clean up any existing reservations/order items for test animal
-    await prisma.reservation.deleteMany({ where: { animalId: testAnimalId } });
-    await prisma.orderItem.deleteMany({ where: { animalId: testAnimalId } });
-  });
-
-  afterAll(async () => {
-    // Clean up cascade
-    await prisma.reservation.deleteMany({ where: { animalId: testAnimalId } });
-    await prisma.orderItem.deleteMany({ where: { animalId: testAnimalId } });
-    await prisma.animal.deleteMany({ where: { slug: "integration-test-animal-001" } });
+    testAnimalId = (await createAnimal()).id;
   });
 
   it("Guarantees strict concurrency: Promise.all of concurrent acquireHold attempts on 1 animal yields EXACTLY 1 success", async () => {
@@ -142,8 +97,9 @@ describe("Integration Tests — Concurrency, Webhooks & Flow Isolation", () => {
     expect(res.ticketRef).toMatch(/^TK-/);
     expect(res.accessToken).toBeDefined();
 
-    const admin = await prisma.adminUser.findFirst();
-    if (!admin) throw new Error("Admin user not found");
+    const admin = await prisma.adminUser.create({
+      data: { email: `admin-${Date.now()}@example.com`, name: "Fixture Admin", passwordHash: await hashPassword("fixture-password-123") },
+    });
 
     const ticketAdminView = await prisma.supportTicket.findUnique({
       where: { reference: res.ticketRef },
@@ -246,5 +202,12 @@ describe("Integration Tests — Concurrency, Webhooks & Flow Isolation", () => {
     // Success resets
     await recordGatewaySuccess(testGw);
     expect(await getGatewayCircuitState(testGw)).toBe("CLOSED");
+  });
+
+  it("HALF_OPEN lets exactly one concurrent trial attempt through", async () => {
+    const gw = `test_half_${Date.now()}`;
+    await moveGatewayToHalfOpen(gw);
+    const claims = await Promise.all(Array.from({ length: 5 }, () => acquireGatewaySlot(gw)));
+    expect(claims.filter(Boolean)).toHaveLength(1);
   });
 });

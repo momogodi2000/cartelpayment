@@ -65,3 +65,8 @@ export function formatMoney(
     maximumFractionDigits: 2,
   }).format(amountCents / 100);
 }
+
+/** True when the date lies in the future (kept out of components so renders stay pure). */
+export function isInFuture(date: Date | string | number): boolean {
+  return new Date(date).getTime() > Date.now();
+}

@@ -25,7 +25,12 @@
     "learnMore": "Learn More",
     "secureConnection": "Secure 256-bit SSL Connection",
     "certifiedKennel": "Official European Kennel Club Lineages",
-    "certifiedVeterinary": "WSAVA Vaccination & EU Passport Verified"
+    "certifiedVeterinary": "WSAVA Vaccination & EU Passport Verified",
+    "languageSelector": "Language",
+    "languageEnglish": "English",
+    "languageFrench": "Français",
+    "switchToEnglish": "Switch to English",
+    "switchToFrench": "Passer en français"
   },
   "Cookies": {
     "ariaLabel": "Cookie Consent",

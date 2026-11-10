@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+// Development-only fallbacks. Production startup rejects them explicitly.
+const DEV_ENCRYPTION_KEY = "dev-only-0123456789abcdef0123456789abcdef0123456789abcdef";
+const DEV_CRON_SECRET = "dev-only-cron-secret-change-me";
+
 const envSchema = z
   .object({
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -30,17 +34,18 @@ const envSchema = z
     GENIUSPAY_WEBHOOK_SECRET: z.string().min(1, "GENIUSPAY_WEBHOOK_SECRET is required"),
     GENIUSPAY_AMOUNT_UNIT: z.enum(["major", "minor"]).default("major"),
     GENIUSPAY_PAYMENT_METHOD: z.string().default("card"),
-    GENIUSPAY_GATEWAY: z.string().optional().default("stripe"),
+    GENIUSPAY_TIMEOUT_MS: z.coerce.number().int().min(2000).max(30000).default(10000),
     
     // Inventory Rules
     HOLD_MINUTES: z.coerce.number().int().positive().default(30),
     
     // Security & Administration
+    // Development-only fallbacks; production refuses them (see superRefine below).
     ENCRYPTION_KEY: z
       .string()
       .min(32, "ENCRYPTION_KEY must be at least 32 characters for AES-256-GCM")
-      .default("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"),
-    CRON_SECRET: z.string().default("sample_cron_secret_change_me_in_production"),
+      .default(DEV_ENCRYPTION_KEY),
+    CRON_SECRET: z.string().min(16).default(DEV_CRON_SECRET),
     ADMIN_BOOTSTRAP_PASSWORD: z.string().optional(),
     
     // Transactional Email (Resend)
@@ -53,26 +58,33 @@ const envSchema = z
     CLOUDINARY_API_SECRET: z.string().optional().default(""),
   })
   .superRefine((data, ctx) => {
-    // Safety guard: Reject live keys if environment is not production or if running in test
-    const isLiveKey =
-      data.GENIUSPAY_API_KEY.startsWith("pk_live_") ||
-      data.GENIUSPAY_API_SECRET.startsWith("sk_live_");
+    const issue = (path: string, message: string) =>
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message, path: [path] });
 
-    if (isLiveKey) {
-      if (data.NODE_ENV === "test") {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Live GeniusPay keys are strictly forbidden in test mode.",
-          path: ["GENIUSPAY_API_KEY"],
-        });
+    const isLiveKey =
+      data.GENIUSPAY_API_KEY.startsWith("pk_live_") || data.GENIUSPAY_API_SECRET.startsWith("sk_live_");
+    const isSandboxKey = /^(pk_sandbox_|pk_test_|sbx_test_)/.test(data.GENIUSPAY_API_KEY) ||
+      /^(sk_sandbox_|sk_test_|sbx_test_)/.test(data.GENIUSPAY_API_SECRET);
+
+    // Live keys: never in tests, and only with an explicit production payment environment.
+    if (isLiveKey && data.NODE_ENV === "test") {
+      issue("GENIUSPAY_API_KEY", "Live GeniusPay keys are forbidden in test mode.");
+    }
+    if (isLiveKey && data.GENIUSPAY_ENVIRONMENT !== "production") {
+      issue("GENIUSPAY_ENVIRONMENT", "Live GeniusPay keys require GENIUSPAY_ENVIRONMENT=production.");
+    }
+    // Sandbox keys must never be used for a production payment environment.
+    if (isSandboxKey && data.GENIUSPAY_ENVIRONMENT === "production") {
+      issue("GENIUSPAY_ENVIRONMENT", "Sandbox GeniusPay keys cannot be used with GENIUSPAY_ENVIRONMENT=production.");
+    }
+
+    // Production deployments must not run on development fallback secrets.
+    if (data.NODE_ENV === "production" && process.env.NEXT_PHASE !== "phase-production-build") {
+      if (data.ENCRYPTION_KEY === DEV_ENCRYPTION_KEY) {
+        issue("ENCRYPTION_KEY", "ENCRYPTION_KEY must be set explicitly in production.");
       }
-      if (data.GENIUSPAY_ENVIRONMENT !== "production") {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message:
-            "Live GeniusPay keys detected while GENIUSPAY_ENVIRONMENT is not 'production'.",
-          path: ["GENIUSPAY_ENVIRONMENT"],
-        });
+      if (data.CRON_SECRET === DEV_CRON_SECRET) {
+        issue("CRON_SECRET", "CRON_SECRET must be set explicitly in production.");
       }
     }
   });
@@ -103,6 +115,7 @@ export function getEnv(): Env {
       GENIUSPAY_WEBHOOK_SECRET: "",
       GENIUSPAY_AMOUNT_UNIT: "major",
       GENIUSPAY_PAYMENT_METHOD: "card",
+      GENIUSPAY_TIMEOUT_MS: 10000,
       HOLD_MINUTES: 30,
       ENCRYPTION_KEY: "",
       CRON_SECRET: "",
@@ -125,6 +138,12 @@ export function getEnv(): Env {
 
   parsedEnv = result.data;
   return parsedEnv;
+}
+
+/** Test-only: forget the cached environment so a test can change process.env values. */
+export function resetEnvCacheForTests(): void {
+  if (process.env.NODE_ENV !== "test") throw new Error("resetEnvCacheForTests is test-only");
+  parsedEnv = null;
 }
 
 export const env = typeof window === "undefined" ? getEnv() : ({} as Env);

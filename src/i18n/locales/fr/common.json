@@ -25,7 +25,12 @@
     "learnMore": "En savoir plus",
     "secureConnection": "Connexion Sécurisée SSL 256-bit",
     "certifiedKennel": "Lignées Officielles LOF & LOOF Certifiées",
-    "certifiedVeterinary": "Protocole WSAVA & Passeport Européen Validés"
+    "certifiedVeterinary": "Protocole WSAVA & Passeport Européen Validés",
+    "languageSelector": "Langue",
+    "languageEnglish": "English",
+    "languageFrench": "Français",
+    "switchToEnglish": "Switch to English",
+    "switchToFrench": "Passer en français"
   },
   "Cookies": {
     "ariaLabel": "Consentement aux cookies",

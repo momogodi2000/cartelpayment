@@ -1,45 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { RefreshCw } from "lucide-react";
 import { actionReconcilePayments } from "@/app/actions/admin";
-import { RefreshCw, CheckCircle2, AlertCircle } from "lucide-react";
 
 export default function ReconciliationButton() {
-  const [loading, setLoading] = useState(false);
+  const t = useTranslations("AdminPayments");
+  const router = useRouter();
+  const [pending, start] = useTransition();
   const [result, setResult] = useState<string | null>(null);
 
-  const handleReconcile = async () => {
-    setLoading(true);
-    setResult(null);
-    try {
-      const res = await actionReconcilePayments();
-      if (res.success && res.report) {
-        setResult(
-          `Evaluated ${res.report.evaluatedCount}: ${res.report.settledCount} settled, ${res.report.expiredCount} expired/abandoned.`
-        );
-      }
-    } catch (err: any) {
-      setResult(`Error: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+    <div className="flex flex-col items-start gap-2 sm:items-end">
       <button
-        onClick={handleReconcile}
-        disabled={loading}
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#183C32] text-white text-xs font-bold shadow-sm hover:bg-[#122E26] transition-colors disabled:opacity-60 cursor-pointer"
+        type="button"
+        disabled={pending}
+        aria-busy={pending}
+        onClick={() =>
+          start(async () => {
+            const res = await actionReconcilePayments();
+            const r = res.report;
+            setResult(
+              t("reconcileResult", { evaluated: r.evaluated, settled: r.settled, terminal: r.terminal, open: r.stillOpen, errors: r.errors.length })
+            );
+            router.refresh();
+          })
+        }
+        className="inline-flex items-center gap-2 rounded-xl bg-[#183C32] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#12302A] disabled:opacity-60"
       >
-        <RefreshCw className={`h-3.5 w-3.5 text-[#B69A65] ${loading ? "animate-spin" : ""}`} />
-        <span>{loading ? "Reconciling against Providers..." : "Reconcile Unsettled Transactions"}</span>
+        <RefreshCw className={`h-4 w-4 ${pending ? "animate-spin" : ""}`} aria-hidden="true" />
+        {pending ? t("reconciling") : t("reconcileButton")}
       </button>
-
       {result && (
-        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700">
+        <p role="status" className="text-xs text-zinc-600 dark:text-zinc-300">
           {result}
-        </span>
+        </p>
       )}
     </div>
   );

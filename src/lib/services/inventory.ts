@@ -25,6 +25,11 @@ export interface AcquireHoldParams {
   deliveryCountry?: string;
   deliveryMethod?: "standard" | "express" | "vip";
   termsVersion?: string;
+  /**
+   * Only the SUPER_ADMIN test-payment flow may reserve the internal payment-test animal.
+   * Public checkout leaves this false, so the test animal is rejected server-side.
+   */
+  allowPaymentTest?: boolean;
 }
 
 export interface HoldResult {
@@ -33,6 +38,7 @@ export interface HoldResult {
   reservationId: string;
   expiresAt: Date;
   pricing: ReturnType<typeof calculatePricing>;
+  isTest: boolean;
 }
 
 /**
@@ -68,7 +74,11 @@ export async function acquireHold(params: AcquireHoldParams): Promise<HoldResult
         include: { breed: true },
       });
 
-      if (!animal || !animal.published || animal.status !== AnimalStatus.AVAILABLE) {
+      const isTest = Boolean(animal?.isPaymentTest);
+      if (!animal || animal.status !== AnimalStatus.AVAILABLE) {
+        throw new AnimalUnavailableError("Animal is not available for adoption.");
+      }
+      if (isTest ? !params.allowPaymentTest : !animal.published) {
         throw new AnimalUnavailableError("Animal is not available for adoption.");
       }
 
@@ -77,7 +87,7 @@ export async function acquireHold(params: AcquireHoldParams): Promise<HoldResult
         where: {
           id: params.animalId,
           status: AnimalStatus.AVAILABLE,
-          published: true,
+          ...(isTest ? { isPaymentTest: true } : { published: true, isPaymentTest: false }),
         },
         data: {
           status: AnimalStatus.HELD,
@@ -111,10 +121,20 @@ export async function acquireHold(params: AcquireHoldParams): Promise<HoldResult
       }
 
       // 4. Calculate server-authoritative pricing
-      const pricing = calculatePricing(animal.priceCents, {
-        deliveryCountry: params.deliveryCountry || params.customer.country,
-        deliveryMethod: params.deliveryMethod,
-      });
+      // The internal test animal is charged its exact price (no transport, fees or extra VAT).
+      const pricing = isTest
+        ? {
+            animalPriceCents: animal.priceCents,
+            transportCents: 0,
+            taxCents: 0,
+            feesCents: 0,
+            totalCents: animal.priceCents,
+            currency: "EUR",
+          }
+        : calculatePricing(animal.priceCents, {
+            deliveryCountry: params.deliveryCountry || params.customer.country,
+            deliveryMethod: params.deliveryMethod,
+          });
 
       const orderReference = generateOrderReference();
 
@@ -133,6 +153,7 @@ export async function acquireHold(params: AcquireHoldParams): Promise<HoldResult
           currency: pricing.currency,
           termsAcceptedAt: now,
           termsVersion,
+          isTest,
         },
       });
 
@@ -175,6 +196,7 @@ export async function acquireHold(params: AcquireHoldParams): Promise<HoldResult
         reservationId: reservation.id,
         expiresAt,
         pricing,
+        isTest,
       };
     }, txOptions);
   } catch (error: any) {

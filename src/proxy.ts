@@ -25,7 +25,10 @@ export async function proxy(request: NextRequest) {
       }
     }
 
-    return NextResponse.next();
+    // Expose the pathname to the console layout (first-login password-change enforcement).
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pw-pathname", pathname);
+    return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
   // Let internal API pass directly to its route handlers

@@ -79,8 +79,8 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
         setServerError(result.error || t("termsError"));
         setSubmitting(false);
       }
-    } catch (err: unknown) {
-      setServerError(err instanceof Error ? err.message : "Network error");
+    } catch {
+      setServerError(t("errorNetwork"));
       setSubmitting(false);
     }
   };

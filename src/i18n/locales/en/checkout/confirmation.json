@@ -1,7 +1,7 @@
 {
   "Confirmation": {
     "successTitle": "Adoption Confirmed!",
-    "successSubtitle": "Your payment has been successfully authorized and confirmed by our secure gateway.",
+    "successSubtitle": "Your card payment has been confirmed. A confirmation email is on its way.",
     "orderRefLabel": "Order Reference",
     "orderRefCopy": "Keep this reference for your tracking and customer support requests.",
     "nextStepsTitle": "Next Steps for Your Companion",
@@ -14,8 +14,27 @@
     "trackOrderBtn": "Track My Adoption Order",
     "returnHomeBtn": "Return to Homepage",
     "cancelTitle": "Payment Not Completed",
-    "cancelSubtitle": "Your transaction was cancelled or interrupted. Your 15-minute temporary reservation hold has been released.",
+    "cancelSubtitle": "Your card payment was not completed and you have not been charged.",
     "retryBtn": "Restart Checkout",
-    "browseCatalogBtn": "Browse Catalog"
+    "browseCatalogBtn": "Browse Catalog",
+    "pendingTitle": "Payment being confirmed",
+    "pendingSubtitle": "Your payment is still being confirmed by the card processor. This page updates automatically once confirmation is received; you will also receive an email.",
+    "processingTitle": "Payment in progress",
+    "processingSubtitle": "Your bank is processing the payment (for example a 3D Secure check). Please do not pay a second time.",
+    "failedTitle": "Card payment declined",
+    "failedSubtitle": "The payment could not be completed and you have not been charged. You can try again with the same or another card.",
+    "cancelledTitle": "Payment cancelled",
+    "cancelledSubtitle": "You cancelled the card payment. You have not been charged.",
+    "expiredTitle": "Payment session expired",
+    "expiredSubtitle": "The secure payment session expired before the payment was completed. You have not been charged.",
+    "reviewTitle": "Payment under review",
+    "reviewSubtitle": "We received a payment notification that needs a manual check by our team. We will contact you by email; please do not pay again.",
+    "holdStillActive": "This animal remains reserved for you until {time}.",
+    "holdReleased": "Your reservation has ended. If the animal is still available, you can start a new order.",
+    "retryPaymentBtn": "Try the card payment again",
+    "resumePaymentBtn": "Return to the secure payment page",
+    "retryError": "The payment could not be restarted. Please start a new order.",
+    "linkInvalidTitle": "Check your email",
+    "linkInvalidSubtitle": "For your privacy, payment details are only shown through the secure link from your confirmation email or the order tracking page."
   }
 }

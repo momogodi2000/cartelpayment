@@ -1,7 +1,7 @@
 {
   "Confirmation": {
     "successTitle": "Adoption Confirmée !",
-    "successSubtitle": "Votre paiement a été validé avec succès par notre passerelle sécurisée.",
+    "successSubtitle": "Votre paiement par carte est confirmé. Un e-mail de confirmation vous a été envoyé.",
     "orderRefLabel": "Numéro de Commande",
     "orderRefCopy": "Conservez précieusement cette référence pour votre suivi d'adoption.",
     "nextStepsTitle": "Les Prochaines Étapes de votre Compagnon",
@@ -14,8 +14,27 @@
     "trackOrderBtn": "Suivre mon Adoption",
     "returnHomeBtn": "Retour à l'Accueil",
     "cancelTitle": "Paiement Non Finalisé",
-    "cancelSubtitle": "La transaction a été annulée ou interrompue. Votre réservation temporaire de 15 minutes a été libérée.",
+    "cancelSubtitle": "Votre paiement par carte n'a pas abouti et aucun montant n'a été débité.",
     "retryBtn": "Recommencer la Commande",
-    "browseCatalogBtn": "Parcourir le Catalogue"
+    "browseCatalogBtn": "Parcourir le Catalogue",
+    "pendingTitle": "Paiement en cours de confirmation",
+    "pendingSubtitle": "Votre paiement est en cours de confirmation par l'organisme de paiement. Cette page se met à jour dès réception de la confirmation ; vous recevrez également un e-mail.",
+    "processingTitle": "Paiement en cours de traitement",
+    "processingSubtitle": "Votre banque traite le paiement (par exemple une vérification 3D Secure). Merci de ne pas payer une seconde fois.",
+    "failedTitle": "Paiement par carte refusé",
+    "failedSubtitle": "Le paiement n'a pas pu aboutir et aucun montant n'a été débité. Vous pouvez réessayer avec la même carte ou une autre carte.",
+    "cancelledTitle": "Paiement annulé",
+    "cancelledSubtitle": "Vous avez annulé le paiement par carte. Aucun montant n'a été débité.",
+    "expiredTitle": "Session de paiement expirée",
+    "expiredSubtitle": "La session de paiement sécurisée a expiré avant la fin du paiement. Aucun montant n'a été débité.",
+    "reviewTitle": "Paiement en cours de vérification",
+    "reviewSubtitle": "Nous avons reçu une notification de paiement qui nécessite une vérification manuelle par notre équipe. Nous vous contacterons par e-mail ; merci de ne pas payer à nouveau.",
+    "holdStillActive": "Cet animal reste réservé pour vous jusqu'à {time}.",
+    "holdReleased": "Votre réservation a pris fin. Si l'animal est toujours disponible, vous pouvez passer une nouvelle commande.",
+    "retryPaymentBtn": "Réessayer le paiement par carte",
+    "resumePaymentBtn": "Revenir à la page de paiement sécurisée",
+    "retryError": "Le paiement n'a pas pu être relancé. Merci de passer une nouvelle commande.",
+    "linkInvalidTitle": "Consultez votre e-mail",
+    "linkInvalidSubtitle": "Pour protéger vos données, le détail du paiement n'est accessible que via le lien sécurisé de votre e-mail de confirmation ou la page de suivi de commande."
   }
 }

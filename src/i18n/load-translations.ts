@@ -41,6 +41,10 @@ import enAdminCustomers from "./locales/en/admin/customers.json";
 import enAdminSupport from "./locales/en/admin/support.json";
 import enAdminSettings from "./locales/en/admin/settings.json";
 import enAdminAudit from "./locales/en/admin/audit.json";
+import enAdminTestPayment from "./locales/en/admin/test-payment.json";
+import enAdminShell from "./locales/en/admin/shell.json";
+import enAdminAccount from "./locales/en/admin/account.json";
+import enAdminAuth from "./locales/en/admin/auth.json";
 
 import enErrorsNotFound from "./locales/en/errors/not-found.json";
 import enErrorsGeneral from "./locales/en/errors/general.json";
@@ -76,6 +80,10 @@ import frAdminCustomers from "./locales/fr/admin/customers.json";
 import frAdminSupport from "./locales/fr/admin/support.json";
 import frAdminSettings from "./locales/fr/admin/settings.json";
 import frAdminAudit from "./locales/fr/admin/audit.json";
+import frAdminTestPayment from "./locales/fr/admin/test-payment.json";
+import frAdminShell from "./locales/fr/admin/shell.json";
+import frAdminAccount from "./locales/fr/admin/account.json";
+import frAdminAuth from "./locales/fr/admin/auth.json";
 
 import frErrorsNotFound from "./locales/fr/errors/not-found.json";
 import frErrorsGeneral from "./locales/fr/errors/general.json";
@@ -117,6 +125,10 @@ const enMessages = assembleLocale([
   enAdminSupport,
   enAdminSettings,
   enAdminAudit,
+  enAdminTestPayment,
+  enAdminShell,
+  enAdminAccount,
+  enAdminAuth,
   enErrorsNotFound,
   enErrorsGeneral,
 ]);
@@ -148,6 +160,10 @@ const frMessages = assembleLocale([
   frAdminSupport,
   frAdminSettings,
   frAdminAudit,
+  frAdminTestPayment,
+  frAdminShell,
+  frAdminAccount,
+  frAdminAuth,
   frErrorsNotFound,
   frErrorsGeneral,
 ]);

@@ -1,9 +1,9 @@
 {
   "Checkout": {
     "title": "Complete Your Adoption",
-    "subtitle": "Official reservation with secure 3D-Secure credit card payment (Visa, Mastercard).",
-    "holdNotice": "Your selected companion is held exclusively for 15 minutes.",
-    "holdExpired": "Your 15-minute reservation hold has expired. Please restart checkout.",
+    "subtitle": "Secure full payment by credit or debit card (Visa, Mastercard).",
+    "holdNotice": "Your selected animal is reserved exclusively for you for {minutes} minutes.",
+    "holdExpired": "Your {minutes}-minute reservation has expired. Please start the checkout again.",
     "contactSection": "1. Adopter Contact Information",
     "fullName": "Full Name",
     "fullNamePlaceholder": "Arthur Pendelton",
@@ -40,7 +40,14 @@
     "termsError": "You must accept the terms of service to proceed.",
     "submitButton": "Proceed to Secure Payment",
     "processingButton": "Connecting to Secure Payment Gateway...",
-    "secureBadge": "100% Secure 3D-Secure Credit Card Payment (Visa, Mastercard, Amex).",
-    "fullPaymentNote": "Full payment required. Pawelium does not offer deposits or installment loans."
+    "secureBadge": "Secure card payment with 3D Secure authentication.",
+    "fullPaymentNote": "Full payment required. Pawelium does not offer deposits or installment loans.",
+    "errorUnavailable": "Card payment is temporarily unavailable. You have not been charged. Please try again in a few minutes.",
+    "errorAnimalUnavailable": "This animal is no longer available. It may have just been reserved by another customer.",
+    "errorRateLimited": "Too many attempts. Please wait a few minutes and try again.",
+    "errorValidation": "Please check the highlighted fields.",
+    "errorReview": "Your payment needs a manual check. Our team will contact you by email; please do not pay again.",
+    "errorNetwork": "Network error. Please check your connection and try again.",
+    "backToCatalogue": "Back to the catalogue"
   }
 }

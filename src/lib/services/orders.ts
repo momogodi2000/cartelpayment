@@ -2,7 +2,7 @@ import { OrderStatus, ActorType, AnimalStatus, ReservationStatus, PaymentStatus 
 import { prisma } from "../db/client";
 import { assertValidOrderTransition } from "../domain/order-state";
 import { logAudit } from "./audit";
-import { queueEmail, sendEmailNotification } from "./email/outbox";
+import { queueEmail } from "./email/outbox";
 import { getEnv } from "../env";
 
 export interface TransitionOrderParams {
@@ -108,8 +108,12 @@ export async function recordManualPayment(input: RecordManualPaymentInput): Prom
     throw new Error(`Order ${orderId} not found.`);
   }
 
-  if (order.status === OrderStatus.PAID) {
-    throw new Error("Order is already marked as PAID.");
+  if (order.isTest) {
+    throw new Error("Manual payments cannot be recorded for internal test orders.");
+  }
+  const settleable: OrderStatus[] = [OrderStatus.PENDING_PAYMENT, OrderStatus.PAYMENT_PROCESSING, OrderStatus.CANCELLED];
+  if (!settleable.includes(order.status)) {
+    throw new Error(`Order status ${order.status} cannot receive a manual payment.`);
   }
 
   const animalId = order.item?.animalId;
@@ -118,17 +122,25 @@ export async function recordManualPayment(input: RecordManualPaymentInput): Prom
   }
 
   await prisma.$transaction(async (tx) => {
-    // 1. Mark animal SOLD with strict condition
-    const animalUpdate = await tx.animal.updateMany({
-      where: {
-        id: animalId,
-        status: { in: [AnimalStatus.HELD, AnimalStatus.AVAILABLE] },
-      },
-      data: { status: AnimalStatus.SOLD },
+    // 0. Never double-settle: no other successful payment may exist for this order.
+    const alreadyPaid = await tx.payment.findFirst({
+      where: { orderId: order.id, status: PaymentStatus.SUCCESSFUL },
     });
+    if (alreadyPaid) {
+      throw new Error("This order already has a successful payment.");
+    }
 
-    if (animalUpdate.count === 0) {
-      throw new Error("Cannot record manual payment: animal is already sold or no longer available.");
+    // 1. Ownership-checked sale: our own ACTIVE hold on a HELD animal, or a free animal.
+    const reservation = await tx.reservation.findUnique({ where: { orderId: order.id } });
+    let acquired = false;
+    if (reservation?.status === ReservationStatus.ACTIVE && reservation.activeAnimalId === animalId) {
+      acquired = (await tx.animal.updateMany({ where: { id: animalId, status: AnimalStatus.HELD }, data: { status: AnimalStatus.SOLD } })).count === 1;
+    } else if (!reservation || reservation.status !== ReservationStatus.ACTIVE) {
+      acquired = (await tx.animal.updateMany({ where: { id: animalId, status: AnimalStatus.AVAILABLE }, data: { status: AnimalStatus.SOLD } })).count === 1;
+    }
+
+    if (!acquired) {
+      throw new Error("Cannot record manual payment: the animal is held by another order or already sold.");
     }
 
     // 2. Convert reservation
@@ -201,7 +213,8 @@ export async function recordManualPayment(input: RecordManualPaymentInput): Prom
     // 7. Queue confirmation email
     const siteUrl = getEnv().NEXT_PUBLIC_SITE_URL;
     const trackingUrl = `${siteUrl}/${order.locale}/track-order?ref=${order.reference}`;
-    const notifId = await queueEmail(
+    // Delivered by the outbox worker after commit (never send from inside the transaction).
+    await queueEmail(
       {
         idempotencyKey: `order:${order.id}:paid`,
         template: "order_paid",
@@ -210,13 +223,12 @@ export async function recordManualPayment(input: RecordManualPaymentInput): Prom
         payload: {
           customerName: order.customer.name,
           orderRef: order.reference,
-          animalName: order.item?.animalName || "votre animal",
+          animalName: order.item?.animalName || "",
           trackingUrl,
         },
       },
       tx
     );
 
-    sendEmailNotification(notifId).catch(console.error);
   });
 }

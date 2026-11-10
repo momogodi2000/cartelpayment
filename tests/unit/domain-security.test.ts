@@ -8,8 +8,11 @@ import { generateToken, hashToken, timingSafeCompare } from "@/lib/security/toke
 import { encrypt, decrypt } from "@/lib/security/encryption";
 import { escapeHtml } from "@/lib/security/html-escape";
 import { geniusPay } from "@/lib/services/payments/geniuspay";
-import { getEligibleCardGateways, BASE_GATEWAY_REGISTRY } from "@/lib/services/payments/gateway-registry";
-import { isStripeDirectConfigured } from "@/lib/services/payments/stripe";
+import { isAcceptableCardSession } from "@/lib/services/payments/gateway-registry";
+import { classifyInitError } from "@/lib/services/payments/payment-fallback";
+import { GeniusPayError } from "@/lib/services/payments/geniuspay";
+import { mapProviderStatus } from "@/lib/services/payments/settlement";
+import { derivePaymentStateLabel } from "@/lib/services/payments/payment-state-label";
 import crypto from "node:crypto";
 
 describe("Unit Tests — Core Domain & Security Suite", () => {
@@ -178,35 +181,51 @@ describe("Unit Tests — Core Domain & Security Suite", () => {
     });
   });
 
-  describe("European Payment Gateway Routing & Safeguards", () => {
-    it("strictly prioritizes Stripe for European card payments in EUR", () => {
-      const eligible = getEligibleCardGateways("EUR");
-      expect(eligible.length).toBeGreaterThan(0);
-      expect(eligible[0].id).toMatch(/stripe/);
-      expect(eligible[0].methods).toContain("card");
-      expect(eligible[0].currencies).toContain("EUR");
+  describe("Card routing safeguards", () => {
+    it("accepts only sessions routed to card processors", () => {
+      expect(isAcceptableCardSession("paystack", "https://checkout.paystack.com/x")).toBe(true);
+      expect(isAcceptableCardSession("stripe", "https://checkout.stripe.com/c/x")).toBe(true);
+      expect(isAcceptableCardSession("wave", "https://checkout.paystack.com/x")).toBe(false);
+      expect(isAcceptableCardSession("pawapay", "https://geniuspay.ci/checkout/x")).toBe(false);
+      expect(isAcceptableCardSession(null, "https://geniuspay.ci/checkout/x")).toBe(false); // generic picker could offer mobile money
+      expect(isAcceptableCardSession(null, "https://checkout.stripe.com/c/x")).toBe(true);
     });
 
-    it("strictly disables Paystack and Mobile Money for European checkout", () => {
-      const eligible = getEligibleCardGateways("EUR");
-      const gatewayIds = eligible.map((g) => g.id);
-
-      expect(gatewayIds).not.toContain("paystack");
-      expect(gatewayIds).not.toContain("wave");
-      expect(gatewayIds).not.toContain("pawapay");
-
-      // Verify Mobile money is never eligible
-      for (const g of eligible) {
-        expect(g.methods).not.toContain("mobile_money");
-      }
+    it("classifies initialization failures so fallback never risks a duplicate charge", () => {
+      expect(classifyInitError(new GeniusPayError("refused", "not_sent"))).toBe("SAFE");
+      expect(classifyInitError(new GeniusPayError("422", "http_error", 422))).toBe("SAFE");
+      expect(classifyInitError(new GeniusPayError("503", "http_error", 503))).toBe("SAFE");
+      expect(classifyInitError(new GeniusPayError("500", "http_error", 500))).toBe("AMBIGUOUS");
+      expect(classifyInitError(new GeniusPayError("503 with ref", "http_error", 503, null, "MTX-1"))).toBe("AMBIGUOUS");
+      expect(classifyInitError(new GeniusPayError("timeout", "no_response"))).toBe("AMBIGUOUS");
+      expect(classifyInitError(new GeniusPayError("bad body", "invalid_response", 200))).toBe("AMBIGUOUS");
+      expect(classifyInitError(new Error("unknown local failure"))).toBe("AMBIGUOUS");
     });
 
-    it("strictly formats EUR amounts with 2 decimal places for European adoption", () => {
-      const formattedEn = formatMoney(90, "EUR", "en"); // 0.90 EUR
-      expect(formattedEn).toBe("€0.90");
+    it("maps provider statuses without ever inventing success", () => {
+      expect(mapProviderStatus("completed")).toBe("SUCCESSFUL");
+      expect(mapProviderStatus("failed")).toBe("FAILED");
+      expect(mapProviderStatus("declined")).toBe("DECLINED");
+      expect(mapProviderStatus("cancelled")).toBe("CANCELLED");
+      expect(mapProviderStatus("expired")).toBe("EXPIRED");
+      expect(mapProviderStatus("refunded")).toBe("REFUNDED");
+      expect(mapProviderStatus("something-new")).toBe("PENDING");
+      expect(mapProviderStatus(undefined)).toBe("PENDING");
+    });
 
-      const formattedFr = formatMoney(90, "EUR", "fr");
-      expect(formattedFr).toMatch(/0,90\s*€/);
+    it("labels payments so init failures, declines, abandonment and pending webhooks are distinguishable", () => {
+      const base = { providerReference: null as string | null, createdAt: new Date(Date.now() - 60_000) };
+      const o = { processedWebhookCount: 0, holdMinutes: 30 };
+      expect(derivePaymentStateLabel({ ...base, status: "FAILED" }, o)).toBe("initFailed");
+      expect(derivePaymentStateLabel({ ...base, providerReference: "MTX", status: "FAILED" }, o)).toBe("declined");
+      expect(derivePaymentStateLabel({ ...base, providerReference: "MTX", status: "PENDING", createdAt: new Date(Date.now() - 3600e3) }, o)).toBe("abandoned");
+      expect(derivePaymentStateLabel({ ...base, providerReference: "MTX", status: "SUCCESSFUL" }, o)).toBe("paidAwaitingWebhook");
+      expect(derivePaymentStateLabel({ ...base, providerReference: "MTX", status: "SUCCESSFUL" }, { ...o, processedWebhookCount: 1 })).toBe("paid");
+    });
+
+    it("formats EUR amounts with 2 decimals in both languages", () => {
+      expect(formatMoney(100, "EUR", "en")).toBe("€1.00");
+      expect(formatMoney(100, "EUR", "fr")).toMatch(/1,00\s*€/);
     });
   });
 });

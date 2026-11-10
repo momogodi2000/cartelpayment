@@ -2,12 +2,15 @@ import { hasLocale } from 'next-intl';
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from './routing';
 import { loadModularTranslations } from './load-translations';
+import { resolveAdminLocale } from './locale';
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale;
+  // Public routes carry the locale in the [locale] segment; admin routes (outside [locale])
+  // use the SUPER_ADMIN's language preference cookie.
   const locale = hasLocale(routing.locales, requested)
     ? requested
-    : routing.defaultLocale;
+    : await resolveAdminLocale();
 
   return {
     locale,

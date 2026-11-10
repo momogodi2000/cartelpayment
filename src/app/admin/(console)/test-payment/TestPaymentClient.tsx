@@ -1,125 +1,129 @@
 "use client";
 
-import React, { useState } from "react";
-import { actionResetTestDogStatus } from "@/app/actions/admin";
-import { startCheckout } from "@/app/actions/checkout";
-import { Loader2, ShieldCheck, PlayCircle, RotateCcw, ExternalLink } from "lucide-react";
+import React, { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { Loader2, ExternalLink, RotateCcw, RefreshCw } from "lucide-react";
+import { actionStartTestPayment, actionResetTestDogStatus, actionRefreshTestPayment } from "@/app/actions/admin";
 
-interface Props {
-  testDogId: string;
-  testDogStatus: string;
-}
-
-export default function TestPaymentClient({ testDogId, testDogStatus }: Props) {
-  const [loading, setLoading] = useState(false);
-  const [resetting, setResetting] = useState(false);
+function TestPaymentClient({ locale, disabled }: { locale: string; disabled: boolean }) {
+  const t = useTranslations("AdminTestPayment");
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+  const [resetting, startReset] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
 
-  const handleStartTest = async () => {
-    setLoading(true);
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    formData.set("locale", locale);
     setError(null);
-    setCheckoutUrl(null);
-
-    const formData = new FormData();
-    formData.append("animalId", testDogId);
-    formData.append("name", "Super Admin Test Verification");
-    formData.append("email", "admin@pawelium.fyi");
-    formData.append("phone", "+33600000000");
-    formData.append("street", "1 Administration Way");
-    formData.append("city", "Paris");
-    formData.append("postalCode", "75001");
-    formData.append("country", "France");
-    formData.append("deliveryMethod", "standard");
-    formData.append("termsAccepted", "true");
-    formData.append("locale", "en");
-
-    try {
-      const res = await startCheckout(formData);
-      if (res.success && res.checkoutUrl) {
+    setNotice(null);
+    startTransition(async () => {
+      const res = await actionStartTestPayment(formData);
+      if (res.success) {
         setCheckoutUrl(res.checkoutUrl);
+        setNotice(t("sessionReady"));
         window.open(res.checkoutUrl, "_blank", "noopener,noreferrer");
       } else {
-        setError(res.error || "Failed to initialize test payment session.");
+        setError(t(`errors.${res.errorCode}`));
       }
-    } catch (err: any) {
-      setError(err.message || "Network error occurred.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleReset = async () => {
-    setResetting(true);
-    setError(null);
-    try {
-      await actionResetTestDogStatus();
-      setCheckoutUrl(null);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setResetting(false);
-    }
+      router.refresh();
+    });
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 border-t border-zinc-100 dark:border-zinc-800 pt-5">
+      <h2 className="font-bold text-sm text-zinc-900 dark:text-white">{t("startTitle")}</h2>
+
       {error && (
-        <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-semibold">
+        <p role="alert" className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm">
           {error}
+        </p>
+      )}
+      {notice && (
+        <div role="status" className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm space-y-2">
+          <p>{notice}</p>
+          {checkoutUrl && (
+            <a href={checkoutUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-bold underline">
+              {t("openCheckout")} <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          )}
         </div>
       )}
 
-      {checkoutUrl && (
-        <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs space-y-2">
-          <p className="font-bold flex items-center gap-1.5">
-            <ShieldCheck className="h-4 w-4" />
-            <span>Card Checkout Session Generated Successfully!</span>
-          </p>
-          <p className="text-[11px] text-emerald-700 dark:text-emerald-400">
-            A secure EUR checkout window has been opened. If blocked by a popup blocker, click below:
-          </p>
-          <a
-            href={checkoutUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-bold text-xs underline text-[#183C32] dark:text-emerald-200 hover:text-black"
+      <form onSubmit={onSubmit} className="space-y-3">
+        <div>
+          <label htmlFor="tp-phone" className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+            {t("phoneLabel")}
+          </label>
+          <input
+            id="tp-phone"
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            required
+            className="w-full max-w-xs px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 text-sm"
+          />
+        </div>
+        <label className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+          <input name="authorize" type="checkbox" required className="mt-1" />
+          <span>{t("authorizeLabel")}</span>
+        </label>
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="submit"
+            disabled={disabled || pending}
+            aria-busy={pending}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#183C32] text-white text-sm font-bold disabled:opacity-50"
           >
-            <span>Open Provider Checkout URL ({checkoutUrl.slice(0, 45)}...)</span>
-            <ExternalLink className="h-3 w-3" />
-          </a>
+            {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+            {pending ? t("starting") : t("startButton")}
+          </button>
+          <button
+            type="button"
+            disabled={resetting}
+            onClick={() =>
+              startReset(async () => {
+                setError(null);
+                await actionResetTestDogStatus();
+                setCheckoutUrl(null);
+                setNotice(t("resetDone"));
+                router.refresh();
+              })
+            }
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 text-sm font-semibold disabled:opacity-50"
+          >
+            <RotateCcw className="h-4 w-4" aria-hidden="true" />
+            {resetting ? t("resetting") : t("resetButton")}
+          </button>
         </div>
-      )}
-
-      <div className="flex flex-wrap items-center gap-3 pt-2">
-        <button
-          onClick={handleStartTest}
-          disabled={loading || testDogStatus !== "AVAILABLE"}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#183C32] text-white text-xs font-bold shadow-md hover:bg-[#122E26] transition-all disabled:opacity-50 cursor-pointer"
-        >
-          {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin text-[#B69A65]" />
-          ) : (
-            <PlayCircle className="h-4 w-4 text-[#B69A65]" />
-          )}
-          <span>
-            {loading ? "Generating €0.90 Card Session..." : "Initialize €0.90 Test Transaction"}
-          </span>
-        </button>
-
-        <button
-          onClick={handleReset}
-          disabled={resetting}
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-xs font-bold hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors disabled:opacity-50 cursor-pointer"
-        >
-          {resetting ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <RotateCcw className="h-4 w-4" />
-          )}
-          <span>Reset Test Dog to Available</span>
-        </button>
-      </div>
+      </form>
     </div>
   );
 }
+
+export function RefreshTestPayment({ orderRef, label }: { orderRef: string; label: string }) {
+  const router = useRouter();
+  const [pending, start] = useTransition();
+  return (
+    <button
+      type="button"
+      disabled={pending}
+      onClick={() =>
+        start(async () => {
+          await actionRefreshTestPayment(orderRef);
+          router.refresh();
+        })
+      }
+      className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 text-xs font-semibold disabled:opacity-50"
+    >
+      <RefreshCw className={`h-3.5 w-3.5 ${pending ? "animate-spin" : ""}`} aria-hidden="true" />
+      {label}
+    </button>
+  );
+}
+
+export default TestPaymentClient;

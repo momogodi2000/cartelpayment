@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { prisma } from "@/lib/db/client";
 import { calculatePricing } from "@/lib/domain/pricing";
 import { formatMoney } from "@/lib/domain/money";
+import { getEnv } from "@/lib/env";
 import { ShieldCheck, Lock, AlertCircle, ArrowLeft } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import CheckoutClientForm from "./CheckoutClientForm";
@@ -41,49 +42,28 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
     },
   });
 
-  if (!animal || animal.status !== "AVAILABLE") {
+  // Unpublished listings and the internal payment-test animal are never purchasable here.
+  if (!animal || !animal.published || animal.isPaymentTest) {
+    notFound();
+  }
+
+  const holdMinutes = getEnv().HOLD_MINUTES;
+
+  if (animal.status !== "AVAILABLE") {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-6">
         <div className="w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto">
           <AlertCircle className="h-8 w-8" />
         </div>
         <h1 className="font-serif text-3xl font-bold text-gray-900 dark:text-white">
-          {t("holdExpired")}
+          {t("errorAnimalUnavailable")}
         </h1>
-        <p className="text-gray-600 dark:text-gray-300">
-          {t("subtitle")}
-        </p>
         <Link
           href="/animals"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#183C32] text-white font-bold text-sm"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>{t("title")}</span>
-        </Link>
-      </div>
-    );
-  }
-
-  if (animal.isPaymentTest) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-6">
-        <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto">
-          <AlertCircle className="h-8 w-8" />
-        </div>
-        <h1 className="font-serif text-3xl font-bold text-gray-900 dark:text-white">
-          {locale === "fr" ? "Profil de Test Interne Administrateur" : "Internal Payment-Testing Animal"}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300">
-          {locale === "fr"
-            ? "Cette fiche est strictement réservée aux tests techniques du terminal de paiement par l'administration."
-            : "This listing is restricted to internal payment gateway verification by administrators."}
-        </p>
-        <Link
-          href="/animals"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#183C32] text-white font-bold text-sm"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>{locale === "fr" ? "Retour au catalogue" : "Browse Catalogue"}</span>
+          <span>{t("backToCatalogue")}</span>
         </Link>
       </div>
     );
@@ -106,7 +86,7 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
           {t("title")}
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          {t("holdNotice")}
+          {t("holdNotice", { minutes: holdMinutes })}
         </p>
       </div>
 

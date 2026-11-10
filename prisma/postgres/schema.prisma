@@ -165,6 +165,8 @@ enum ExceptionKind {
   AMOUNT_MISMATCH
   CURRENCY_MISMATCH
   UNKNOWN_REFERENCE
+  DUPLICATE_CAPTURE
+  PROVIDER_UNREACHABLE
 }
 
 enum ExceptionStatus {
@@ -230,6 +232,7 @@ model AdminUser {
   totpSecretEnc     String?
   totpEnabled       Boolean      @default(false)
   lastTotpStep      BigInt?
+  mustChangePassword Boolean     @default(false)
   recoveryCodesHash String? // JSON array of hashed recovery codes
   status            AdminStatus  @default(ACTIVE)
   failedLogins      Int          @default(0)
@@ -473,6 +476,7 @@ model Order {
   termsVersion        String
   notesInternal       String?
   deliveryPreferences String? // JSON object
+  isTest              Boolean            @default(false) // Internal payment-integration test order (never fulfilled, excluded from reports)
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
 
@@ -547,6 +551,7 @@ model Payment {
   expiresAt         DateTime?
   environment       PaymentEnv          @default(SANDBOX)
   isSeedDemo        Boolean             @default(false)
+  isTest            Boolean             @default(false) // Internal payment-integration test payment
   rawLast           String? // JSON snapshot of last response
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
@@ -570,7 +575,11 @@ model PaymentAttempt {
   providerReference  String?
   status             PaymentAttemptStatus @default(CREATED)
   errorCode          String?
+  errorClass         String? // SAFE | AMBIGUOUS | DECLINE | REJECTED_ROUTE
+  errorMessage       String?
   httpStatus         Int?
+  gatewayRequested   String? // value sent to GeniusPay (null = default routing)
+  gatewayActual      String? // gateway echoed back by GeniusPay (data.gateway)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 
@@ -583,8 +592,13 @@ model GatewayHealth {
   gatewayId           String    @unique
   state               String    @default("CLOSED") // CLOSED | OPEN | HALF_OPEN
   consecutiveFailures Int       @default(0)
-  openedUntil         DateTime?
+  openedUntil         DateTime? // null while OPEN = manual / provider-reported outage (no auto half-open)
+  halfOpenTrialAt     DateTime? // claim timestamp for the single HALF_OPEN trial attempt
   lastError           String?
+  note                String?
+  verified            Boolean   @default(false) // identifier + card/EUR capability verified (probe or real session)
+  verifiedAt          DateTime?
+  lastProbe           String? // JSON summary of last probe (redacted)
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 }

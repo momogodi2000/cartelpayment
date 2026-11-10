@@ -1,0 +1,46 @@
+{
+  "AdminShell": {
+    "brandTag": "Administration",
+    "role": "SUPER_ADMIN",
+    "openMenu": "Open navigation",
+    "closeMenu": "Close navigation",
+    "mainNav": "Administration modules",
+    "switchToFrench": "Passer l'interface en français",
+    "switchToEnglish": "Switch the interface to English",
+    "themeLight": "Switch to light theme",
+    "themeDark": "Switch to dark theme",
+    "signOut": "Sign out",
+    "skipToContent": "Skip to content",
+    "categories": {
+      "operations": "Operations",
+      "commerce": "Commerce",
+      "relations": "Customers",
+      "platform": "Platform",
+      "security": "Security"
+    },
+    "nav": {
+      "dashboard": "Overview",
+      "animals": "Animals",
+      "inventory": "Inventory",
+      "breeds": "Breeds",
+      "breeders": "Breeders",
+      "reservations": "Reservations",
+      "orders": "Orders",
+      "payments": "Payments",
+      "testPayment": "€1 payment test",
+      "refunds": "Refunds",
+      "deliveries": "Deliveries",
+      "customers": "Customers & GDPR",
+      "reviews": "Reviews",
+      "support": "Support tickets",
+      "content": "Content",
+      "translations": "Translations",
+      "seo": "SEO",
+      "newsletter": "Newsletter",
+      "analytics": "Analytics",
+      "audit": "Audit log",
+      "settings": "Settings",
+      "account": "Account & security"
+    }
+  }
+}

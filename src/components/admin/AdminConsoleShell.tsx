@@ -1,16 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   PawPrint,
+  Boxes,
   BookOpen,
   Building2,
   Clock,
   ShoppingBag,
   CreditCard,
+  PlayCircle,
   RotateCcw,
   Truck,
   Users,
@@ -29,272 +33,197 @@ import {
   X,
   Sun,
   Moon,
-  Shield,
-  ChevronRight,
-  PlayCircle,
 } from "lucide-react";
 import { actionAdminLogout } from "@/app/actions/admin";
+import { setAdminLocaleCookie } from "@/lib/client/admin-locale";
 
-interface AdminUserProps {
-  id: string;
-  name: string;
-  email: string;
-}
+type Category = "operations" | "commerce" | "relations" | "platform" | "security";
 
-interface AdminConsoleShellProps {
-  admin: AdminUserProps;
-  locale: string;
-  children: React.ReactNode;
-}
-
-interface NavItem {
-  labelEn: string;
-  labelFr: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  categoryEn: string;
-  categoryFr: string;
-}
-
-const NAV_ITEMS: NavItem[] = [
-  // Core Operations
-  { labelEn: "Overview", labelFr: "Tableau de Bord", href: "/admin", icon: LayoutDashboard, categoryEn: "Operations", categoryFr: "Opérations" },
-  { labelEn: "Animals & Inventory", labelFr: "Animaux & Inventaire", href: "/admin/animals", icon: PawPrint, categoryEn: "Operations", categoryFr: "Opérations" },
-  { labelEn: "Breeds Registry", labelFr: "Registre des Races", href: "/admin/breeds", icon: BookOpen, categoryEn: "Operations", categoryFr: "Opérations" },
-  { labelEn: "Breeders & Partners", labelFr: "Éleveurs Partenaires", href: "/admin/breeders", icon: Building2, categoryEn: "Operations", categoryFr: "Opérations" },
-  { labelEn: "Reservations & Holds", labelFr: "Réservations Actives", href: "/admin/reservations", icon: Clock, categoryEn: "Operations", categoryFr: "Opérations" },
-
-  // Commerce & Financials
-  { labelEn: "Adoption Orders", labelFr: "Commandes d'Adoption", href: "/admin/orders", icon: ShoppingBag, categoryEn: "Commerce", categoryFr: "Commerce" },
-  { labelEn: "Payments & Webhooks", labelFr: "Paiements & Webhooks", href: "/admin/payments", icon: CreditCard, categoryEn: "Commerce", categoryFr: "Commerce" },
-  { labelEn: "Test Payment Suite", labelFr: "Test Paiement 0,90 €", href: "/admin/test-payment", icon: PlayCircle, categoryEn: "Commerce", categoryFr: "Commerce" },
-  { labelEn: "Manual Refunds", labelFr: "Remboursements", href: "/admin/refunds", icon: RotateCcw, categoryEn: "Commerce", categoryFr: "Commerce" },
-  { labelEn: "VIP Deliveries", labelFr: "Livraisons Sécurisées", href: "/admin/deliveries", icon: Truck, categoryEn: "Commerce", categoryFr: "Commerce" },
-
-  // Adopters & Trust
-  { labelEn: "Customers & GDPR", labelFr: "Clients & RGPD", href: "/admin/customers", icon: Users, categoryEn: "Relations", categoryFr: "Relations" },
-  { labelEn: "Reviews Moderation", labelFr: "Modération des Avis", href: "/admin/reviews", icon: Star, categoryEn: "Relations", categoryFr: "Relations" },
-  { labelEn: "Support Tickets", labelFr: "Tickets Support", href: "/admin/support", icon: Headphones, categoryEn: "Relations", categoryFr: "Relations" },
-
-  // Marketing & System
-  { labelEn: "Content Blocks", labelFr: "Gestion de Contenu", href: "/admin/content", icon: FileText, categoryEn: "Platform", categoryFr: "Plateforme" },
-  { labelEn: "Translations Parity", labelFr: "Santé Traductions", href: "/admin/translations", icon: Languages, categoryEn: "Platform", categoryFr: "Plateforme" },
-  { labelEn: "SEO & OpenGraph", labelFr: "SEO & Métadonnées", href: "/admin/seo", icon: Globe, categoryEn: "Platform", categoryFr: "Plateforme" },
-  { labelEn: "Newsletter List", labelFr: "Abonnés Newsletter", href: "/admin/newsletter", icon: Mail, categoryEn: "Platform", categoryFr: "Plateforme" },
-  { labelEn: "Analytics & KPIs", labelFr: "Analytique & Revenus", href: "/admin/analytics", icon: BarChart3, categoryEn: "Platform", categoryFr: "Plateforme" },
-  { labelEn: "Audit Ledger", labelFr: "Journal d'Audit", href: "/admin/audit", icon: ShieldCheck, categoryEn: "Security", categoryFr: "Sécurité" },
-  { labelEn: "Settings & Gateways", labelFr: "Paramètres Système", href: "/admin/settings", icon: Settings, categoryEn: "Security", categoryFr: "Sécurité" },
-  { labelEn: "Account & MFA", labelFr: "Compte & Sécurité", href: "/admin/account", icon: UserCheck, categoryEn: "Security", categoryFr: "Sécurité" },
+const NAV: Array<{ key: string; href: string; icon: React.ComponentType<{ className?: string }>; category: Category }> = [
+  { key: "dashboard", href: "/admin", icon: LayoutDashboard, category: "operations" },
+  { key: "animals", href: "/admin/animals", icon: PawPrint, category: "operations" },
+  { key: "inventory", href: "/admin/inventory", icon: Boxes, category: "operations" },
+  { key: "breeds", href: "/admin/breeds", icon: BookOpen, category: "operations" },
+  { key: "breeders", href: "/admin/breeders", icon: Building2, category: "operations" },
+  { key: "reservations", href: "/admin/reservations", icon: Clock, category: "operations" },
+  { key: "orders", href: "/admin/orders", icon: ShoppingBag, category: "commerce" },
+  { key: "payments", href: "/admin/payments", icon: CreditCard, category: "commerce" },
+  { key: "testPayment", href: "/admin/test-payment", icon: PlayCircle, category: "commerce" },
+  { key: "refunds", href: "/admin/refunds", icon: RotateCcw, category: "commerce" },
+  { key: "deliveries", href: "/admin/deliveries", icon: Truck, category: "commerce" },
+  { key: "customers", href: "/admin/customers", icon: Users, category: "relations" },
+  { key: "reviews", href: "/admin/reviews", icon: Star, category: "relations" },
+  { key: "support", href: "/admin/support", icon: Headphones, category: "relations" },
+  { key: "content", href: "/admin/content", icon: FileText, category: "platform" },
+  { key: "translations", href: "/admin/translations", icon: Languages, category: "platform" },
+  { key: "seo", href: "/admin/seo", icon: Globe, category: "platform" },
+  { key: "newsletter", href: "/admin/newsletter", icon: Mail, category: "platform" },
+  { key: "analytics", href: "/admin/analytics", icon: BarChart3, category: "platform" },
+  { key: "audit", href: "/admin/audit", icon: ShieldCheck, category: "security" },
+  { key: "settings", href: "/admin/settings", icon: Settings, category: "security" },
+  { key: "account", href: "/admin/account", icon: UserCheck, category: "security" },
 ];
+
+const CATEGORIES: Category[] = ["operations", "commerce", "relations", "platform", "security"];
 
 export default function AdminConsoleShell({
   admin,
-  locale,
   children,
-}: AdminConsoleShellProps) {
-  const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<"light" | "dark">("light");
-  const isFr = locale === "fr";
+}: {
+  admin: { id: string; name: string; email: string };
+  children: React.ReactNode;
+}) {
+  const t = useTranslations("AdminShell");
+  const locale = useLocale();
+  const pathname = usePathname() || "/admin";
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
 
-  // Safely sync theme after mount to avoid server/client hydration mismatch
-  React.useEffect(() => {
-    try {
-      const activeTheme = document.documentElement.getAttribute("data-theme");
-      if (activeTheme === "dark" || activeTheme === "light") {
-        setCurrentTheme(activeTheme);
-      }
-    } catch {}
+  // Theme is only known on the client (set pre-paint by the root layout script).
+  useEffect(() => {
+    setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
   }, []);
 
-  // Switch locale cookie
-  const switchLocale = (newLocale: "en" | "fr") => {
-    document.cookie = `pw_admin_locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-    window.location.reload();
+  useEffect(() => setOpen(false), [pathname]);
+
+  const switchLocale = () => {
+    const next = locale === "fr" ? "en" : "fr";
+    setAdminLocaleCookie(next);
+    router.refresh();
   };
 
-  // Toggle dark/light theme
   const toggleTheme = () => {
-    const next = currentTheme === "dark" ? "light" : "dark";
-    setCurrentTheme(next);
-    localStorage.setItem("pawelium_theme", next);
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try {
+      localStorage.setItem("pawelium_theme", next);
+    } catch {}
     document.documentElement.setAttribute("data-theme", next);
-    if (next === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    document.documentElement.classList.toggle("dark", next === "dark");
   };
 
-  // Group nav items by category
-  const categories = Array.from(
-    new Set(NAV_ITEMS.map((item) => (isFr ? item.categoryFr : item.categoryEn)))
+  const isActive = (href: string) => (href === "/admin" ? pathname === "/admin" : pathname.startsWith(href));
+
+  const utilityButtons = (
+    <>
+      <button
+        type="button"
+        onClick={switchLocale}
+        lang={locale === "fr" ? "en" : "fr"}
+        aria-label={locale === "fr" ? t("switchToEnglish") : t("switchToFrench")}
+        className="rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-bold text-[#E9D9B5] hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B69A65]"
+      >
+        {locale === "fr" ? "EN" : "FR"}
+      </button>
+      <button
+        type="button"
+        onClick={toggleTheme}
+        aria-label={theme === "dark" ? t("themeLight") : t("themeDark")}
+        className="rounded-lg bg-white/10 p-2 text-white/80 hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B69A65]"
+      >
+        {theme === "dark" ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
+      </button>
+    </>
   );
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
-      {/* Mobile Top Header */}
-      <header className="lg:hidden flex items-center justify-between p-4 bg-[#183C32] text-white border-b border-emerald-950 sticky top-0 z-40">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#B69A65] text-zinc-950 flex items-center justify-center font-bold font-serif text-sm">
-            P
-          </div>
-          <div>
-            <h1 className="font-serif font-bold text-base leading-tight">Pawelium</h1>
-            <span className="text-[10px] text-emerald-300 uppercase tracking-widest font-extrabold block">
-              SUPER_ADMIN
-            </span>
-          </div>
-        </div>
+    <div className="min-h-screen lg:flex bg-[#F4F2EC] dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
+      <a href="#admin-main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-lg focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-semibold">
+        {t("skipToContent")}
+      </a>
 
+      {/* Mobile top bar */}
+      <header className="lg:hidden sticky top-0 z-40 flex items-center justify-between bg-[#183C32] px-4 py-3 text-white">
+        <Link href="/admin" className="flex items-center gap-2">
+          <Image src="/logo.png" alt="Pawelium" width={32} height={32} className="rounded-lg bg-white/95 p-0.5" />
+          <span className="font-serif text-lg font-bold">Pawelium</span>
+        </Link>
         <div className="flex items-center gap-2">
+          {utilityButtons}
           <button
-            onClick={() => switchLocale(isFr ? "en" : "fr")}
-            className="px-2 py-1 text-xs font-mono font-bold rounded bg-white/10 hover:bg-white/20 text-[#B69A65]"
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="admin-sidebar"
+            aria-label={open ? t("closeMenu") : t("openMenu")}
+            className="rounded-lg bg-white/10 p-2 hover:bg-white/20"
           >
-            {isFr ? "EN" : "FR"}
-          </button>
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg bg-white/10 hover:bg-white/20"
-            aria-label="Toggle navigation"
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
         </div>
       </header>
 
-      {/* Sidebar (Desktop & Mobile Drawer) */}
+      {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#183C32] text-white flex flex-col shrink-0 border-r border-emerald-950/80 transition-transform duration-300 lg:static lg:translate-x-0 ${
-          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        id="admin-sidebar"
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-[#183C32] text-white transition-transform duration-200 motion-reduce:transition-none lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${
+          open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Brand Header */}
-        <div className="p-6 border-b border-emerald-900/50 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#B69A65] to-[#8C7343] text-zinc-950 flex items-center justify-center font-serif font-extrabold text-lg shadow-inner">
-              P
-            </div>
-            <div>
-              <span className="text-[9px] uppercase tracking-widest text-[#B69A65] font-extrabold block">
-                European Concierge
-              </span>
-              <h1 className="font-serif text-xl font-bold tracking-tight">
-                Pawelium <span className="text-emerald-400 text-xs">2.0</span>
-              </h1>
-            </div>
-          </div>
-          <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[#B69A65] text-zinc-950 shadow-sm">
-            SUPER_ADMIN
-          </span>
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
+          <Link href="/admin" className="flex items-center gap-3">
+            <Image src="/logo.png" alt="Pawelium" width={40} height={40} className="rounded-xl bg-white/95 p-1" />
+            <span>
+              <span className="block font-serif text-xl font-bold leading-tight">Pawelium</span>
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-[#B69A65]">{t("brandTag")}</span>
+            </span>
+          </Link>
+          <span className="rounded bg-[#B69A65] px-2 py-0.5 text-[10px] font-bold text-[#202823]">{t("role")}</span>
         </div>
 
-        {/* Navigation Modules */}
-        <nav className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-thin scrollbar-thumb-emerald-900">
-          {categories.map((category) => {
-            const items = NAV_ITEMS.filter((item) =>
-              isFr ? item.categoryFr === category : item.categoryEn === category
-            );
-
-            return (
-              <div key={category} className="space-y-1">
-                <h3 className="px-3 text-[10px] font-extrabold tracking-widest uppercase text-emerald-400/70 font-mono">
-                  {category}
-                </h3>
-                <div className="space-y-0.5 mt-1">
-                  {items.map((item) => {
-                    const Icon = item.icon;
-                    const isActive =
-                      item.href === "/admin"
-                        ? pathname === "/admin"
-                        : pathname.startsWith(item.href);
-
-                    return (
+        <nav aria-label={t("mainNav")} className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
+          {CATEGORIES.map((cat) => (
+            <div key={cat}>
+              <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-white/50">{t(`categories.${cat}`)}</p>
+              <ul className="space-y-0.5">
+                {NAV.filter((n) => n.category === cat).map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.href);
+                  return (
+                    <li key={item.href}>
                       <Link
-                        key={item.href}
                         href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                          isActive
-                            ? "bg-white/15 text-white font-bold shadow-sm ring-1 ring-white/10"
-                            : "text-zinc-300 hover:text-white hover:bg-white/10"
+                        aria-current={active ? "page" : undefined}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B69A65] ${
+                          active ? "bg-white/15 font-semibold text-white" : "text-white/75 hover:bg-white/10 hover:text-white"
                         }`}
                       >
-                        <div className="flex items-center gap-2.5">
-                          <Icon
-                            className={`h-4 w-4 shrink-0 ${
-                              isActive ? "text-[#B69A65]" : "text-emerald-400/80"
-                            }`}
-                          />
-                          <span>{isFr ? item.labelFr : item.labelEn}</span>
-                        </div>
-                        {isActive && (
-                          <ChevronRight className="h-3 w-3 text-[#B69A65]" />
-                        )}
+                        <Icon className={`h-4 w-4 shrink-0 ${active ? "text-[#B69A65]" : "text-white/60"}`} aria-hidden="true" />
+                        {t(`nav.${item.key}`)}
                       </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
         </nav>
 
-        {/* Footer Admin Profile & Actions */}
-        <div className="p-4 border-t border-emerald-900/50 bg-black/15">
-          <div className="flex items-center justify-between mb-3 px-1">
-            <div className="truncate max-w-[170px]">
-              <p className="text-xs font-bold text-white truncate">{admin.name}</p>
-              <p className="text-[10px] text-emerald-300/80 truncate font-mono">
-                {admin.email}
-              </p>
+        <div className="border-t border-white/10 bg-black/10 p-4">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold">{admin.name}</p>
+              <p className="truncate text-xs text-white/60">{admin.email}</p>
             </div>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => switchLocale(isFr ? "en" : "fr")}
-                className="px-2 py-1 text-[10px] font-mono font-bold rounded bg-white/10 hover:bg-white/20 text-[#B69A65]"
-                title="Switch Admin Language"
-              >
-                {isFr ? "EN" : "FR"}
-              </button>
-              <button
-                onClick={toggleTheme}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white"
-                title="Toggle Theme"
-              >
-                {currentTheme === "dark" ? (
-                  <Sun className="h-3.5 w-3.5" />
-                ) : (
-                  <Moon className="h-3.5 w-3.5" />
-                )}
-              </button>
-            </div>
+            <div className="hidden items-center gap-1.5 lg:flex">{utilityButtons}</div>
           </div>
-
           <form action={actionAdminLogout}>
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold bg-red-950/40 text-red-300 border border-red-800/40 hover:bg-red-900/50 hover:text-white transition-colors"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 px-3 py-2 text-sm font-semibold text-white/90 hover:bg-white/10"
             >
-              <LogOut className="h-3.5 w-3.5" />
-              <span>{isFr ? "Déconnexion Sécurisée" : "Secure Sign Out"}</span>
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              {t("signOut")}
             </button>
           </form>
         </div>
       </aside>
 
-      {/* Backdrop for mobile drawer */}
-      {mobileMenuOpen && (
-        <div
-          onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-sm"
-        />
-      )}
+      {open && <div onClick={() => setOpen(false)} className="fixed inset-0 z-40 bg-black/50 lg:hidden" aria-hidden="true" />}
 
-      {/* Main Content Pane */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+      <div className="min-w-0 flex-1">
+        <main id="admin-main" className="mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
           {children}
         </main>
       </div>

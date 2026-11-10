@@ -255,7 +255,6 @@ export default function Header() {
                 {mounted && (
                   <>
                     <LocaleSwitcher
-                      variant="full"
                       className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-black/[0.06] text-xs font-bold text-text-premium/70 hover:bg-black/[0.03] transition-colors"
                     />
                     <button

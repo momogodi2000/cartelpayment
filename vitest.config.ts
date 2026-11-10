@@ -9,7 +9,11 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/*.test.ts", "tests/**/*.test.ts"],
+    exclude: ["tests/e2e/**", "node_modules/**"],
+    globalSetup: ["tests/global-setup.ts"],
     setupFiles: ["tests/setup.ts"],
     environment: "node",
+    testTimeout: 30000,
+    hookTimeout: 60000,
   },
 });

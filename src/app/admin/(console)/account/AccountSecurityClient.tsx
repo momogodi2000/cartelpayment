@@ -1,508 +1,251 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useActionState, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { Loader2, KeyRound, ShieldCheck, ShieldAlert, Monitor, Copy, Check } from "lucide-react";
 import {
   actionAdminChangePassword,
+  actionAdminStartMFA,
   actionAdminConfirmMFA,
   actionAdminDisableMFA,
   actionAdminRevokeSession,
 } from "@/app/actions/admin";
-import {
-  KeyRound,
-  ShieldCheck,
-  ShieldAlert,
-  Loader2,
-  CheckCircle2,
-  AlertCircle,
-  Monitor,
-  Trash2,
-  Lock,
-  Copy,
-  Check,
-} from "lucide-react";
 
-interface SessionItem {
+interface SessionRow {
   id: string;
-  ip: string;
-  userAgent: string;
+  device: string | null;
+  ip: string | null;
   createdAt: string;
   lastSeenAt: string;
   expiresAt: string;
-  revokedAt: string | null;
+  state: "active" | "revoked" | "expired";
+  isCurrent: boolean;
 }
 
-interface Props {
-  admin: {
-    id: string;
-    name: string;
-    email: string;
-    totpEnabled: boolean;
-    passwordChangedAt: string;
-  };
-  sessions: SessionItem[];
-  qrSvg: string | null;
-  mfaSetupData: {
-    secret: string;
-    otpauthUrl: string;
-    recoveryCodes: string[];
-  } | null;
+const input =
+  "w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#183C32]";
+const primary =
+  "inline-flex items-center gap-2 rounded-xl bg-[#183C32] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#12302A] disabled:opacity-60";
+const card = "rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 space-y-4";
+
+function Feedback({ kind, children }: { kind: "error" | "ok"; children: React.ReactNode }) {
+  return (
+    <p
+      role={kind === "error" ? "alert" : "status"}
+      className={`rounded-xl border p-3 text-sm ${
+        kind === "error" ? "border-red-200 bg-red-50 text-red-800" : "border-emerald-200 bg-emerald-50 text-emerald-900"
+      }`}
+    >
+      {children}
+    </p>
+  );
 }
 
 export default function AccountSecurityClient({
-  admin,
+  totpEnabled,
+  passwordChangedAt,
   sessions,
-  qrSvg,
-  mfaSetupData,
-}: Props) {
-  // Password change state
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [pwdLoading, setPwdLoading] = useState(false);
-  const [pwdError, setPwdError] = useState<string | null>(null);
-  const [pwdSuccess, setPwdSuccess] = useState(false);
+}: {
+  totpEnabled: boolean;
+  passwordChangedAt: string | null;
+  sessions: SessionRow[];
+}) {
+  const t = useTranslations("AdminAccount");
+  const router = useRouter();
 
-  // MFA verification state
-  const [totpInput, setTotpInput] = useState("");
-  const [mfaLoading, setMfaLoading] = useState(false);
-  const [mfaError, setMfaError] = useState<string | null>(null);
-  const [mfaSuccess, setMfaSuccess] = useState(false);
-  const [copiedCodes, setCopiedCodes] = useState(false);
-
-  // MFA disable state
-  const [disablePassword, setDisablePassword] = useState("");
-  const [disableLoading, setDisableLoading] = useState(false);
-  const [disableError, setDisableError] = useState<string | null>(null);
-
-  // Session revoke state
-  const [revokingId, setRevokingId] = useState<string | null>(null);
-
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setPwdError(null);
-    setPwdSuccess(false);
-
-    if (newPassword.length < 12) {
-      setPwdError("New password must be at least 12 characters long.");
-      return;
+  // ---- Password -------------------------------------------------------------------------
+  const [pwd, pwdAction, pwdPending] = useActionState<{ ok?: boolean; code?: string }, FormData>(async (_p, fd) => {
+    const next = String(fd.get("newPassword") || "");
+    if (next.length < 12) return { code: "TOO_SHORT" };
+    if (next !== String(fd.get("confirmPassword") || "")) return { code: "MISMATCH" };
+    const res = await actionAdminChangePassword(fd);
+    if (res.success) {
+      router.refresh();
+      return { ok: true };
     }
+    return { code: res.errorCode || "GENERIC" };
+  }, {});
 
-    if (newPassword !== confirmPassword) {
-      setPwdError("New passwords do not match.");
-      return;
+  // ---- MFA --------------------------------------------------------------------------------
+  const [setup, setSetup] = useState<{ secret: string; qrSvg: string } | null>(null);
+  const [codes, setCodes] = useState<string[] | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [starting, startSetup] = useTransition();
+  const [mfa, mfaAction, mfaPending] = useActionState<{ code?: string }, FormData>(async (_p, fd) => {
+    const res = await actionAdminConfirmMFA(fd);
+    if (res.success && res.recoveryCodes) {
+      setCodes(res.recoveryCodes);
+      setSetup(null);
+      return {};
     }
-
-    setPwdLoading(true);
-    const formData = new FormData();
-    formData.append("currentPassword", currentPassword);
-    formData.append("newPassword", newPassword);
-
-    try {
-      const res = await actionAdminChangePassword(formData);
-      if (res.success) {
-        setPwdSuccess(true);
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-      } else {
-        setPwdError(res.error || "Failed to update password.");
-      }
-    } catch {
-      setPwdError("An unexpected error occurred.");
-    } finally {
-      setPwdLoading(false);
+    return { code: res.errorCode || "INVALID_CODE" };
+  }, {});
+  const [disable, disableAction, disablePending] = useActionState<{ code?: string }, FormData>(async (_p, fd) => {
+    const res = await actionAdminDisableMFA(fd);
+    if (res.success) {
+      router.refresh();
+      return {};
     }
-  };
+    return { code: res.errorCode || "WRONG_PASSWORD" };
+  }, {});
 
-  const handleMFAConfirm = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!mfaSetupData) return;
-    setMfaError(null);
-    setMfaLoading(true);
-
-    const formData = new FormData();
-    formData.append("totpCode", totpInput);
-    formData.append("secret", mfaSetupData.secret);
-    formData.append("recoveryCodes", JSON.stringify(mfaSetupData.recoveryCodes));
-
-    try {
-      const res = await actionAdminConfirmMFA(formData);
-      if (res.success) {
-        setMfaSuccess(true);
-        window.location.reload();
-      } else {
-        setMfaError(res.error || "Failed to verify TOTP code.");
-      }
-    } catch {
-      setMfaError("An unexpected error occurred.");
-    } finally {
-      setMfaLoading(false);
-    }
-  };
-
-  const handleMFADisable = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setDisableError(null);
-    setDisableLoading(true);
-
-    const formData = new FormData();
-    formData.append("password", disablePassword);
-
-    try {
-      const res = await actionAdminDisableMFA(formData);
-      if (res.success) {
-        window.location.reload();
-      } else {
-        setDisableError(res.error || "Failed to disable MFA.");
-      }
-    } catch {
-      setDisableError("An unexpected error occurred.");
-    } finally {
-      setDisableLoading(false);
-    }
-  };
-
-  const handleRevokeSession = async (sessionId: string) => {
-    setRevokingId(sessionId);
-    try {
-      await actionAdminRevokeSession(sessionId);
-      window.location.reload();
-    } finally {
-      setRevokingId(null);
-    }
-  };
-
-  const copyRecoveryCodes = () => {
-    if (mfaSetupData?.recoveryCodes) {
-      navigator.clipboard.writeText(mfaSetupData.recoveryCodes.join("\n"));
-      setCopiedCodes(true);
-      setTimeout(() => setCopiedCodes(false), 2000);
-    }
-  };
+  // ---- Sessions ---------------------------------------------------------------------------
+  const [revoking, startRevoke] = useTransition();
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* 1. Change Master Password */}
-      <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-[#183C32] dark:text-emerald-400">
-            <KeyRound className="h-5 w-5" />
-          </div>
+    <div className="space-y-6">
+      {/* Password */}
+      <section className={card} aria-labelledby="pwd-title">
+        <h2 id="pwd-title" className="flex items-center gap-2 font-serif text-xl font-bold">
+          <KeyRound className="h-5 w-5 text-[#B69A65]" aria-hidden="true" />
+          {t("passwordSection")}
+        </h2>
+        <p className="text-sm text-zinc-500">{passwordChangedAt ? t("passwordLastChanged", { date: passwordChangedAt }) : t("passwordNever")}</p>
+        {pwd.ok && <Feedback kind="ok">{t("passwordSaved")}</Feedback>}
+        {pwd.code && <Feedback kind="error">{t(`passwordErrors.${pwd.code}`)}</Feedback>}
+        <form action={pwdAction} className="grid gap-3 sm:max-w-md">
+          <label className="text-sm font-semibold" htmlFor="cur-pwd">{t("currentPassword")}</label>
+          <input id="cur-pwd" name="currentPassword" type="password" autoComplete="current-password" required className={input} />
+          <label className="text-sm font-semibold" htmlFor="new-pwd">{t("newPassword")}</label>
+          <input id="new-pwd" name="newPassword" type="password" autoComplete="new-password" minLength={12} required className={input} />
+          <label className="text-sm font-semibold" htmlFor="conf-pwd">{t("confirmPassword")}</label>
+          <input id="conf-pwd" name="confirmPassword" type="password" autoComplete="new-password" minLength={12} required className={input} />
           <div>
-            <h2 className="font-serif text-lg font-bold text-zinc-900 dark:text-white">
-              Change Master Password
-            </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Last modified: {admin.passwordChangedAt}
-            </p>
+            <button type="submit" disabled={pwdPending} className={primary}>
+              {pwdPending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+              {pwdPending ? t("saving") : t("savePassword")}
+            </button>
           </div>
-        </div>
-
-        {pwdSuccess && (
-          <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-            <span>Master password updated successfully.</span>
-          </div>
-        )}
-
-        {pwdError && (
-          <div className="p-3.5 rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/40 text-red-700 dark:text-red-300 text-xs font-semibold flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 text-red-500" />
-            <span>{pwdError}</span>
-          </div>
-        )}
-
-        <form onSubmit={handlePasswordSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
-              Current Password
-            </label>
-            <input
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              required
-              disabled={pwdLoading}
-              placeholder="••••••••••••"
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#183C32]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
-              New Password (min 12 characters)
-            </label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              disabled={pwdLoading}
-              placeholder="••••••••••••"
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#183C32]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
-              Confirm New Password
-            </label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              disabled={pwdLoading}
-              placeholder="••••••••••••"
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#183C32]"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={pwdLoading}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#183C32] hover:bg-[#122E26] text-white font-bold text-xs shadow-md transition-all disabled:opacity-60"
-          >
-            {pwdLoading ? <Loader2 className="h-4 w-4 animate-spin text-[#B69A65]" /> : null}
-            <span>Update Master Password</span>
-          </button>
         </form>
-      </div>
+      </section>
 
-      {/* 2. Multi-Factor Authentication (TOTP) */}
-      <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div
-              className={`p-2.5 rounded-xl ${
-                admin.totpEnabled
-                  ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600"
-                  : "bg-amber-50 dark:bg-amber-950/40 text-amber-600"
-              }`}
-            >
-              {admin.totpEnabled ? (
-                <ShieldCheck className="h-5 w-5" />
-              ) : (
-                <ShieldAlert className="h-5 w-5" />
-              )}
-            </div>
-            <div>
-              <h2 className="font-serif text-lg font-bold text-zinc-900 dark:text-white">
-                Two-Factor Authentication
-              </h2>
-              <span
-                className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase mt-0.5 ${
-                  admin.totpEnabled
-                    ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                    : "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
-                }`}
-              >
-                {admin.totpEnabled ? "MFA Protected" : "MFA Disabled (Action Required)"}
-              </span>
-            </div>
-          </div>
-        </div>
+      {/* MFA */}
+      <section className={card} aria-labelledby="mfa-title">
+        <h2 id="mfa-title" className="flex items-center gap-2 font-serif text-xl font-bold">
+          {totpEnabled ? <ShieldCheck className="h-5 w-5 text-emerald-600" aria-hidden="true" /> : <ShieldAlert className="h-5 w-5 text-amber-600" aria-hidden="true" />}
+          {t("mfaSection")}
+        </h2>
 
-        {admin.totpEnabled ? (
-          /* MFA is enabled: show disable form */
-          <div className="space-y-4 pt-2">
-            <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
-              Your account is secured with a TOTP authenticator app. An anti-replay mechanism ensures codes cannot be reused.
-            </p>
-
-            <form onSubmit={handleMFADisable} className="space-y-3 pt-2">
-              <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300">
-                To disable MFA, confirm your Master Password:
-              </label>
-              <input
-                type="password"
-                value={disablePassword}
-                onChange={(e) => setDisablePassword(e.target.value)}
-                required
-                disabled={disableLoading}
-                placeholder="Master Password"
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              />
-
-              {disableError && (
-                <p className="text-xs text-red-600 dark:text-red-400 font-semibold">
-                  {disableError}
-                </p>
-              )}
-
+        {codes ? (
+          <div className="space-y-3">
+            <p className="font-semibold">{t("mfaRecoveryTitle")}</p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-300">{t("mfaRecoveryBody")}</p>
+            <ul className="grid grid-cols-2 gap-2 font-mono text-sm">
+              {codes.map((c) => (
+                <li key={c} className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-3 py-1.5">{c}</li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap gap-2">
               <button
-                type="submit"
-                disabled={disableLoading}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition-colors disabled:opacity-60"
+                type="button"
+                onClick={() => {
+                  navigator.clipboard?.writeText(codes.join("\n")).then(() => setCopied(true));
+                }}
+                className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 px-3 py-2 text-sm font-semibold"
               >
-                {disableLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                <span>Disable Two-Factor Authentication</span>
+                {copied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+                {copied ? t("mfaCopied") : t("mfaCopy")}
               </button>
-            </form>
+              <button type="button" onClick={() => { setCodes(null); router.refresh(); }} className={primary}>
+                {t("mfaDone")}
+              </button>
+            </div>
           </div>
-        ) : (
-          /* MFA is disabled: show QR code and enrolment flow */
-          <div className="space-y-5">
-            <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
-              Scan this QR code with Google Authenticator, 1Password, or Authy, then enter the 6-digit confirmation code below.
-            </p>
-
-            {qrSvg && (
-              <div className="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700">
-                <div
-                  className="w-36 h-36 bg-white p-2 rounded-xl shadow-sm shrink-0 flex items-center justify-center"
-                  dangerouslySetInnerHTML={{ __html: qrSvg }}
-                />
-                <div className="space-y-2 text-xs">
-                  <div className="font-bold text-zinc-800 dark:text-zinc-200">
-                    Manual Secret Key:
-                  </div>
-                  <code className="block p-2 rounded-lg bg-zinc-100 dark:bg-zinc-900 font-mono text-[11px] text-[#183C32] dark:text-emerald-300 font-bold break-all select-all">
-                    {mfaSetupData?.secret}
-                  </code>
-                  <p className="text-[11px] text-zinc-400">
-                    Keep your emergency recovery codes stored offline.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Emergency Recovery Codes */}
-            {mfaSetupData?.recoveryCodes && (
-              <div className="p-4 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-900 dark:text-amber-200">
-                    Emergency Recovery Codes
-                  </span>
-                  <button
-                    type="button"
-                    onClick={copyRecoveryCodes}
-                    className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 hover:text-amber-950 dark:text-amber-300"
-                  >
-                    {copiedCodes ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
-                    <span>{copiedCodes ? "Copied" : "Copy All"}</span>
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-[11px] text-amber-950 dark:text-amber-100">
-                  {mfaSetupData.recoveryCodes.map((code, idx) => (
-                    <div
-                      key={idx}
-                      className="p-1.5 rounded-lg bg-white/80 dark:bg-zinc-900/80 text-center font-bold border border-amber-200/50"
-                    >
-                      {code}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <form onSubmit={handleMFAConfirm} className="space-y-3">
-              <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300">
-                Verification Code from Authenticator:
-              </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="text"
-                  value={totpInput}
-                  onChange={(e) => setTotpInput(e.target.value.trim())}
-                  placeholder="000000"
-                  maxLength={6}
-                  required
-                  disabled={mfaLoading}
-                  className="w-40 px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-center font-mono font-bold tracking-widest text-[#183C32] dark:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-[#183C32]"
-                />
-                <button
-                  type="submit"
-                  disabled={mfaLoading || totpInput.length !== 6}
-                  className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#183C32] hover:bg-[#122E26] text-white font-bold text-xs shadow-md transition-all disabled:opacity-60"
-                >
-                  {mfaLoading ? <Loader2 className="h-4 w-4 animate-spin text-[#B69A65]" /> : null}
-                  <span>Verify & Activate MFA</span>
+        ) : totpEnabled ? (
+          <>
+            <p className="text-sm text-emerald-800 dark:text-emerald-300">{t("mfaEnabled")}</p>
+            {disable.code && <Feedback kind="error">{t(`passwordErrors.${disable.code}`)}</Feedback>}
+            <form action={disableAction} className="grid gap-2 sm:max-w-md">
+              <label htmlFor="mfa-disable" className="text-sm font-semibold">{t("mfaDisableLabel")}</label>
+              <input id="mfa-disable" name="password" type="password" autoComplete="current-password" required className={input} />
+              <div>
+                <button type="submit" disabled={disablePending} className="inline-flex items-center gap-2 rounded-xl border border-red-300 px-4 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-50 disabled:opacity-60">
+                  {disablePending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+                  {t("mfaDisable")}
                 </button>
               </div>
-
-              {mfaError && (
-                <p className="text-xs text-red-600 dark:text-red-400 font-semibold">
-                  {mfaError}
-                </p>
-              )}
             </form>
+          </>
+        ) : setup ? (
+          <div className="grid gap-4 sm:grid-cols-[200px_1fr]">
+            <div className="rounded-2xl border border-zinc-200 bg-white p-2" dangerouslySetInnerHTML={{ __html: setup.qrSvg }} aria-label={t("mfaScan")} role="img" />
+            <div className="space-y-3">
+              <p className="text-sm">{t("mfaScan")}</p>
+              <p className="text-xs text-zinc-500">{t("mfaSecretLabel")}</p>
+              <code className="block break-all rounded-lg bg-zinc-100 dark:bg-zinc-800 px-3 py-2 font-mono text-sm">{setup.secret}</code>
+              {mfa.code && <Feedback kind="error">{t(`mfaErrors.${mfa.code}`)}</Feedback>}
+              <form action={mfaAction} className="grid gap-2 sm:max-w-xs">
+                <label htmlFor="mfa-code" className="text-sm font-semibold">{t("mfaCodeLabel")}</label>
+                <input id="mfa-code" name="totpCode" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required className={`${input} font-mono tracking-[0.3em] text-center`} />
+                <div>
+                  <button type="submit" disabled={mfaPending} className={primary}>
+                    {mfaPending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+                    {t("mfaConfirm")}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
+        ) : (
+          <>
+            <p className="text-sm text-amber-800 dark:text-amber-300">{t("mfaDisabled")}</p>
+            <button
+              type="button"
+              disabled={starting}
+              onClick={() => startSetup(async () => setSetup(await actionAdminStartMFA()))}
+              className={primary}
+            >
+              {starting && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+              {starting ? t("mfaStarting") : t("mfaStart")}
+            </button>
+          </>
         )}
-      </div>
+      </section>
 
-      {/* 3. Active Sessions Ledger */}
-      <div className="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-[#183C32] dark:text-emerald-400">
-            <Monitor className="h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="font-serif text-lg font-bold text-zinc-900 dark:text-white">
-              Active & Recent Admin Sessions
-            </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Revoking a session immediately invalidates its authentication token across all devices.
-            </p>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-zinc-50 dark:bg-zinc-800/50 uppercase font-bold text-zinc-500 tracking-wider border-y border-zinc-200 dark:border-zinc-700">
-              <tr>
-                <th className="py-3 px-4">Client IP</th>
-                <th className="py-3 px-4">Browser / Device</th>
-                <th className="py-3 px-4">Created</th>
-                <th className="py-3 px-4">Last Activity</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800 font-mono">
-              {sessions.map((s) => {
-                const isRevoked = Boolean(s.revokedAt);
-
-                return (
-                  <tr key={s.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30">
-                    <td className="py-3 px-4 font-bold text-zinc-900 dark:text-white">
-                      {s.ip}
-                    </td>
-                    <td className="py-3 px-4 font-sans text-zinc-600 dark:text-zinc-300 max-w-xs truncate" title={s.userAgent}>
-                      {s.userAgent}
-                    </td>
-                    <td className="py-3 px-4 text-zinc-500 font-sans">{s.createdAt}</td>
-                    <td className="py-3 px-4 text-zinc-500 font-sans">{s.lastSeenAt}</td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          isRevoked
-                            ? "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
-                            : "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
-                        }`}
-                      >
-                        {isRevoked ? "Revoked" : "Active"}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      {!isRevoked && (
-                        <button
-                          type="button"
-                          onClick={() => handleRevokeSession(s.id)}
-                          disabled={revokingId === s.id}
-                          className="px-2.5 py-1 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/60 text-[11px] font-bold transition-colors disabled:opacity-50"
-                        >
-                          {revokingId === s.id ? "Revoking..." : "Revoke"}
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Sessions */}
+      <section className={card} aria-labelledby="sess-title">
+        <h2 id="sess-title" className="flex items-center gap-2 font-serif text-xl font-bold">
+          <Monitor className="h-5 w-5 text-[#B69A65]" aria-hidden="true" />
+          {t("sessionsSection")}
+        </h2>
+        <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          {sessions.map((s) => (
+            <li key={s.id} className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0 text-sm">
+                <p className="truncate font-semibold">{s.device || t("unknownDevice")}</p>
+                <p className="text-xs text-zinc-500">
+                  {s.ip ? `${s.ip} · ` : ""}
+                  {t("sessionCreated")}: {s.createdAt} · {t("sessionLastSeen")}: {s.lastSeenAt} · {t("sessionExpires")}: {s.expiresAt}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                    s.isCurrent
+                      ? "bg-[#183C32] text-white"
+                      : s.state === "active"
+                        ? "bg-emerald-100 text-emerald-800"
+                        : "bg-zinc-100 text-zinc-600"
+                  }`}
+                >
+                  {s.isCurrent ? t("sessionCurrent") : s.state === "active" ? t("sessionActive") : s.state === "revoked" ? t("sessionRevoked") : t("sessionExpired")}
+                </span>
+                {s.state === "active" && !s.isCurrent && (
+                  <button
+                    type="button"
+                    disabled={revoking}
+                    onClick={() => startRevoke(async () => { await actionAdminRevokeSession(s.id); router.refresh(); })}
+                    className="rounded-lg border border-zinc-300 px-2.5 py-1 text-xs font-semibold hover:bg-zinc-50 disabled:opacity-60"
+                  >
+                    {t("sessionRevoke")}
+                  </button>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

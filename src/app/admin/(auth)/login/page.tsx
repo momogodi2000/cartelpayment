@@ -1,127 +1,91 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
-import { requireSuperAdmin } from "@/lib/services/admin-auth";
-import { resolveAdminLocale } from "@/i18n/locale";
+import { getTranslations } from "next-intl/server";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { getSuperAdmin } from "@/lib/services/admin-auth";
+import ScopedIntl from "@/i18n/ScopedIntl";
 import AdminLoginForm from "./AdminLoginForm";
-import { Shield, ArrowLeft, Lock } from "lucide-react";
-
-// Load translations for auth
-import enAuth from "@/i18n/locales/en/admin/auth.json";
-import frAuth from "@/i18n/locales/fr/admin/auth.json";
+import AdminLocaleToggle from "../AdminLocaleToggle";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminLoginPage() {
-  let alreadySignedIn = false;
+  // Read-only session check, outside any try/catch so Next.js handles the redirect.
+  if (await getSuperAdmin()) redirect("/admin");
 
-  try {
-    await requireSuperAdmin();
-    alreadySignedIn = true;
-  } catch {
-    alreadySignedIn = false;
-  }
-
-  // Check session outside any try/catch so redirect exception is handled by Next.js
-  if (alreadySignedIn) {
-    redirect("/admin");
-  }
-
-  const locale = await resolveAdminLocale();
-  const t = locale === "fr" ? frAuth : enAuth;
+  const t = await getTranslations("AdminAuth");
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#0D1F1A]">
-      {/* Editorial Left Hero Panel (Desktop) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-[#183C32] overflow-hidden p-12 flex-col justify-between border-r border-emerald-950/80">
-        {/* Ambient atmospheric glows */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#B69A65]/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-emerald-700/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(#B69A65_1px,transparent_1px)] [background-size:28px_28px] opacity-10 pointer-events-none" />
+    <div className="min-h-screen w-full grid lg:grid-cols-[1.1fr_1fr] bg-[#F8F6F0] dark:bg-zinc-950">
+      {/* Editorial panel */}
+      <aside className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-[#183C32] text-white p-12">
+        <Image
+          src="/images/chien/golden-retriever-1.jpeg"
+          alt=""
+          fill
+          priority
+          sizes="55vw"
+          className="object-cover opacity-25"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#183C32] via-[#183C32]/80 to-[#183C32]/40" aria-hidden="true" />
 
-        {/* Brand Crest */}
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#B69A65] to-[#8C7343] p-0.5 shadow-xl flex items-center justify-center">
-            <div className="w-full h-full bg-[#183C32] rounded-[14px] flex items-center justify-center">
-              <span className="font-serif font-extrabold text-[#B69A65] text-xl">P</span>
-            </div>
-          </div>
+        <div className="relative flex items-center gap-3">
+          <Image src="/logo.png" alt="Pawelium" width={44} height={44} className="rounded-xl bg-white/95 p-1" />
           <div>
-            <span className="text-[10px] uppercase tracking-widest text-[#B69A65] font-extrabold block">
-              European Concierge
-            </span>
-            <h1 className="font-serif text-2xl font-bold tracking-tight text-white">
-              Pawelium
-            </h1>
+            <p className="font-serif text-2xl font-bold tracking-tight">Pawelium</p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-[#B69A65] font-semibold">{t("brandTag")}</p>
           </div>
         </div>
 
-        {/* Editorial Text Block */}
-        <div className="relative z-10 max-w-lg space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-emerald-300 text-xs font-semibold backdrop-blur-md">
-            <Shield className="h-3.5 w-3.5 text-[#B69A65]" />
-            <span>{t.portalBadge}</span>
-          </div>
-          <h2 className="font-serif text-4xl xl:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            High-Integrity Pet Registry & Concierge Administration
-          </h2>
-          <p className="text-zinc-300 text-sm leading-relaxed">
-            Strict single-admin architecture protecting pedigree verifications, international veterinary clearance protocols, and reserved European adoptions.
-          </p>
+        <div className="relative max-w-md space-y-4">
+          <h2 className="font-serif text-4xl xl:text-5xl font-bold leading-tight">{t("heroTitle")}</h2>
+          <p className="text-white/80 text-base leading-relaxed">{t("heroBody")}</p>
         </div>
 
-        {/* Bottom Metadata */}
-        <div className="relative z-10 flex items-center justify-between text-xs text-emerald-400/80 border-t border-emerald-900/60 pt-6">
-          <span>Pawelium v2.0 Platform</span>
-          <span className="font-mono text-[11px]">SUPER_ADMIN Authorized Only</span>
-        </div>
-      </div>
+        <p className="relative flex items-start gap-2 text-xs text-white/70 max-w-md border-t border-white/15 pt-6">
+          <ShieldCheck className="h-4 w-4 text-[#B69A65] shrink-0" aria-hidden="true" />
+          {t("heroFootnote")}
+        </p>
+      </aside>
 
-      {/* Form Right Panel (Ivory / Clean Card) */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 lg:p-12 bg-zinc-50 dark:bg-zinc-950">
-        <div className="w-full max-w-md bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-10 border border-zinc-200 dark:border-zinc-800 shadow-xl space-y-7">
-          {/* Mobile Brand Emblem */}
-          <div className="lg:hidden text-center space-y-2">
-            <div className="mx-auto w-14 h-14 rounded-2xl bg-[#183C32] flex items-center justify-center shadow-md">
-              <span className="font-serif font-extrabold text-[#B69A65] text-2xl">P</span>
+      {/* Form panel */}
+      <main className="flex flex-col items-center justify-center px-4 py-10 sm:px-8">
+        <div className="w-full max-w-md">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2 lg:hidden">
+              <Image src="/logo.png" alt="Pawelium" width={36} height={36} className="rounded-lg" />
+              <span className="font-serif text-xl font-bold text-[#183C32] dark:text-white">Pawelium</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#183C32]/8 text-[#183C32] text-[10px] font-extrabold uppercase tracking-widest">
-              <Shield className="h-3 w-3 text-[#B69A65]" />
-              <span>{t.portalBadge}</span>
+            <div className="ml-auto">
+              <ScopedIntl namespaces={["AdminAuth"]}>
+                <AdminLocaleToggle />
+              </ScopedIntl>
             </div>
           </div>
 
-          <div className="text-left space-y-1">
-            <h1 className="font-serif text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-              {t.portalTitle}
-            </h1>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              {t.portalSubtitle}
-            </p>
+          <div className="rounded-3xl bg-white dark:bg-zinc-900 border border-black/[0.06] dark:border-zinc-800 shadow-[0_20px_60px_-30px_rgba(24,60,50,0.35)] p-6 sm:p-9">
+            <h1 className="font-serif text-3xl font-bold text-[#202823] dark:text-white">{t("title")}</h1>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{t("subtitle")}</p>
+            <div className="mt-7">
+              <ScopedIntl namespaces={["AdminAuth"]}>
+                <AdminLoginForm />
+              </ScopedIntl>
+            </div>
           </div>
 
-          {/* Form */}
-          <AdminLoginForm t={t} locale={locale} />
-
-          {/* Footer Info */}
-          <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-[#183C32] dark:hover:text-emerald-400 font-semibold transition-colors"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span>{t.returnMarketplace}</span>
+          <div className="mt-6 flex items-center justify-between text-sm">
+            <Link href="/" className="inline-flex items-center gap-1.5 text-zinc-600 hover:text-[#183C32] dark:text-zinc-400 dark:hover:text-white">
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              {t("returnMarketplace")}
             </Link>
-            <Link
-              href="/admin/forgot-password"
-              className="text-zinc-500 hover:text-[#183C32] dark:hover:text-emerald-400 font-semibold transition-colors"
-            >
-              {t.forgotPassword}
+            <Link href="/admin/forgot-password" className="font-semibold text-[#183C32] hover:underline dark:text-emerald-400">
+              {t("forgotPassword")}
             </Link>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

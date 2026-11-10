@@ -1,13 +1,29 @@
+/**
+ * src/lib/services/payments/geniuspay.ts
+ *
+ * GeniusPay Merchant API client (internal payment orchestration layer).
+ * Only documented endpoints are used (https://geniuspay.ci/docs/api):
+ *   POST /payments              — initialize a payment (hosted checkout)
+ *   GET  /payments/{reference}  — authoritative status
+ *   GET  /payments?search=…     — documented search (reference, customer name or phone)
+ * Webhooks: X-Webhook-Signature = hex HMAC-SHA256(timestamp + "." + rawBody, whsec).
+ */
+
 import crypto from "node:crypto";
 import { getEnv } from "../../env";
 import { formatForGeniusPay } from "../../domain/money";
 
+/** How a specific gateway is requested from GeniusPay. `null` = GeniusPay default routing. */
+export type GatewaySelectionParam = { field: "gateway" | "payment_method"; value: string } | null;
+
 export interface CreateGeniusPayPaymentInput {
   orderId: string;
   orderRef: string;
+  paymentId: string;
+  attemptRef: string;
   amountCents: number;
-  currency?: string;
-  gateway?: string;
+  currency: string;
+  selection: GatewaySelectionParam;
   customer: {
     name: string;
     email: string;
@@ -25,205 +41,287 @@ export interface GeniusPayPaymentResponse {
   status: string;
   checkoutUrl: string;
   expiresAt?: string;
+  /** Gateway echoed by GeniusPay (`data.gateway`), lower-cased, when present. */
+  gateway: string | null;
+  currency: string | null;
+  amount: number | null;
 }
 
 export interface GeniusPayStatusResponse {
   id: string;
   reference: string;
-  status: "pending" | "processing" | "completed" | "failed" | "expired" | "cancelled" | "refunded";
+  status: string;
   amount: number;
   currency: string;
+  gateway?: string | null;
+  paymentUrl?: string | null;
+  expiresAt?: string | null;
   metadata?: Record<string, any>;
 }
 
-export class GeniusPayProvider {
-  private baseUrl: string;
-  private apiKey: string;
-  private apiSecret: string;
-  private webhookSecret: string;
-  private environment: string;
+export interface GeniusPaySearchItem {
+  reference: string;
+  amount: number;
+  currency: string;
+  status: string;
+  createdAt: string | null;
+}
 
-  constructor() {
-    const env = getEnv();
-    this.baseUrl = env.GENIUSPAY_BASE_URL.replace(/\/+$/, "");
-    this.apiKey = env.GENIUSPAY_API_KEY;
-    this.apiSecret = env.GENIUSPAY_API_SECRET;
-    this.webhookSecret = env.GENIUSPAY_WEBHOOK_SECRET;
-    this.environment = env.GENIUSPAY_ENVIRONMENT;
+/** Phase in which a provider call failed — drives the safe/ambiguous classification. */
+export type ProviderFailurePhase =
+  | "not_sent" // DNS / connection refused: the request never reached the provider
+  | "no_response" // timeout / reset after the request was sent: outcome unknown
+  | "http_error" // provider answered with a non-2xx status
+  | "invalid_response"; // provider answered 2xx but the body is unusable
+
+export class GeniusPayError extends Error {
+  constructor(
+    message: string,
+    public readonly phase: ProviderFailurePhase,
+    public readonly httpStatus: number | null = null,
+    public readonly errorCode: string | null = null,
+    /** Provider reference present in an error/invalid body (proves a session may exist). */
+    public readonly reference: string | null = null
+  ) {
+    super(message);
+    this.name = "GeniusPayError";
   }
+}
 
-  private getHeaders(): Record<string, string> {
+function classifyFetchFailure(err: any): ProviderFailurePhase {
+  const name = err?.name || "";
+  const code = err?.cause?.code || err?.code || "";
+  if (name === "TimeoutError" || name === "AbortError") return "no_response";
+  if (["ECONNREFUSED", "ENOTFOUND", "EAI_AGAIN", "ERR_INVALID_URL", "CERT_HAS_EXPIRED"].includes(code)) {
+    return "not_sent";
+  }
+  // ECONNRESET / UND_ERR_SOCKET / unknown: the request may have been processed.
+  return "no_response";
+}
+
+export class GeniusPayProvider {
+  private get config() {
+    const env = getEnv();
     return {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "User-Agent": "Pawelium-European-Concierge/2.0 (Live Pet Registry)",
-      "X-API-Key": this.apiKey,
-      "X-API-Secret": this.apiSecret,
+      baseUrl: env.GENIUSPAY_BASE_URL.replace(/\/+$/, ""),
+      apiKey: env.GENIUSPAY_API_KEY,
+      apiSecret: env.GENIUSPAY_API_SECRET,
+      webhookSecret: env.GENIUSPAY_WEBHOOK_SECRET,
+      environment: env.GENIUSPAY_ENVIRONMENT,
+      timeoutMs: env.GENIUSPAY_TIMEOUT_MS,
     };
   }
 
-  /**
-   * Normalizes customer country code to ISO 2-letter uppercase format.
-   */
-  private normalizeCountryCode(country: string): string {
+  private headers(): Record<string, string> {
+    const c = this.config;
+    return {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "User-Agent": "Pawelium-Commerce/2.0",
+      "X-API-Key": c.apiKey,
+      "X-API-Secret": c.apiSecret,
+    };
+  }
+
+  private async request(path: string, init: RequestInit): Promise<{ status: number; ok: boolean; body: any }> {
+    const c = this.config;
+    let res: Response;
+    try {
+      res = await fetch(`${c.baseUrl}${path}`, {
+        ...init,
+        headers: this.headers(),
+        signal: AbortSignal.timeout(c.timeoutMs),
+      });
+    } catch (err: any) {
+      throw new GeniusPayError(
+        `Provider request failed: ${err?.name || "Error"}`,
+        classifyFetchFailure(err)
+      );
+    }
+    const body = await res.json().catch(() => null);
+    return { status: res.status, ok: res.ok, body };
+  }
+
+  /** ISO-3166 alpha-2 country normalisation for the provider payload. */
+  static normalizeCountry(country: string): string {
     const cleaned = (country || "").trim().toUpperCase();
-    if (cleaned === "FRANCE") return "FR";
-    if (cleaned === "GERMANY" || cleaned === "DEUTSCHLAND") return "DE";
-    if (cleaned === "ITALY" || cleaned === "ITALIA") return "IT";
-    if (cleaned === "SPAIN" || cleaned === "ESPANA") return "ES";
-    if (cleaned === "BELGIUM" || cleaned === "BELGIQUE") return "BE";
-    if (cleaned === "SWITZERLAND" || cleaned === "SUISSE") return "CH";
-    return cleaned.slice(0, 2) || "FR";
+    const map: Record<string, string> = {
+      FRANCE: "FR",
+      GERMANY: "DE",
+      DEUTSCHLAND: "DE",
+      ITALY: "IT",
+      ITALIA: "IT",
+      SPAIN: "ES",
+      ESPANA: "ES",
+      "ESPAÑA": "ES",
+      BELGIUM: "BE",
+      BELGIQUE: "BE",
+      SWITZERLAND: "CH",
+      SUISSE: "CH",
+      LUXEMBOURG: "LU",
+      NETHERLANDS: "NL",
+      AUSTRIA: "AT",
+      PORTUGAL: "PT",
+    };
+    if (map[cleaned]) return map[cleaned];
+    return /^[A-Z]{2}$/.test(cleaned) ? cleaned : "FR";
   }
 
   /**
-   * Creates a payment session with GeniusPay hosted checkout.
+   * POST /payments. Throws GeniusPayError (with phase/httpStatus) on any failure so the
+   * router can decide between safe fallback and reconciliation.
    */
   async createPayment(input: CreateGeniusPayPaymentInput): Promise<GeniusPayPaymentResponse> {
-    const amount = formatForGeniusPay(input.amountCents);
-    const currency = input.currency || "EUR";
-    const paymentMethod = input.gateway === "stripe" ? "stripe" : "card";
-    const country = this.normalizeCountryCode(input.customer.country);
-
     const payload: Record<string, any> = {
-      amount,
-      currency,
-      payment_method: paymentMethod,
-      description: input.description || `Pawelium adoption reservation #${input.orderRef}`,
+      amount: formatForGeniusPay(input.amountCents),
+      currency: input.currency.toUpperCase(),
+      payment_method: getEnv().GENIUSPAY_PAYMENT_METHOD,
+      description: input.description || `Pawelium order ${input.orderRef}`,
       customer: {
         name: input.customer.name,
         email: input.customer.email,
         phone: input.customer.phone,
-        country,
+        country: GeniusPayProvider.normalizeCountry(input.customer.country),
       },
       success_url: input.successUrl,
       error_url: input.errorUrl,
       metadata: {
-        orderId: input.orderId,
-        orderRef: input.orderRef,
-        amountCents: input.amountCents,
+        order_id: input.orderId,
+        order_ref: input.orderRef,
+        payment_id: input.paymentId,
+        attempt_ref: input.attemptRef,
+        amount_cents: input.amountCents,
       },
     };
 
-    if (input.gateway) {
-      payload.gateway = input.gateway;
+    if (input.selection) {
+      payload[input.selection.field] = input.selection.value;
     }
 
-    // 10s fetch timeout via AbortSignal.timeout
-    const res = await fetch(`${this.baseUrl}/payments`, {
+    const { status, ok, body } = await this.request("/payments", {
       method: "POST",
-      headers: this.getHeaders(),
       body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(10000),
     });
 
-    const data: any = await res.json().catch(() => null);
+    const data = body?.data ?? null;
+    const reference: string | null = data?.reference ?? body?.reference ?? null;
 
-    if (!res.ok || !data) {
-      console.error("[GeniusPay] Payment creation failed:", res.status, data);
-      const detail = data?.error?.message || data?.message || res.statusText || res.status;
-      throw new Error(`Payment gateway error: ${detail}`);
+    if (!ok) {
+      throw new GeniusPayError(
+        body?.error?.message || body?.message || `HTTP ${status}`,
+        "http_error",
+        status,
+        body?.error?.code ?? null,
+        reference
+      );
     }
 
-    const paymentData = data.data || data;
-    const checkoutUrl = paymentData.checkout_url || paymentData.payment_url || paymentData.url;
-
-    if (!checkoutUrl) {
-      throw new Error("No checkout URL returned from payment session.");
+    const checkoutUrl: string | undefined = data?.checkout_url || data?.payment_url;
+    if (!data || !reference || !checkoutUrl) {
+      throw new GeniusPayError(
+        "Provider returned an incomplete payment session.",
+        "invalid_response",
+        status,
+        null,
+        reference
+      );
     }
 
     return {
-      id: String(paymentData.id || paymentData.reference),
-      reference: paymentData.reference,
-      status: paymentData.status || "pending",
+      id: String(data.id ?? reference),
+      reference,
+      status: String(data.status || "pending"),
       checkoutUrl,
-      expiresAt: paymentData.expires_at,
+      expiresAt: data.expires_at,
+      gateway: data.gateway ? String(data.gateway).toLowerCase() : null,
+      currency: data.currency ? String(data.currency).toUpperCase() : null,
+      amount: typeof data.amount === "number" ? data.amount : data.amount ? Number(data.amount) : null,
     };
   }
 
-  /**
-   * Authoritatively fetches current payment status from GeniusPay API.
-   */
+  /** GET /payments/{reference} — the authoritative status source. */
   async getPaymentStatus(reference: string): Promise<GeniusPayStatusResponse> {
-    const res = await fetch(`${this.baseUrl}/payments/${encodeURIComponent(reference)}`, {
+    const { status, ok, body } = await this.request(`/payments/${encodeURIComponent(reference)}`, {
       method: "GET",
-      headers: this.getHeaders(),
-      signal: AbortSignal.timeout(10000),
     });
 
-    if (!res.ok) {
-      throw new Error(`Failed to fetch payment status: HTTP ${res.status}`);
+    if (!ok) {
+      throw new GeniusPayError(
+        body?.error?.message || `Failed to fetch payment status: HTTP ${status}`,
+        "http_error",
+        status,
+        body?.error?.code ?? null,
+        null
+      );
     }
 
-    const json: any = await res.json().catch(() => null);
-    const p = json?.data || json;
-
-    if (!p || !p.reference) {
-      throw new Error("Invalid response format from payment provider.");
+    const p = body?.data ?? body;
+    if (!p || !p.reference || !p.status) {
+      throw new GeniusPayError("Invalid status response from provider.", "invalid_response", status);
     }
 
     return {
-      id: String(p.id || p.reference),
-      reference: p.reference,
-      status: p.status,
-      amount: p.amount,
-      currency: p.currency,
-      metadata: p.metadata,
+      id: String(p.id ?? p.reference),
+      reference: String(p.reference),
+      status: String(p.status),
+      amount: typeof p.amount === "number" ? p.amount : Number(p.amount),
+      currency: p.currency ? String(p.currency) : "",
+      gateway: p.gateway || p.payment_provider || null,
+      paymentUrl: p.checkout_url || p.payment_url || null,
+      expiresAt: p.expires_at || null,
+      metadata: p.metadata || {},
     };
   }
 
+  /** GET /payments?search=… (documented: reference, customer name or phone). */
+  async searchPayments(search: string, fromDate?: string): Promise<GeniusPaySearchItem[]> {
+    const qs = new URLSearchParams({ search, per_page: "20" });
+    if (fromDate) qs.set("from", fromDate);
+    const { status, ok, body } = await this.request(`/payments?${qs.toString()}`, { method: "GET" });
+    if (!ok || !Array.isArray(body?.data)) {
+      throw new GeniusPayError(`Payment search failed: HTTP ${status}`, ok ? "invalid_response" : "http_error", status);
+    }
+    return body.data.map((p: any) => ({
+      reference: String(p.reference),
+      amount: Number(p.amount),
+      currency: String(p.currency || ""),
+      status: String(p.status || ""),
+      createdAt: p.created_at || null,
+    }));
+  }
+
   /**
-   * Verifies cryptographic HMAC-SHA256 signature and timestamp of an incoming webhook.
+   * Verifies the HMAC-SHA256 signature over the RAW request body and the replay window.
+   * Only the documented format is accepted: hex(HMAC-SHA256(timestamp + "." + rawBody)).
    */
   verifyWebhookSignature(
     rawBody: string,
     signature: string | null,
     timestamp: string | null,
-    incomingEnv?: string | null
+    incomingEnv?: string | null,
+    nowMs: number = Date.now()
   ): boolean {
-    if (!signature || !timestamp) {
+    const c = this.config;
+    if (!signature || !timestamp || !c.webhookSecret) return false;
+
+    if (incomingEnv) {
+      const norm = (e: string) => (e.toLowerCase() === "live" ? "production" : e.toLowerCase());
+      if (norm(incomingEnv) !== norm(c.environment)) return false;
+    }
+
+    const tsSec = Number.parseInt(timestamp, 10);
+    if (!Number.isFinite(tsSec) || Math.abs(Math.floor(nowMs / 1000) - tsSec) > 300) {
       return false;
     }
 
-    // Bi-directional environment mapping (live <-> production, sandbox <-> sandbox)
-    const norm = (e: string) => (e.toLowerCase() === "live" ? "production" : e.toLowerCase());
-
-    if (incomingEnv && norm(incomingEnv) !== norm(this.environment)) {
-      console.warn(
-        `[GeniusPay Webhook] Environment mismatch: received ${incomingEnv}, expected ${this.environment}`
-      );
-      return false;
-    }
-
-    // Timestamp replay check: within 300 seconds (5 minutes)
-    const nowSec = Math.floor(Date.now() / 1000);
-    const tsSec = parseInt(timestamp, 10);
-    if (isNaN(tsSec) || Math.abs(nowSec - tsSec) > 300) {
-      console.warn(`[GeniusPay Webhook] Timestamp delta too large: delta=${Math.abs(nowSec - tsSec)}s`);
-      return false;
-    }
-
-    const payloadToSign = `${timestamp}.${rawBody}`;
-    const expectedHash = crypto
-      .createHmac("sha256", this.webhookSecret)
-      .update(payloadToSign)
-      .digest("hex");
-
+    const expected = crypto.createHmac("sha256", c.webhookSecret).update(`${timestamp}.${rawBody}`).digest();
+    let provided: Buffer;
     try {
-      const bufExpected = Buffer.from(expectedHash, "hex");
-      const bufActual = Buffer.from(signature, "hex");
-
-      if (
-        bufExpected.length === bufActual.length &&
-        crypto.timingSafeEqual(bufExpected, bufActual)
-      ) {
-        return true;
-      }
+      provided = Buffer.from(signature.trim(), "hex");
     } catch {
       return false;
     }
-
-    return false;
+    return provided.length === expected.length && crypto.timingSafeEqual(provided, expected);
   }
 }
 

@@ -1,51 +1,43 @@
+/**
+ * Real GeniusPay contract tests. They run ONLY when sandbox credentials are explicitly
+ * provided (GENIUSPAY_SANDBOX_API_KEY / GENIUSPAY_SANDBOX_API_SECRET, optionally
+ * GENIUSPAY_SANDBOX_BASE_URL). Live keys are never used here (tests/setup.ts and env.ts
+ * forbid them). Without credentials the suite is reported as SKIPPED, not as passed.
+ */
 import { describe, it, expect } from "vitest";
-import { GeniusPayProvider } from "@/lib/services/payments/geniuspay";
-import { getEnv } from "@/lib/env";
+import { GeniusPayProvider, GeniusPayError } from "@/lib/services/payments/geniuspay";
 
-describe("GeniusPay Sandbox Contract Verification", () => {
-  const env = getEnv();
-  const apiKey = env.GENIUSPAY_API_KEY;
-  const isRealSandboxKey = apiKey.startsWith("pk_sandbox_") && !apiKey.includes("placeholder") && !apiKey.includes("vitest_mock");
+const hasSandbox = Boolean(process.env.GENIUSPAY_SANDBOX_API_KEY && process.env.GENIUSPAY_SANDBOX_API_SECRET);
 
-  it("checks whether real GeniusPay sandbox credentials are configured", () => {
-    if (!isRealSandboxKey) {
-      console.log("ℹ️ Skipping live sandbox network calls: Placeholder/mock sandbox keys configured.");
-      expect(true).toBe(true);
-      return;
-    }
-  });
+describe.skipIf(!hasSandbox)("GeniusPay sandbox contract (requires GENIUSPAY_SANDBOX_* credentials)", () => {
+  const provider = new GeniusPayProvider();
 
-  it.runIf(isRealSandboxKey)("creates EUR card payment session in sandbox", async () => {
-    const provider = new GeniusPayProvider();
-    const result = await provider.createPayment({
-      orderId: "contract-test-order-001",
-      orderRef: "PW-TESTSANDBOX",
-      amountCents: 150000, // 1500.00 EUR
+  it("creates an EUR card session through default routing and reads it back", async () => {
+    const ref = `PW-SBX-${Date.now()}`;
+    const session = await provider.createPayment({
+      orderId: ref,
+      orderRef: ref,
+      paymentId: ref,
+      attemptRef: `${ref}-A1`,
+      amountCents: 100,
       currency: "EUR",
-      customer: {
-        name: "Test Adopter",
-        email: "test.adopter@example.com",
-        phone: "+33600000000",
-        country: "France",
-      },
+      selection: null,
+      customer: { name: "Sandbox Contract", email: "sandbox.contract@example.com", phone: "+33600000000", country: "FR" },
       successUrl: "https://pawelium.fyi/en/checkout/return",
       errorUrl: "https://pawelium.fyi/en/checkout/cancel",
+      description: "Pawelium sandbox contract test",
     });
+    expect(session.reference).toBeTruthy();
+    expect(session.checkoutUrl).toMatch(/^https:\/\//);
 
-    expect(result.id).toBeDefined();
-    expect(result.reference).toBeDefined();
-    expect(result.checkoutUrl).toBeDefined();
-    console.log(`[GeniusPay Sandbox Verified] Reference: ${result.reference}, Checkout URL: ${result.checkoutUrl}`);
-
-    // GET status
-    const statusData = await provider.getPaymentStatus(result.reference);
-    expect(statusData.reference).toBe(result.reference);
-    expect(statusData.currency.toUpperCase()).toBe("EUR");
-    console.log(`[GeniusPay Sandbox Status] Status: ${statusData.status}, Amount: ${statusData.amount}`);
+    const status = await provider.getPaymentStatus(session.reference);
+    expect(status.reference).toBe(session.reference);
+    expect(["pending", "processing"]).toContain(status.status.toLowerCase());
   });
 
-  it.runIf(isRealSandboxKey)("handles invalid reference properly", async () => {
-    const provider = new GeniusPayProvider();
-    await expect(provider.getPaymentStatus("NON_EXISTENT_MTX_REF_99999")).rejects.toThrow();
+  it("returns 404 TRANSACTION_NOT_FOUND for an unknown reference", async () => {
+    const err = await provider.getPaymentStatus("MTX-DOESNOTEXIST").catch((e) => e);
+    expect(err).toBeInstanceOf(GeniusPayError);
+    expect(err.httpStatus).toBe(404);
   });
 });

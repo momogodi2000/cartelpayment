@@ -34,6 +34,10 @@ export const NAMESPACES = [
   'admin/support',
   'admin/settings',
   'admin/audit',
+  'admin/test-payment',
+  'admin/shell',
+  'admin/account',
+  'admin/auth',
   'errors/not-found',
   'errors/general',
 ] as const;
@@ -147,6 +151,22 @@ export const namespaceLoaders: Record<
   'admin/audit': {
     en: () => import('./locales/en/admin/audit.json'),
     fr: () => import('./locales/fr/admin/audit.json'),
+  },
+  'admin/test-payment': {
+    en: () => import('./locales/en/admin/test-payment.json'),
+    fr: () => import('./locales/fr/admin/test-payment.json'),
+  },
+  'admin/auth': {
+    en: () => import('./locales/en/admin/auth.json'),
+    fr: () => import('./locales/fr/admin/auth.json'),
+  },
+  'admin/account': {
+    en: () => import('./locales/en/admin/account.json'),
+    fr: () => import('./locales/fr/admin/account.json'),
+  },
+  'admin/shell': {
+    en: () => import('./locales/en/admin/shell.json'),
+    fr: () => import('./locales/fr/admin/shell.json'),
   },
   'errors/not-found': {
     en: () => import('./locales/en/errors/not-found.json'),

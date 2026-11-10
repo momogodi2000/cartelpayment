@@ -1,52 +1,57 @@
 /**
  * src/lib/services/payments/payment-fallback.ts
  *
- * Error classification & safe fallback policy for card initialization.
+ * Classifies a failed session initialization so the router never risks a duplicate charge.
+ *
+ *  SAFE       — the provider certainly did NOT create a payable session for the customer
+ *               (request never sent, explicit rejection without a reference, gateway outage
+ *               status without a reference). The next eligible gateway may be tried.
+ *  AMBIGUOUS  — a session MAY exist (timeout after send, 5xx carrying/possibly carrying a
+ *               reference, unusable 2xx). The original attempt must be reconciled first.
+ *  DECLINE    — customer-level refusal (never produced by hosted-checkout initialization,
+ *               kept for completeness). No automatic fallback.
  */
 
-export type InitErrorClass = "SAFE" | "AMBIGUOUS" | "DECLINE" | "VALIDATION";
+import { GeniusPayError } from "./geniuspay";
 
-export interface ClassifyErrorParams {
-  httpStatus?: number;
-  errorCode?: string;
-  errorMessage?: string;
-  requestSent?: boolean;
-}
+export type InitErrorClass = "SAFE" | "AMBIGUOUS" | "DECLINE";
 
-export function classifyInitError(params: ClassifyErrorParams): InitErrorClass {
-  const { httpStatus, errorCode, errorMessage, requestSent } = params;
-  const msg = (errorMessage || "").toLowerCase();
-  const code = (errorCode || "").toLowerCase();
+const DECLINE_PATTERN = /(declined|insufficient|do_not_honor|expired_card|incorrect_cvc|3ds_failed)/i;
 
-  // Ambiguous: network timeout or dropped socket after request was dispatched
-  if (msg.includes("timeout") || msg.includes("econnreset") || msg.includes("aborted")) {
-    return requestSent ? "AMBIGUOUS" : "SAFE";
-  }
-
-  // Safe infrastructure outages: 502 Bad Gateway, 503 Service Unavailable, 504 Gateway Timeout
-  if (httpStatus === 502 || httpStatus === 503 || httpStatus === 504) {
-    return "SAFE";
-  }
-
-  // Gateway not supported / validation failure
-  if (httpStatus === 422 || code === "validation.in" || msg.includes("validation.in")) {
-    return "VALIDATION";
-  }
-
-  // Customer decline or invalid card details
-  if (
-    msg.includes("declined") ||
-    msg.includes("insufficient") ||
-    msg.includes("expired_card") ||
-    msg.includes("incorrect_cvc")
-  ) {
-    return "DECLINE";
-  }
-
-  // Default to safe if not sent, ambiguous if 500 received after dispatch
-  if (httpStatus && httpStatus >= 500) {
+export function classifyInitError(err: unknown): InitErrorClass {
+  if (!(err instanceof GeniusPayError)) {
+    // Unknown local error before/around the call: we cannot prove no session exists.
     return "AMBIGUOUS";
   }
 
-  return "SAFE";
+  if (DECLINE_PATTERN.test(err.message || "") || DECLINE_PATTERN.test(err.errorCode || "")) {
+    return "DECLINE";
+  }
+
+  switch (err.phase) {
+    case "not_sent":
+      return "SAFE";
+    case "no_response":
+    case "invalid_response":
+      return "AMBIGUOUS";
+    case "http_error": {
+      if (err.reference) return "AMBIGUOUS"; // a transaction reference came back: a session may exist
+      const s = err.httpStatus ?? 0;
+      if (s >= 400 && s < 500) return "SAFE"; // explicit rejection (422 validation, 400 init failed, 401/403/404)
+      if (s === 502 || s === 503 || s === 504) return "SAFE"; // gateway / provider outage
+      return "AMBIGUOUS"; // other 5xx: provider may have processed the request
+    }
+  }
+}
+
+/** Only SAFE failures of the gateway itself should count against its circuit breaker. */
+export function countsAgainstGatewayHealth(err: unknown): boolean {
+  if (!(err instanceof GeniusPayError)) return false;
+  if (err.phase === "not_sent") return false; // our network, not the gateway
+  if (err.phase === "http_error") {
+    const s = err.httpStatus ?? 0;
+    // 401/403 are merchant-credential problems, not gateway outages.
+    return s === 422 || s === 400 || s >= 500;
+  }
+  return err.phase === "no_response";
 }

@@ -1,7 +1,7 @@
 import type { Config } from "@netlify/functions";
 
 export const config: Config = {
-  schedule: "*/10 * * * *", // Every 10 minutes
+  schedule: "*/5 * * * *", // Every 5 minutes
 };
 
 export default async function () {

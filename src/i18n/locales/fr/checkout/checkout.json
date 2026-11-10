@@ -1,9 +1,9 @@
 {
   "Checkout": {
     "title": "Finaliser l'Adoption",
-    "subtitle": "Réservation officielle avec paiement sécurisé par carte bancaire 3D-Secure (Visa, Mastercard).",
-    "holdNotice": "Votre compagnon est réservé exclusivement pendant 15 minutes.",
-    "holdExpired": "Le temps de réservation de 15 minutes est écoulé. Veuillez relancer la commande.",
+    "subtitle": "Paiement intégral sécurisé par carte bancaire (Visa, Mastercard).",
+    "holdNotice": "L'animal choisi vous est réservé en exclusivité pendant {minutes} minutes.",
+    "holdExpired": "Votre réservation de {minutes} minutes a expiré. Merci de recommencer la commande.",
     "contactSection": "1. Coordonnées de l'Adoptant",
     "fullName": "Nom complet",
     "fullNamePlaceholder": "Jean Dupont",
@@ -40,7 +40,14 @@
     "termsError": "Vous devez accepter les conditions générales de vente pour continuer.",
     "submitButton": "Procéder au Paiement Sécurisé",
     "processingButton": "Connexion sécurisée au terminal de paiement...",
-    "secureBadge": "Paiement 100% sécurisé par carte bancaire avec protocole 3D-Secure (Visa, Mastercard).",
-    "fullPaymentNote": "Paiement intégral obligatoire. Aucun acompte ou facilité de paiement n'est accepté."
+    "secureBadge": "Paiement par carte sécurisé avec authentification 3D Secure.",
+    "fullPaymentNote": "Paiement intégral obligatoire. Aucun acompte ou facilité de paiement n'est accepté.",
+    "errorUnavailable": "Le paiement par carte est momentanément indisponible. Aucun montant n'a été débité. Merci de réessayer dans quelques minutes.",
+    "errorAnimalUnavailable": "Cet animal n'est plus disponible. Il vient peut-être d'être réservé par un autre client.",
+    "errorRateLimited": "Trop de tentatives. Merci de patienter quelques minutes avant de réessayer.",
+    "errorValidation": "Merci de vérifier les champs signalés.",
+    "errorReview": "Votre paiement nécessite une vérification manuelle. Notre équipe vous contactera par e-mail ; merci de ne pas payer à nouveau.",
+    "errorNetwork": "Erreur réseau. Vérifiez votre connexion puis réessayez.",
+    "backToCatalogue": "Retour au catalogue"
   }
 }

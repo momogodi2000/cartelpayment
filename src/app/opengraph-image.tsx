@@ -75,7 +75,7 @@ export default function OpengraphImage() {
               borderRadius: 999,
             }}
           >
-            Marché Européen d'Exception
+            Marché Européen d&apos;Exception
           </div>
           <div style={{ fontSize: 30, color: "#8a7a63" }}>{domain}</div>
         </div>

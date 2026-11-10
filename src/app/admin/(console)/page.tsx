@@ -15,6 +15,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import ExceptionResolveButton from "./ExceptionResolveButton";
+import ScopedIntl from "@/i18n/ScopedIntl";
 
 export const dynamic = "force-dynamic";
 
@@ -151,7 +152,9 @@ export default async function AdminOverviewPage() {
                   </span>
                   <p className="text-zinc-600 mt-1">{ex.notes}</p>
                 </div>
-                <ExceptionResolveButton exceptionId={ex.id} />
+                <ScopedIntl namespaces={["AdminPayments"]}>
+                  <ExceptionResolveButton exceptionId={ex.id} />
+                </ScopedIntl>
               </div>
             ))}
           </div>

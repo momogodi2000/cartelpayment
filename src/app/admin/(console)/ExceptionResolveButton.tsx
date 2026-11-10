@@ -1,39 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
-import { actionResolveException } from "@/app/actions/admin";
+import React, { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { Check, Loader2 } from "lucide-react";
+import { actionResolveException } from "@/app/actions/admin";
 
 export default function ExceptionResolveButton({ exceptionId }: { exceptionId: string }) {
-  const [loading, setLoading] = useState(false);
-  const [resolved, setResolved] = useState(false);
+  const t = useTranslations("AdminPayments");
+  const router = useRouter();
+  const [pending, start] = useTransition();
+  const [done, setDone] = useState(false);
 
-  const handleResolve = async () => {
-    const notes = prompt("Enter resolution notes (e.g. 'Refund initiated via provider dashboard' or 'Authorized replacement'):");
-    if (!notes) return;
-
-    setLoading(true);
-    await actionResolveException(exceptionId, notes);
-    setLoading(false);
-    setResolved(true);
-  };
-
-  if (resolved) {
+  if (done) {
     return (
-      <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
-        <Check className="h-4 w-4" /> Resolved
+      <span className="flex items-center gap-1 text-xs font-bold text-emerald-700">
+        <Check className="h-4 w-4" aria-hidden="true" /> {t("exceptionResolved")}
       </span>
     );
   }
 
   return (
     <button
-      onClick={handleResolve}
-      disabled={loading}
-      className="px-3 py-1.5 rounded-lg bg-zinc-900 text-white font-bold text-xs hover:bg-zinc-800 transition-colors shrink-0 flex items-center gap-1 disabled:opacity-50"
+      type="button"
+      disabled={pending}
+      onClick={() => {
+        const notes = window.prompt(t("exceptionNotes"));
+        if (!notes || !notes.trim()) return;
+        start(async () => {
+          await actionResolveException(exceptionId, notes.trim());
+          setDone(true);
+          router.refresh();
+        });
+      }}
+      className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-zinc-800 disabled:opacity-50"
     >
-      {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-      <span>Resolve Exception</span>
+      {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />}
+      {t("exceptionResolve")}
     </button>
   );
 }
