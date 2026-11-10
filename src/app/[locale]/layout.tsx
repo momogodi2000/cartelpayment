@@ -131,13 +131,14 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       className={`h-full scroll-smooth antialiased ${playfair.variable} ${inter.variable}`}
+      data-scroll-behavior="smooth"
+      // Only <html> is exempt: the pre-paint theme script sets data-theme/class before hydration.
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body
-        suppressHydrationWarning
         className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans"
       >
         <NextIntlClientProvider locale={locale} messages={messages}>

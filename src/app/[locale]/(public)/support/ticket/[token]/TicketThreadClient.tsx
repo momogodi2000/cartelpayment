@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { actionReplyCustomerTicket } from "@/app/actions/support";
 import { Send, Loader2, ShieldCheck, User } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { formatDateTime } from "@/lib/format";
 
 interface Props {
   ticket: any;
@@ -87,13 +88,10 @@ export default function TicketThreadClient({ ticket, accessToken, locale }: Prop
               >
                 <div className="flex justify-between items-center gap-4 mb-1">
                   <span className="text-[10px] font-bold uppercase tracking-wider opacity-75">
-                    {isCustomer ? "You" : "Pawelium Concierge"}
+                    {isCustomer ? t("authorYou") : t("authorTeam")}
                   </span>
                   <span className="text-[10px] opacity-60">
-                    {new Date(m.createdAt).toLocaleDateString(locale, {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {formatDateTime(m.createdAt, locale)}
                   </span>
                 </div>
                 <p className="whitespace-pre-wrap leading-relaxed">{m.body}</p>

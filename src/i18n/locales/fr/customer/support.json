@@ -35,6 +35,8 @@
     "replyPlaceholder": "Écrire une réponse à la conciergerie...",
     "sendReplyBtn": "Envoyer ma Réponse",
     "sendingReplyBtn": "Envoi en cours...",
-    "internalNoteBadge": "Note Interne Conciergerie (Invisible pour l'adoptant)"
+    "internalNoteBadge": "Note Interne Conciergerie (Invisible pour l'adoptant)",
+    "authorYou": "Vous",
+    "authorTeam": "Équipe d'assistance Pawelium"
   }
 }

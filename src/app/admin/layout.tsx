@@ -46,13 +46,14 @@ export default async function AdminRootLayout({
     <html
       lang={adminLocale}
       className={`h-full antialiased ${playfair.variable} ${inter.variable}`}
+      data-scroll-behavior="smooth"
+      // Only <html> is exempt: the pre-paint theme script sets data-theme/class before hydration.
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body
-        suppressHydrationWarning
         className="min-h-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans selection:bg-[#B69A65]/30"
       >
         {children}

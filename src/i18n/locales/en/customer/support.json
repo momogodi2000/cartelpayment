@@ -35,6 +35,8 @@
     "replyPlaceholder": "Type your reply to our concierge...",
     "sendReplyBtn": "Send Reply",
     "sendingReplyBtn": "Sending message...",
-    "internalNoteBadge": "Internal Concierge Note (Adopter Cannot See)"
+    "internalNoteBadge": "Internal Concierge Note (Adopter Cannot See)",
+    "authorYou": "You",
+    "authorTeam": "Pawelium support team"
   }
 }

@@ -52,19 +52,8 @@ export function formatDateTime(
   return formatDate(date, locale, { includeTime: true });
 }
 
-export function formatMoney(
-  amountCents: number,
-  currency: string = "EUR",
-  locale: string = "fr-FR"
-): string {
-  const normalizedLocale = locale.startsWith("fr") ? "fr-FR" : "en-GB";
-  return new Intl.NumberFormat(normalizedLocale, {
-    style: "currency",
-    currency: currency.toUpperCase(),
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amountCents / 100);
-}
+/** Single money formatter for the whole app (integer minor units, Intl.NumberFormat). */
+export { formatMoney } from "./domain/money";
 
 /** True when the date lies in the future (kept out of components so renders stay pure). */
 export function isInFuture(date: Date | string | number): boolean {
