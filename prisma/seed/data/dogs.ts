@@ -1,0 +1,738 @@
+// ============================================================
+// dogs.ts — pawelium real dog profiles
+// Photos: /public/images/chien (real client media).
+// Prices carry a site-wide -35% promotion: price = round(originalPrice * 0.65).
+// Generated from a fixed spec — edit values here directly.
+// ============================================================
+
+export type SizeCategory = 'petit' | 'moyen' | 'grand';
+export type Sex = 'male' | 'femelle';
+export type Availability = 'disponible' | 'réservé' | 'vendu';
+export type AnimalSpecies = 'dog' | 'cat';
+
+/** Site-wide promotional discount applied to every listing. */
+export const DISCOUNT_RATE = 0.35;
+
+/** Last-resort image if a listing ever ships without photos (served from /public). */
+export const PLACEHOLDER_IMAGE = '/images/chien/golden-retriever-1.jpeg';
+
+/** Percentage label for the promo badge, e.g. "-35%". */
+export const DISCOUNT_LABEL = `-${Math.round(DISCOUNT_RATE * 100)}%`;
+
+export interface DogImage {
+  url: string;
+  alt: string;
+}
+
+export interface DogParents {
+  father?: string;
+  mother?: string;
+}
+
+export interface VaccinationRecord {
+  disease: string;
+  date: string;
+  nextDueDate: string;
+  veterinarian: string;
+}
+
+export interface MarketDetails {
+  averageEuropeanPrice: string;
+  breedingLineage: string;
+  healthGuarantee: string;
+}
+
+export interface Dog {
+  id: string;
+  slug: string;
+  /** Animal species — defaults to 'dog' for legacy entries */
+  species?: AnimalSpecies;
+  name: string;
+  breed: string;
+  breedName: string;
+  breedNameEn: string;
+  category: SizeCategory;
+  sex: Sex;
+  age: string;
+  ageMonths: number;
+  dateOfBirth: string;
+  location: string;
+  country: string;
+  /** Promotional price actually charged (originalPrice minus DISCOUNT_RATE). */
+  price: number;
+  /** Reference European market price before the promotion. */
+  originalPrice: number;
+  currency: 'EUR';
+  availability: Availability;
+  pedigree: boolean;
+  microchip: boolean;
+  /** Optional short clip (served from /public). */
+  video?: string;
+  vaccinations: VaccinationRecord[];
+  marketDetails: MarketDetails;
+  description: string;
+  descriptionEn: string;
+  temperament: string[];
+  temperamentEn: string[];
+  size: SizeCategory;
+  color: string;
+  weight: string;
+  parents: DogParents | null;
+  images: DogImage[];
+  featured: boolean;
+  seoTitle: string;
+  seoDescription: string;
+}
+
+export const dogs: Dog[] = [
+  {
+    id: 'dog-01',
+    slug: 'mae-golden-retriever-01',
+    name: 'Maë',
+    breed: 'golden-retriever',
+    breedName: 'Golden Retriever',
+    breedNameEn: 'Golden Retriever',
+    category: 'grand',
+    sex: 'femelle',
+    age: '3 mois',
+    ageMonths: 3,
+    dateOfBirth: '2026-06-04',
+    location: 'Lyon',
+    country: 'France',
+    price: 1400,
+    originalPrice: 2150,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    video: '/images/chien/golden-retriever.mp4',
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-08-04', nextDueDate: '2026-09-04', veterinarian: 'Dr. Martin, Clinique Vétérinaire Lyon 6' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-09-04', nextDueDate: '2027-09-04', veterinarian: 'Dr. Martin, Clinique Vétérinaire Lyon 6' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-09-04', nextDueDate: '2027-09-04', veterinarian: 'Dr. Martin, Clinique Vétérinaire Lyon 6' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '2 000 € – 2 600 € (élevage LOF/FCI, parents testés dysplasie)',
+      breedingLineage: 'Lignée de show LOF/FCI, hanches et coudes testés (HD-A/ED-0), yeux suivis (DPO).',
+      healthGuarantee: 'Certificat vétérinaire de bonne santé, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Maë est un chiot Golden Retriever élevé en famille à Lyon, au contact des enfants. Doux, équilibré et déjà propre, elle annonce le tempérament chaleureux et fiable de la race.',
+    descriptionEn: 'Maë is a family-raised Golden Retriever puppy from Lyon, used to children. Gentle, well-balanced and already house-trained, showing the breed\'s warm, reliable temperament.',
+    temperament: ['Affectueux', 'Sociable', 'Patient'],
+    temperamentEn: ['Affectionate', 'Sociable', 'Patient'],
+    size: 'grand',
+    color: 'Sable doré',
+    weight: '9 kg',
+    parents: { father: 'Étalon Golden Retriever LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/golden-retriever-1.jpeg', alt: 'Maë — Golden Retriever' },
+      { url: '/images/chien/golden-retriever-3.jpeg', alt: 'Maë — Golden Retriever (photo 2)' },
+    ],
+    featured: true,
+    seoTitle: 'Maë — Chiot Golden Retriever LOF | pawelium',
+    seoDescription: 'Maë, chiot Golden Retriever de 3 mois à Lyon (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1400 € au lieu de 2150 €.',
+  },
+  {
+    id: 'dog-02',
+    slug: 'ulysse-golden-retriever-02',
+    name: 'Ulysse',
+    breed: 'golden-retriever',
+    breedName: 'Golden Retriever',
+    breedNameEn: 'Golden Retriever',
+    category: 'grand',
+    sex: 'male',
+    age: '4 mois',
+    ageMonths: 4,
+    dateOfBirth: '2026-05-04',
+    location: 'Genève',
+    country: 'Suisse',
+    price: 1430,
+    originalPrice: 2200,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-07-04', nextDueDate: '2026-08-04', veterinarian: 'Dr. Müller, Cabinet Vétérinaire Genève' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Müller, Cabinet Vétérinaire Genève' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Müller, Cabinet Vétérinaire Genève' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '2 000 € – 2 600 € (élevage LOF/FCI, parents testés dysplasie)',
+      breedingLineage: 'Lignée de show LOF/FCI, hanches et coudes testés (HD-A/ED-0), yeux suivis (DPO).',
+      healthGuarantee: 'Certificat vétérinaire de bonne santé, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Ulysse est un chiot Golden Retriever élevé en famille à Genève, au contact des enfants. Doux, équilibré et déjà propre, il annonce le tempérament chaleureux et fiable de la race.',
+    descriptionEn: 'Ulysse is a family-raised Golden Retriever puppy from Genève, used to children. Gentle, well-balanced and already house-trained, showing the breed\'s warm, reliable temperament.',
+    temperament: ['Affectueux', 'Sociable', 'Patient'],
+    temperamentEn: ['Affectionate', 'Sociable', 'Patient'],
+    size: 'grand',
+    color: 'Doré crème',
+    weight: '13 kg',
+    parents: { father: 'Étalon Golden Retriever LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/golden-retriever-3.jpeg', alt: 'Ulysse — Golden Retriever' },
+      { url: '/images/chien/golden-retriever-1.jpeg', alt: 'Ulysse — Golden Retriever (photo 2)' },
+    ],
+    featured: false,
+    seoTitle: 'Ulysse — Chiot Golden Retriever LOF | pawelium',
+    seoDescription: 'Ulysse, chiot Golden Retriever de 4 mois à Genève (Suisse). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1430 € au lieu de 2200 €.',
+  },
+  {
+    id: 'dog-03',
+    slug: 'rio-labrador-retriever-03',
+    name: 'Rio',
+    breed: 'labrador-retriever',
+    breedName: 'Labrador Retriever',
+    breedNameEn: 'Labrador Retriever',
+    category: 'grand',
+    sex: 'male',
+    age: '3 mois',
+    ageMonths: 3,
+    dateOfBirth: '2026-06-04',
+    location: 'Amsterdam',
+    country: 'Pays-Bas',
+    price: 1300,
+    originalPrice: 2000,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-08-04', nextDueDate: '2026-09-04', veterinarian: 'Dr. Bakker, Dierenkliniek Amsterdam' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-09-04', nextDueDate: '2027-09-04', veterinarian: 'Dr. Bakker, Dierenkliniek Amsterdam' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-09-04', nextDueDate: '2027-09-04', veterinarian: 'Dr. Bakker, Dierenkliniek Amsterdam' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '1 700 € – 2 300 € (élevage LOF/FCI, EIC et hanches testés)',
+      breedingLineage: 'Lignée LOF/FCI, parents testés dysplasie (HD-A), EIC et PRA clair par ADN.',
+      healthGuarantee: 'Certificat vétérinaire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Rio est un chiot Labrador Retriever né à Amsterdam, issu d\'une portée sélectionnée pour le caractère. Vif sans être turbulent, il adore l\'eau et le rapport.',
+    descriptionEn: 'Rio is a Labrador Retriever puppy born in Amsterdam, from a litter selected for temperament. Lively but not boisterous, he loves water and retrieving.',
+    temperament: ['Gentil', 'Joueur', 'Dévoué'],
+    temperamentEn: ['Gentle', 'Playful', 'Devoted'],
+    size: 'grand',
+    color: 'Sable',
+    weight: '9 kg',
+    parents: { father: 'Étalon Labrador Retriever LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/labrador-retriever.jpeg', alt: 'Rio — Labrador Retriever' },
+      { url: '/images/chien/labrador-retriever-2.jpeg', alt: 'Rio — Labrador Retriever (photo 2)' },
+      { url: '/images/chien/labrador-retriever-3.jpeg', alt: 'Rio — Labrador Retriever (photo 3)' },
+    ],
+    featured: true,
+    seoTitle: 'Rio — Chiot Labrador Retriever LOF | pawelium',
+    seoDescription: 'Rio, chiot Labrador Retriever de 3 mois à Amsterdam (Pays-Bas). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1300 € au lieu de 2000 €.',
+  },
+  {
+    id: 'dog-04',
+    slug: 'nala-labrador-retriever-04',
+    name: 'Nala',
+    breed: 'labrador-retriever',
+    breedName: 'Labrador Retriever',
+    breedNameEn: 'Labrador Retriever',
+    category: 'grand',
+    sex: 'femelle',
+    age: '4 mois',
+    ageMonths: 4,
+    dateOfBirth: '2026-05-04',
+    location: 'Paris',
+    country: 'France',
+    price: 1240,
+    originalPrice: 1900,
+    currency: 'EUR',
+    availability: 'réservé',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-07-04', nextDueDate: '2026-08-04', veterinarian: 'Dr. Dubois, Clinique Vétérinaire Paris 14' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Dubois, Clinique Vétérinaire Paris 14' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Dubois, Clinique Vétérinaire Paris 14' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '1 700 € – 2 300 € (élevage LOF/FCI, EIC et hanches testés)',
+      breedingLineage: 'Lignée LOF/FCI, parents testés dysplasie (HD-A), EIC et PRA clair par ADN.',
+      healthGuarantee: 'Certificat vétérinaire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Nala est un chiot Labrador Retriever né à Paris, issu d\'une portée sélectionnée pour le caractère. Vif sans être turbulent, elle adore l\'eau et le rapport.',
+    descriptionEn: 'Nala is a Labrador Retriever puppy born in Paris, from a litter selected for temperament. Lively but not boisterous, she loves water and retrieving.',
+    temperament: ['Gentil', 'Joueur', 'Dévoué'],
+    temperamentEn: ['Gentle', 'Playful', 'Devoted'],
+    size: 'grand',
+    color: 'Chocolat',
+    weight: '14 kg',
+    parents: { father: 'Étalon Labrador Retriever LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/labrador-retriever-4.jpeg', alt: 'Nala — Labrador Retriever' },
+      { url: '/images/chien/labrador-retriever-3.jpeg', alt: 'Nala — Labrador Retriever (photo 2)' },
+    ],
+    featured: false,
+    seoTitle: 'Nala — Chiot Labrador Retriever LOF | pawelium',
+    seoDescription: 'Nala, chiot Labrador Retriever de 4 mois à Paris (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1240 € au lieu de 1900 €.',
+  },
+  {
+    id: 'dog-05',
+    slug: 'gaston-bouledogue-francais-05',
+    name: 'Gaston',
+    breed: 'bouledogue-francais',
+    breedName: 'Bouledogue Français',
+    breedNameEn: 'French Bulldog',
+    category: 'petit',
+    sex: 'male',
+    age: '4 mois',
+    ageMonths: 4,
+    dateOfBirth: '2026-05-04',
+    location: 'Bruxelles',
+    country: 'Belgique',
+    price: 2020,
+    originalPrice: 3100,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-07-04', nextDueDate: '2026-08-04', veterinarian: 'Dr. Peeters, Dierenkliniek Brussel' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Peeters, Dierenkliniek Brussel' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Peeters, Dierenkliniek Brussel' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '2 600 € – 3 600 € (LOF, test d’effort respiratoire validé)',
+      breedingLineage: 'Inscription LOF/LOSH, narines ouvertes, test d’effort respiratoire validé, parents testés ADN (HUU, DM).',
+      healthGuarantee: 'Bilan vétérinaire respiratoire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Gaston est un chiot Bouledogue Français élevé à Bruxelles, sélectionné pour une morphologie saine garantissant une bonne respiration. Câlin, pot-de-colle et parfait pour la vie en appartement.',
+    descriptionEn: 'Gaston is a French Bulldog puppy raised in Bruxelles, bred for a healthy conformation ensuring good breathing. Cuddly, velcro-like and perfect for apartment living.',
+    temperament: ['Joueur', 'Affectueux', 'Calme'],
+    temperamentEn: ['Playful', 'Affectionate', 'Calm'],
+    size: 'petit',
+    color: 'Fauve',
+    weight: '6 kg',
+    parents: { father: 'Étalon Bouledogue Français LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/bouledogue-francais.jpeg', alt: 'Gaston — Bouledogue Français' },
+      { url: '/images/chien/bouledogue-francais-1.jpeg', alt: 'Gaston — Bouledogue Français (photo 2)' },
+      { url: '/images/chien/bouledogue-francais-3.jpeg', alt: 'Gaston — Bouledogue Français (photo 3)' },
+    ],
+    featured: true,
+    seoTitle: 'Gaston — Chiot Bouledogue Français LOF | pawelium',
+    seoDescription: 'Gaston, chiot Bouledogue Français de 4 mois à Bruxelles (Belgique). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 2020 € au lieu de 3100 €.',
+  },
+  {
+    id: 'dog-06',
+    slug: 'lola-bouledogue-francais-06',
+    name: 'Lola',
+    breed: 'bouledogue-francais',
+    breedName: 'Bouledogue Français',
+    breedNameEn: 'French Bulldog',
+    category: 'petit',
+    sex: 'femelle',
+    age: '5 mois',
+    ageMonths: 5,
+    dateOfBirth: '2026-04-04',
+    location: 'Paris',
+    country: 'France',
+    price: 2050,
+    originalPrice: 3150,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-06-04', nextDueDate: '2026-07-04', veterinarian: 'Dr. Dubois, Clinique Vétérinaire Paris 14' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-07-04', nextDueDate: '2027-07-04', veterinarian: 'Dr. Dubois, Clinique Vétérinaire Paris 14' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-07-04', nextDueDate: '2027-07-04', veterinarian: 'Dr. Dubois, Clinique Vétérinaire Paris 14' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '2 600 € – 3 600 € (LOF, test d’effort respiratoire validé)',
+      breedingLineage: 'Inscription LOF/LOSH, narines ouvertes, test d’effort respiratoire validé, parents testés ADN (HUU, DM).',
+      healthGuarantee: 'Bilan vétérinaire respiratoire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Lola est un chiot Bouledogue Français élevé à Paris, sélectionné pour une morphologie saine garantissant une bonne respiration. Câlin, pot-de-colle et parfait pour la vie en appartement.',
+    descriptionEn: 'Lola is a French Bulldog puppy raised in Paris, bred for a healthy conformation ensuring good breathing. Cuddly, velcro-like and perfect for apartment living.',
+    temperament: ['Joueur', 'Affectueux', 'Calme'],
+    temperamentEn: ['Playful', 'Affectionate', 'Calm'],
+    size: 'petit',
+    color: 'Bringé',
+    weight: '8 kg',
+    parents: { father: 'Étalon Bouledogue Français LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/bouledogue-francais-4.jpeg', alt: 'Lola — Bouledogue Français' },
+      { url: '/images/chien/bouledogue-francais-5.jpeg', alt: 'Lola — Bouledogue Français (photo 2)' },
+    ],
+    featured: false,
+    seoTitle: 'Lola — Chiot Bouledogue Français LOF | pawelium',
+    seoDescription: 'Lola, chiot Bouledogue Français de 5 mois à Paris (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 2050 € au lieu de 3150 €.',
+  },
+  {
+    id: 'dog-07',
+    slug: 'archie-cavalier-king-charles-07',
+    name: 'Archie',
+    breed: 'cavalier-king-charles',
+    breedName: 'Cavalier King Charles Spaniel',
+    breedNameEn: 'Cavalier King Charles Spaniel',
+    category: 'petit',
+    sex: 'male',
+    age: '4 mois',
+    ageMonths: 4,
+    dateOfBirth: '2026-05-04',
+    location: 'Bruxelles',
+    country: 'Belgique',
+    price: 1590,
+    originalPrice: 2450,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-07-04', nextDueDate: '2026-08-04', veterinarian: 'Dr. Peeters, Dierenkliniek Brussel' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Peeters, Dierenkliniek Brussel' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Peeters, Dierenkliniek Brussel' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '2 000 € – 3 000 € (LOF, parents testés cœur et yeux)',
+      breedingLineage: 'Pedigree LOF, parents testés MVD (cardiologue) et tares oculaires, échographie doppler fournie.',
+      healthGuarantee: 'Échocardiographie des parents fournie, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Archie est un chiot Cavalier King Charles élevé à Bruxelles, véritable petite boule d\'amour. Idéal pour une famille ou une personne à la recherche d\'un compagnon doux et proche.',
+    descriptionEn: 'Archie is a Cavalier King Charles puppy raised in Bruxelles, a true little ball of love. Ideal for a family or anyone seeking a gentle, close companion.',
+    temperament: ['Doux', 'Sociable', 'Câlin'],
+    temperamentEn: ['Sweet', 'Sociable', 'Cuddly'],
+    size: 'petit',
+    color: 'Blenheim (blanc et roux)',
+    weight: '4,5 kg',
+    parents: { father: 'Étalon Cavalier King Charles Spaniel LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/cavalier-king-charles.jpeg', alt: 'Archie — Cavalier King Charles Spaniel' },
+      { url: '/images/chien/cavalier-king-charles-2.jpeg', alt: 'Archie — Cavalier King Charles Spaniel (photo 2)' },
+    ],
+    featured: true,
+    seoTitle: 'Archie — Chiot Cavalier King Charles Spaniel LOF | pawelium',
+    seoDescription: 'Archie, chiot Cavalier King Charles Spaniel de 4 mois à Bruxelles (Belgique). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1590 € au lieu de 2450 €.',
+  },
+  {
+    id: 'dog-08',
+    slug: 'rosie-cavalier-king-charles-08',
+    name: 'Rosie',
+    breed: 'cavalier-king-charles',
+    breedName: 'Cavalier King Charles Spaniel',
+    breedNameEn: 'Cavalier King Charles Spaniel',
+    category: 'petit',
+    sex: 'femelle',
+    age: '5 mois',
+    ageMonths: 5,
+    dateOfBirth: '2026-04-04',
+    location: 'Amsterdam',
+    country: 'Pays-Bas',
+    price: 1630,
+    originalPrice: 2500,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-06-04', nextDueDate: '2026-07-04', veterinarian: 'Dr. Bakker, Dierenkliniek Amsterdam' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-07-04', nextDueDate: '2027-07-04', veterinarian: 'Dr. Bakker, Dierenkliniek Amsterdam' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-07-04', nextDueDate: '2027-07-04', veterinarian: 'Dr. Bakker, Dierenkliniek Amsterdam' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '2 000 € – 3 000 € (LOF, parents testés cœur et yeux)',
+      breedingLineage: 'Pedigree LOF, parents testés MVD (cardiologue) et tares oculaires, échographie doppler fournie.',
+      healthGuarantee: 'Échocardiographie des parents fournie, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Rosie est un chiot Cavalier King Charles élevé à Amsterdam, véritable petite boule d\'amour. Idéal pour une famille ou une personne à la recherche d\'un compagnon doux et proche.',
+    descriptionEn: 'Rosie is a Cavalier King Charles puppy raised in Amsterdam, a true little ball of love. Ideal for a family or anyone seeking a gentle, close companion.',
+    temperament: ['Doux', 'Sociable', 'Câlin'],
+    temperamentEn: ['Sweet', 'Sociable', 'Cuddly'],
+    size: 'petit',
+    color: 'Tricolore',
+    weight: '5,5 kg',
+    parents: { father: 'Étalon Cavalier King Charles Spaniel LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/cavalier-king-charles-4.jpeg', alt: 'Rosie — Cavalier King Charles Spaniel' },
+      { url: '/images/chien/cavalier-king-charles.jpeg', alt: 'Rosie — Cavalier King Charles Spaniel (photo 2)' },
+    ],
+    featured: false,
+    seoTitle: 'Rosie — Chiot Cavalier King Charles Spaniel LOF | pawelium',
+    seoDescription: 'Rosie, chiot Cavalier King Charles Spaniel de 5 mois à Amsterdam (Pays-Bas). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1630 € au lieu de 2500 €.',
+  },
+  {
+    id: 'dog-09',
+    slug: 'paco-chihuahua-09',
+    name: 'Paco',
+    breed: 'chihuahua',
+    breedName: 'Chihuahua',
+    breedNameEn: 'Chihuahua',
+    category: 'petit',
+    sex: 'male',
+    age: '4 mois',
+    ageMonths: 4,
+    dateOfBirth: '2026-05-04',
+    location: 'Madrid',
+    country: 'Espagne',
+    price: 1330,
+    originalPrice: 2050,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-07-04', nextDueDate: '2026-08-04', veterinarian: 'Dr. García, Clínica Veterinaria Madrid' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. García, Clínica Veterinaria Madrid' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. García, Clínica Veterinaria Madrid' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '1 600 € – 2 400 € (LOF, lignée poil court)',
+      breedingLineage: 'Inscription LOF, parents testés luxation rotulienne et cardiaque, molera contrôlée.',
+      healthGuarantee: 'Certificat vétérinaire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Paco est un chiot Chihuahua à poil court élevé à Madrid, sociabilisé en intérieur. Petit format mais grand caractère : vif, courageux et très attaché à ses humains.',
+    descriptionEn: 'Paco is a short-haired Chihuahua puppy raised in Madrid, socialised indoors. Small size but big personality: lively, brave and deeply attached to his people.',
+    temperament: ['Vif', 'Attaché', 'Alerte'],
+    temperamentEn: ['Lively', 'Attached', 'Alert'],
+    size: 'petit',
+    color: 'Fauve',
+    weight: '1,4 kg',
+    parents: { father: 'Étalon Chihuahua LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/chihuahua.jpeg', alt: 'Paco — Chihuahua' },
+      { url: '/images/chien/chihuahua-2.jpeg', alt: 'Paco — Chihuahua (photo 2)' },
+    ],
+    featured: true,
+    seoTitle: 'Paco — Chiot Chihuahua LOF | pawelium',
+    seoDescription: 'Paco, chiot Chihuahua de 4 mois à Madrid (Espagne). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1330 € au lieu de 2050 €.',
+  },
+  {
+    id: 'dog-10',
+    slug: 'bella-chihuahua-10',
+    name: 'Bella',
+    breed: 'chihuahua',
+    breedName: 'Chihuahua',
+    breedNameEn: 'Chihuahua',
+    category: 'petit',
+    sex: 'femelle',
+    age: '5 mois',
+    ageMonths: 5,
+    dateOfBirth: '2026-04-04',
+    location: 'Lyon',
+    country: 'France',
+    price: 1270,
+    originalPrice: 1950,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-06-04', nextDueDate: '2026-07-04', veterinarian: 'Dr. Martin, Clinique Vétérinaire Lyon 6' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-07-04', nextDueDate: '2027-07-04', veterinarian: 'Dr. Martin, Clinique Vétérinaire Lyon 6' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-07-04', nextDueDate: '2027-07-04', veterinarian: 'Dr. Martin, Clinique Vétérinaire Lyon 6' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '1 600 € – 2 400 € (LOF, lignée poil court)',
+      breedingLineage: 'Inscription LOF, parents testés luxation rotulienne et cardiaque, molera contrôlée.',
+      healthGuarantee: 'Certificat vétérinaire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Bella est un chiot Chihuahua à poil court élevé à Lyon, sociabilisé en intérieur. Petit format mais grand caractère : vif, courageux et très attaché à ses humains.',
+    descriptionEn: 'Bella is a short-haired Chihuahua puppy raised in Lyon, socialised indoors. Small size but big personality: lively, brave and deeply attached to her people.',
+    temperament: ['Vif', 'Attaché', 'Alerte'],
+    temperamentEn: ['Lively', 'Attached', 'Alert'],
+    size: 'petit',
+    color: 'Crème',
+    weight: '1,8 kg',
+    parents: { father: 'Étalon Chihuahua LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/chihuahua-2.jpeg', alt: 'Bella — Chihuahua' },
+      { url: '/images/chien/chihuahua.jpeg', alt: 'Bella — Chihuahua (photo 2)' },
+    ],
+    featured: false,
+    seoTitle: 'Bella — Chiot Chihuahua LOF | pawelium',
+    seoDescription: 'Bella, chiot Chihuahua de 5 mois à Lyon (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1270 € au lieu de 1950 €.',
+  },
+  {
+    id: 'dog-11',
+    slug: 'coco-caniche-11',
+    name: 'Coco',
+    breed: 'caniche',
+    breedName: 'Caniche',
+    breedNameEn: 'Poodle',
+    category: 'moyen',
+    sex: 'femelle',
+    age: '4 mois',
+    ageMonths: 4,
+    dateOfBirth: '2026-05-04',
+    location: 'Genève',
+    country: 'Suisse',
+    price: 1460,
+    originalPrice: 2250,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-07-04', nextDueDate: '2026-08-04', veterinarian: 'Dr. Müller, Cabinet Vétérinaire Genève' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Müller, Cabinet Vétérinaire Genève' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Müller, Cabinet Vétérinaire Genève' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '1 800 € – 2 800 € (LOF, pelage hypoallergénique)',
+      breedingLineage: 'Lignée LOF/FCI, parents testés dysplasie, Addison et tares oculaires (PRA) par ADN.',
+      healthGuarantee: 'Certificat vétérinaire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Coco est un chiot Caniche élevé à Genève, au pelage bouclé hypoallergénique. Extrêmement intelligent et facile à éduquer, elle s\'adapte aussi bien à l\'appartement qu\'à la maison.',
+    descriptionEn: 'Coco is a Poodle puppy raised in Genève, with a hypoallergenic curly coat. Extremely intelligent and easy to train, equally at home in a flat or a house.',
+    temperament: ['Intelligent', 'Élégant', 'Fidèle'],
+    temperamentEn: ['Intelligent', 'Elegant', 'Loyal'],
+    size: 'moyen',
+    color: 'Abricot',
+    weight: '6 kg',
+    parents: { father: 'Étalon Caniche LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/caniche.jpeg', alt: 'Coco — Caniche' },
+      { url: '/images/chien/caniche-2.jpeg', alt: 'Coco — Caniche (photo 2)' },
+      { url: '/images/chien/caniche-3.jpeg', alt: 'Coco — Caniche (photo 3)' },
+    ],
+    featured: true,
+    seoTitle: 'Coco — Chiot Caniche LOF | pawelium',
+    seoDescription: 'Coco, chiot Caniche de 4 mois à Genève (Suisse). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1460 € au lieu de 2250 €.',
+  },
+  {
+    id: 'dog-12',
+    slug: 'jazz-caniche-12',
+    name: 'Jazz',
+    breed: 'caniche',
+    breedName: 'Caniche',
+    breedNameEn: 'Poodle',
+    category: 'moyen',
+    sex: 'male',
+    age: '3 mois',
+    ageMonths: 3,
+    dateOfBirth: '2026-06-04',
+    location: 'Bordeaux',
+    country: 'France',
+    price: 1500,
+    originalPrice: 2300,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-08-04', nextDueDate: '2026-09-04', veterinarian: 'Dr. Lacroix, Clinique Vétérinaire Bordeaux' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-09-04', nextDueDate: '2027-09-04', veterinarian: 'Dr. Lacroix, Clinique Vétérinaire Bordeaux' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-09-04', nextDueDate: '2027-09-04', veterinarian: 'Dr. Lacroix, Clinique Vétérinaire Bordeaux' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '1 800 € – 2 800 € (LOF, pelage hypoallergénique)',
+      breedingLineage: 'Lignée LOF/FCI, parents testés dysplasie, Addison et tares oculaires (PRA) par ADN.',
+      healthGuarantee: 'Certificat vétérinaire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Jazz est un chiot Caniche élevé à Bordeaux, au pelage bouclé hypoallergénique. Extrêmement intelligent et facile à éduquer, il s\'adapte aussi bien à l\'appartement qu\'à la maison.',
+    descriptionEn: 'Jazz is a Poodle puppy raised in Bordeaux, with a hypoallergenic curly coat. Extremely intelligent and easy to train, equally at home in a flat or a house.',
+    temperament: ['Intelligent', 'Élégant', 'Fidèle'],
+    temperamentEn: ['Intelligent', 'Elegant', 'Loyal'],
+    size: 'moyen',
+    color: 'Noir',
+    weight: '4 kg',
+    parents: { father: 'Étalon Caniche LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/caniche-5.jpeg', alt: 'Jazz — Caniche' },
+      { url: '/images/chien/caniche-6.jpeg', alt: 'Jazz — Caniche (photo 2)' },
+    ],
+    featured: false,
+    seoTitle: 'Jazz — Chiot Caniche LOF | pawelium',
+    seoDescription: 'Jazz, chiot Caniche de 3 mois à Bordeaux (France). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1500 € au lieu de 2300 €.',
+  },
+  {
+    id: 'dog-13',
+    slug: 'oscar-teckel-13',
+    name: 'Oscar',
+    breed: 'teckel',
+    breedName: 'Teckel',
+    breedNameEn: 'Dachshund',
+    category: 'petit',
+    sex: 'male',
+    age: '3 mois',
+    ageMonths: 3,
+    dateOfBirth: '2026-06-04',
+    location: 'Berlin',
+    country: 'Allemagne',
+    price: 1070,
+    originalPrice: 1650,
+    currency: 'EUR',
+    availability: 'disponible',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-08-04', nextDueDate: '2026-09-04', veterinarian: 'Dr. Schmidt, Tierklinik Berlin-Mitte' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-09-04', nextDueDate: '2027-09-04', veterinarian: 'Dr. Schmidt, Tierklinik Berlin-Mitte' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-09-04', nextDueDate: '2027-09-04', veterinarian: 'Dr. Schmidt, Tierklinik Berlin-Mitte' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '1 400 € – 2 100 € (LOF/VDH, dos et yeux suivis)',
+      breedingLineage: 'Inscription LOF/VDH, parents testés IVDD (dos), Lafora et tares oculaires (cord1-PRA) par ADN.',
+      healthGuarantee: 'Certificat vétérinaire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Oscar est un chiot Teckel (poil ras) élevé à Berlin. Curieux, drôle et intrépide, il forme un compagnon plein de vie pour un foyer prêt à un peu de caractère.',
+    descriptionEn: 'Oscar is a smooth-haired Dachshund puppy raised in Berlin. Curious, funny and fearless, a lively companion for a household ready for a bit of character.',
+    temperament: ['Courageux', 'Joueur', 'Têtu'],
+    temperamentEn: ['Courageous', 'Playful', 'Stubborn'],
+    size: 'petit',
+    color: 'Rouge',
+    weight: '3,5 kg',
+    parents: { father: 'Étalon Teckel LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/teckel.jpeg', alt: 'Oscar — Teckel' },
+      { url: '/images/chien/teckel-2.jpeg', alt: 'Oscar — Teckel (photo 2)' },
+    ],
+    featured: true,
+    seoTitle: 'Oscar — Chiot Teckel LOF | pawelium',
+    seoDescription: 'Oscar, chiot Teckel de 3 mois à Berlin (Allemagne). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1070 € au lieu de 1650 €.',
+  },
+  {
+    id: 'dog-14',
+    slug: 'frida-teckel-14',
+    name: 'Frida',
+    breed: 'teckel',
+    breedName: 'Teckel',
+    breedNameEn: 'Dachshund',
+    category: 'petit',
+    sex: 'femelle',
+    age: '4 mois',
+    ageMonths: 4,
+    dateOfBirth: '2026-05-04',
+    location: 'Munich',
+    country: 'Allemagne',
+    price: 1110,
+    originalPrice: 1700,
+    currency: 'EUR',
+    availability: 'réservé',
+    pedigree: true,
+    microchip: true,
+    vaccinations: [
+      { disease: 'DHPPi 1re injection (Carré, Hépatite, Parvovirose, Parainfluenza)', date: '2026-07-04', nextDueDate: '2026-08-04', veterinarian: 'Dr. Schulz, Kleintierpraxis München' },
+      { disease: 'DHPPi 2e injection + Leptospirose', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Schulz, Kleintierpraxis München' },
+      { disease: 'Rage (obligatoire pour le transport intra-UE)', date: '2026-08-04', nextDueDate: '2027-08-04', veterinarian: 'Dr. Schulz, Kleintierpraxis München' },
+    ],
+    marketDetails: {
+      averageEuropeanPrice: '1 400 € – 2 100 € (LOF/VDH, dos et yeux suivis)',
+      breedingLineage: 'Inscription LOF/VDH, parents testés IVDD (dos), Lafora et tares oculaires (cord1-PRA) par ADN.',
+      healthGuarantee: 'Certificat vétérinaire, passeport européen, garantie légale de conformité 2 ans.',
+    },
+    description: 'Frida est un chiot Teckel (poil ras) élevé à Munich. Curieux, drôle et intrépide, elle forme un compagnon plein de vie pour un foyer prêt à un peu de caractère.',
+    descriptionEn: 'Frida is a smooth-haired Dachshund puppy raised in Munich. Curious, funny and fearless, a lively companion for a household ready for a bit of character.',
+    temperament: ['Courageux', 'Joueur', 'Têtu'],
+    temperamentEn: ['Courageous', 'Playful', 'Stubborn'],
+    size: 'petit',
+    color: 'Noir et feu',
+    weight: '5 kg',
+    parents: { father: 'Étalon Teckel LOF, testé', mother: 'Lignée européenne LOF/FCI' },
+    images: [
+      { url: '/images/chien/teckel-3.jpeg', alt: 'Frida — Teckel' },
+      { url: '/images/chien/teckel-4.jpeg', alt: 'Frida — Teckel (photo 2)' },
+    ],
+    featured: false,
+    seoTitle: 'Frida — Chiot Teckel LOF | pawelium',
+    seoDescription: 'Frida, chiot Teckel de 4 mois à Munich (Allemagne). Pedigree, vaccins à jour, passeport européen. Prix promo -35 % : 1110 € au lieu de 1700 €.',
+  },
+];
+
+export default dogs;

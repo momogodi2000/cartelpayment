@@ -5,10 +5,9 @@ import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { ArrowRight, Award, CheckCircle2, MessageSquare, Handshake, CreditCard, Lock, Truck, FileCheck2, Package } from "lucide-react";
 import { getWhatsAppLink, siteConfig } from "@/data/site";
-import animals, { dogs, cats } from "@/data/animals";
-import breeds, { dogBreeds, catBreeds } from "@/data/breeds";
+import { dogBreeds as staticDogBreeds, catBreeds as staticCatBreeds } from "@/data/breeds";
 import { faqs } from "@/data/faq";
-import { testimonials } from "@/data/testimonials";
+import { testimonials as staticTestimonials } from "@/data/testimonials";
 
 import HeroBackground from "@/components/features/HeroBackground";
 import HomeTimeline from "@/components/features/HomeTimeline";
@@ -45,7 +44,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const t = await getTranslations("Home");
   const isEn = (await getLocale()) === "en";
 
-  const [featuredDogs, featuredCats, totalAnimalsCount, totalBreedsCount] = await Promise.all([
+  const [featuredDogs, featuredCats, totalAnimalsCount, totalBreedsCount, dbDogBreeds, dbCatBreeds, approvedReviews] = await Promise.all([
     prisma.animal.findMany({
       where: { species: "DOG", published: true },
       take: 8,
@@ -60,6 +59,21 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     }),
     prisma.animal.count({ where: { published: true } }),
     prisma.breed.count(),
+    prisma.breed.findMany({
+      where: { species: "DOG" },
+      orderBy: { nameEn: "asc" },
+      take: 10,
+    }),
+    prisma.breed.findMany({
+      where: { species: "CAT" },
+      orderBy: { nameEn: "asc" },
+      take: 10,
+    }),
+    prisma.review.findMany({
+      where: { status: "APPROVED" },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+    }),
   ]);
 
   const homeFaqs = faqs.slice(0, 4);
@@ -305,13 +319,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <p className="text-xs font-extrabold uppercase tracking-widest text-text-premium/50">
               {t("breeds.dogsTitle")}
             </p>
-            <BreedSection breeds={dogBreeds} />
+            <BreedSection breeds={dbDogBreeds.length > 0 ? (dbDogBreeds as any) : staticDogBreeds} />
           </div>
           <div className="space-y-4">
             <p className="text-xs font-extrabold uppercase tracking-widest text-text-premium/50">
               {t("breeds.catsTitle")}
             </p>
-            <BreedSection breeds={catBreeds} />
+            <BreedSection breeds={dbCatBreeds.length > 0 ? (dbCatBreeds as any) : staticCatBreeds} />
           </div>
         </div>
       </section>
@@ -337,7 +351,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <p className="text-text-premium/70 text-xs sm:text-sm leading-relaxed">{t("testimonials.subtitle")}</p>
           <div className="h-1 w-16 bg-primary mx-auto rounded-full mt-3" />
         </div>
-        <HomeTestimonials testimonials={testimonials} />
+        <HomeTestimonials
+          testimonials={approvedReviews.length > 0 ? (approvedReviews as any) : staticTestimonials}
+        />
       </section>
 
       {/* Partner banner */}

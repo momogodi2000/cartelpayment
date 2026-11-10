@@ -1,0 +1,76 @@
+{
+  "updatedAt": "2026-11-10T00:19:45.701Z",
+  "environment": "production",
+  "verifiedGateways": [
+    {
+      "id": "default",
+      "accepted": true,
+      "cardCapable": true,
+      "currencies": [
+        "EUR"
+      ],
+      "isStripeTest": false,
+      "isLive": false,
+      "lastStatus": 201,
+      "lastError": null,
+      "echoedGateway": "paystack",
+      "unpaidProbeReference": "MTX-UAF0OUUBYY"
+    },
+    {
+      "id": "stripe",
+      "accepted": false,
+      "cardCapable": false,
+      "currencies": [
+        "EUR"
+      ],
+      "isStripeTest": false,
+      "isLive": false,
+      "lastStatus": 422,
+      "lastError": "Une erreur est survenue",
+      "echoedGateway": null,
+      "unpaidProbeReference": null
+    },
+    {
+      "id": "paystack",
+      "accepted": false,
+      "cardCapable": false,
+      "currencies": [
+        "EUR"
+      ],
+      "isStripeTest": false,
+      "isLive": false,
+      "lastStatus": 422,
+      "lastError": "Une erreur est survenue",
+      "echoedGateway": null,
+      "unpaidProbeReference": null
+    },
+    {
+      "id": "paiementpro",
+      "accepted": false,
+      "cardCapable": false,
+      "currencies": [
+        "EUR"
+      ],
+      "isStripeTest": false,
+      "isLive": false,
+      "lastStatus": 422,
+      "lastError": "Une erreur est survenue",
+      "echoedGateway": null,
+      "unpaidProbeReference": null
+    },
+    {
+      "id": "cinetpay",
+      "accepted": false,
+      "cardCapable": false,
+      "currencies": [
+        "EUR"
+      ],
+      "isStripeTest": false,
+      "isLive": false,
+      "lastStatus": 422,
+      "lastError": "Une erreur est survenue",
+      "echoedGateway": null,
+      "unpaidProbeReference": null
+    }
+  ]
+}

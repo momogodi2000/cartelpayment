@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import { getEnv } from "../../env";
-import { formatForGeniusPay, parseFromGeniusPay } from "../../domain/money";
+import { formatForGeniusPay } from "../../domain/money";
 
 export interface CreateGeniusPayPaymentInput {
   orderId: string;
@@ -63,13 +63,27 @@ export class GeniusPayProvider {
   }
 
   /**
+   * Normalizes customer country code to ISO 2-letter uppercase format.
+   */
+  private normalizeCountryCode(country: string): string {
+    const cleaned = (country || "").trim().toUpperCase();
+    if (cleaned === "FRANCE") return "FR";
+    if (cleaned === "GERMANY" || cleaned === "DEUTSCHLAND") return "DE";
+    if (cleaned === "ITALY" || cleaned === "ITALIA") return "IT";
+    if (cleaned === "SPAIN" || cleaned === "ESPANA") return "ES";
+    if (cleaned === "BELGIUM" || cleaned === "BELGIQUE") return "BE";
+    if (cleaned === "SWITZERLAND" || cleaned === "SUISSE") return "CH";
+    return cleaned.slice(0, 2) || "FR";
+  }
+
+  /**
    * Creates a payment session with GeniusPay hosted checkout.
    */
   async createPayment(input: CreateGeniusPayPaymentInput): Promise<GeniusPayPaymentResponse> {
     const amount = formatForGeniusPay(input.amountCents);
     const currency = input.currency || "EUR";
-    const paymentMethod = getEnv().GENIUSPAY_PAYMENT_METHOD || "card";
-    const gateway = input.gateway || getEnv().GENIUSPAY_GATEWAY || "stripe";
+    const paymentMethod = "card";
+    const country = this.normalizeCountryCode(input.customer.country);
 
     const payload: Record<string, any> = {
       amount,
@@ -80,7 +94,7 @@ export class GeniusPayProvider {
         name: input.customer.name,
         email: input.customer.email,
         phone: input.customer.phone,
-        country: input.customer.country,
+        country,
       },
       success_url: input.successUrl,
       error_url: input.errorUrl,
@@ -91,33 +105,19 @@ export class GeniusPayProvider {
       },
     };
 
-    if (gateway) {
-      payload.gateway = gateway;
+    if (input.gateway) {
+      payload.gateway = input.gateway;
     }
 
-    let res = await fetch(`${this.baseUrl}/payments`, {
+    // 10s fetch timeout via AbortSignal.timeout
+    const res = await fetch(`${this.baseUrl}/payments`, {
       method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(10000),
     });
 
-    let data = await res.json().catch(() => null);
-
-    // If a forced gateway (such as "stripe") is rejected with validation.in because the merchant
-    // account has not yet had Stripe activated by GeniusPay support, gracefully fall back
-    // to default card processing so live adoptions do not fail.
-    if (!res.ok && data?.error?.errors?.gateway && payload.gateway) {
-      console.warn(
-        `[GeniusPay] Gateway '${payload.gateway}' rejected with validation.in (awaiting Stripe activation on merchant account). Retrying with default card routing...`
-      );
-      delete payload.gateway;
-      res = await fetch(`${this.baseUrl}/payments`, {
-        method: "POST",
-        headers: this.getHeaders(),
-        body: JSON.stringify(payload),
-      });
-      data = await res.json().catch(() => null);
-    }
+    const data: any = await res.json().catch(() => null);
 
     if (!res.ok || !data) {
       console.error("[GeniusPay] Payment creation failed:", res.status, data);
@@ -147,17 +147,22 @@ export class GeniusPayProvider {
     const res = await fetch(`${this.baseUrl}/payments/${encodeURIComponent(reference)}`, {
       method: "GET",
       headers: this.getHeaders(),
+      signal: AbortSignal.timeout(10000),
     });
 
-    const data = await res.json().catch(() => null);
-
-    if (!res.ok || !data) {
-      throw new Error(`GeniusPay GET status error: ${data?.message || res.status}`);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch payment status: HTTP ${res.status}`);
     }
 
-    const p = data.data || data;
+    const json: any = await res.json().catch(() => null);
+    const p = json?.data || json;
+
+    if (!p || !p.reference) {
+      throw new Error("Invalid response format from payment provider.");
+    }
+
     return {
-      id: p.id,
+      id: String(p.id || p.reference),
       reference: p.reference,
       status: p.status,
       amount: p.amount,
@@ -167,7 +172,7 @@ export class GeniusPayProvider {
   }
 
   /**
-   * Verifies the cryptographic HMAC-SHA256 signature and timestamp of an incoming webhook.
+   * Verifies cryptographic HMAC-SHA256 signature and timestamp of an incoming webhook.
    */
   verifyWebhookSignature(
     rawBody: string,
@@ -179,9 +184,13 @@ export class GeniusPayProvider {
       return false;
     }
 
-    // Check environment if header present
-    if (incomingEnv && incomingEnv !== this.environment) {
-      console.warn(`[GeniusPay Webhook] Environment mismatch: received ${incomingEnv}, expected ${this.environment}`);
+    // Bi-directional environment mapping (live <-> production, sandbox <-> sandbox)
+    const norm = (e: string) => (e.toLowerCase() === "live" ? "production" : e.toLowerCase());
+
+    if (incomingEnv && norm(incomingEnv) !== norm(this.environment)) {
+      console.warn(
+        `[GeniusPay Webhook] Environment mismatch: received ${incomingEnv}, expected ${this.environment}`
+      );
       return false;
     }
 
@@ -193,38 +202,24 @@ export class GeniusPayProvider {
       return false;
     }
 
-    const computeHmac = (body: string): string => {
-      const payloadToSign = `${timestamp}.${body}`;
-      return crypto
-        .createHmac("sha256", this.webhookSecret)
-        .update(payloadToSign)
-        .digest("hex");
-    };
+    const payloadToSign = `${timestamp}.${rawBody}`;
+    const expectedHash = crypto
+      .createHmac("sha256", this.webhookSecret)
+      .update(payloadToSign)
+      .digest("hex");
 
-    // Primary check: signature over raw body
-    const primaryHash = computeHmac(rawBody);
     try {
-      const bufExpected = Buffer.from(primaryHash, "hex");
+      const bufExpected = Buffer.from(expectedHash, "hex");
       const bufActual = Buffer.from(signature, "hex");
-      if (bufExpected.length === bufActual.length && crypto.timingSafeEqual(bufExpected, bufActual)) {
+
+      if (
+        bufExpected.length === bufActual.length &&
+        crypto.timingSafeEqual(bufExpected, bufActual)
+      ) {
         return true;
       }
     } catch {
-      // Continue to secondary check
-    }
-
-    // Secondary check: canonical re-serialized JSON (in case PHP/upstream used json_encode)
-    try {
-      const parsed = JSON.parse(rawBody);
-      const canonicalBody = JSON.stringify(parsed);
-      const secondaryHash = computeHmac(canonicalBody);
-      const bufExpected2 = Buffer.from(secondaryHash, "hex");
-      const bufActual = Buffer.from(signature, "hex");
-      if (bufExpected2.length === bufActual.length && crypto.timingSafeEqual(bufExpected2, bufActual)) {
-        return true;
-      }
-    } catch {
-      // Not valid JSON
+      return false;
     }
 
     return false;

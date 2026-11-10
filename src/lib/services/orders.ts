@@ -118,11 +118,18 @@ export async function recordManualPayment(input: RecordManualPaymentInput): Prom
   }
 
   await prisma.$transaction(async (tx) => {
-    // 1. Mark animal SOLD
-    await tx.animal.updateMany({
-      where: { id: animalId },
+    // 1. Mark animal SOLD with strict condition
+    const animalUpdate = await tx.animal.updateMany({
+      where: {
+        id: animalId,
+        status: { in: [AnimalStatus.HELD, AnimalStatus.AVAILABLE] },
+      },
       data: { status: AnimalStatus.SOLD },
     });
+
+    if (animalUpdate.count === 0) {
+      throw new Error("Cannot record manual payment: animal is already sold or no longer available.");
+    }
 
     // 2. Convert reservation
     if (order.reservation) {

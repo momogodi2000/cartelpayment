@@ -7,7 +7,7 @@ import { prisma } from "@/lib/db/client";
 import { getEnv } from "@/lib/env";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 import { acquireHold, releaseHold } from "@/lib/services/inventory";
-import { geniusPay } from "@/lib/services/payments/geniuspay";
+import { initializeCardPayment } from "@/lib/services/payments/payment-initialization";
 import { queueEmail, sendEmailNotification } from "@/lib/services/email/outbox";
 import { formatMoney } from "@/lib/domain/money";
 
@@ -114,7 +114,7 @@ export async function startCheckout(formData: FormData): Promise<CheckoutActionS
 
   let paymentSession;
   try {
-    paymentSession = await geniusPay.createPayment({
+    paymentSession = await initializeCardPayment({
       orderId,
       orderRef: orderReference,
       amountCents: pricing.totalCents,
@@ -127,34 +127,16 @@ export async function startCheckout(formData: FormData): Promise<CheckoutActionS
       },
       successUrl,
       errorUrl,
-      description: `Pawelium adoption reservation #${orderReference}`,
     });
   } catch (providerError: any) {
     console.error("[Checkout] Payment provider error:", providerError);
     // Provider failure: immediately release reservation hold
-    await releaseHold(reservationId, "GeniusPay checkout session initialization failed");
+    await releaseHold(reservationId, "Card checkout session initialization failed");
     return {
       success: false,
-      error: "Unable to initiate secure payment session. Please try again.",
+      error: "Card payment is temporarily unavailable. You have not been charged.",
     };
   }
-
-  // Record Payment record
-  await prisma.payment.create({
-    data: {
-      orderId,
-      provider: "GENIUSPAY",
-      providerReference: paymentSession.reference,
-      amountCents: pricing.totalCents,
-      currency: "EUR",
-      method: "card",
-      status: "PENDING",
-      checkoutUrl: paymentSession.checkoutUrl,
-      expiresAt: paymentSession.expiresAt ? new Date(paymentSession.expiresAt) : null,
-      environment: env.GENIUSPAY_ENVIRONMENT === "production" ? "LIVE" : "SANDBOX",
-      rawLast: JSON.stringify(paymentSession),
-    },
-  });
 
   // Queue pending order confirmation email
   const notifId = await queueEmail({

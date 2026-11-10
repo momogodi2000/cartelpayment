@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
 
 # next.js
 /.next/
@@ -43,7 +45,12 @@ dev-server.log
 *.tsbuildinfo
 next-env.d.ts
 
+# sqlite database files
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
 # local-only reference material (agent skills, guides)
 /docs/Ai-agents-rule/
-.pawelium_data/
 

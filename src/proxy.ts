@@ -8,15 +8,35 @@ const intlMiddleware = createMiddleware(routing);
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Let admin and internal API pass directly to their respective handlers
-  if (pathname.startsWith("/admin") || pathname.startsWith("/api")) {
+  // Defensive early redirect for admin routes if session cookie is absent
+  if (pathname.startsWith("/admin")) {
+    const isAuthRoute =
+      pathname === "/admin/login" ||
+      pathname.startsWith("/admin/forgot-password") ||
+      pathname.startsWith("/admin/reset-password");
+
+    if (!isAuthRoute) {
+      const hasAdminCookie =
+        request.cookies.has("__Host-pw_admin") || request.cookies.has("pw_admin");
+
+      if (!hasAdminCookie) {
+        const loginUrl = new URL("/admin/login", request.url);
+        return NextResponse.redirect(loginUrl);
+      }
+    }
+
+    return NextResponse.next();
+  }
+
+  // Let internal API pass directly to its route handlers
+  if (pathname.startsWith("/api")) {
     return NextResponse.next();
   }
 
   // Internationalization middleware for public routes
   const response = intlMiddleware(request);
 
-  // Security headers
+  // Security headers for public routes
   response.headers.set("X-DNS-Prefetch-Control", "on");
   response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
   response.headers.set("X-Content-Type-Options", "nosniff");
@@ -46,8 +66,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Exclude admin, api, Next internals, metadata routes and static assets
+  // Match public routes AND admin routes for defensive session check
   matcher: [
-    "/((?!api|admin|_next/static|_next/image|opengraph-image|twitter-image|icon|apple-icon|manifest|.*\\..*).*)",
+    "/((?!api|_next/static|_next/image|opengraph-image|twitter-image|icon|apple-icon|manifest|.*\\..*).*)",
   ],
 };

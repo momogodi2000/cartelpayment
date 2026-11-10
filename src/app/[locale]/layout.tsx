@@ -2,12 +2,14 @@ import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale, getMessages } from "next-intl/server";
 import "../globals.css";
 import PWARegister from "@/components/common/PWARegister";
 import { AppProvider } from "@/context/AppContext";
 import { routing } from "@/i18n/routing";
 import { siteConfig } from "@/data/site";
+import { loadNamespaces } from "@/i18n/load-translations";
+import type { Locale } from "@/i18n/config";
 
 const siteUrl = new URL(siteConfig.siteUrl || "http://localhost:3000");
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || siteConfig.name;
@@ -43,9 +45,9 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "Meta" });
 
   const languages: Record<string, string> = {
-    "fr-FR": "/",
+    "fr-FR": "/fr",
     "en-GB": "/en",
-    "x-default": "/",
+    "x-default": "/fr",
   };
 
   return {
@@ -78,7 +80,7 @@ export async function generateMetadata({
       // Card image comes from src/app/opengraph-image.tsx (per-listing pages override it).
       title: t("defaultTitle"),
       description: t("defaultDescription"),
-      url: locale === "fr" ? siteUrl.toString() : `${siteUrl.toString()}en`,
+      url: `${siteUrl.toString().replace(/\/$/, "")}/${locale}`,
       siteName,
       locale: locale === "fr" ? "fr_FR" : "en_GB",
       type: "website",
@@ -89,7 +91,7 @@ export async function generateMetadata({
       description: t("defaultDescription"),
     },
     alternates: {
-      canonical: locale === "fr" ? "/" : "/en",
+      canonical: `/${locale}`,
       languages,
     },
     ...(googleSiteVerification
@@ -123,6 +125,7 @@ export default async function LocaleLayout({
   }
 
   setRequestLocale(locale);
+  const messages = await getMessages();
 
   return (
     <html
@@ -137,7 +140,7 @@ export default async function LocaleLayout({
         suppressHydrationWarning
         className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans"
       >
-        <NextIntlClientProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <AppProvider>
             <PWARegister />
             {children}

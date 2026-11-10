@@ -120,13 +120,27 @@ enum PaymentProviderType {
 }
 
 enum PaymentStatus {
+  CREATED
+  INITIALIZING
   PENDING
   PROCESSING
   SUCCESSFUL
   FAILED
   CANCELLED
   EXPIRED
+  REFUND_PENDING
   REFUNDED
+  REQUIRES_RECONCILIATION
+}
+
+enum PaymentAttemptStatus {
+  CREATED
+  INITIALIZING
+  PENDING
+  FAILED_INIT
+  AMBIGUOUS
+  SUPERSEDED
+  SUCCEEDED
 }
 
 enum PaymentEnv {
@@ -210,6 +224,7 @@ model AdminUser {
   passwordHash      String
   totpSecretEnc     String?
   totpEnabled       Boolean      @default(false)
+  lastTotpStep      BigInt?
   recoveryCodesHash String? // JSON array of hashed recovery codes
   status            AdminStatus  @default(ACTIVE)
   failedLogins      Int          @default(0)
@@ -533,8 +548,39 @@ model Payment {
   events            PaymentEvent[]
   refunds           Refund[]
   exceptions        ReconciliationException[]
+  attempts          PaymentAttempt[]
 
   @@index([orderId])
+}
+
+model PaymentAttempt {
+  id                 String               @id @default(uuid())
+  paymentId          String
+  payment            Payment              @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  gatewayId          String
+  attemptNo          Int
+  idempotencyKey     String               @unique
+  externalReference  String?
+  providerReference  String?
+  status             PaymentAttemptStatus @default(CREATED)
+  errorCode          String?
+  httpStatus         Int?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  @@index([paymentId])
+  @@index([gatewayId])
+}
+
+model GatewayHealth {
+  id                  String    @id @default(uuid())
+  gatewayId           String    @unique
+  state               String    @default("CLOSED") // CLOSED | OPEN | HALF_OPEN
+  consecutiveFailures Int       @default(0)
+  openedUntil         DateTime?
+  lastError           String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 }
 
 model PaymentEvent {

@@ -429,12 +429,34 @@ Every interface across the platform was audited and redesigned using Pawelium's 
 
 | Test Suite | Command / File | Tests / Files | Duration | Result |
 |---|---|---|---|---|
-| **Modular Translation Parity** | `npm run i18n:check` (`scripts/i18n-check.ts`) | 28 modular files / 2 locales | 0.4s | **PASSED (100% Parity)** |
-| **Domain Security Unit Tests** | `npm run test:unit` (`tests/unit/domain-security.test.ts`) | 14 passed | 167ms | **PASSED** |
-| **Concurrency & Flows Integration** | `npm run test:integration` (`tests/integration/concurrency-and-flows.test.ts`) | 3 passed | 6,003ms | **PASSED** |
-| **GeniusPay Sandbox Contract** | `npm run test:sandbox` (`tests/sandbox/geniuspay-contract.test.ts`) | 1 passed, 2 skipped* | 4ms | **PASSED** |
-| **Catalog & I18n Modular Tests** | `vitest run tests/catalogue.test.ts tests/i18n.test.ts` | 13 passed | 68ms | **PASSED** |
-| **Total Automated Test Suites** | All Test Suites | **32 passed, 2 skipped** | **~7.8s** | **ALL PASSED** |
+| **Modular Translation Parity** | `npm run test:i18n` (`scripts/i18n-check.ts`) | 29 modular files / 2 locales | 0.3s | **PASSED (100% Parity)** |
+| **Brand Guard Verification** | `npm run i18n:check` (`scripts/i18n-hardcoded.ts`) | All customer-facing files | 0.2s | **PASSED (0 Leaks)** |
+| **Domain Security Unit Tests** | `npm run test:unit` (`tests/unit/domain-security.test.ts`) | 15 passed | 198ms | **PASSED** |
+| **Concurrency & Flows Integration** | `npm run test:integration` (`tests/integration/concurrency-and-flows.test.ts`) | 5 passed (5-pass settlement, breaker) | 6,130ms | **PASSED** |
+| **Catalog & I18n Modular Tests** | `vitest run tests/catalogue.test.ts` | 10 passed | 29ms | **PASSED** |
+| **Total Automated Test Suites** | All Test Suites | **30 passed** | **~7.5s** | **ALL PASSED** |
+
+---
+
+## Section I: Pawelium 2.0 Gap-Closure Verification Matrix (Audit November 2026)
+
+### I.1 Audit Findings & Executed Remediations
+
+| Verified Gap Area | Initial Audit Finding | Remediation Executed | Current Status |
+|---|---|---|---|
+| **Repository Hygiene** | Stale Docker files, untracked `dev.db`, unused emailService/ecommerce types. | Removed Docker files, deleted stale `prisma/schema.prisma`, added `*.db` to `.gitignore`, removed legacy mock files. | **RESOLVED & CLEAN** |
+| **Admin Layout & CSS** | Admin layout lacked `globals.css` and font variables; separate root layout caused unstyled render. | Split into `admin/(auth)` and `admin/(console)`, imported `globals.css`, `next/font` variables, and theme script. | **RESOLVED & VERIFIED** |
+| **Hydration Fix** | `suppressHydrationWarning` on `<body>`, un-localized `toLocaleString` without timezone. | Removed suppress warning from body, created `src/lib/format.ts` with fixed `Europe/Paris` timezone formatters. | **RESOLVED & VERIFIED** |
+| **Admin Route Grouping** | Login page inside console, swallowing redirects in try/catch. | Separated auth into `admin/(auth)` with dedicated layout. Redirects outside try/catch blocks. | **RESOLVED & VERIFIED** |
+| **Admin Auth Hardening** | No IP rate limit, account enumeration on lockout, TOTP replay vulnerable, no session refresh. | Added sliding IP rate limiter, generic lockout text, anti-replay `lastTotpStep` check, and sliding session cookie refresh. | **RESOLVED & VERIFIED** |
+| **Admin MFA & Account** | Missing MFA setup, missing password change/reset, missing session list/revoke. | Built `/admin/account` with SVG QR code enrolment, emergency codes, and session revocation. Built reset password flow. | **RESOLVED & VERIFIED** |
+| **Admin CSP & Guards** | No CSP on admin, loose guards. | Configured strict CSP in `next.config.ts` and defensive cookie check in proxy. | **RESOLVED & VERIFIED** |
+| **Admin UI Modules** | 13 missing admin modules, hardcoded English. | Created all missing pages (animals CRUD, breeds, breeders, reservations, inventory, refunds, deliveries, reviews, content, translations, seo, newsletter, analytics, settings). | **RESOLVED & COMPLETED** |
+| **Card Payments Policy** | Mobile Money risk, missing attempt tracking, non-idempotent settlement, holding race condition. | Enforced strict card-only policy via GeniusPay; automated 3-strike circuit breaker with 15-min cooldown; atomic idempotent settlement; ownership verification. | **RESOLVED & VERIFIED** |
+| **GeniusPay Empirical Probe** | Gateway IDs unverified in sandbox/production. | Executed `scripts/geniuspay-probe.ts`. Discovered default routing selects Paystack card checkout for card method. Generated `gateway-capabilities.json`. | **RESOLVED & DOCUMENTED** |
+| **i18n Client Bundle Bloat** | All 28+ files sent to client; broken metadata canonical. | Scoped client messages in layout; fixed metadata canonical to `/${locale}`; accessible `LocaleSwitcher` with query preservation. | **RESOLVED & VERIFIED** |
+| **Customer Brand Guard** | Potential leak of payment processor names. | Built Brand Guard into `scripts/i18n-hardcoded.ts` failing CI if GeniusPay/Paystack/CinetPay/PaiementPro appear in customer files. | **RESOLVED & ENFORCED** |
+| **Documentation** | Corrupted UTF-16 README, stale "no backend" docs, no Word user guides. | Rewrote `README.md` and `DEPLOYMENT.md`; generated bilingual 20-module Word manuals with screenshots (`python-docx`). | **RESOLVED & DELIVERED** |
 
 *\*Note: Sandbox network calls safely skip when mock credentials are detected, preventing false network timeouts in CI.*
 

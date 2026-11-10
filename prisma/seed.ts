@@ -1,7 +1,7 @@
 import { PrismaClient, Species, Gender, Size, AnimalStatus, HealthDocStatus, ImageKind, DocType, OrderStatus, ReservationStatus, ActorType, PaymentProviderType, PaymentStatus, PaymentEnv, TicketCategory, TicketPriority, TicketStatus, MessageAuthorType, ReviewStatus } from "@prisma/client";
-import { breeds as staticBreeds } from "../src/data/breeds";
-import { dogs as staticDogs } from "../src/data/dogs";
-import { cats as staticCats } from "../src/data/cats";
+import { breeds as staticBreeds } from "./seed/data/breeds";
+import { dogs as staticDogs } from "./seed/data/dogs";
+import { cats as staticCats } from "./seed/data/cats";
 import { hashPassword } from "../src/lib/security/password";
 import { generateOrderReference, generateTicketReference } from "../src/lib/domain/references";
 import { hashToken } from "../src/lib/security/tokens";

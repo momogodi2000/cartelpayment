@@ -27,7 +27,15 @@ function base32ToBuffer(base32: string): Buffer {
   return Buffer.from(bytes);
 }
 
-export function generateTOTP(secretBase32: string, timeStepSeconds = 30, time = Date.now()): string {
+export function getTOTPStep(time = Date.now(), timeStepSeconds = 30): bigint {
+  return BigInt(Math.floor(time / 1000 / timeStepSeconds));
+}
+
+export function generateTOTP(
+  secretBase32: string,
+  timeStepSeconds = 30,
+  time = Date.now()
+): string {
   const counter = Math.floor(time / 1000 / timeStepSeconds);
   const counterBuf = Buffer.alloc(8);
   counterBuf.writeBigInt64BE(BigInt(counter), 0);
@@ -47,25 +55,61 @@ export function generateTOTP(secretBase32: string, timeStepSeconds = 30, time = 
   return otp;
 }
 
+export interface TOTPVerificationResult {
+  valid: boolean;
+  step?: bigint;
+}
+
+/**
+ * Verifies a 6-digit TOTP code with constant-time comparison and anti-replay protection.
+ */
+export function verifyTOTPWithStep(
+  token: string,
+  secretBase32: string,
+  lastUsedStep?: bigint | null,
+  window = 1,
+  time = Date.now()
+): TOTPVerificationResult {
+  if (!token || token.length !== 6 || !/^\d+$/.test(token)) {
+    return { valid: false };
+  }
+
+  const tokenBuf = Buffer.from(token, "utf-8");
+  const stepMs = 30 * 1000;
+
+  for (let offset = -window; offset <= window; offset++) {
+    const checkTime = time + offset * stepMs;
+    const currentStep = getTOTPStep(checkTime, 30);
+
+    // Anti-replay check: prevent reusing a code from an already consumed time-step
+    if (lastUsedStep !== undefined && lastUsedStep !== null && currentStep <= lastUsedStep) {
+      continue;
+    }
+
+    const expected = generateTOTP(secretBase32, 30, checkTime);
+    const expectedBuf = Buffer.from(expected, "utf-8");
+
+    if (
+      tokenBuf.length === expectedBuf.length &&
+      crypto.timingSafeEqual(tokenBuf, expectedBuf)
+    ) {
+      return { valid: true, step: currentStep };
+    }
+  }
+
+  return { valid: false };
+}
+
+/**
+ * Standard TOTP verification with constant-time comparison.
+ */
 export function verifyTOTP(
   token: string,
   secretBase32: string,
   window = 1,
   time = Date.now()
 ): boolean {
-  if (!token || token.length !== 6 || !/^\d+$/.test(token)) {
-    return false;
-  }
-
-  const stepMs = 30 * 1000;
-  for (let offset = -window; offset <= window; offset++) {
-    const checkTime = time + offset * stepMs;
-    const expected = generateTOTP(secretBase32, 30, checkTime);
-    if (expected === token) {
-      return true;
-    }
-  }
-  return false;
+  return verifyTOTPWithStep(token, secretBase32, null, window, time).valid;
 }
 
 export function generateRecoveryCodes(count = 8): string[] {

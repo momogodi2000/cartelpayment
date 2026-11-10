@@ -24,7 +24,7 @@ test.describe("Security & Public Marketplace E2E", () => {
     for (const route of protectedRoutes) {
       await page.goto(route);
       // Unauthenticated access must redirect to /admin/login or show login form
-      await expect(page.locator("text=Super Admin Portal").or(page.locator("text=Sign In to Admin"))).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Pawelium Admin" })).toBeVisible();
     }
   });
 

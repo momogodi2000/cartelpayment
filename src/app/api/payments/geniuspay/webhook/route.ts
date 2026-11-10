@@ -6,7 +6,7 @@ import { applyProviderStatus } from "@/lib/services/payments/settlement";
 export const dynamic = "force-dynamic";
 
 /**
- * GeniusPay Webhook Handler
+ * GeniusPay Webhook Route Handler
  * Verified according to geniuspay.ci/docs/api
  */
 export async function POST(req: NextRequest) {
@@ -38,56 +38,69 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid JSON payload." }, { status: 400 });
     }
 
-    const providerEventId = payload.id || deliveryId || `evt-${Date.now()}`;
-    const paymentRef = payload.data?.reference || payload.reference;
-
-    // 2. Idempotency Check via unique providerEventId in PaymentEvent
-    const existingEvent = await prisma.paymentEvent.findUnique({
-      where: { providerEventId },
-    });
-
-    if (existingEvent) {
-      // Event already recorded and processed: return 200 idempotent response immediately
-      return NextResponse.json({ status: "already_processed" }, { status: 200 });
+    // Require an authoritative provider event id
+    const providerEventId = payload.id || deliveryId || payload.data?.reference || payload.reference;
+    if (!providerEventId) {
+      return NextResponse.json({ error: "Missing event delivery identification." }, { status: 400 });
     }
 
-    // 3. Record raw PaymentEvent
-    const eventRecord = await prisma.paymentEvent.create({
-      data: {
-        providerEventId,
-        eventType,
-        signatureValid: true,
-        payload: rawBody,
-        receivedAt: new Date(),
-      },
-    });
+    const paymentRef = payload.data?.reference || payload.reference;
 
-    // 4. Apply status authoritatively via re-querying GET /payments/{reference}
+    // 2. Atomic Idempotency Record (Catch P2002 on concurrent deliveries)
+    let eventRecordId: string;
+    try {
+      const eventRecord = await prisma.paymentEvent.create({
+        data: {
+          providerEventId,
+          eventType,
+          signatureValid: true,
+          payload: rawBody,
+          receivedAt: new Date(),
+        },
+      });
+      eventRecordId = eventRecord.id;
+    } catch (createErr: any) {
+      // Prisma P2002: Unique constraint violation on providerEventId
+      if (createErr.code === "P2002") {
+        return NextResponse.json({ status: "already_processed" }, { status: 200 });
+      }
+      throw createErr;
+    }
+
+    // 3. Authoritative Settlement: re-query GET /payments/{reference}
     if (paymentRef) {
       try {
         const result = await applyProviderStatus(paymentRef);
+
         await prisma.paymentEvent.update({
-          where: { id: eventRecord.id },
+          where: { id: eventRecordId },
           data: {
             processedAt: new Date(),
-            outcome: `Settled with status: ${result.paymentStatus} / order: ${result.orderStatus}`,
+            outcome: `Settled: payment=${result.paymentStatus}, order=${result.orderStatus}`,
           },
         });
       } catch (settleError: any) {
-        console.error("[GeniusPay Webhook] Error settling payment:", settleError);
+        console.error("[GeniusPay Webhook] Critical settlement failure:", settleError);
+
+        // Update record with error details
         await prisma.paymentEvent.update({
-          where: { id: eventRecord.id },
+          where: { id: eventRecordId },
           data: {
-            processedAt: new Date(),
-            outcome: `Settlement error: ${settleError.message}`,
+            outcome: `Settlement exception: ${settleError.message}`,
           },
         });
+
+        // Return HTTP 500 so GeniusPay webhook retry mechanism retries delivery
+        return NextResponse.json(
+          { error: "Settlement processing exception. Retrying." },
+          { status: 500 }
+        );
       }
     }
 
-    return NextResponse.json({ status: "received" }, { status: 200 });
+    return NextResponse.json({ status: "processed" }, { status: 200 });
   } catch (error: any) {
-    console.error("[GeniusPay Webhook] Unexpected error:", error);
+    console.error("[GeniusPay Webhook] Unexpected runtime error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

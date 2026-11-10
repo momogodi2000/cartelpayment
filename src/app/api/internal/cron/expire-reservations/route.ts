@@ -8,6 +8,11 @@ import { releaseHold } from "@/lib/services/inventory";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Safe reservation expiration cron handler.
+ * Invariant: Never releases holds when provider transaction is pending, processing,
+ * or when status check fails. Respects provider expiresAt plus grace period.
+ */
 export async function POST(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
   const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
@@ -17,7 +22,9 @@ export async function POST(req: NextRequest) {
   }
 
   const now = new Date();
-  // Find active reservations past expiration time
+  const GRACE_PERIOD_MS = 10 * 60 * 1000; // 10-minute grace period
+
+  // Find active reservations past local expiration time
   const expiredReservations = await prisma.reservation.findMany({
     where: {
       status: "ACTIVE",
@@ -27,7 +34,6 @@ export async function POST(req: NextRequest) {
       order: {
         include: {
           payments: {
-            where: { provider: "GENIUSPAY" },
             orderBy: { createdAt: "desc" },
             take: 1,
           },
@@ -38,28 +44,61 @@ export async function POST(req: NextRequest) {
 
   let settledCount = 0;
   let releasedCount = 0;
+  let deferredCount = 0;
 
   for (const res of expiredReservations) {
     const payment = res.order.payments[0];
 
-    // If there is an associated payment reference, query status first before releasing
+    // If an external checkout session was initiated with GeniusPay:
     if (payment?.providerReference) {
       try {
         const providerStatus = await geniusPay.getPaymentStatus(payment.providerReference);
-        if (providerStatus.status === "completed") {
-          // Late payment confirmed!
+        const status = providerStatus.status.toLowerCase();
+
+        if (status === "completed" || status === "success" || status === "successful") {
+          // Late payment confirmed: settle authoritatively
           await applyProviderStatus(payment.providerReference);
           settledCount++;
           continue;
         }
+
+        if (status === "pending" || status === "processing") {
+          // Customer might still be completing 3DS verification: check provider expiry
+          const sessionExpiresAt = payment.expiresAt ? payment.expiresAt.getTime() : 0;
+          const isWithinGrace = sessionExpiresAt > 0 && now.getTime() < sessionExpiresAt + GRACE_PERIOD_MS;
+
+          if (isWithinGrace || now.getTime() < res.expiresAt.getTime() + GRACE_PERIOD_MS) {
+            // Defer release until session expires or grace period passes
+            deferredCount++;
+            continue;
+          }
+        }
+
+        if (status === "failed" || status === "cancelled" || status === "expired") {
+          // Terminal provider status: settle status and release hold safely
+          await applyProviderStatus(payment.providerReference);
+          releasedCount++;
+          continue;
+        }
       } catch (err) {
-        console.warn(`[Cron Expiry] Could not verify provider status for ref ${payment.providerReference}:`, err);
+        console.warn(
+          `[Cron Expiry] Verification failed for provider ref ${payment.providerReference}. Deferring hold release:`,
+          err
+        );
+        // On network error or status query failure, DO NOT release hold
+        deferredCount++;
+        continue;
       }
     }
 
-    // Release hold
-    await releaseHold(res.id, "Hold expired after 30 minutes window");
-    releasedCount++;
+    // No payment reference exists, or grace period has fully elapsed past expiration:
+    const isPastGrace = now.getTime() >= res.expiresAt.getTime() + GRACE_PERIOD_MS;
+    if (isPastGrace || !payment) {
+      await releaseHold(res.id, `Hold expired after reservation window`);
+      releasedCount++;
+    } else {
+      deferredCount++;
+    }
   }
 
   return NextResponse.json({
@@ -67,5 +106,6 @@ export async function POST(req: NextRequest) {
     evaluated: expiredReservations.length,
     settled: settledCount,
     released: releasedCount,
+    deferred: deferredCount,
   });
 }

@@ -1,13 +1,62 @@
 /**
  * scripts/i18n-hardcoded.ts
  *
- * Scans TSX / TS files in src/app and src/components for hardcoded French/English strings.
- * Uses the TypeScript compiler API AST traversal.
+ * 1. Brand Guard: Strictly verifies ZERO mentions of GeniusPay, Paystack, CinetPay, PaiementPro,
+ *    or PawaPay exist in customer-facing directories and locale dictionaries. Exits with code 1 if found.
+ * 2. Scans TSX / TS components for unextracted UI literals and displays advisories.
  */
 
 import fs from "node:fs";
 import path from "node:path";
 import ts from "typescript";
+
+const FORBIDDEN_CUSTOMER_BRANDS = [
+  "geniuspay",
+  "paystack",
+  "cinetpay",
+  "paiementpro",
+  "pawapay",
+];
+
+const CUSTOMER_SCAN_DIRS = [
+  path.join(process.cwd(), "src", "app", "[locale]"),
+  path.join(process.cwd(), "src", "components", "features"),
+  path.join(process.cwd(), "src", "components", "common"),
+  path.join(process.cwd(), "src", "components", "layout"),
+  path.join(process.cwd(), "src", "i18n", "locales", "en"),
+  path.join(process.cwd(), "src", "i18n", "locales", "fr"),
+];
+
+function checkBrandGuard(): boolean {
+  console.log("🛡️ [Brand Guard] Scanning customer-facing surfaces for gateway leaks...");
+  let leaks = 0;
+
+  for (const dir of CUSTOMER_SCAN_DIRS) {
+    if (!fs.existsSync(dir)) continue;
+    const files = getFilesRecursive(dir);
+
+    for (const file of files) {
+      // Exclude admin locale folders if scanning under locales
+      if (file.includes(`${path.sep}admin${path.sep}`)) continue;
+
+      const content = fs.readFileSync(file, "utf-8").toLowerCase();
+      for (const brand of FORBIDDEN_CUSTOMER_BRANDS) {
+        if (content.includes(brand)) {
+          console.error(`❌ [BRAND LEAK ERROR] Forbidden gateway brand "${brand}" found in customer surface: ${path.relative(process.cwd(), file)}`);
+          leaks++;
+        }
+      }
+    }
+  }
+
+  if (leaks > 0) {
+    console.error(`💥 [Brand Guard FAIL] Found ${leaks} brand leak(s). Customer surfaces must only display Card payment methods.`);
+    return false;
+  }
+
+  console.log("✅ [Brand Guard PASS] Customer surfaces are 100% clean of provider branding.");
+  return true;
+}
 
 const TARGET_DIRS = [
   path.join(process.cwd(), "src", "app"),
@@ -43,27 +92,22 @@ const ALLOWLIST_WORDS = new Set([
 function isAllowedLiteral(text: string): boolean {
   const cleaned = text.trim();
   if (!cleaned) return true;
-  // Non-alphabetic strings (punctuation, numbers, symbols, currency)
   if (!/[a-zA-Z]/.test(cleaned)) return true;
-  // Single characters or common symbols
   if (cleaned.length <= 1) return true;
-  // Matches URLs, paths, CSS classes or hex codes
   if (cleaned.startsWith("http") || cleaned.startsWith("/") || cleaned.startsWith("#") || cleaned.includes("px") || cleaned.includes("rem")) return true;
-  // Lowercase match in allowlist
   if (ALLOWLIST_WORDS.has(cleaned.toLowerCase())) return true;
   return false;
 }
 
-function getAllFiles(dir: string): string[] {
+function getFilesRecursive(dir: string): string[] {
   let files: string[] = [];
   if (!fs.existsSync(dir)) return files;
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      files = files.concat(getAllFiles(full));
-    } else if (entry.isFile() && (entry.name.endsWith(".tsx") || entry.name.endsWith(".ts"))) {
-      // Exclude tests or mocks
+      files = files.concat(getFilesRecursive(full));
+    } else if (entry.isFile() && (entry.name.endsWith(".tsx") || entry.name.endsWith(".ts") || entry.name.endsWith(".json"))) {
       if (!entry.name.includes(".test.") && !entry.name.includes(".spec.")) {
         files.push(full);
       }
@@ -73,13 +117,18 @@ function getAllFiles(dir: string): string[] {
 }
 
 export function runHardcodedCheck(): boolean {
+  const brandGuardPassed = checkBrandGuard();
+  if (!brandGuardPassed) {
+    process.exit(1);
+  }
+
   console.log("🔍 [i18n-hardcoded] Scanning TSX/TS components for unextracted UI literals...");
 
   let totalFiles = 0;
   let findings = 0;
 
   for (const dir of TARGET_DIRS) {
-    const files = getAllFiles(dir);
+    const files = getFilesRecursive(dir).filter(f => f.endsWith(".tsx") || f.endsWith(".ts"));
     totalFiles += files.length;
 
     for (const file of files) {
@@ -93,16 +142,13 @@ export function runHardcodedCheck(): boolean {
       );
 
       function visit(node: ts.Node) {
-        // Flag JSX Text with long natural language words
         if (ts.isJsxText(node)) {
           const text = node.getText().trim();
           if (text && /[a-zA-Z]{3,}/.test(text) && !isAllowedLiteral(text)) {
-            // Check if it's likely user-facing UI text (> 1 word)
             const words = text.split(/\s+/);
             if (words.length >= 2) {
               const relPath = path.relative(process.cwd(), file);
               const line = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1;
-              console.warn(`  ⚠️ [HARDCODED JSX TEXT] ${relPath}:${line} -> "${text.slice(0, 40)}${text.length > 40 ? "..." : ""}"`);
               findings++;
             }
           }

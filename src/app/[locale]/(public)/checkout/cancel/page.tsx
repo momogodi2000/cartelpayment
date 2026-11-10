@@ -2,7 +2,7 @@ import React from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { prisma } from "@/lib/db/client";
-import { releaseHold } from "@/lib/services/inventory";
+import { applyProviderStatus } from "@/lib/services/payments/settlement";
 import { XCircle, ArrowLeft } from "lucide-react";
 
 interface PageProps {
@@ -16,14 +16,24 @@ export default async function CheckoutCancelPage({ params, searchParams }: PageP
   const t = await getTranslations("Confirmation");
   const { ref } = await searchParams;
 
+  // Safe read-only cancel: verify with provider before taking action
   if (ref) {
-    const order = await prisma.order.findUnique({
-      where: { reference: ref },
-      include: { reservation: true },
-    });
+    try {
+      const payment = await prisma.payment.findFirst({
+        where: {
+          OR: [
+            { providerReference: ref },
+            { order: { reference: ref } },
+          ],
+        },
+      });
 
-    if (order?.reservation?.id && order.reservation.status === "ACTIVE") {
-      await releaseHold(order.reservation.id, "Checkout session cancelled by customer in browser");
+      if (payment?.providerReference) {
+        // Query provider authoritatively; settlement service only releases on terminal failed/cancelled/expired
+        await applyProviderStatus(payment.providerReference);
+      }
+    } catch (err) {
+      console.warn("[Cancel Page] Provider verification failed:", err);
     }
   }
 
