@@ -46,18 +46,18 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const [featuredDogs, featuredCats, totalAnimalsCount, totalBreedsCount, dbDogBreeds, dbCatBreeds, approvedReviews] = await Promise.all([
     prisma.animal.findMany({
-      where: { species: "DOG", published: true },
+      where: { species: "DOG", published: true, isPaymentTest: false },
       take: 8,
       orderBy: { createdAt: "desc" },
       include: { breed: true, images: { orderBy: { sortOrder: "asc" } } },
     }),
     prisma.animal.findMany({
-      where: { species: "CAT", published: true },
+      where: { species: "CAT", published: true, isPaymentTest: false },
       take: 8,
       orderBy: { createdAt: "desc" },
       include: { breed: true, images: { orderBy: { sortOrder: "asc" } } },
     }),
-    prisma.animal.count({ where: { published: true } }),
+    prisma.animal.count({ where: { published: true, isPaymentTest: false } }),
     prisma.breed.count(),
     prisma.breed.findMany({
       where: { species: "DOG" },

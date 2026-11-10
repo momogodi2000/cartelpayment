@@ -7,11 +7,12 @@
  */
 
 import { prisma } from "../../db/client";
-import { PaymentStatus, PaymentAttemptStatus } from "@prisma/client";
+import { PaymentStatus, PaymentAttemptStatus, PaymentProviderType } from "@prisma/client";
 import { selectCardGateways } from "./payment-router";
 import { recordGatewayFailure, recordGatewaySuccess } from "./gateway-health";
 import { classifyInitError } from "./payment-fallback";
 import { geniusPay } from "./geniuspay";
+import { createStripeCheckoutSession, isStripeDirectConfigured } from "./stripe";
 import { generateToken } from "../../security/tokens";
 import { getEnv } from "../../env";
 
@@ -93,34 +94,67 @@ export async function initializeCardPayment(
     });
 
     try {
-      // Call provider with 10s fetch timeout
-      const providerRes = await geniusPay.createPayment({
-        orderId: input.orderId,
-        orderRef: input.orderRef,
-        amountCents: input.amountCents,
-        currency: input.currency,
-        gateway: gateway.providerValue || undefined,
-        customer: input.customer,
-        successUrl: input.successUrl,
-        errorUrl: input.errorUrl,
-      });
+      let providerReference = "";
+      let checkoutUrl = "";
+      let expiresAt: Date | null = null;
+      let providerType: PaymentProviderType = PaymentProviderType.GENIUSPAY;
+
+      if (gateway.id === "stripe_direct") {
+        providerType = PaymentProviderType.STRIPE;
+        const order = await prisma.order.findUnique({
+          where: { id: input.orderId },
+          include: { item: true },
+        });
+
+        const stripeRes = await createStripeCheckoutSession({
+          orderId: input.orderId,
+          orderRef: input.orderRef,
+          animalName: order?.item?.animalName || "European Companion",
+          breedName: order?.item?.breedName,
+          amountCents: input.amountCents,
+          currency: input.currency,
+          customer: input.customer,
+          successUrl: input.successUrl,
+          cancelUrl: input.errorUrl,
+        });
+
+        providerReference = stripeRes.sessionId;
+        checkoutUrl = stripeRes.checkoutUrl;
+      } else {
+        // Call GeniusPay with 10s fetch timeout
+        const providerRes = await geniusPay.createPayment({
+          orderId: input.orderId,
+          orderRef: input.orderRef,
+          amountCents: input.amountCents,
+          currency: input.currency,
+          gateway: gateway.providerValue || undefined,
+          customer: input.customer,
+          successUrl: input.successUrl,
+          errorUrl: input.errorUrl,
+        });
+
+        providerReference = providerRes.reference;
+        checkoutUrl = providerRes.checkoutUrl;
+        expiresAt = providerRes.expiresAt ? new Date(providerRes.expiresAt) : null;
+      }
 
       // Success: update attempt and payment
       await prisma.paymentAttempt.update({
         where: { id: attempt.id },
         data: {
           status: PaymentAttemptStatus.SUCCEEDED,
-          providerReference: providerRes.reference,
+          providerReference,
         },
       });
 
       await prisma.payment.update({
         where: { id: payment.id },
         data: {
+          provider: providerType,
           status: PaymentStatus.PENDING,
-          providerReference: providerRes.reference,
-          checkoutUrl: providerRes.checkoutUrl,
-          expiresAt: providerRes.expiresAt ? new Date(providerRes.expiresAt) : null,
+          providerReference,
+          checkoutUrl,
+          expiresAt,
         },
       });
 
@@ -128,8 +162,8 @@ export async function initializeCardPayment(
 
       return {
         paymentId: payment.id,
-        checkoutUrl: providerRes.checkoutUrl,
-        providerReference: providerRes.reference,
+        checkoutUrl,
+        providerReference,
         attemptId: attempt.id,
       };
     } catch (err: any) {

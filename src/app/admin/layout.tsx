@@ -51,7 +51,10 @@ export default async function AdminRootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
-      <body className="min-h-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans selection:bg-[#B69A65]/30">
+      <body
+        suppressHydrationWarning
+        className="min-h-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans selection:bg-[#B69A65]/30"
+      >
         {children}
       </body>
     </html>

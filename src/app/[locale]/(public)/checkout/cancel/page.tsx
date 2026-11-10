@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { prisma } from "@/lib/db/client";
 import { applyProviderStatus } from "@/lib/services/payments/settlement";
+import { releaseHold } from "@/lib/services/inventory";
+import { PaymentStatus, ReservationStatus } from "@prisma/client";
 import { XCircle, ArrowLeft } from "lucide-react";
 
 interface PageProps {
@@ -16,7 +18,7 @@ export default async function CheckoutCancelPage({ params, searchParams }: PageP
   const t = await getTranslations("Confirmation");
   const { ref } = await searchParams;
 
-  // Safe read-only cancel: verify with provider before taking action
+  // Explicit cancellation handling: verify not paid, then release hold immediately
   if (ref) {
     try {
       const payment = await prisma.payment.findFirst({
@@ -26,11 +28,30 @@ export default async function CheckoutCancelPage({ params, searchParams }: PageP
             { order: { reference: ref } },
           ],
         },
+        include: {
+          order: {
+            include: { reservation: true },
+          },
+        },
       });
 
       if (payment?.providerReference) {
-        // Query provider authoritatively; settlement service only releases on terminal failed/cancelled/expired
-        await applyProviderStatus(payment.providerReference);
+        // Query provider authoritatively first:
+        const statusRes = await applyProviderStatus(payment.providerReference);
+        if (statusRes.paymentStatus === PaymentStatus.SUCCESSFUL) {
+          // If payment somehow cleared before cancel, do not cancel
+          console.log(`[Cancel Page] Provider confirmed payment already completed for ref=${ref}`);
+        } else {
+          // Unpaid: mark CANCELLED and immediately release hold
+          await prisma.payment.update({
+            where: { id: payment.id },
+            data: { status: PaymentStatus.CANCELLED },
+          });
+
+          if (payment.order?.reservation?.status === ReservationStatus.ACTIVE) {
+            await releaseHold(payment.order.reservation.id, "Customer cancelled checkout");
+          }
+        }
       }
     } catch (err) {
       console.warn("[Cancel Page] Provider verification failed:", err);

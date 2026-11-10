@@ -123,8 +123,7 @@ export async function settlePaymentAuthoritative(
     const providerMinor = toMinorUnits(providerData.amount);
     const amountMismatch = Math.abs(providerMinor - payment.amountCents) > 0;
     const currencyMismatch =
-      providerData.currency.toUpperCase() !== payment.currency.toUpperCase() &&
-      providerData.currency.toUpperCase() !== "XOF"; // Permit XOF when converted from EUR by provider
+      providerData.currency.toUpperCase() !== payment.currency.toUpperCase();
 
     if (amountMismatch) {
       await prisma.reconciliationException.create({

@@ -21,6 +21,8 @@ import { transitionOrderStatus, recordManualPayment } from "@/lib/services/order
 import { logAudit } from "@/lib/services/audit";
 import { anonymizeCustomerData } from "@/lib/services/gdpr";
 import { adminReplyTicket } from "@/lib/services/support";
+import { reconcileUnresolvedPayments } from "@/lib/services/payments/reconciliation";
+import { releaseHold } from "@/lib/services/inventory";
 import {
   AnimalStatus,
   OrderStatus,
@@ -485,5 +487,62 @@ export async function actionSaveSiteSetting(key: string, value: string) {
   });
 
   revalidatePath("/admin/settings");
+  return { success: true };
+}
+
+export async function actionReconcilePayments() {
+  const { admin } = await requireSuperAdmin();
+  const report = await reconcileUnresolvedPayments();
+
+  await logAudit({
+    actorType: "ADMIN",
+    adminId: admin.id,
+    action: "RECONCILE_PAYMENTS",
+    entity: "Payment",
+    entityId: "batch",
+    diff: JSON.parse(JSON.stringify(report)),
+  });
+
+  revalidatePath("/admin/payments");
+  revalidatePath("/admin/reservations");
+  revalidatePath("/admin/orders");
+  return { success: true, report };
+}
+
+export async function actionResetTestDogStatus() {
+  const { admin } = await requireSuperAdmin();
+  const testDog = await prisma.animal.findFirst({
+    where: { isPaymentTest: true },
+  });
+
+  if (!testDog) {
+    throw new Error("Internal payment-testing dog not found.");
+  }
+
+  // Release any active reservations on the test dog
+  const activeRes = await prisma.reservation.findFirst({
+    where: { animalId: testDog.id, status: ReservationStatus.ACTIVE },
+  });
+
+  if (activeRes) {
+    await releaseHold(activeRes.id, "Admin reset payment-test dog status");
+  }
+
+  await prisma.animal.update({
+    where: { id: testDog.id },
+    data: { status: AnimalStatus.AVAILABLE },
+  });
+
+  await logAudit({
+    actorType: "ADMIN",
+    adminId: admin.id,
+    action: "RESET_TEST_DOG",
+    entity: "Animal",
+    entityId: testDog.id,
+    diff: { status: AnimalStatus.AVAILABLE },
+  });
+
+  revalidatePath("/admin/test-payment");
+  revalidatePath("/admin/animals");
   return { success: true };
 }

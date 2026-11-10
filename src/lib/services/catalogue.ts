@@ -32,6 +32,7 @@ export async function getCatalogueAnimals(options: CatalogueFilterOptions = {}) 
 
   const where: Prisma.AnimalWhereInput = {
     published: true,
+    isPaymentTest: false,
   };
 
   if (status) {
@@ -101,6 +102,7 @@ export async function getFeaturedAnimals(limit = 6) {
   return await prisma.animal.findMany({
     where: {
       published: true,
+      isPaymentTest: false,
       status: AnimalStatus.AVAILABLE,
       featured: true,
     },
@@ -137,6 +139,7 @@ export async function getAnimalBySlug(slug: string) {
     where: {
       id: { not: animal.id },
       published: true,
+      isPaymentTest: false,
       species: animal.species,
       status: AnimalStatus.AVAILABLE,
     },

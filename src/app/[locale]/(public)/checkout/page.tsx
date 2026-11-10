@@ -64,6 +64,31 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
     );
   }
 
+  if (animal.isPaymentTest) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-6">
+        <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto">
+          <AlertCircle className="h-8 w-8" />
+        </div>
+        <h1 className="font-serif text-3xl font-bold text-gray-900 dark:text-white">
+          {locale === "fr" ? "Profil de Test Interne Administrateur" : "Internal Payment-Testing Animal"}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          {locale === "fr"
+            ? "Cette fiche est strictement réservée aux tests techniques du terminal de paiement par l'administration."
+            : "This listing is restricted to internal payment gateway verification by administrators."}
+        </p>
+        <Link
+          href="/animals"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#183C32] text-white font-bold text-sm"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>{locale === "fr" ? "Retour au catalogue" : "Browse Catalogue"}</span>
+        </Link>
+      </div>
+    );
+  }
+
   const breedName = locale === "fr" ? animal.breed.nameFr : animal.breed.nameEn;
   const initialPricing = calculatePricing(animal.priceCents, { deliveryCountry: "France" });
 

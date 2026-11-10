@@ -54,6 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const animals = await prisma.animal.findMany({
       where: {
         published: true,
+        isPaymentTest: false,
         status: { not: "ARCHIVED" },
       },
       select: { slug: true, updatedAt: true },

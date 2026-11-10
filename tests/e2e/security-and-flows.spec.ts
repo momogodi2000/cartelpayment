@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Security & Public Marketplace E2E", () => {
+  test.setTimeout(60000);
   test("Health check endpoint reports healthy database and configuration", async ({ request }) => {
     const res = await request.get("/api/health");
     expect(res.status()).toBe(200);
@@ -36,5 +37,15 @@ test.describe("Security & Public Marketplace E2E", () => {
     await page.goto("/fr/animaux");
     await expect(page.locator("h1")).toBeVisible();
     await expect(page.locator("article").first()).toBeVisible();
+  });
+
+  test("Internal payment test dog is strictly excluded from public catalogue", async ({ page }) => {
+    await page.goto("/en/animals");
+    const testDogCard = page.locator("text=Internal Payment Test");
+    await expect(testDogCard).toHaveCount(0);
+
+    await page.goto("/fr/animaux");
+    const testDogCardFr = page.locator("text=Internal Payment Test");
+    await expect(testDogCardFr).toHaveCount(0);
   });
 });

@@ -8,6 +8,8 @@ import { generateToken, hashToken, timingSafeCompare } from "@/lib/security/toke
 import { encrypt, decrypt } from "@/lib/security/encryption";
 import { escapeHtml } from "@/lib/security/html-escape";
 import { geniusPay } from "@/lib/services/payments/geniuspay";
+import { getEligibleCardGateways, BASE_GATEWAY_REGISTRY } from "@/lib/services/payments/gateway-registry";
+import { isStripeDirectConfigured } from "@/lib/services/payments/stripe";
 import crypto from "node:crypto";
 
 describe("Unit Tests — Core Domain & Security Suite", () => {
@@ -173,6 +175,38 @@ describe("Unit Tests — Core Domain & Security Suite", () => {
 
     it("ensures webhook event processing rejects null or empty event payloads", () => {
       expect(geniusPay.verifyWebhookSignature("", "some-sig", "12345")).toBe(false);
+    });
+  });
+
+  describe("European Payment Gateway Routing & Safeguards", () => {
+    it("strictly prioritizes Stripe for European card payments in EUR", () => {
+      const eligible = getEligibleCardGateways("EUR");
+      expect(eligible.length).toBeGreaterThan(0);
+      expect(eligible[0].id).toMatch(/stripe/);
+      expect(eligible[0].methods).toContain("card");
+      expect(eligible[0].currencies).toContain("EUR");
+    });
+
+    it("strictly disables Paystack and Mobile Money for European checkout", () => {
+      const eligible = getEligibleCardGateways("EUR");
+      const gatewayIds = eligible.map((g) => g.id);
+
+      expect(gatewayIds).not.toContain("paystack");
+      expect(gatewayIds).not.toContain("wave");
+      expect(gatewayIds).not.toContain("pawapay");
+
+      // Verify Mobile money is never eligible
+      for (const g of eligible) {
+        expect(g.methods).not.toContain("mobile_money");
+      }
+    });
+
+    it("strictly formats EUR amounts with 2 decimal places for European adoption", () => {
+      const formattedEn = formatMoney(90, "EUR", "en"); // 0.90 EUR
+      expect(formattedEn).toBe("€0.90");
+
+      const formattedFr = formatMoney(90, "EUR", "fr");
+      expect(formattedFr).toMatch(/0,90\s*€/);
     });
   });
 });

@@ -115,6 +115,7 @@ enum ActorType {
 }
 
 enum PaymentProviderType {
+  STRIPE
   GENIUSPAY
 }
 
@@ -122,13 +123,17 @@ enum PaymentStatus {
   CREATED
   INITIALIZING
   PENDING
+  REQUIRES_ACTION
   PROCESSING
+  SUCCEEDED
   SUCCESSFUL
   FAILED
+  DECLINED
   CANCELLED
   EXPIRED
   REFUND_PENDING
   REFUNDED
+  PARTIALLY_REFUNDED
   REQUIRES_RECONCILIATION
 }
 
@@ -358,6 +363,7 @@ model Animal {
   seoTitle        String?
   seoDescription  String?
   isDemo          Boolean         @default(false)
+  isPaymentTest   Boolean         @default(false)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 

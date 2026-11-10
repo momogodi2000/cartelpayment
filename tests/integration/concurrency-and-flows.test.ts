@@ -43,7 +43,8 @@ describe("Integration Tests — Concurrency, Webhooks & Flow Isolation", () => {
         temperamentFr: "[]",
         socializationEn: "Test",
         socializationFr: "Test",
-        isDemo: true,
+        isDemo: false,
+        isPaymentTest: false,
       },
     });
 

@@ -31,6 +31,7 @@ import {
   Moon,
   Shield,
   ChevronRight,
+  PlayCircle,
 } from "lucide-react";
 import { actionAdminLogout } from "@/app/actions/admin";
 
@@ -66,6 +67,7 @@ const NAV_ITEMS: NavItem[] = [
   // Commerce & Financials
   { labelEn: "Adoption Orders", labelFr: "Commandes d'Adoption", href: "/admin/orders", icon: ShoppingBag, categoryEn: "Commerce", categoryFr: "Commerce" },
   { labelEn: "Payments & Webhooks", labelFr: "Paiements & Webhooks", href: "/admin/payments", icon: CreditCard, categoryEn: "Commerce", categoryFr: "Commerce" },
+  { labelEn: "Test Payment Suite", labelFr: "Test Paiement 0,90 €", href: "/admin/test-payment", icon: PlayCircle, categoryEn: "Commerce", categoryFr: "Commerce" },
   { labelEn: "Manual Refunds", labelFr: "Remboursements", href: "/admin/refunds", icon: RotateCcw, categoryEn: "Commerce", categoryFr: "Commerce" },
   { labelEn: "VIP Deliveries", labelFr: "Livraisons Sécurisées", href: "/admin/deliveries", icon: Truck, categoryEn: "Commerce", categoryFr: "Commerce" },
 
@@ -94,6 +96,16 @@ export default function AdminConsoleShell({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<"light" | "dark">("light");
   const isFr = locale === "fr";
+
+  // Safely sync theme after mount to avoid server/client hydration mismatch
+  React.useEffect(() => {
+    try {
+      const activeTheme = document.documentElement.getAttribute("data-theme");
+      if (activeTheme === "dark" || activeTheme === "light") {
+        setCurrentTheme(activeTheme);
+      }
+    } catch {}
+  }, []);
 
   // Switch locale cookie
   const switchLocale = (newLocale: "en" | "fr") => {

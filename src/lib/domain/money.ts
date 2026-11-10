@@ -12,10 +12,11 @@
  */
 export function formatMoney(cents: number, currency = "EUR", locale = "fr-FR"): string {
   const major = cents / 100;
-  return new Intl.NumberFormat(locale === "fr" ? "fr-FR" : "en-US", {
+  const normalizedLocale = locale === "fr" || locale === "fr-FR" ? "fr-FR" : "en-GB";
+  return new Intl.NumberFormat(normalizedLocale, {
     style: "currency",
-    currency,
-    minimumFractionDigits: 0,
+    currency: currency.toUpperCase(),
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(major);
 }

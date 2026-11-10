@@ -38,7 +38,7 @@ export default async function CatalogPage({
 
   const [dbAnimals, dbBreeds] = await Promise.all([
     prisma.animal.findMany({
-      where: { published: true },
+      where: { published: true, isPaymentTest: false },
       include: {
         breed: true,
         images: { orderBy: { sortOrder: "asc" } },

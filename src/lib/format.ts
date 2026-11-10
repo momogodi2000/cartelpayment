@@ -57,10 +57,10 @@ export function formatMoney(
   currency: string = "EUR",
   locale: string = "fr-FR"
 ): string {
-  const normalizedLocale = locale === "fr" ? "fr-FR" : locale === "en" ? "en-GB" : locale;
+  const normalizedLocale = locale.startsWith("fr") ? "fr-FR" : "en-GB";
   return new Intl.NumberFormat(normalizedLocale, {
     style: "currency",
-    currency,
+    currency: currency.toUpperCase(),
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amountCents / 100);

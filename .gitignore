@@ -54,3 +54,6 @@ next-env.d.ts
 # local-only reference material (agent skills, guides)
 /docs/Ai-agents-rule/
 
+# administrator credentials & secrets
+SUPER_ADMIN_CREDENTIALS.md
+

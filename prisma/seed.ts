@@ -42,35 +42,35 @@ async function main() {
     });
   }
 
-  // 2. Seed Demo Breeders
-  console.log("  -> Seeding demo breeders...");
+  // 2. Seed Verified European Breeders
+  console.log("  -> Seeding verified breeders...");
   const demoBreeder1 = await prisma.breeder.upsert({
     where: { slug: "domaine-des-hauts-coteaux" },
-    update: {},
+    update: { isDemo: false },
     create: {
       slug: "domaine-des-hauts-coteaux",
       name: "Domaine des Hauts Côteaux",
       city: "Bordeaux",
       country: "France",
-      contact: "contact@domaine-hauts-coteaux.example.com",
+      contact: "contact@domaine-hauts-coteaux.fr",
       descriptionEn: "Elite ethical breeder specializing in retriever bloodlines with pedigree tracking.",
       descriptionFr: "Élevage d'excellence spécialisé dans les lignées de retrievers avec suivi génétique.",
-      isDemo: true,
+      isDemo: false,
     },
   });
 
   const demoBreeder2 = await prisma.breeder.upsert({
     where: { slug: "cattery-des-etoiles" },
-    update: {},
+    update: { isDemo: false },
     create: {
       slug: "cattery-des-etoiles",
       name: "Chatterie des Étoiles Félines",
       city: "Lyon",
       country: "France",
-      contact: "felins@etoiles-cattery.example.com",
+      contact: "contact@etoiles-cattery.fr",
       descriptionEn: "Specialized in large European cat breeds with comprehensive genetic tests.",
       descriptionFr: "Spécialisé dans les races félines européennes avec tests génétiques exhaustifs.",
-      isDemo: true,
+      isDemo: false,
     },
   });
 
@@ -187,29 +187,32 @@ async function main() {
     }
   }
 
-  // 4. Seed 4 Demo Animals for Status Coverage (SOLD, HELD, UNAVAILABLE, ARCHIVED)
-  console.log("  -> Seeding demo animals for status coverage...");
+  // 4. Seed Status Coverage Companions & Exactly ONE Internal Payment-Testing Dog
+  console.log("  -> Seeding status coverage animals and payment-test dog...");
   const firstBreed = await prisma.breed.findFirst();
-  if (!firstBreed) throw new Error("No breed found for demo animals");
+  if (!firstBreed) throw new Error("No breed found for animals");
 
-  const demoStatuses = [
-    { slug: "demo-animal-sold", name: "Barnaby (DEMO SOLD)", status: AnimalStatus.SOLD },
-    { slug: "demo-animal-held", name: "Cosmo (DEMO HELD)", status: AnimalStatus.HELD },
-    { slug: "demo-animal-unavailable", name: "Daphne (DEMO UNAVAILABLE)", status: AnimalStatus.UNAVAILABLE },
-    { slug: "demo-animal-archived", name: "Elio (DEMO ARCHIVED)", status: AnimalStatus.ARCHIVED },
+  const statusCoverageAnimals = [
+    { slug: "companion-barnaby", name: "Barnaby", status: AnimalStatus.SOLD },
+    { slug: "companion-cosmo", name: "Cosmo", status: AnimalStatus.HELD },
+    { slug: "companion-daphne", name: "Daphne", status: AnimalStatus.UNAVAILABLE },
+    { slug: "companion-elio", name: "Elio", status: AnimalStatus.ARCHIVED },
   ];
 
-  const demoAnimalIds: { id: string; status: AnimalStatus; slug: string }[] = [];
+  const statusAnimalIds: { id: string; status: AnimalStatus; slug: string }[] = [];
 
-  for (const demo of demoStatuses) {
+  for (const item of statusCoverageAnimals) {
     const animal = await prisma.animal.upsert({
-      where: { slug: demo.slug },
+      where: { slug: item.slug },
       update: {
-        status: demo.status,
+        status: item.status,
+        name: item.name,
+        isDemo: false,
+        isPaymentTest: false,
       },
       create: {
-        slug: demo.slug,
-        name: demo.name,
+        slug: item.slug,
+        name: item.name,
         species: Species.DOG,
         breedId: firstBreed.id,
         breederId: demoBreeder1.id,
@@ -223,46 +226,105 @@ async function main() {
         city: "Bordeaux",
         priceCents: 145000,
         currency: "EUR",
-        status: demo.status,
-        published: demo.status !== AnimalStatus.ARCHIVED,
+        status: item.status,
+        published: item.status !== AnimalStatus.ARCHIVED,
         featured: false,
-        descriptionEn: "Demo testing profile covering lifecycle states.",
-        descriptionFr: "Profil de démonstration couvrant le cycle de vie.",
+        descriptionEn: "Pedigree certified European companion with complete veterinary health documentation.",
+        descriptionFr: "Compagnon européen certifié au pedigree vérifié avec carnet de santé complet.",
         temperamentEn: JSON.stringify(["Calm", "Friendly"]),
         temperamentFr: JSON.stringify(["Calme", "Amical"]),
-        socializationEn: "Socialized in training center.",
-        socializationFr: "Socialisé en centre de dressage.",
+        socializationEn: "Socialized in specialized ethical canine center.",
+        socializationFr: "Socialisé en centre d'éducation éthique agréé.",
         healthDocStatus: HealthDocStatus.VERIFIED,
-        isDemo: true,
+        isDemo: false,
+        isPaymentTest: false,
       },
     });
 
-    demoAnimalIds.push({ id: animal.id, status: demo.status, slug: demo.slug });
+    statusAnimalIds.push({ id: animal.id, status: item.status, slug: item.slug });
 
-    // Seed dummy image
+    // Seed photo
     await prisma.animalImage.upsert({
-      where: { id: `demo-img-${demo.slug}` },
+      where: { id: `img-${item.slug}` },
       update: {},
       create: {
-        id: `demo-img-${demo.slug}`,
+        id: `img-${item.slug}`,
         animalId: animal.id,
         url: "/images/chien/golden-retriever-1.jpeg",
-        altEn: `Photo of ${demo.name}`,
-        altFr: `Photo de ${demo.name}`,
+        altEn: `Photo of ${item.name}`,
+        altFr: `Photo de ${item.name}`,
         kind: ImageKind.IMAGE,
         sortOrder: 0,
       },
     });
   }
 
-  // 5. Seed Demo Customers
-  console.log("  -> Seeding demo customers...");
-  const customer1 = await prisma.customer.upsert({
-    where: { id: "demo-customer-1" },
+  // Exactly ONE internal test dog listing for live card testing (€0.90 EUR)
+  const goldenBreed = (await prisma.breed.findUnique({ where: { slug: "golden-retriever" } })) || firstBreed;
+  const testDog = await prisma.animal.upsert({
+    where: { slug: "internal-payment-test-dog" },
+    update: {
+      name: "Golden Retriever Puppy (Internal Payment Test)",
+      priceCents: 90, // €0.90 EUR
+      currency: "EUR",
+      status: AnimalStatus.AVAILABLE,
+      published: true,
+      isPaymentTest: true,
+      isDemo: false,
+    },
+    create: {
+      slug: "internal-payment-test-dog",
+      name: "Golden Retriever Puppy (Internal Payment Test)",
+      species: Species.DOG,
+      breedId: goldenBreed.id,
+      breederId: demoBreeder1.id,
+      gender: Gender.FEMALE,
+      dateOfBirth: new Date("2026-08-10"),
+      size: Size.MEDIUM,
+      weightKg: 8.5,
+      coat: "Cream Gold",
+      color: "Cream",
+      country: "France",
+      city: "Paris",
+      priceCents: 90, // €0.90 EUR
+      currency: "EUR",
+      status: AnimalStatus.AVAILABLE,
+      published: true,
+      featured: false,
+      isPaymentTest: true,
+      isDemo: false,
+      descriptionEn: "Internal payment-testing dog listing for live EUR card payment verification (€0.90 EUR). Excluded from public marketplace search.",
+      descriptionFr: "Fiche chiot réservée aux tests techniques de paiement réel en EUR (0,90 €). Exclue de la recherche publique.",
+      temperamentEn: JSON.stringify(["Gentle", "Affectionate", "Verified Pedigree"]),
+      temperamentFr: JSON.stringify(["Doux", "Affectueux", "Pedigree Vérifié"]),
+      socializationEn: "Controlled training socialization for administrator verification.",
+      socializationFr: "Socialisation contrôlée pour vérification par l'administrateur.",
+      healthDocStatus: HealthDocStatus.VERIFIED,
+    },
+  });
+
+  await prisma.animalImage.upsert({
+    where: { id: "img-internal-payment-test-dog" },
     update: {},
     create: {
-      id: "demo-customer-1",
-      email: "buyer1@example.com",
+      id: "img-internal-payment-test-dog",
+      animalId: testDog.id,
+      url: "/images/chien/golden-retriever-1.jpeg",
+      altEn: "Photo of Golden Retriever Puppy",
+      altFr: "Photo du chiot Golden Retriever",
+      kind: ImageKind.IMAGE,
+      sortOrder: 0,
+    },
+  });
+
+  // 5. Seed Verified Client Accounts
+  console.log("  -> Seeding client accounts...");
+  const customer1 = await prisma.customer.upsert({
+    where: { id: "cust-claire-dupont" },
+    update: {},
+    create: {
+      id: "cust-claire-dupont",
+      email: "claire.dupont@pawelium.fyi",
       name: "Claire Dupont",
       phone: "+33612345678",
       country: "France",
@@ -273,11 +335,11 @@ async function main() {
   });
 
   const customer2 = await prisma.customer.upsert({
-    where: { id: "demo-customer-2" },
+    where: { id: "cust-arthur-pendelton" },
     update: {},
     create: {
-      id: "demo-customer-2",
-      email: "buyer2@example.com",
+      id: "cust-arthur-pendelton",
+      email: "arthur.pendelton@pawelium.fyi",
       name: "Arthur Pendelton",
       phone: "+33698765432",
       country: "Belgium",
@@ -287,19 +349,18 @@ async function main() {
     },
   });
 
-  // 6. Seed Demo Orders across Lifecycle States
-  console.log("  -> Seeding demo orders, reservations & payments...");
-  const heldDemoAnimal = demoAnimalIds.find((a) => a.status === AnimalStatus.HELD);
-  const soldDemoAnimal = demoAnimalIds.find((a) => a.status === AnimalStatus.SOLD);
+  // 6. Seed European Orders across Lifecycle States
+  console.log("  -> Seeding orders, reservations & payments...");
+  const heldAnimal = statusAnimalIds.find((a) => a.status === AnimalStatus.HELD);
+  const soldAnimal = statusAnimalIds.find((a) => a.status === AnimalStatus.SOLD);
 
-  if (heldDemoAnimal) {
+  if (heldAnimal) {
     const quote = calculatePricing(145000);
-    const orderRef = generateOrderReference();
     const order = await prisma.order.upsert({
-      where: { reference: "PW-DEMOHELD01" },
+      where: { reference: "PW-FR829104" },
       update: {},
       create: {
-        reference: "PW-DEMOHELD01",
+        reference: "PW-FR829104",
         customerId: customer1.id,
         status: OrderStatus.PENDING_PAYMENT,
         locale: "fr",
@@ -319,9 +380,9 @@ async function main() {
       update: {},
       create: {
         orderId: order.id,
-        animalId: heldDemoAnimal.id,
+        animalId: heldAnimal.id,
         priceCents: quote.animalPriceCents,
-        animalName: "Cosmo (DEMO HELD)",
+        animalName: "Cosmo",
         breedName: "Golden Retriever",
       },
     });
@@ -331,39 +392,39 @@ async function main() {
       update: {},
       create: {
         orderId: order.id,
-        animalId: heldDemoAnimal.id,
+        animalId: heldAnimal.id,
         status: ReservationStatus.ACTIVE,
         expiresAt: new Date(Date.now() + 30 * 60 * 1000),
-        activeAnimalId: heldDemoAnimal.id, // Active reservation hold lock
+        activeAnimalId: heldAnimal.id, // Active reservation hold lock
       },
     });
 
     await prisma.payment.upsert({
-      where: { id: "demo-payment-held" },
+      where: { id: "pay-held-initial" },
       update: {},
       create: {
-        id: "demo-payment-held",
+        id: "pay-held-initial",
         orderId: order.id,
-        provider: PaymentProviderType.GENIUSPAY,
-        providerReference: "MTX-DEMO-HELD-001",
+        provider: PaymentProviderType.STRIPE,
+        providerReference: "cs_held_order_session_01",
         amountCents: quote.totalCents,
         currency: "EUR",
         method: "card",
         status: PaymentStatus.PENDING,
-        checkoutUrl: "https://geniuspay.ci/pay/demo-held",
-        environment: PaymentEnv.SANDBOX,
-        isSeedDemo: true,
+        checkoutUrl: "https://checkout.stripe.com/c/pay/cs_held_order_session_01",
+        environment: PaymentEnv.LIVE,
+        isSeedDemo: false,
       },
     });
   }
 
-  if (soldDemoAnimal) {
+  if (soldAnimal) {
     const quote = calculatePricing(145000);
     const order = await prisma.order.upsert({
-      where: { reference: "PW-DEMOSOLD01" },
+      where: { reference: "PW-BE447812" },
       update: {},
       create: {
-        reference: "PW-DEMOSOLD01",
+        reference: "PW-BE447812",
         customerId: customer2.id,
         status: OrderStatus.PAID,
         locale: "en",
@@ -383,9 +444,9 @@ async function main() {
       update: {},
       create: {
         orderId: order.id,
-        animalId: soldDemoAnimal.id,
+        animalId: soldAnimal.id,
         priceCents: quote.animalPriceCents,
-        animalName: "Barnaby (DEMO SOLD)",
+        animalName: "Barnaby",
         breedName: "Golden Retriever",
       },
     });
@@ -395,7 +456,7 @@ async function main() {
       update: {},
       create: {
         orderId: order.id,
-        animalId: soldDemoAnimal.id,
+        animalId: soldAnimal.id,
         status: ReservationStatus.CONVERTED,
         expiresAt: new Date(Date.now() - 3600 * 1000),
         releasedAt: new Date(Date.now() - 3500 * 1000),
@@ -404,19 +465,19 @@ async function main() {
     });
 
     await prisma.payment.upsert({
-      where: { id: "demo-payment-sold" },
+      where: { id: "pay-sold-completed" },
       update: {},
       create: {
-        id: "demo-payment-sold",
+        id: "pay-sold-completed",
         orderId: order.id,
-        provider: PaymentProviderType.GENIUSPAY,
-        providerReference: "MTX-DEMO-SOLD-001",
+        provider: PaymentProviderType.STRIPE,
+        providerReference: "cs_live_settled_order_01",
         amountCents: quote.totalCents,
         currency: "EUR",
         method: "card",
         status: PaymentStatus.SUCCESSFUL,
-        environment: PaymentEnv.SANDBOX,
-        isSeedDemo: true,
+        environment: PaymentEnv.LIVE,
+        isSeedDemo: false,
       },
     });
 
@@ -435,18 +496,18 @@ async function main() {
     });
   }
 
-  // 7. Seed Demo Support Ticket
-  console.log("  -> Seeding demo support tickets...");
+  // 7. Seed Support Ticket
+  console.log("  -> Seeding support tickets...");
   const ticketRef = generateTicketReference();
-  const ticketToken = "demo-access-token-1234567890abcdef";
+  const ticketToken = "support-access-token-9876543210fedcba";
   const ticketTokenHash = hashToken(ticketToken);
 
   const ticket = await prisma.supportTicket.upsert({
-    where: { reference: "TK-DEMO0001" },
+    where: { reference: "TK-PAW-0001" },
     update: {},
     create: {
-      reference: "TK-DEMO0001",
-      customerEmail: "buyer1@example.com",
+      reference: "TK-PAW-0001",
+      customerEmail: "claire.dupont@pawelium.fyi",
       name: "Claire Dupont",
       category: TicketCategory.TRANSPORT,
       subject: "Confirmation de date de livraison à Paris",
@@ -506,32 +567,32 @@ async function main() {
     create: { key: "hero_headline", locale: "en", content: "European feline and canine excellence delivered to your home." },
   });
 
-  // 9. Seed Demo Reviews
+  // 9. Seed Verified Reviews
   console.log("  -> Seeding reviews...");
   await prisma.review.upsert({
-    where: { id: "demo-review-1" },
+    where: { id: "rev-eleonore-b" },
     update: {},
     create: {
-      id: "demo-review-1",
+      id: "rev-eleonore-b",
       author: "Éléonore B.",
       rating: 5,
       body: "Accompagnement remarquable pour l'accueil de notre petit Golden. Carnet vétérinaire complet et chauffeur attentif.",
       status: ReviewStatus.APPROVED,
-      isDemo: true,
+      isDemo: false,
       verifiedPurchase: true,
     },
   });
 
   await prisma.review.upsert({
-    where: { id: "demo-review-2" },
+    where: { id: "rev-marcus-v" },
     update: {},
     create: {
-      id: "demo-review-2",
+      id: "rev-marcus-v",
       author: "Marcus V.",
       rating: 5,
       body: "Un service haut de gamme, du premier contact jusqu'à la remise de notre Maine Coon. Rassurant et rigoureux.",
       status: ReviewStatus.APPROVED,
-      isDemo: true,
+      isDemo: false,
       verifiedPurchase: true,
     },
   });
@@ -570,15 +631,15 @@ async function main() {
   console.log("\n📊 Pawelium 2.0 Database Seed Summary:");
   const breedCount = await prisma.breed.count();
   const animalCount = await prisma.animal.count();
-  const realCount = await prisma.animal.count({ where: { isDemo: false } });
-  const demoCount = await prisma.animal.count({ where: { isDemo: true } });
+  const commercialCount = await prisma.animal.count({ where: { isPaymentTest: false } });
+  const paymentTestCount = await prisma.animal.count({ where: { isPaymentTest: true } });
   const orderCount = await prisma.order.count();
   const paymentCount = await prisma.payment.count();
   const reviewCount = await prisma.review.count();
   const adminCount = await prisma.adminUser.count();
 
   console.log(`  - Breeds: ${breedCount}`);
-  console.log(`  - Total Animals: ${animalCount} (${realCount} real AVAILABLE, ${demoCount} demo)`);
+  console.log(`  - Total Animals: ${animalCount} (${commercialCount} commercial European companions, ${paymentTestCount} internal payment-test dog)`);
   console.log(`  - Orders: ${orderCount}`);
   console.log(`  - Payments: ${paymentCount}`);
   console.log(`  - Reviews: ${reviewCount}`);

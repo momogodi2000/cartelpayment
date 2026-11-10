@@ -82,7 +82,7 @@ export class GeniusPayProvider {
   async createPayment(input: CreateGeniusPayPaymentInput): Promise<GeniusPayPaymentResponse> {
     const amount = formatForGeniusPay(input.amountCents);
     const currency = input.currency || "EUR";
-    const paymentMethod = "card";
+    const paymentMethod = input.gateway === "stripe" ? "stripe" : "card";
     const country = this.normalizeCountryCode(input.customer.country);
 
     const payload: Record<string, any> = {
@@ -121,7 +121,8 @@ export class GeniusPayProvider {
 
     if (!res.ok || !data) {
       console.error("[GeniusPay] Payment creation failed:", res.status, data);
-      throw new Error(`Payment gateway error: ${data?.message || res.statusText || res.status}`);
+      const detail = data?.error?.message || data?.message || res.statusText || res.status;
+      throw new Error(`Payment gateway error: ${detail}`);
     }
 
     const paymentData = data.data || data;
