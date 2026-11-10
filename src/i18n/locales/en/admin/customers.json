@@ -1,14 +1,22 @@
 {
   "AdminCustomers": {
-    "title": "Adopters & Customer Registry",
-    "subtitle": "Review guest adopter records, enforce GDPR right-to-be-forgotten, and export personal data.",
-    "tableColName": "Customer Name",
-    "tableColEmail": "Email Address",
-    "tableColPhone": "Phone",
-    "tableColOrders": "Total Orders",
-    "tableColGdpr": "GDPR Status",
-    "tableColActions": "Actions",
-    "exportGdprBtn": "Export Data (JSON)",
-    "anonymizeGdprBtn": "Anonymize Records"
+    "title": "Customers & GDPR",
+    "subtitle": "Guest customers (no accounts). Export or anonymise personal data on request.",
+    "search": "Name or email",
+    "count": "{count} customer(s)",
+    "cols": {
+      "customer": "Customer",
+      "country": "Country",
+      "orders": "Orders",
+      "spent": "Paid total",
+      "created": "First seen",
+      "actions": "GDPR"
+    },
+    "anonymized": "Anonymised {date}",
+    "export": "Export data (JSON)",
+    "anonymize": "Anonymise",
+    "anonymizeConfirm": "Anonymise this customer permanently? Name, email, phone and addresses are erased; orders and payments are kept for legal accounting.",
+    "anonymizeBlocked": "Cannot anonymise: an order is still being paid or fulfilled.",
+    "empty": "No customer found."
   }
 }

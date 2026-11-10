@@ -1,87 +1,49 @@
 import React from "react";
+import { getLocale, getTranslations } from "next-intl/server";
 import { requireSuperAdmin } from "@/lib/services/admin-auth";
 import { prisma } from "@/lib/db/client";
-import ContentBlockModal from "./ContentBlockModal";
-import { FileText } from "lucide-react";
+import { formatDate } from "@/lib/format";
+import { actionSaveContentBlock, actionDeleteContentBlock } from "@/app/actions/admin-content";
+import { PageHeader, Card, DataTable, Td, Empty, fieldClass } from "@/components/admin/ui";
+import AdminForm from "@/components/admin/AdminForm";
+import ActionButton from "@/components/admin/ActionButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminContentPage() {
   await requireSuperAdmin();
-
-  const blocks = await prisma.contentBlock.findMany({
-    orderBy: [{ key: "asc" }, { locale: "asc" }],
-  });
+  const [t, tc, locale] = await Promise.all([getTranslations("AdminContent"), getTranslations("AdminCommon"), getLocale()]);
+  const blocks = await prisma.contentBlock.findMany({ orderBy: [{ key: "asc" }, { locale: "asc" }] });
+  const errors = { VALIDATION: t("errors.VALIDATION") };
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-            Content Blocks CMS
-          </h1>
-          <p className="text-xs text-zinc-500 mt-1">
-            Dynamic editorial copy, announcement banners, legal policy revisions, and concierge FAQs.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <ContentBlockModal />
-          <span className="px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-bold border border-zinc-200 dark:border-zinc-700">
-            {blocks.length} Content Blocks
-          </span>
-        </div>
-      </div>
-
-      <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden p-6">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-zinc-50 dark:bg-zinc-800/50 border-y border-zinc-200 dark:border-zinc-800 uppercase font-bold text-zinc-500 tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Key</th>
-                <th className="py-3 px-4">Locale</th>
-                <th className="py-3 px-4">Title</th>
-                <th className="py-3 px-4">Content Preview</th>
-                <th className="py-3 px-4">Last Updated</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {blocks.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="py-8 text-center text-zinc-500">
-                    No custom content blocks defined yet. Default JSON strings are currently in use.
-                  </td>
-                </tr>
-              ) : (
-                blocks.map((block) => (
-                  <tr key={block.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30">
-                    <td className="py-3 px-4 font-mono font-bold text-zinc-900 dark:text-zinc-100">
-                      {block.key}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 uppercase">
-                        {block.locale}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-zinc-700 dark:text-zinc-300">
-                      {block.title || "—"}
-                    </td>
-                    <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400 max-w-sm truncate">
-                      {block.content}
-                    </td>
-                    <td className="py-3 px-4 text-zinc-500">
-                      {new Date(block.updatedAt).toLocaleDateString("en-GB")}
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <ContentBlockModal block={block} />
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      <Card>
+        <h2 className="mb-3 font-serif text-xl font-bold">{t("add")}</h2>
+        <AdminForm action={actionSaveContentBlock} submitLabel={t("save")} savingLabel={t("saving")} savedText={t("saved")} errors={errors} fallbackError={tc("error")} className="grid gap-3 sm:grid-cols-2">
+          <label className="text-sm"><span className="mb-1 block font-semibold">{t("key")}</span><input name="key" required pattern="[a-z0-9_.\-]{2,80}" aria-describedby="key-help" className={`${fieldClass} font-mono`} /><span id="key-help" className="text-xs text-zinc-500">{t("keyHelp")}</span></label>
+          <label className="text-sm"><span className="mb-1 block font-semibold">{t("locale")}</span>
+            <select name="locale" className={fieldClass}><option value="en">English</option><option value="fr">Français</option></select></label>
+          <label className="text-sm sm:col-span-2"><span className="mb-1 block font-semibold">{t("titleField")}</span><input name="title" maxLength={200} className={fieldClass} /></label>
+          <label className="text-sm sm:col-span-2"><span className="mb-1 block font-semibold">{t("content")}</span><textarea name="content" rows={5} required maxLength={20000} className={fieldClass} /></label>
+        </AdminForm>
+      </Card>
+      {blocks.length === 0 ? (
+        <Empty>{t("empty")}</Empty>
+      ) : (
+        <DataTable columns={[t("cols.key"), t("cols.locale"), t("cols.preview"), t("cols.updated"), t("cols.actions")]}>
+          {blocks.map((b) => (
+            <tr key={b.id}>
+              <Td className="font-mono text-xs">{b.key}</Td>
+              <Td>{b.locale.toUpperCase()}</Td>
+              <Td className="max-w-md truncate">{b.title ? <strong>{b.title} — </strong> : null}{b.content.slice(0, 140)}</Td>
+              <Td className="whitespace-nowrap">{formatDate(b.updatedAt, locale)}</Td>
+              <Td><ActionButton action={actionDeleteContentBlock.bind(null, b.id) as unknown as () => Promise<unknown>} label={t("delete")} confirmText={t("deleteConfirm")} fallbackError={tc("error")} /></Td>
+            </tr>
+          ))}
+        </DataTable>
+      )}
     </div>
   );
 }

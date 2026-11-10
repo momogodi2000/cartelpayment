@@ -1,14 +1,22 @@
 {
   "AdminCustomers": {
-    "title": "Adoptants & Registre Clients",
-    "subtitle": "Consultez les fiches adoptants, appliquez le droit à l'oubli RGPD et exportez les données personnelles.",
-    "tableColName": "Nom de l'Adoptant",
-    "tableColEmail": "Adresse Email",
-    "tableColPhone": "Téléphone",
-    "tableColOrders": "Total Commandes",
-    "tableColGdpr": "Statut RGPD",
-    "tableColActions": "Actions",
-    "exportGdprBtn": "Exporter Données (JSON)",
-    "anonymizeGdprBtn": "Anonymiser Fiche"
+    "title": "Clients et RGPD",
+    "subtitle": "Clients invités (sans compte). Exportez ou anonymisez les données personnelles sur demande.",
+    "search": "Nom ou e-mail",
+    "count": "{count} client(s)",
+    "cols": {
+      "customer": "Client",
+      "country": "Pays",
+      "orders": "Commandes",
+      "spent": "Total payé",
+      "created": "Première visite",
+      "actions": "RGPD"
+    },
+    "anonymized": "Anonymisé le {date}",
+    "export": "Exporter les données (JSON)",
+    "anonymize": "Anonymiser",
+    "anonymizeConfirm": "Anonymiser ce client définitivement ? Nom, e-mail, téléphone et adresses sont effacés ; les commandes et paiements sont conservés pour la comptabilité légale.",
+    "anonymizeBlocked": "Anonymisation impossible : une commande est encore en cours de paiement ou de traitement.",
+    "empty": "Aucun client trouvé."
   }
 }

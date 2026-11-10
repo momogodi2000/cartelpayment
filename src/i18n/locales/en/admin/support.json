@@ -1,17 +1,40 @@
 {
   "AdminSupport": {
-    "title": "Support Desk & Inquiries",
-    "subtitle": "Manage incoming adopter tickets, dispatch official responses, and attach confidential internal notes.",
-    "tableColRef": "Ticket Ref",
-    "tableColCustomer": "Customer",
-    "tableColCategory": "Category",
-    "tableColSubject": "Subject",
-    "tableColStatus": "Status",
-    "tableColDate": "Created",
-    "tableColActions": "Reply",
-    "replyModalTitle": "Ticket Discussion Thread",
-    "internalNoteLabel": "Internal Private Note (Visible only to SUPER_ADMIN)",
-    "publicReplyLabel": "Public Adopter Response (Dispatched via email)",
-    "sendReplyBtn": "Send Response"
+    "title": "Support tickets",
+    "subtitle": "Customer conversations. Internal notes are never visible to customers.",
+    "statusFilter": "Status",
+    "count": "{count} ticket(s)",
+    "cols": {
+      "ref": "Reference",
+      "customer": "Customer",
+      "subject": "Subject",
+      "category": "Category",
+      "priority": "Priority",
+      "status": "Status",
+      "updated": "Updated"
+    },
+    "empty": "No ticket matches.",
+    "back": "Back to tickets",
+    "order": "Order {ref}",
+    "noOrder": "No linked order",
+    "opened": "Opened {date}",
+    "priority": "Priority",
+    "status": "Status",
+    "update": "Update",
+    "updated": "Ticket updated.",
+    "conversation": "Conversation",
+    "you": "Pawelium team",
+    "customerLabel": "Customer",
+    "internalBadge": "Internal note — not visible to the customer",
+    "replyTitle": "Reply",
+    "body": "Message",
+    "internal": "Internal note (not sent to the customer)",
+    "send": "Send",
+    "sending": "Sending…",
+    "sent": "Sent.",
+    "errors": {
+      "VALIDATION": "Write a message (max. 5000 characters).",
+      "NOT_FOUND": "Ticket not found."
+    }
   }
 }

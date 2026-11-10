@@ -135,24 +135,16 @@ export async function actionResolveException(exceptionId: string, notes: string)
   return { success: true };
 }
 
-export async function actionAdminReplyTicket(formData: FormData) {
+
+export async function actionAnonymizeCustomer(customerId: string): Promise<{ success: boolean; errorCode?: string }> {
   const { admin } = await requireSuperAdmin();
-  const ticketId = formData.get("ticketId") as string;
-  const body = formData.get("body") as string;
-  const isInternalNote = formData.get("isInternalNote") === "true";
-
-  await adminReplyTicket(ticketId, admin.id, body, isInternalNote);
-  revalidatePath(`/admin/support/${ticketId}`);
-  revalidatePath("/admin/support");
-  return { success: true };
-}
-
-export async function actionAnonymizeCustomer(customerId: string) {
-  const { admin } = await requireSuperAdmin();
-  const reqHeaders = await headers();
-  const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
-
-  await anonymizeCustomerData(customerId, admin.id, ip);
+  const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim();
+  try {
+    await anonymizeCustomerData(customerId, admin.id, ip);
+  } catch (e) {
+    if ((e as Error).message === "ORDER_IN_PROGRESS") return { success: false, errorCode: "ORDER_IN_PROGRESS" };
+    throw e;
+  }
   revalidatePath("/admin/customers");
   return { success: true };
 }
@@ -272,83 +264,9 @@ export async function actionUpdateRefund(refundId: string, step: "submitted" | "
   return { success: true };
 }
 
-export async function actionModerateReview(reviewId: string, status: "APPROVED" | "REJECTED") {
-  await requireSuperAdmin();
-  await prisma.review.update({
-    where: { id: reviewId },
-    data: { status },
-  });
 
-  revalidatePath("/admin/reviews");
-  return { success: true };
-}
 
-export async function actionSaveTranslationOverride(formData: FormData) {
-  const { admin } = await requireSuperAdmin();
-  const locale = formData.get("locale") as string;
-  const namespace = formData.get("namespace") as string;
-  const key = formData.get("key") as string;
-  const value = formData.get("value") as string;
 
-  await prisma.translationOverride.upsert({
-    where: {
-      locale_namespace_key: { locale, namespace, key },
-    },
-    create: {
-      locale,
-      namespace,
-      key,
-      value,
-      authorId: admin.id,
-    },
-    update: {
-      value,
-      authorId: admin.id,
-    },
-  });
-
-  revalidatePath("/admin/translations");
-  return { success: true };
-}
-
-export async function actionSaveContentBlock(formData: FormData) {
-  await requireSuperAdmin();
-  const key = formData.get("key") as string;
-  const locale = formData.get("locale") as string;
-  const title = (formData.get("title") as string) || null;
-  const content = formData.get("content") as string;
-
-  await prisma.contentBlock.upsert({
-    where: {
-      key_locale: { key, locale },
-    },
-    create: {
-      key,
-      locale,
-      title,
-      content,
-    },
-    update: {
-      title,
-      content,
-    },
-  });
-
-  revalidatePath("/admin/content");
-  return { success: true };
-}
-
-export async function actionSaveSiteSetting(key: string, value: string) {
-  await requireSuperAdmin();
-  await prisma.siteSetting.upsert({
-    where: { key },
-    create: { key, value },
-    update: { value },
-  });
-
-  revalidatePath("/admin/settings");
-  return { success: true };
-}
 
 export async function actionReconcilePayments() {
   const { admin } = await requireSuperAdmin();

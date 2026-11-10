@@ -1,179 +1,88 @@
 import React from "react";
+import { getLocale, getTranslations } from "next-intl/server";
+import { OrderStatus, PaymentStatus } from "@prisma/client";
 import { requireSuperAdmin } from "@/lib/services/admin-auth";
 import { prisma } from "@/lib/db/client";
 import { formatMoney } from "@/lib/domain/money";
-import { BarChart3, TrendingUp, CreditCard, ShoppingBag, Users, CheckCircle2 } from "lucide-react";
+import { PageHeader, DataTable, Td, Empty } from "@/components/admin/ui";
 
 export const dynamic = "force-dynamic";
 
+const PAID: OrderStatus[] = [OrderStatus.PAID, OrderStatus.DOCUMENTATION_REVIEW, OrderStatus.PREPARING, OrderStatus.TRANSPORT_SCHEDULED, OrderStatus.IN_TRANSIT, OrderStatus.DELIVERED, OrderStatus.COMPLETED];
+
 export default async function AdminAnalyticsPage() {
   await requireSuperAdmin();
+  const [t, locale] = await Promise.all([getTranslations("AdminAnalytics"), getLocale()]);
 
-  const [orders, payments, attempts, customersCount] = await Promise.all([
-    prisma.order.findMany({
-      select: {
-        id: true,
-        status: true,
-        totalCents: true,
-        currency: true,
-        createdAt: true,
-      },
-    }),
-    prisma.payment.findMany({
-      select: {
-        id: true,
-        status: true,
-        amountCents: true,
-        currency: true,
-        provider: true,
-      },
-    }),
-    prisma.paymentAttempt.findMany({
-      select: {
-        id: true,
-        gatewayId: true,
-        status: true,
-        createdAt: true,
-      },
-    }),
-    prisma.customer.count(),
+  const [orders, paidOrders, payTotal, paySuccess, attempts, customers] = await Promise.all([
+    prisma.order.count({ where: { isTest: false } }),
+    prisma.order.findMany({ where: { isTest: false, status: { in: PAID } }, select: { totalCents: true, createdAt: true } }),
+    prisma.payment.count({ where: { isTest: false, status: { notIn: [PaymentStatus.CREATED, PaymentStatus.INITIALIZING] } } }),
+    prisma.payment.count({ where: { isTest: false, status: PaymentStatus.SUCCESSFUL } }),
+    prisma.paymentAttempt.groupBy({ by: ["gatewayId", "status"], where: { payment: { isTest: false } }, _count: { _all: true } }),
+    prisma.customer.count({ where: { anonymizedAt: null } }),
   ]);
 
-  const paidOrders = orders.filter((o) => o.status === "PAID" || o.status === "DELIVERED");
-  const totalRevenueCents = paidOrders.reduce((sum, o) => sum + o.totalCents, 0);
-
-  const successfulPayments = payments.filter((p) => p.status === "SUCCESSFUL");
-  const paymentSuccessRate = payments.length > 0
-    ? Math.round((successfulPayments.length / payments.length) * 100)
-    : 100;
-
-  // Breakdown of attempts by gateway
-  const attemptsByGateway: Record<string, { total: number; succeeded: number }> = {};
-  for (const att of attempts) {
-    const gw = att.gatewayId || "default";
-    if (!attemptsByGateway[gw]) {
-      attemptsByGateway[gw] = { total: 0, succeeded: 0 };
-    }
-    attemptsByGateway[gw].total++;
-    if (att.status === "SUCCEEDED") {
-      attemptsByGateway[gw].succeeded++;
-    }
+  const revenue = paidOrders.reduce((n, o) => n + o.totalCents, 0);
+  const months = new Map<string, { orders: number; revenue: number }>();
+  for (const o of paidOrders) {
+    const key = o.createdAt.toISOString().slice(0, 7);
+    const m = months.get(key) ?? { orders: 0, revenue: 0 };
+    m.orders += 1;
+    m.revenue += o.totalCents;
+    months.set(key, m);
   }
+  const monthRows = [...months.entries()].sort((a, b) => b[0].localeCompare(a[0])).slice(0, 12);
+
+  const gateways = new Map<string, { total: number; ok: number; failed: number }>();
+  for (const a of attempts) {
+    const g = gateways.get(a.gatewayId) ?? { total: 0, ok: 0, failed: 0 };
+    g.total += a._count._all;
+    if (a.status === "SUCCEEDED") g.ok += a._count._all;
+    if (a.status === "FAILED_INIT") g.failed += a._count._all;
+    gateways.set(a.gatewayId, g);
+  }
+
+  const cards: Array<[string, string]> = [
+    [t("revenue"), formatMoney(revenue, "EUR", locale)],
+    [t("paidOrders"), String(paidOrders.length)],
+    [t("avgOrder"), paidOrders.length ? formatMoney(Math.round(revenue / paidOrders.length), "EUR", locale) : "—"],
+    [t("conversion"), orders ? `${Math.round((paidOrders.length / orders) * 100)} %` : "—"],
+    [t("successRate"), payTotal ? `${Math.round((paySuccess / payTotal) * 100)} %` : "—"],
+    [t("customers"), String(customers)],
+  ];
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="font-serif text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-          Analytics & Performance KPIs
-        </h1>
-        <p className="text-xs text-zinc-500 mt-1">
-          Gross transaction volume, conversion metrics, gateway routing reliability, and adoption velocity.
-        </p>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <div className="text-xs text-zinc-500 font-medium">Gross Revenue (EUR)</div>
-          <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mt-1">
-            {formatMoney(totalRevenueCents, "EUR", "en")}
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+        {cards.map(([label, value]) => (
+          <div key={label} className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+            <p className="text-xs font-semibold text-zinc-500">{label}</p>
+            <p className="text-2xl font-bold tabular-nums">{value}</p>
           </div>
-          <div className="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
-            <TrendingUp className="h-3 w-3" />
-            {paidOrders.length} completed transactions
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <div className="text-xs text-zinc-500 font-medium">Payment Success Rate</div>
-          <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mt-1">
-            {paymentSuccessRate}%
-          </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
-            {successfulPayments.length} of {payments.length} transactions
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <div className="text-xs text-zinc-500 font-medium">Total Orders Placed</div>
-          <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mt-1">
-            {orders.length}
-          </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
-            {paidOrders.length} paid / {orders.length - paidOrders.length} pending
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <div className="text-xs text-zinc-500 font-medium">Registered Adopters</div>
-          <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mt-1">
-            {customersCount}
-          </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
-            Verified VIP clientele
-          </div>
-        </div>
-      </div>
-
-      {/* Gateway Routing Performance Breakdown */}
-      <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm p-6 space-y-4">
-        <h2 className="font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-          <CreditCard className="h-5 w-5 text-[#B69A65]" />
-          Card Gateway Performance & Route Distribution
-        </h2>
-        <p className="text-xs text-zinc-500">
-          Attempt routing metrics through the card-only payment layer.
-        </p>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-zinc-50 dark:bg-zinc-800/50 border-y border-zinc-200 dark:border-zinc-800 uppercase font-bold text-zinc-500 tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Gateway Identifier</th>
-                <th className="py-3 px-4">Total Attempts</th>
-                <th className="py-3 px-4">Successful Settled</th>
-                <th className="py-3 px-4">Conversion Ratio</th>
-                <th className="py-3 px-4">Circuit Health</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {Object.keys(attemptsByGateway).length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="py-6 text-center text-zinc-500">
-                    No payment attempt transactions logged yet.
-                  </td>
-                </tr>
-              ) : (
-                Object.entries(attemptsByGateway).map(([gw, data]) => {
-                  const ratio = data.total > 0 ? Math.round((data.succeeded / data.total) * 100) : 0;
-                  return (
-                    <tr key={gw} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30">
-                      <td className="py-3 px-4 font-mono font-bold text-zinc-900 dark:text-zinc-100 uppercase">
-                        {gw}
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-zinc-700 dark:text-zinc-300">
-                        {data.total}
-                      </td>
-                      <td className="py-3 px-4 text-emerald-600 font-bold">
-                        {data.succeeded}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="font-semibold text-zinc-900 dark:text-zinc-100">{ratio}%</span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
-                          HEALTHY (CIRCUIT CLOSED)
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        ))}
+      </section>
+      <section className="space-y-3">
+        <h2 className="font-serif text-xl font-bold">{t("monthlyTitle")}</h2>
+        {monthRows.length === 0 ? <Empty>{t("empty")}</Empty> : (
+          <DataTable columns={[t("monthCols.month"), t("monthCols.orders"), t("monthCols.revenue")]}>
+            {monthRows.map(([m, v]) => (
+              <tr key={m}><Td className="font-mono">{m}</Td><Td className="tabular-nums">{v.orders}</Td><Td className="tabular-nums">{formatMoney(v.revenue, "EUR", locale)}</Td></tr>
+            ))}
+          </DataTable>
+        )}
+      </section>
+      <section className="space-y-3">
+        <h2 className="font-serif text-xl font-bold">{t("gatewayTitle")}</h2>
+        {gateways.size === 0 ? <Empty>{t("empty")}</Empty> : (
+          <DataTable columns={[t("gatewayCols.gateway"), t("gatewayCols.attempts"), t("gatewayCols.succeeded"), t("gatewayCols.failed"), t("gatewayCols.rate")]}>
+            {[...gateways.entries()].map(([id, g]) => (
+              <tr key={id}><Td className="font-mono">{id}</Td><Td className="tabular-nums">{g.total}</Td><Td className="tabular-nums">{g.ok}</Td><Td className="tabular-nums">{g.failed}</Td><Td className="tabular-nums">{Math.round((g.ok / g.total) * 100)} %</Td></tr>
+            ))}
+          </DataTable>
+        )}
+      </section>
     </div>
   );
 }

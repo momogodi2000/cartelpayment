@@ -1,13 +1,20 @@
 {
   "AdminAudit": {
-    "title": "Journal d'Audit & Sécurité Immuable",
-    "subtitle": "Registre cryptographique chronologique de toutes les connexions admin, modifications de prix et exports.",
-    "tableColTimestamp": "Horodatage",
-    "tableColAction": "Action",
-    "tableColEntity": "Entité Cible",
-    "tableColEntityId": "ID Enregistrement",
-    "tableColAdmin": "Identité Admin",
-    "tableColIp": "Adresse IP",
-    "tableColDetails": "Détails (JSON)"
+    "title": "Journal d'audit",
+    "subtitle": "Toutes les actions d'administration sensibles et les événements système.",
+    "filters": {
+      "action": "Action contenant",
+      "entity": "Entité"
+    },
+    "cols": {
+      "time": "Date",
+      "actor": "Acteur",
+      "action": "Action",
+      "entity": "Entité",
+      "ip": "IP",
+      "details": "Détails"
+    },
+    "system": "Système",
+    "empty": "Aucune entrée ne correspond."
   }
 }

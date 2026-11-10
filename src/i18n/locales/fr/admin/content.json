@@ -1,0 +1,28 @@
+{
+  "AdminContent": {
+    "title": "Blocs de contenu",
+    "subtitle": "Textes modifiables par langue (par exemple le titre de la page d'accueil).",
+    "add": "Ajouter ou modifier un bloc",
+    "key": "Clé",
+    "keyHelp": "Minuscules, chiffres, points, tirets, tirets bas.",
+    "locale": "Langue",
+    "titleField": "Titre (facultatif)",
+    "content": "Contenu",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Contenu enregistré.",
+    "cols": {
+      "key": "Clé",
+      "locale": "Langue",
+      "preview": "Contenu",
+      "updated": "Mis à jour",
+      "actions": "Actions"
+    },
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer ce bloc ?",
+    "errors": {
+      "VALIDATION": "Vérifiez la clé, la langue et le contenu."
+    },
+    "empty": "Aucun bloc pour le moment."
+  }
+}

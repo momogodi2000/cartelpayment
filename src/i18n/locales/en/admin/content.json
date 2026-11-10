@@ -1,0 +1,28 @@
+{
+  "AdminContent": {
+    "title": "Content blocks",
+    "subtitle": "Editable text blocks per language (for example the homepage headline).",
+    "add": "Add or edit a block",
+    "key": "Key",
+    "keyHelp": "Lowercase letters, digits, dots, hyphens, underscores.",
+    "locale": "Language",
+    "titleField": "Title (optional)",
+    "content": "Content",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Content saved.",
+    "cols": {
+      "key": "Key",
+      "locale": "Language",
+      "preview": "Content",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "delete": "Delete",
+    "deleteConfirm": "Delete this block?",
+    "errors": {
+      "VALIDATION": "Check the key, language and content."
+    },
+    "empty": "No block yet."
+  }
+}

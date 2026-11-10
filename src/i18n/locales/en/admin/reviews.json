@@ -1,0 +1,24 @@
+{
+  "AdminReviews": {
+    "title": "Reviews",
+    "subtitle": "Only reviews from verified purchases can be published as testimonials.",
+    "cols": {
+      "author": "Author",
+      "rating": "Rating",
+      "body": "Review",
+      "status": "Status",
+      "created": "Date",
+      "actions": "Moderation"
+    },
+    "verified": "Verified purchase",
+    "notVerified": "Not a verified purchase",
+    "approve": "Approve",
+    "reject": "Reject",
+    "reopen": "Back to pending",
+    "errors": {
+      "NOT_VERIFIED_PURCHASE": "Only verified purchases can be approved.",
+      "NOT_FOUND": "Review not found."
+    },
+    "empty": "No review yet."
+  }
+}

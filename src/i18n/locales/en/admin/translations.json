@@ -1,0 +1,37 @@
+{
+  "AdminTranslations": {
+    "title": "Translations",
+    "subtitle": "Source-controlled files are the reference. Overrides below let you adjust public wording without a deployment.",
+    "parityTitle": "Completeness by namespace",
+    "parityCols": {
+      "namespace": "Namespace",
+      "en": "English keys",
+      "fr": "French keys",
+      "status": "Status"
+    },
+    "parityOk": "In sync",
+    "parityDiff": "Differs",
+    "overrideTitle": "Add or edit an override",
+    "locale": "Language",
+    "namespace": "Namespace",
+    "key": "Key (dotted path)",
+    "value": "New text",
+    "save": "Save override",
+    "saving": "Saving…",
+    "saved": "Override saved.",
+    "cols": {
+      "locale": "Language",
+      "namespace": "Namespace",
+      "key": "Key",
+      "value": "Text",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "delete": "Remove",
+    "deleteConfirm": "Remove this override and return to the default text?",
+    "errors": {
+      "VALIDATION": "Check the namespace, key and text."
+    },
+    "empty": "No override."
+  }
+}

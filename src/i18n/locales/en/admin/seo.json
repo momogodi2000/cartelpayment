@@ -1,0 +1,17 @@
+{
+  "AdminSeo": {
+    "title": "SEO",
+    "subtitle": "Default search-engine metadata. Per-animal SEO fields are edited on each listing.",
+    "siteTitle": "Default title (max. 70)",
+    "siteDescription": "Default description (max. 170)",
+    "ogImage": "Social sharing image path or URL",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "SEO settings saved.",
+    "errors": {
+      "VALIDATION": "Check the field lengths."
+    },
+    "indexingTitle": "Indexing",
+    "indexingBody": "Published animals appear in the sitemap; sold animals stay indexed as sold; archived, unpublished and internal test records are never indexed. Admin, checkout and tracking pages are blocked."
+  }
+}

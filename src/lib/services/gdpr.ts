@@ -55,41 +55,36 @@ export async function exportCustomerData(customerId: string) {
   };
 }
 
-export async function anonymizeCustomerData(customerId: string, adminId: string, ip?: string) {
-  const customer = await prisma.customer.findUnique({
-    where: { id: customerId },
-  });
-
-  if (!customer) {
-    throw new Error("Customer not found.");
+export class AnonymizeBlockedError extends Error {
+  constructor() {
+    super("ORDER_IN_PROGRESS");
+    this.name = "AnonymizeBlockedError";
   }
+}
 
-  const anonymousEmail = `anonymized-${customer.id.slice(0, 8)}@gdpr.pawelium.local`;
+/**
+ * Erases a customer's personal data (GDPR). Orders and payments are kept for legal accounting.
+ * Refused while an order is awaiting payment or being fulfilled. The audit trail records
+ * only the customer id — never the erased email.
+ */
+export async function anonymizeCustomerData(customerId: string, adminId: string, ip?: string) {
+  const customer = await prisma.customer.findUnique({ where: { id: customerId } });
+  if (!customer) throw new Error("Customer not found.");
+  if (customer.anonymizedAt) return;
 
+  const active = await prisma.order.count({
+    where: { customerId, status: { in: ["PENDING_PAYMENT", "PAYMENT_PROCESSING", "PAID", "DOCUMENTATION_REVIEW", "PREPARING", "TRANSPORT_SCHEDULED", "IN_TRANSIT", "REFUND_PENDING", "DISPUTED"] } },
+  });
+  if (active > 0) throw new AnonymizeBlockedError();
+
+  const anonymousEmail = `anonymized-${customer.id.slice(0, 8)}@gdpr.invalid`;
   await prisma.$transaction(async (tx) => {
     await tx.customer.update({
       where: { id: customerId },
-      data: {
-        name: "Anonymized User",
-        email: anonymousEmail,
-        phone: "+33000000000",
-        billingAddress: null,
-        deliveryAddress: null,
-        anonymizedAt: new Date(),
-      },
+      data: { name: "Anonymized", email: anonymousEmail, phone: "", billingAddress: null, deliveryAddress: null, anonymizedAt: new Date() },
     });
-
-    await logAudit(
-      {
-        actorType: "ADMIN",
-        adminId,
-        action: "GDPR_ANONYMIZE_CUSTOMER",
-        entity: "Customer",
-        entityId: customerId,
-        ip,
-        diff: { originalEmail: customer.email, anonymizedEmail: anonymousEmail },
-      },
-      tx
-    );
+    await tx.supportTicket.updateMany({ where: { customerEmail: customer.email }, data: { customerEmail: anonymousEmail, name: "Anonymized" } });
+    await tx.newsletterSubscriber.deleteMany({ where: { email: customer.email } });
+    await logAudit({ actorType: "ADMIN", adminId, action: "GDPR_ANONYMIZE_CUSTOMER", entity: "Customer", entityId: customerId, ip }, tx);
   });
 }

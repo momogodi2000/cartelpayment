@@ -53,6 +53,12 @@ import enNsAdminDeliveries from "./locales/en/admin/deliveries.json";
 import enNsAdminInventory from "./locales/en/admin/inventory.json";
 import enNsAdminBreeds from "./locales/en/admin/breeds.json";
 import enNsAdminBreeders from "./locales/en/admin/breeders.json";
+import enNsAdminReviews from "./locales/en/admin/reviews.json";
+import enNsAdminContent from "./locales/en/admin/content.json";
+import enNsAdminTranslations from "./locales/en/admin/translations.json";
+import enNsAdminSeo from "./locales/en/admin/seo.json";
+import enNsAdminNewsletter from "./locales/en/admin/newsletter.json";
+import enNsAdminAnalytics from "./locales/en/admin/analytics.json";
 import enErrorsNotFound from "./locales/en/errors/not-found.json";
 import enErrorsGeneral from "./locales/en/errors/general.json";
 
@@ -99,6 +105,12 @@ import frNsAdminDeliveries from "./locales/fr/admin/deliveries.json";
 import frNsAdminInventory from "./locales/fr/admin/inventory.json";
 import frNsAdminBreeds from "./locales/fr/admin/breeds.json";
 import frNsAdminBreeders from "./locales/fr/admin/breeders.json";
+import frNsAdminReviews from "./locales/fr/admin/reviews.json";
+import frNsAdminContent from "./locales/fr/admin/content.json";
+import frNsAdminTranslations from "./locales/fr/admin/translations.json";
+import frNsAdminSeo from "./locales/fr/admin/seo.json";
+import frNsAdminNewsletter from "./locales/fr/admin/newsletter.json";
+import frNsAdminAnalytics from "./locales/fr/admin/analytics.json";
 import frErrorsNotFound from "./locales/fr/errors/not-found.json";
 import frErrorsGeneral from "./locales/fr/errors/general.json";
 
@@ -150,6 +162,12 @@ const enMessages = assembleLocale([
   enNsAdminInventory,
   enNsAdminBreeds,
   enNsAdminBreeders,
+  enNsAdminReviews,
+  enNsAdminContent,
+  enNsAdminTranslations,
+  enNsAdminSeo,
+  enNsAdminNewsletter,
+  enNsAdminAnalytics,
   enErrorsNotFound,
   enErrorsGeneral,
 ]);
@@ -192,6 +210,12 @@ const frMessages = assembleLocale([
   frNsAdminInventory,
   frNsAdminBreeds,
   frNsAdminBreeders,
+  frNsAdminReviews,
+  frNsAdminContent,
+  frNsAdminTranslations,
+  frNsAdminSeo,
+  frNsAdminNewsletter,
+  frNsAdminAnalytics,
   frErrorsNotFound,
   frErrorsGeneral,
 ]);

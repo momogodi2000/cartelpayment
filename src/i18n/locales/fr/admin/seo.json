@@ -1,0 +1,17 @@
+{
+  "AdminSeo": {
+    "title": "SEO",
+    "subtitle": "Métadonnées par défaut pour les moteurs de recherche. Les champs SEO de chaque animal se modifient sur sa fiche.",
+    "siteTitle": "Titre par défaut (70 max.)",
+    "siteDescription": "Description par défaut (170 max.)",
+    "ogImage": "Chemin ou URL de l'image de partage",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Paramètres SEO enregistrés.",
+    "errors": {
+      "VALIDATION": "Vérifiez la longueur des champs."
+    },
+    "indexingTitle": "Indexation",
+    "indexingBody": "Les animaux publiés figurent dans le plan du site ; les animaux vendus restent indexés comme vendus ; les fiches archivées, non publiées et les enregistrements de test internes ne sont jamais indexés. Les pages d'administration, de paiement et de suivi sont bloquées."
+  }
+}

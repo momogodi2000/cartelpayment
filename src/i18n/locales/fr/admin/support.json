@@ -1,17 +1,40 @@
 {
   "AdminSupport": {
-    "title": "Support Conciergerie & Demandes",
-    "subtitle": "Traitez les tickets adoptants, transmettez les réponses officielles et annotez les fiches en notes privées.",
-    "tableColRef": "Réf. Ticket",
-    "tableColCustomer": "Client",
-    "tableColCategory": "Catégorie",
-    "tableColSubject": "Sujet",
-    "tableColStatus": "Statut",
-    "tableColDate": "Créé le",
-    "tableColActions": "Répondre",
-    "replyModalTitle": "Fil d'Échange avec l'Adoptant",
-    "internalNoteLabel": "Note Interne Privée (Visible uniquement par le SUPER_ADMIN)",
-    "publicReplyLabel": "Réponse Publique Adoptant (Envoyée par email)",
-    "sendReplyBtn": "Transmettre la Réponse"
+    "title": "Tickets d'assistance",
+    "subtitle": "Conversations avec les clients. Les notes internes ne sont jamais visibles par les clients.",
+    "statusFilter": "Statut",
+    "count": "{count} ticket(s)",
+    "cols": {
+      "ref": "Référence",
+      "customer": "Client",
+      "subject": "Objet",
+      "category": "Catégorie",
+      "priority": "Priorité",
+      "status": "Statut",
+      "updated": "Mis à jour"
+    },
+    "empty": "Aucun ticket ne correspond.",
+    "back": "Retour aux tickets",
+    "order": "Commande {ref}",
+    "noOrder": "Aucune commande liée",
+    "opened": "Ouvert le {date}",
+    "priority": "Priorité",
+    "status": "Statut",
+    "update": "Mettre à jour",
+    "updated": "Ticket mis à jour.",
+    "conversation": "Conversation",
+    "you": "Équipe Pawelium",
+    "customerLabel": "Client",
+    "internalBadge": "Note interne — invisible pour le client",
+    "replyTitle": "Répondre",
+    "body": "Message",
+    "internal": "Note interne (non envoyée au client)",
+    "send": "Envoyer",
+    "sending": "Envoi…",
+    "sent": "Envoyé.",
+    "errors": {
+      "VALIDATION": "Rédigez un message (5000 caractères max.).",
+      "NOT_FOUND": "Ticket introuvable."
+    }
   }
 }

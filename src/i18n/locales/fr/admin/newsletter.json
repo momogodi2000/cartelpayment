@@ -1,0 +1,20 @@
+{
+  "AdminNewsletter": {
+    "title": "Newsletter",
+    "subtitle": "Abonnés avec double consentement.",
+    "export": "Télécharger le CSV",
+    "count": "{count} abonné(s)",
+    "cols": {
+      "email": "E-mail",
+      "locale": "Langue",
+      "status": "Statut",
+      "created": "Inscription",
+      "actions": "Actions"
+    },
+    "unsubscribe": "Désinscrire",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer définitivement cet abonné ?",
+    "unsubscribeConfirm": "Marquer cet abonné comme désinscrit ?",
+    "empty": "Aucun abonné pour le moment."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "AdminAnalytics": {
+    "title": "Statistiques",
+    "subtitle": "Activité clients uniquement (tests internes exclus). Montants en EUR.",
+    "revenue": "Chiffre d'affaires confirmé",
+    "paidOrders": "Commandes payées",
+    "avgOrder": "Panier moyen",
+    "conversion": "Commandes payées / créées",
+    "successRate": "Taux de réussite des paiements",
+    "customers": "Clients",
+    "monthlyTitle": "Chiffre d'affaires par mois",
+    "monthCols": {
+      "month": "Mois",
+      "orders": "Commandes payées",
+      "revenue": "Chiffre d'affaires"
+    },
+    "gatewayTitle": "Tentatives par passerelle carte",
+    "gatewayCols": {
+      "gateway": "Passerelle",
+      "attempts": "Tentatives",
+      "succeeded": "Sessions créées",
+      "failed": "Échecs",
+      "rate": "Réussite"
+    },
+    "empty": "Aucune donnée pour le moment."
+  }
+}

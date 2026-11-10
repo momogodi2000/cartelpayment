@@ -45,6 +45,12 @@ export const NAMESPACES = [
   'admin/inventory',
   'admin/breeds',
   'admin/breeders',
+  'admin/reviews',
+  'admin/content',
+  'admin/translations',
+  'admin/seo',
+  'admin/newsletter',
+  'admin/analytics',
   'errors/not-found',
   'errors/general',
 ] as const;
@@ -202,6 +208,30 @@ export const namespaceLoaders: Record<
   'admin/breeders': {
     en: () => import('./locales/en/admin/breeders.json'),
     fr: () => import('./locales/fr/admin/breeders.json'),
+  },
+  'admin/reviews': {
+    en: () => import('./locales/en/admin/reviews.json'),
+    fr: () => import('./locales/fr/admin/reviews.json'),
+  },
+  'admin/content': {
+    en: () => import('./locales/en/admin/content.json'),
+    fr: () => import('./locales/fr/admin/content.json'),
+  },
+  'admin/translations': {
+    en: () => import('./locales/en/admin/translations.json'),
+    fr: () => import('./locales/fr/admin/translations.json'),
+  },
+  'admin/seo': {
+    en: () => import('./locales/en/admin/seo.json'),
+    fr: () => import('./locales/fr/admin/seo.json'),
+  },
+  'admin/newsletter': {
+    en: () => import('./locales/en/admin/newsletter.json'),
+    fr: () => import('./locales/fr/admin/newsletter.json'),
+  },
+  'admin/analytics': {
+    en: () => import('./locales/en/admin/analytics.json'),
+    fr: () => import('./locales/fr/admin/analytics.json'),
   },
   'errors/not-found': {
     en: () => import('./locales/en/errors/not-found.json'),

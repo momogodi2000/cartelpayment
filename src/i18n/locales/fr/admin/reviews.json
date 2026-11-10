@@ -1,0 +1,24 @@
+{
+  "AdminReviews": {
+    "title": "Avis",
+    "subtitle": "Seuls les avis issus d'un achat vérifié peuvent être publiés comme témoignages.",
+    "cols": {
+      "author": "Auteur",
+      "rating": "Note",
+      "body": "Avis",
+      "status": "Statut",
+      "created": "Date",
+      "actions": "Modération"
+    },
+    "verified": "Achat vérifié",
+    "notVerified": "Achat non vérifié",
+    "approve": "Approuver",
+    "reject": "Refuser",
+    "reopen": "Remettre en attente",
+    "errors": {
+      "NOT_VERIFIED_PURCHASE": "Seuls les achats vérifiés peuvent être approuvés.",
+      "NOT_FOUND": "Avis introuvable."
+    },
+    "empty": "Aucun avis pour le moment."
+  }
+}

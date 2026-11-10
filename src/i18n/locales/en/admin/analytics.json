@@ -1,0 +1,27 @@
+{
+  "AdminAnalytics": {
+    "title": "Analytics",
+    "subtitle": "Customer activity only (internal tests excluded). Amounts in EUR.",
+    "revenue": "Confirmed revenue",
+    "paidOrders": "Paid orders",
+    "avgOrder": "Average order",
+    "conversion": "Paid / created orders",
+    "successRate": "Payment success rate",
+    "customers": "Customers",
+    "monthlyTitle": "Revenue by month",
+    "monthCols": {
+      "month": "Month",
+      "orders": "Paid orders",
+      "revenue": "Revenue"
+    },
+    "gatewayTitle": "Card gateway attempts",
+    "gatewayCols": {
+      "gateway": "Gateway",
+      "attempts": "Attempts",
+      "succeeded": "Sessions created",
+      "failed": "Failed",
+      "rate": "Success"
+    },
+    "empty": "No data yet."
+  }
+}

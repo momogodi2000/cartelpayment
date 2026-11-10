@@ -1,17 +1,31 @@
 {
   "AdminSettings": {
-    "title": "Paramètres de la Plateforme & Diagnostics",
-    "subtitle": "Configurez les frais de transport, le taux de TVA, testez l'envoi d'emails et vérifiez l'intégrité du système.",
-    "generalSectionTitle": "Paramètres Opérationnels & Tarifs",
-    "transportFeeLabel": "Frais de Transport Standard (€)",
-    "conciergeFeeLabel": "Frais de Conciergerie & Vétérinaire (€)",
-    "vatRateLabel": "Taux de TVA Applicable (%)",
-    "holdMinutesLabel": "Durée de Réservation Exclusive (Minutes)",
-    "saveSettingsBtn": "Enregistrer les Paramètres",
-    "diagnosticsSectionTitle": "Diagnostics Système & Connectivité",
-    "dbStatus": "Moteur de Base de Données",
-    "geniusPayStatus": "Mode GeniusPay Sandbox / Production",
-    "emailStatus": "Statut API Resend",
-    "sendTestEmailBtn": "Envoyer un Email de Test"
+    "title": "Paramètres",
+    "subtitle": "Informations de l'entreprise et état de la configuration en lecture seule. Les secrets ne sont jamais affichés.",
+    "businessTitle": "Informations de l'entreprise",
+    "phone": "Téléphone de la conciergerie",
+    "siren": "Numéro d'immatriculation (SIREN)",
+    "sirenHelp": "Affiché dans les mentions légales. Ne saisissez le numéro réel qu'une fois l'entreprise immatriculée.",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Paramètres enregistrés.",
+    "errors": {
+      "VALIDATION": "Vérifiez les champs."
+    },
+    "statusTitle": "État de la configuration",
+    "configured": "Configuré",
+    "missing": "Manquant",
+    "items": {
+      "payments": "Paiements par carte (identifiants GeniusPay)",
+      "webhook": "Secret du webhook de paiement",
+      "email": "E-mails transactionnels (Resend)",
+      "media": "Stockage des médias (Cloudinary)",
+      "database": "Base de données",
+      "cron": "Secret des tâches planifiées",
+      "encryption": "Clé de chiffrement"
+    },
+    "environment": "Environnement de paiement : {env}",
+    "hold": "Durée de réservation : {minutes} minutes (définie par la variable HOLD_MINUTES)",
+    "gatewaysNote": "L'ordre, l'activation et la vérification des passerelles carte se gèrent dans la page Paiements."
   }
 }

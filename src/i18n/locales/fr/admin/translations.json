@@ -1,0 +1,37 @@
+{
+  "AdminTranslations": {
+    "title": "Traductions",
+    "subtitle": "Les fichiers versionnés font référence. Les remplacements ci-dessous permettent d'ajuster les textes publics sans déploiement.",
+    "parityTitle": "Complétude par espace de noms",
+    "parityCols": {
+      "namespace": "Espace de noms",
+      "en": "Clés anglaises",
+      "fr": "Clés françaises",
+      "status": "Statut"
+    },
+    "parityOk": "Synchronisé",
+    "parityDiff": "Différent",
+    "overrideTitle": "Ajouter ou modifier un remplacement",
+    "locale": "Langue",
+    "namespace": "Espace de noms",
+    "key": "Clé (chemin pointé)",
+    "value": "Nouveau texte",
+    "save": "Enregistrer le remplacement",
+    "saving": "Enregistrement…",
+    "saved": "Remplacement enregistré.",
+    "cols": {
+      "locale": "Langue",
+      "namespace": "Espace de noms",
+      "key": "Clé",
+      "value": "Texte",
+      "updated": "Mis à jour",
+      "actions": "Actions"
+    },
+    "delete": "Retirer",
+    "deleteConfirm": "Retirer ce remplacement et revenir au texte par défaut ?",
+    "errors": {
+      "VALIDATION": "Vérifiez l'espace de noms, la clé et le texte."
+    },
+    "empty": "Aucun remplacement."
+  }
+}

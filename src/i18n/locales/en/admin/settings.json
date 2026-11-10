@@ -1,17 +1,31 @@
 {
   "AdminSettings": {
-    "title": "Platform Settings & Diagnostics",
-    "subtitle": "Configure transport fees, VAT rates, test email delivery, and inspect system integrity.",
-    "generalSectionTitle": "Operational & Pricing Parameters",
-    "transportFeeLabel": "Standard Transport Fee (€)",
-    "conciergeFeeLabel": "Concierge & Vet Protocol Fee (€)",
-    "vatRateLabel": "Applicable VAT Rate (%)",
-    "holdMinutesLabel": "Reservation Hold Duration (Minutes)",
-    "saveSettingsBtn": "Save Settings",
-    "diagnosticsSectionTitle": "System Diagnostics & Connectivity",
-    "dbStatus": "Database Engine",
-    "geniusPayStatus": "GeniusPay Sandbox/Live Mode",
-    "emailStatus": "Resend API Status",
-    "sendTestEmailBtn": "Send Test Email"
+    "title": "Settings",
+    "subtitle": "Business details and read-only configuration status. Secrets are never displayed.",
+    "businessTitle": "Business details",
+    "phone": "Concierge phone",
+    "siren": "Business registration number (SIREN)",
+    "sirenHelp": "Shown on the legal notice. Only enter the real number once registered.",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Settings saved.",
+    "errors": {
+      "VALIDATION": "Check the fields."
+    },
+    "statusTitle": "Configuration status",
+    "configured": "Configured",
+    "missing": "Missing",
+    "items": {
+      "payments": "Card payments (GeniusPay credentials)",
+      "webhook": "Payment webhook secret",
+      "email": "Transactional email (Resend)",
+      "media": "Media storage (Cloudinary)",
+      "database": "Database",
+      "cron": "Scheduled-jobs secret",
+      "encryption": "Encryption key"
+    },
+    "environment": "Payment environment: {env}",
+    "hold": "Reservation hold: {minutes} minutes (set by the HOLD_MINUTES environment variable)",
+    "gatewaysNote": "Card gateway order, enablement and verification are managed on the Payments page."
   }
 }

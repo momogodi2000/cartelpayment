@@ -1,0 +1,20 @@
+{
+  "AdminNewsletter": {
+    "title": "Newsletter",
+    "subtitle": "Subscribers with double opt-in.",
+    "export": "Download CSV",
+    "count": "{count} subscriber(s)",
+    "cols": {
+      "email": "Email",
+      "locale": "Language",
+      "status": "Status",
+      "created": "Subscribed",
+      "actions": "Actions"
+    },
+    "unsubscribe": "Unsubscribe",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this subscriber permanently?",
+    "unsubscribeConfirm": "Mark this subscriber as unsubscribed?",
+    "empty": "No subscriber yet."
+  }
+}

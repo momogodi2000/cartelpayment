@@ -1,119 +1,102 @@
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
+import { TicketStatus, TicketPriority } from "@prisma/client";
+import { ArrowLeft } from "lucide-react";
 import { requireSuperAdmin } from "@/lib/services/admin-auth";
-import { prisma } from "@/lib/db/client";
-import { formatDate } from "@/lib/format";
-import AdminTicketReplyForm from "../AdminTicketReplyForm";
-import { ArrowLeft, Headphones, Mail, Clock, ShieldCheck } from "lucide-react";
+import { getTicketForAdmin } from "@/lib/services/support";
+import { formatDateTime } from "@/lib/format";
+import { actionAdminReplyTicket, actionUpdateTicket } from "@/app/actions/admin-content";
+import { PageHeader, Card, Badge, fieldClass } from "@/components/admin/ui";
+import AdminForm from "@/components/admin/AdminForm";
 
 export const dynamic = "force-dynamic";
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default async function AdminTicketDetailPage({ params }: PageProps) {
+export default async function AdminTicketPage({ params }: { params: Promise<{ id: string }> }) {
   await requireSuperAdmin();
   const { id } = await params;
+  const ticket = await getTicketForAdmin(id);
+  if (!ticket) notFound();
+  const [t, tc, locale] = await Promise.all([getTranslations("AdminSupport"), getTranslations("AdminCommon"), getLocale()]);
+  const errors = { VALIDATION: t("errors.VALIDATION"), NOT_FOUND: t("errors.NOT_FOUND") };
 
-  const ticket = await prisma.supportTicket.findUnique({
-    where: { id },
-    include: {
-      messages: {
-        orderBy: { createdAt: "asc" },
-        include: { admin: true },
-      },
-      order: true,
-    },
-  });
-
-  if (!ticket) {
-    notFound();
+  async function update(fd: FormData) {
+    "use server";
+    return actionUpdateTicket(id, { status: String(fd.get("status")), priority: String(fd.get("priority")) });
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <Link
-        href="/admin/support"
-        className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-white font-semibold transition-colors"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        <span>Return to Support Tickets</span>
+    <div className="space-y-6">
+      <Link href="/admin/support" className="inline-flex items-center gap-1.5 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-300">
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        {t("back")}
       </Link>
+      <PageHeader
+        title={`${ticket.reference} — ${ticket.subject}`}
+        subtitle={`${ticket.name} · ${ticket.customerEmail} · ${tc(`ticketCategory.${ticket.category}`)} · ${t("opened", { date: formatDateTime(ticket.createdAt, locale) })}`}
+      >
+        <Badge>{ticket.order ? t("order", { ref: ticket.order.reference }) : t("noOrder")}</Badge>
+      </PageHeader>
 
-      <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm p-6 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-mono text-xs font-bold text-[#183C32] dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/40">
-                {ticket.reference}
-              </span>
-              <span className="text-xs font-bold text-zinc-500 uppercase px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">
-                {ticket.status}
-              </span>
-              <span className="text-[10px] font-bold text-zinc-400 uppercase">
-                {ticket.category}
-              </span>
-            </div>
-            <h1 className="font-serif text-2xl font-bold text-zinc-900 dark:text-white">
-              {ticket.subject}
-            </h1>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-              From: <strong>{ticket.name}</strong> &lt;{ticket.customerEmail}&gt;
-            </p>
-          </div>
+      <Card>
+        <AdminForm action={update} submitLabel={t("update")} savingLabel={t("sending")} savedText={t("updated")} fallbackError={tc("error")} className="flex flex-wrap items-end gap-3">
+          <label className="text-sm">
+            <span className="mb-1 block font-semibold">{t("status")}</span>
+            <select name="status" defaultValue={ticket.status} className={fieldClass}>
+              {Object.values(TicketStatus).map((s) => <option key={s} value={s}>{tc(`ticketStatus.${s}`)}</option>)}
+            </select>
+          </label>
+          <label className="text-sm">
+            <span className="mb-1 block font-semibold">{t("priority")}</span>
+            <select name="priority" defaultValue={ticket.priority} className={fieldClass}>
+              {Object.values(TicketPriority).map((s) => <option key={s} value={s}>{tc(`ticketPriority.${s}`)}</option>)}
+            </select>
+          </label>
+        </AdminForm>
+      </Card>
 
-          <div className="text-right text-xs text-zinc-400">
-            <div>Opened: {formatDate(ticket.createdAt, "en-GB", { timeZone: "Europe/Paris", includeTime: true })}</div>
-            {ticket.order && (
-              <div className="mt-1 font-mono text-[11px] text-[#183C32] dark:text-emerald-400 font-bold">
-                Order: {ticket.order.reference}
+      <section aria-labelledby="conv" className="space-y-3">
+        <h2 id="conv" className="font-serif text-xl font-bold">{t("conversation")}</h2>
+        <ul className="space-y-3">
+          {ticket.messages.map((m) => (
+            <li
+              key={m.id}
+              className={`rounded-2xl border p-4 text-sm ${
+                m.isInternalNote
+                  ? "border-amber-300 bg-amber-50 dark:bg-amber-950/30"
+                  : m.authorType === "ADMIN"
+                    ? "border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30"
+                    : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+              }`}
+            >
+              <div className="mb-1 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-500">
+                <span className="font-semibold">
+                  {m.authorType === "ADMIN" ? m.admin?.name || t("you") : t("customerLabel")}
+                  {m.isInternalNote && <span className="ml-2 text-amber-800">{t("internalBadge")}</span>}
+                </span>
+                <span>{formatDateTime(m.createdAt, locale)}</span>
               </div>
-            )}
-          </div>
-        </div>
+              <p className="whitespace-pre-wrap">{m.body}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-        {/* Message Thread */}
-        <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
-          {ticket.messages.map((m) => {
-            const isInternal = m.isInternalNote;
-            const isAdmin = m.authorType === "ADMIN";
-
-            return (
-              <div
-                key={m.id}
-                className={`p-4 rounded-2xl text-xs space-y-1.5 border ${
-                  isInternal
-                    ? "bg-amber-50/80 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/40 text-amber-950 dark:text-amber-200"
-                    : isAdmin
-                    ? "bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/40 text-emerald-950 dark:text-emerald-200 ml-6"
-                    : "bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 mr-6"
-                }`}
-              >
-                <div className="flex justify-between items-center font-bold">
-                  <span className="uppercase tracking-wider text-[10px]">
-                    {isInternal
-                      ? "🔒 Internal Note (Hidden from Customer)"
-                      : isAdmin
-                      ? `Staff Reply (${m.admin?.name || "Admin"})`
-                      : `Customer (${ticket.name})`}
-                  </span>
-                  <span className="text-zinc-400 font-normal text-[10px]">
-                    {formatDate(m.createdAt, "en-GB", { timeZone: "Europe/Paris", includeTime: true })}
-                  </span>
-                </div>
-                <p className="whitespace-pre-wrap leading-relaxed">{m.body}</p>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Reply form */}
-        <div className="border-t border-zinc-200 dark:border-zinc-800 pt-4">
-          <AdminTicketReplyForm ticketId={ticket.id} />
-        </div>
-      </div>
+      <Card>
+        <h2 className="mb-3 font-serif text-xl font-bold">{t("replyTitle")}</h2>
+        <AdminForm action={actionAdminReplyTicket} submitLabel={t("send")} savingLabel={t("sending")} savedText={t("sent")} errors={errors} fallbackError={tc("error")} resetOnSuccess>
+          <input type="hidden" name="ticketId" value={ticket.id} />
+          <label className="block text-sm">
+            <span className="mb-1 block font-semibold">{t("body")}</span>
+            <textarea name="body" rows={5} required maxLength={5000} className={fieldClass} />
+          </label>
+          <label className="inline-flex items-center gap-2 text-sm">
+            <input type="checkbox" name="isInternalNote" />
+            {t("internal")}
+          </label>
+        </AdminForm>
+      </Card>
     </div>
   );
 }

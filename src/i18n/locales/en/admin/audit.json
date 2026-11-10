@@ -1,13 +1,20 @@
 {
   "AdminAudit": {
-    "title": "Immutable Security & Audit Log",
-    "subtitle": "Cryptographically sequenced record of all administrative logins, price edits, order updates, and data exports.",
-    "tableColTimestamp": "Timestamp",
-    "tableColAction": "Action",
-    "tableColEntity": "Target Entity",
-    "tableColEntityId": "Record ID",
-    "tableColAdmin": "Admin Identity",
-    "tableColIp": "IP Address",
-    "tableColDetails": "Details (JSON)"
+    "title": "Audit log",
+    "subtitle": "Every sensitive administrative action and system event.",
+    "filters": {
+      "action": "Action contains",
+      "entity": "Entity"
+    },
+    "cols": {
+      "time": "Time",
+      "actor": "Actor",
+      "action": "Action",
+      "entity": "Entity",
+      "ip": "IP",
+      "details": "Details"
+    },
+    "system": "System",
+    "empty": "No entry matches."
   }
 }
