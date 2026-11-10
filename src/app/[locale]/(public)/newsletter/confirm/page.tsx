@@ -12,7 +12,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-    title: locale === "fr" ? "Confirmation d'inscription | Pawelium" : "Newsletter Confirmation | Pawelium",
+    title: (await getTranslations({ locale, namespace: "PublicPages" }))("newsletter.metaTitle"),
     robots: { index: false, follow: false },
   };
 }
@@ -39,7 +39,7 @@ export default async function NewsletterConfirmPage({
     }
   }
 
-  const isFr = locale === "fr";
+  const tp = await getTranslations({ locale, namespace: "PublicPages" });
 
   return (
     <div className="max-w-xl mx-auto px-4 py-24 text-center">
@@ -51,12 +51,10 @@ export default async function NewsletterConfirmPage({
             </div>
             <div className="space-y-2">
               <h1 className="text-3xl font-black font-heading text-text-premium">
-                {isFr ? "Inscription confirmée !" : "Subscription Confirmed!"}
+                {tp("newsletter.confirmedTitle")}
               </h1>
               <p className="text-sm text-text-premium/70 leading-relaxed max-w-md mx-auto">
-                {isFr
-                  ? `Votre adresse e-mail (${confirmedEmail}) a bien été vérifiée. Vous recevrez désormais notre sélection privée d'animaux d'exception.`
-                  : `Your email address (${confirmedEmail}) has been successfully confirmed. You will now receive our curated private animal selections.`}
+                {tp("newsletter.confirmedBody", { email: confirmedEmail ?? "" })}
               </p>
             </div>
           </>
@@ -67,12 +65,10 @@ export default async function NewsletterConfirmPage({
             </div>
             <div className="space-y-2">
               <h1 className="text-3xl font-black font-heading text-text-premium">
-                {isFr ? "Lien invalide ou expiré" : "Invalid or Expired Link"}
+                {tp("newsletter.invalidTitle")}
               </h1>
               <p className="text-sm text-text-premium/70 leading-relaxed max-w-md mx-auto">
-                {isFr
-                  ? "Ce lien de confirmation n'est plus valide. Veuillez vous réinscrire depuis notre page d'accueil si nécessaire."
-                  : "This confirmation link is invalid or has expired. Please subscribe again from our homepage if needed."}
+                {tp("newsletter.invalidBody")}
               </p>
             </div>
           </>
@@ -83,7 +79,7 @@ export default async function NewsletterConfirmPage({
             href="/animals"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md hover:scale-[1.02] active:scale-[0.98]"
           >
-            <span>{isFr ? "Découvrir nos animaux" : "Explore Animals"}</span>
+            <span>{tp("newsletter.explore")}</span>
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

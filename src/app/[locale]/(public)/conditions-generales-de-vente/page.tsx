@@ -24,6 +24,7 @@ export default async function TermsOfSalePage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("Terms");
+  const tl = await getTranslations("PublicPages.labels");
 
   return (
     <div className="bg-[#F8F6F0] dark:bg-zinc-950 min-h-screen py-16 px-4 sm:px-6 lg:px-8">
@@ -63,7 +64,7 @@ export default async function TermsOfSalePage({
             </p>
             <div className="pt-2 flex items-center gap-2 text-xs font-bold text-[#183C32] dark:text-emerald-400">
               <Lock className="w-4 h-4 text-[#B69A65]" />
-              <span>3D-Secure • Carte Bancaire PCI-DSS • EUR Only</span>
+              <span>{tl("cardSecurity")}</span>
             </div>
           </section>
 

@@ -56,6 +56,7 @@ interface DogCardProps {
 export default function DogCard({ dog }: DogCardProps) {
   const locale = useLocale();
   const t = useTranslations("DogCard");
+  const tl = useTranslations("PublicPages.labels");
 
   const name = dog.name;
   const isEn = locale === "en";
@@ -131,13 +132,13 @@ export default function DogCard({ dog }: DogCardProps) {
           {dog.pedigree && (
             <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/95 text-[#183C32] shadow-sm border border-black/[0.04]">
               <Shield className="h-2.5 w-2.5 text-[#B69A65]" />
-              LOF / LOOF
+              {tl("lofLoof")}
             </span>
           )}
           {dog.microchip && (
             <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/95 text-[#183C32] shadow-sm border border-black/[0.04]">
               <CheckCircle className="h-2.5 w-2.5 text-emerald-600" />
-              ISO 11784
+              {tl("microchip")}
             </span>
           )}
         </div>
@@ -179,7 +180,7 @@ export default function DogCard({ dog }: DogCardProps) {
             href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="WhatsApp Concierge"
+            aria-label={tl("whatsappAssistance")}
             className="p-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.1] text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors"
           >
             <MessageSquare className="h-4 w-4" />

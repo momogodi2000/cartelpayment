@@ -74,14 +74,13 @@ export default async function MentionsLegalesPage({ params }: { params: Promise<
         <h2 className="text-xl font-extrabold text-text-premium">{t("s2Title")}</h2>
         <div className="text-sm text-text-premium/70 space-y-1 leading-relaxed">
           <p>
-            <strong className="text-text-premium">{t("s2Host")}</strong> Netlify, Inc.
+            <strong className="text-text-premium">{t("s2Host")}</strong> {"Netlify, Inc."}
           </p>
           <p>
-            <strong className="text-text-premium">{t("s2HostAddress")}</strong> 512 Second Street, Suite 200, San
-            Francisco, CA 94107, USA
+            <strong className="text-text-premium">{t("s2HostAddress")}</strong> {"512 Second Street, Suite 200, San Francisco, CA 94107, USA"}
           </p>
           <p>
-            <strong className="text-text-premium">{t("s2Web")}</strong> www.netlify.com
+            <strong className="text-text-premium">{t("s2Web")}</strong> {"www.netlify.com"}
           </p>
         </div>
       </section>

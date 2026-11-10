@@ -1,0 +1,47 @@
+{
+  "PublicPages": {
+    "backToCatalog": "Retour au catalogue",
+    "breeder": {
+      "verified": "Éleveur européen vérifié",
+      "verifying": "Vérification en cours",
+      "animalsTitle": "Animaux de cet élevage ({count})",
+      "noAnimals": "Aucun animal n'est actuellement disponible chez cet éleveur.",
+      "metaTitle": "{name} · Élevage partenaire {city}, {country} | Pawelium"
+    },
+    "breed": {
+      "dog": "Race canine",
+      "cat": "Race féline",
+      "available": "Animaux disponibles ({count})",
+      "metaTitle": "{name} · Chiots et élevage européen | Pawelium",
+      "notFound": "Race introuvable | Pawelium"
+    },
+    "newsletter": {
+      "metaTitle": "Confirmation d'inscription | Pawelium",
+      "confirmedTitle": "Inscription confirmée !",
+      "confirmedBody": "Votre adresse e-mail ({email}) a bien été confirmée. Vous recevrez désormais notre sélection d'animaux disponibles.",
+      "invalidTitle": "Lien invalide ou expiré",
+      "invalidBody": "Ce lien de confirmation n'est plus valide. Veuillez vous réinscrire depuis notre page d'accueil si nécessaire.",
+      "explore": "Découvrir nos animaux"
+    },
+    "labels": {
+      "lofLoof": "Pedigree (LOF / LOOF)",
+      "microchip": "Puce électronique ISO 11784",
+      "whatsappAssistance": "Assistance WhatsApp",
+      "verifiedPlacement": "Achat vérifié",
+      "wsava": "Protocole WSAVA",
+      "breadcrumb": "Fil d'Ariane",
+      "home": "Accueil",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "emailLabel": "E-mail",
+      "logoAlt": "Logo Pawelium",
+      "termsLink": "Conditions de vente",
+      "privacyLink": "Politique de confidentialité",
+      "and": "et",
+      "checkoutProtocol": "Protocole européen de pedigree et de suivi vétérinaire",
+      "cardSecurity": "3D Secure · Paiement par carte PCI-DSS · EUR uniquement",
+      "honeypotWebsite": "Laissez ce champ vide",
+      "honeypotName": "Laissez ce champ vide"
+    }
+  }
+}

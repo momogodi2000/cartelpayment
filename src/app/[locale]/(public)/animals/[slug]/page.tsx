@@ -51,6 +51,7 @@ export default async function AnimalDetailPage({ params }: PageProps) {
   const { slug, locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("DogDetail");
+  const tl = await getTranslations("PublicPages.labels");
 
   const data = await getAnimalBySlug(slug);
   if (!data?.animal) notFound();
@@ -103,7 +104,7 @@ export default async function AnimalDetailPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav aria-label="Breadcrumb" className="text-sm font-medium">
+      <nav aria-label={tl("breadcrumb")} className="text-sm font-medium">
         <Link
           href="/animals"
           className="inline-flex items-center gap-2 text-gray-500 hover:text-[#183C32] dark:hover:text-emerald-400 transition-colors"
@@ -289,7 +290,7 @@ export default async function AnimalDetailPage({ params }: PageProps) {
             </div>
             <div className="flex justify-between py-1.5 border-b border-black/[0.04] dark:border-zinc-700">
               <span className="text-gray-500 dark:text-gray-400">{t("guarantees")}</span>
-              <span className="font-bold text-emerald-600">WSAVA Protocol</span>
+              <span className="font-bold text-emerald-600">{tl("wsava")}</span>
             </div>
             <div className="flex justify-between py-1.5 border-b border-black/[0.04] dark:border-zinc-700">
               <span className="text-gray-500 dark:text-gray-400">{t("color")}</span>

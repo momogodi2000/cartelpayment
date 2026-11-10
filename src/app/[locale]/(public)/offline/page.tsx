@@ -7,6 +7,7 @@ import { siteConfig } from "@/data/site";
 
 export default function OfflinePage() {
   const t = useTranslations("Offline");
+  const tl = useTranslations("PublicPages.labels");
 
   const handleReconnect = () => {
     if (typeof window !== "undefined") window.location.reload();
@@ -37,7 +38,7 @@ export default function OfflinePage() {
         <div className="flex items-center gap-3">
           <Mail className="h-5 w-5 text-primary shrink-0" />
           <div>
-            <span className="font-extrabold text-xs text-text-premium/50 uppercase block">Email</span>
+            <span className="font-extrabold text-xs text-text-premium/50 uppercase block">{tl("emailLabel")}</span>
             <span className="font-semibold text-sm text-text-premium">{email}</span>
           </div>
         </div>

@@ -12,6 +12,7 @@ import { siteConfig, getWhatsAppLink } from "@/data/site";
 export default function Footer() {
   const t = useTranslations("Footer");
   const tc = useTranslations("Common");
+  const tl = useTranslations("PublicPages.labels");
   const currentYear = new Date().getFullYear();
 
   const whatsappUrl = getWhatsAppLink(tc("whatsappGeneralMessage"));
@@ -43,7 +44,7 @@ export default function Footer() {
         {/* Col 1 · Brand */}
         <div className="space-y-5">
           <div className="flex items-center gap-3">
-            <Image src="/logo.jpg" alt="pawelium logo" width={40} height={40} className="rounded-full object-cover shrink-0" />
+            <Image src="/logo.jpg" alt={tl("logoAlt")} width={40} height={40} className="rounded-full object-cover shrink-0" />
             <div>
               <h2 className="text-xl font-black font-heading text-white leading-none">pawelium</h2>
               <p className="text-[10px] font-semibold text-white/50 uppercase tracking-widest mt-0.5">{t("tagline")}</p>

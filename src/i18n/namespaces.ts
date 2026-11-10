@@ -51,6 +51,7 @@ export const NAMESPACES = [
   'admin/seo',
   'admin/newsletter',
   'admin/analytics',
+  'public/pages',
   'errors/not-found',
   'errors/general',
 ] as const;
@@ -232,6 +233,10 @@ export const namespaceLoaders: Record<
   'admin/analytics': {
     en: () => import('./locales/en/admin/analytics.json'),
     fr: () => import('./locales/fr/admin/analytics.json'),
+  },
+  'public/pages': {
+    en: () => import('./locales/en/public/pages.json'),
+    fr: () => import('./locales/fr/public/pages.json'),
   },
   'errors/not-found': {
     en: () => import('./locales/en/errors/not-found.json'),

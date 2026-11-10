@@ -28,7 +28,8 @@
         "cron:run": "tsx scripts/cron-runner.ts",
         "icons:generate": "node scripts/generate-app-icons.js",
         "admin:credentials": "tsx scripts/generate-super-admin-credentials.ts",
-        "db:purge-fabricated": "tsx scripts/purge-fabricated-records.ts"
+        "db:purge-fabricated": "tsx scripts/purge-fabricated-records.ts",
+        "prebuild": "npm run i18n:check"
     },
     "overrides": {
         "effect": "^3.21.2",

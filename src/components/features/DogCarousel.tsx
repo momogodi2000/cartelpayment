@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import DogCard, { type UnifiedAnimalItem } from "./DogCard";
@@ -14,6 +16,7 @@ interface Props {
  * Arrows scroll by one card; they hide when there's nothing to scroll to.
  */
 export default function DogCarousel({ dogs }: Props) {
+  const tl = useTranslations("PublicPages.labels");
   const trackRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -72,7 +75,7 @@ export default function DogCarousel({ dogs }: Props) {
             onClick={() => scrollByCard(-1)}
             disabled={atStart}
             className="h-10 w-10 rounded-xl border border-black/[0.08] dark:border-white/[0.1] flex items-center justify-center text-text-premium/60 hover:text-text-premium hover:bg-black/[0.02] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            aria-label="Previous"
+            aria-label={tl("previous")}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -80,7 +83,7 @@ export default function DogCarousel({ dogs }: Props) {
             onClick={() => scrollByCard(1)}
             disabled={atEnd}
             className="h-10 w-10 rounded-xl border border-black/[0.08] dark:border-white/[0.1] flex items-center justify-center text-text-premium/60 hover:text-text-premium hover:bg-black/[0.02] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            aria-label="Next"
+            aria-label={tl("next")}
           >
             <ChevronRight className="h-5 w-5" />
           </button>

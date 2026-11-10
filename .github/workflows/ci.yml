@@ -16,6 +16,16 @@ jobs:
       NEXT_PUBLIC_SITE_NAME: pawelium
       NEXT_PUBLIC_WHATSAPP_NUMBER: "+33641325328"
       NEXT_PUBLIC_CONTACT_EMAIL: contact@pawelium.fyi
+      # CI uses an isolated SQLite file and placeholder sandbox credentials (never real keys).
+      DATABASE_PROVIDER: sqlite
+      DATABASE_URL: "file:./ci.db"
+      GENIUSPAY_ENVIRONMENT: sandbox
+      GENIUSPAY_API_KEY: pk_sandbox_ci
+      GENIUSPAY_API_SECRET: sk_sandbox_ci
+      GENIUSPAY_WEBHOOK_SECRET: whsec_ci
+      GENIUSPAY_BASE_URL: "http://127.0.0.1:1/api/v1/merchant"
+      ENCRYPTION_KEY: ci-encryption-key-0123456789abcdef0123456789
+      CRON_SECRET: ci-cron-secret-0123456789
 
     steps:
       - name: Checkout code
@@ -30,14 +40,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Translation completeness and hardcoded-text guard
+        run: npm run i18n:check
+
       - name: Lint
         run: npm run lint
 
-      - name: Unit tests
+      - name: Unit and integration tests (isolated SQLite databases)
         run: npm run test
 
       - name: Build
         run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end tests (isolated server and database)
+        run: npm run test:e2e
 
       # After build so Next's generated route types in .next/types are present.
       - name: Type check

@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Sparkles } from "lucide-react";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import prisma from "@/lib/db/client";
 import DogCard from "@/components/features/DogCard";
@@ -14,13 +14,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   const breed = await prisma.breed.findUnique({ where: { slug } });
-  if (!breed) return { title: "Breed Not Found | Pawelium" };
+  if (!breed) {
+    const tpn = await getTranslations({ locale, namespace: "PublicPages" });
+    return { title: tpn("breed.notFound") };
+  }
 
   const isFr = locale === "fr";
   const breedName = isFr ? breed.nameFr : breed.nameEn;
-  const title = isFr
-    ? `${breedName} · Chiots & Élevage Européen | Pawelium`
-    : `${breedName} · Puppies & European Breeding | Pawelium`;
+  const tp = await getTranslations({ locale, namespace: "PublicPages" });
+  const title = tp("breed.metaTitle", { name: breedName });
   const description = isFr ? breed.descriptionFr : breed.descriptionEn;
 
   return {
@@ -61,6 +63,7 @@ export default async function BreedLandingPage({
   }
 
   const isFr = locale === "fr";
+  const tp = await getTranslations({ locale, namespace: "PublicPages" });
   const breedName = isFr ? breed.nameFr : breed.nameEn;
   const desc = isFr ? breed.descriptionFr : breed.descriptionEn;
 
@@ -72,12 +75,12 @@ export default async function BreedLandingPage({
           className="inline-flex items-center gap-2 text-xs font-bold text-text-premium/60 hover:text-primary transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>{isFr ? "Retour au catalogue" : "Back to Catalog"}</span>
+          <span>{tp("backToCatalog")}</span>
         </Link>
 
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
           <Sparkles className="h-4 w-4" />
-          <span>{breed.species === "DOG" ? (isFr ? "Race Canine" : "Dog Breed") : (isFr ? "Race Féline" : "Cat Breed")}</span>
+          <span>{breed.species === "DOG" ? tp("breed.dog") : tp("breed.cat")}</span>
         </div>
 
         <h1 className="text-4xl sm:text-5xl font-black font-heading text-text-premium tracking-tight">
@@ -92,7 +95,7 @@ export default async function BreedLandingPage({
       <div className="border-t border-border pt-8 space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold font-heading text-text-premium">
-            {isFr ? `Compagnons disponibles (${breed.animals.length})` : `Available Companions (${breed.animals.length})`}
+            {tp("breed.available", { count: breed.animals.length })}
           </h2>
         </div>
 

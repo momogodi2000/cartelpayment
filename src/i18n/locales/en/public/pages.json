@@ -1,0 +1,47 @@
+{
+  "PublicPages": {
+    "backToCatalog": "Back to the catalogue",
+    "breeder": {
+      "verified": "Verified European breeder",
+      "verifying": "Verification in progress",
+      "animalsTitle": "Animals from this breeder ({count})",
+      "noAnimals": "No animal is currently available from this breeder.",
+      "metaTitle": "{name} · Partner breeder {city}, {country} | Pawelium"
+    },
+    "breed": {
+      "dog": "Dog breed",
+      "cat": "Cat breed",
+      "available": "Available animals ({count})",
+      "metaTitle": "{name} · Puppies & European breeding | Pawelium",
+      "notFound": "Breed not found | Pawelium"
+    },
+    "newsletter": {
+      "metaTitle": "Newsletter confirmation | Pawelium",
+      "confirmedTitle": "Subscription confirmed!",
+      "confirmedBody": "Your email address ({email}) has been confirmed. You will now receive our selection of available animals.",
+      "invalidTitle": "Invalid or expired link",
+      "invalidBody": "This confirmation link is invalid or has expired. Please subscribe again from our homepage if needed.",
+      "explore": "Discover our animals"
+    },
+    "labels": {
+      "lofLoof": "Pedigree (LOF / LOOF)",
+      "microchip": "ISO 11784 microchip",
+      "whatsappAssistance": "WhatsApp assistance",
+      "verifiedPlacement": "Verified purchase",
+      "wsava": "WSAVA protocol",
+      "breadcrumb": "Breadcrumb",
+      "home": "Home",
+      "previous": "Previous",
+      "next": "Next",
+      "emailLabel": "Email",
+      "logoAlt": "Pawelium logo",
+      "termsLink": "Terms of sale",
+      "privacyLink": "Privacy policy",
+      "and": "and",
+      "checkoutProtocol": "European pedigree and veterinary protocol",
+      "cardSecurity": "3D Secure · PCI-DSS card payment · EUR only",
+      "honeypotWebsite": "Leave this field empty",
+      "honeypotName": "Leave this field empty"
+    }
+  }
+}

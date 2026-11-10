@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
@@ -25,6 +27,7 @@ interface Props {
 }
 
 export default function HomeTestimonials({ testimonials }: Props) {
+  const tl = useTranslations("PublicPages.labels");
   const locale = useLocale();
   const [current, setCurrent] = useState(0);
 
@@ -61,13 +64,13 @@ export default function HomeTestimonials({ testimonials }: Props) {
               {t.verifiedPurchase && (
                 <span className="ml-2 inline-flex items-center gap-1 text-[11px] text-emerald-600 font-semibold">
                   <ShieldCheck className="h-3.5 w-3.5" />
-                  Verified Placement
+                  {tl("verifiedPlacement")}
                 </span>
               )}
             </div>
 
             <blockquote className="text-base sm:text-lg text-text-premium font-medium leading-relaxed mb-6">
-              &ldquo;{content}&rdquo;
+              {"\u201C"}{content}{"\u201D"}
             </blockquote>
 
             <div className="flex items-center gap-3">
@@ -104,14 +107,14 @@ export default function HomeTestimonials({ testimonials }: Props) {
             <button
               onClick={prev}
               className="h-9 w-9 rounded-xl border border-black/[0.08] dark:border-white/[0.1] flex items-center justify-center text-text-premium/60 hover:text-text-premium hover:bg-black/[0.02] transition-colors"
-              aria-label="Previous"
+              aria-label={tl("previous")}
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
               onClick={next}
               className="h-9 w-9 rounded-xl border border-black/[0.08] dark:border-white/[0.1] flex items-center justify-center text-text-premium/60 hover:text-text-premium hover:bg-black/[0.02] transition-colors"
-              aria-label="Next"
+              aria-label={tl("next")}
             >
               <ChevronRight className="h-4 w-4" />
             </button>

@@ -34,6 +34,7 @@ export default async function CatalogPage({
   setRequestLocale(locale);
   const t = await getTranslations("Catalogue");
   const tNav = await getTranslations("Nav");
+  const tHome = await getTranslations("PublicPages.labels");
   const base = siteConfig.siteUrl;
 
   const [dbAnimals, dbBreeds] = await Promise.all([
@@ -61,7 +62,7 @@ export default async function CatalogPage({
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             itemListElement: [
-              { "@type": "ListItem", position: 1, name: locale === "en" ? "Home" : "Accueil", item: base },
+              { "@type": "ListItem", position: 1, name: tHome("home"), item: base },
               {
                 "@type": "ListItem",
                 position: 2,

@@ -28,6 +28,7 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("Checkout");
+  const tl = await getTranslations("PublicPages.labels");
   const { animalId } = await searchParams;
 
   if (!animalId) {
@@ -188,7 +189,7 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-3.5 w-3.5 text-[#B69A65]" />
-                <span>European Pedigree &amp; Veterinary Protocol</span>
+                <span>{tl("checkoutProtocol")}</span>
               </div>
             </div>
           </div>

@@ -23,6 +23,7 @@ import LocaleSwitcher from "@/components/common/LocaleSwitcher";
 export default function Header() {
   const t = useTranslations("Nav");
   const tTheme = useTranslations("Theme");
+  const tl = useTranslations("PublicPages.labels");
   const { theme, toggleTheme } = useApp();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -92,7 +93,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
             <div className="h-9 w-9 rounded-xl overflow-hidden ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all flex items-center justify-center shrink-0">
-              <Image src="/logo.png" alt="pawelium Logo" width={36} height={36} className="w-full h-full object-cover" priority />
+              <Image src="/logo.png" alt={tl("logoAlt")} width={36} height={36} className="w-full h-full object-cover" priority />
             </div>
             <div>
               <span className="text-lg font-black font-heading text-text-premium group-hover:text-primary transition-colors">

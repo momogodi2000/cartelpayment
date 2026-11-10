@@ -8,14 +8,12 @@ export default function Honeypot() {
         type="text"
         name="website"
         tabIndex={-1}
-        placeholder="Your Website URL"
         autoComplete="off"
       />
       <input
         type="text"
         name="middle_name"
         tabIndex={-1}
-        placeholder="Your Middle Name"
         autoComplete="off"
       />
     </div>

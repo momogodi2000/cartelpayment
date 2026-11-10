@@ -59,6 +59,7 @@ import enNsAdminTranslations from "./locales/en/admin/translations.json";
 import enNsAdminSeo from "./locales/en/admin/seo.json";
 import enNsAdminNewsletter from "./locales/en/admin/newsletter.json";
 import enNsAdminAnalytics from "./locales/en/admin/analytics.json";
+import enNsPublicPages from "./locales/en/public/pages.json";
 import enErrorsNotFound from "./locales/en/errors/not-found.json";
 import enErrorsGeneral from "./locales/en/errors/general.json";
 
@@ -111,6 +112,7 @@ import frNsAdminTranslations from "./locales/fr/admin/translations.json";
 import frNsAdminSeo from "./locales/fr/admin/seo.json";
 import frNsAdminNewsletter from "./locales/fr/admin/newsletter.json";
 import frNsAdminAnalytics from "./locales/fr/admin/analytics.json";
+import frNsPublicPages from "./locales/fr/public/pages.json";
 import frErrorsNotFound from "./locales/fr/errors/not-found.json";
 import frErrorsGeneral from "./locales/fr/errors/general.json";
 
@@ -168,6 +170,7 @@ const enMessages = assembleLocale([
   enNsAdminSeo,
   enNsAdminNewsletter,
   enNsAdminAnalytics,
+  enNsPublicPages,
   enErrorsNotFound,
   enErrorsGeneral,
 ]);
@@ -216,6 +219,7 @@ const frMessages = assembleLocale([
   frNsAdminSeo,
   frNsAdminNewsletter,
   frNsAdminAnalytics,
+  frNsPublicPages,
   frErrorsNotFound,
   frErrorsGeneral,
 ]);

@@ -82,6 +82,7 @@ export async function generateMetadata({
       description: t("defaultDescription"),
       url: `${siteUrl.toString().replace(/\/$/, "")}/${locale}`,
       siteName,
+      // i18n-ignore (Open Graph locale code)
       locale: locale === "fr" ? "fr_FR" : "en_GB",
       type: "website",
     },

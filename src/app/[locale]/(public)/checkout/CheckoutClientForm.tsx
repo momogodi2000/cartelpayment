@@ -16,6 +16,7 @@ interface Props {
 
 export default function CheckoutClientForm({ animalId, locale }: Props) {
   const t = useTranslations("Checkout");
+  const tl = useTranslations("PublicPages.labels");
   const [serverError, setServerError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -248,11 +249,11 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
           <span className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
             {t("termsCheckbox")}{" "}
             <Link href="/conditions-generales-de-vente" target="_blank" className="underline font-bold text-[#183C32] dark:text-emerald-400">
-              [CGV]
+              {tl("termsLink")}
             </Link>{" "}
-            &amp;{" "}
+            {tl("and")}{" "}
             <Link href="/politique-de-confidentialite" target="_blank" className="underline font-bold text-[#183C32] dark:text-emerald-400">
-              [RGPD]
+              {tl("privacyLink")}
             </Link>
           </span>
         </label>

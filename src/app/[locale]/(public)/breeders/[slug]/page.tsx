@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, MapPin, ShieldCheck, AlertCircle } from "lucide-react";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import prisma from "@/lib/db/client";
 import DogCard from "@/components/features/DogCard";
@@ -18,9 +18,8 @@ export async function generateMetadata({
 
   const isVerified = breeder.verificationStatus === "VERIFIED";
   const isFr = locale === "fr";
-  const title = isFr
-    ? `${breeder.name} · Élevage Partenaire ${breeder.city}, ${breeder.country} | Pawelium`
-    : `${breeder.name} · Partner Breeder ${breeder.city}, ${breeder.country} | Pawelium`;
+  const tp = await getTranslations({ locale, namespace: "PublicPages" });
+  const title = tp("breeder.metaTitle", { name: breeder.name, city: breeder.city, country: breeder.country });
   const description = isFr ? breeder.descriptionFr : breeder.descriptionEn;
 
   return {
@@ -62,6 +61,7 @@ export default async function BreederProfilePage({
   }
 
   const isFr = locale === "fr";
+  const tp = await getTranslations({ locale, namespace: "PublicPages" });
   const isVerified = breeder.verificationStatus === "VERIFIED";
   const desc = isFr ? breeder.descriptionFr : breeder.descriptionEn;
 
@@ -73,7 +73,7 @@ export default async function BreederProfilePage({
           className="inline-flex items-center gap-2 text-xs font-bold text-text-premium/60 hover:text-primary transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>{isFr ? "Retour au catalogue" : "Back to Catalog"}</span>
+          <span>{tp("backToCatalog")}</span>
         </Link>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -85,12 +85,12 @@ export default async function BreederProfilePage({
           {isVerified ? (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
               <ShieldCheck className="h-3.5 w-3.5" />
-              <span>{isFr ? "Éleveur Européen Vérifié" : "Verified European Breeder"}</span>
+              <span>{tp("breeder.verified")}</span>
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
               <AlertCircle className="h-3.5 w-3.5" />
-              <span>{isFr ? "Vérification en cours" : "Verification in Progress"}</span>
+              <span>{tp("breeder.verifying")}</span>
             </span>
           )}
         </div>
@@ -106,16 +106,12 @@ export default async function BreederProfilePage({
 
       <div className="border-t border-border pt-8 space-y-6">
         <h2 className="text-2xl font-bold font-heading text-text-premium">
-          {isFr
-            ? `Animaux de cet élevage (${breeder.animals.length})`
-            : `Companions from this Breeder (${breeder.animals.length})`}
+          {tp("breeder.animalsTitle", { count: breeder.animals.length })}
         </h2>
 
         {breeder.animals.length === 0 ? (
           <p className="text-sm text-text-premium/50 italic">
-            {isFr
-              ? "Aucun animal disponible actuellement chez cet éleveur."
-              : "No animals currently available from this breeder."}
+            {tp("breeder.noAnimals")}
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
