@@ -1,39 +1,56 @@
 "use client";
 
-import React, { useState } from "react";
-import { actionUpdateAnimalStatus } from "@/app/actions/admin";
-import { AnimalStatus } from "@prisma/client";
+import React, { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { actionSetAnimalStatus } from "@/app/actions/admin-animals";
 
-interface Props {
-  animalId: string;
-  initialStatus: AnimalStatus;
-  initialPublished: boolean;
-}
+const MANUAL = ["AVAILABLE", "UNAVAILABLE", "ARCHIVED"] as const;
 
-export default function AnimalStatusToggle({ animalId, initialStatus, initialPublished }: Props) {
-  const [status, setStatus] = useState(initialStatus);
-  const [loading, setLoading] = useState(false);
+/** Quick availability switch; reserved/sold animals are locked (owned by reservations & payments). */
+export default function AnimalStatusSelect({ animalId, status }: { animalId: string; status: string }) {
+  const t = useTranslations("AdminAnimals");
+  const tc = useTranslations("AdminCommon");
+  const router = useRouter();
+  const [value, setValue] = useState(status);
+  const [error, setError] = useState(false);
+  const [pending, start] = useTransition();
+  const locked = status === "HELD" || status === "SOLD";
 
-  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newStatus = e.target.value as AnimalStatus;
-    setStatus(newStatus);
-    setLoading(true);
-    await actionUpdateAnimalStatus(animalId, newStatus, initialPublished);
-    setLoading(false);
-  };
+  if (locked) {
+    return (
+      <span title={t("statusLocked")} className="text-xs text-zinc-500">
+        {tc(`animalStatus.${status}`)}
+      </span>
+    );
+  }
 
   return (
-    <select
-      value={status}
-      onChange={handleChange}
-      disabled={loading}
-      className="px-2.5 py-1 rounded-lg border border-zinc-300 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#183C32] bg-white disabled:opacity-50"
-    >
-      <option value="AVAILABLE">AVAILABLE</option>
-      <option value="HELD">HELD</option>
-      <option value="SOLD">SOLD</option>
-      <option value="UNAVAILABLE">UNAVAILABLE</option>
-      <option value="ARCHIVED">ARCHIVED</option>
-    </select>
+    <span className="inline-flex flex-col">
+      <select
+        aria-label={t("statusField")}
+        value={value}
+        disabled={pending}
+        onChange={(e) => {
+          const next = e.target.value;
+          setValue(next);
+          setError(false);
+          start(async () => {
+            const res = await actionSetAnimalStatus(animalId, next);
+            if (!res.success) {
+              setError(true);
+              setValue(status);
+            }
+            router.refresh();
+          });
+        }}
+        className="rounded-lg border border-zinc-300 bg-white px-2 py-1 text-xs font-semibold disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800"
+      >
+        {MANUAL.map((s) => (
+          <option key={s} value={s}>{tc(`animalStatus.${s}`)}</option>
+        ))}
+      </select>
+      {error && <span role="alert" className="mt-0.5 text-[11px] text-red-700">{t("statusChangeFailed")}</span>}
+    </span>
   );
 }

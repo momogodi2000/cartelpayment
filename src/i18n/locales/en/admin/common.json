@@ -1,0 +1,141 @@
+{
+  "AdminCommon": {
+    "actions": "Actions",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "cancel": "Cancel",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "create": "Create",
+    "add": "Add",
+    "view": "View",
+    "back": "Back",
+    "search": "Search",
+    "searchPlaceholder": "Search…",
+    "filter": "Filter",
+    "apply": "Apply",
+    "reset": "Reset",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "none": "—",
+    "loading": "Loading…",
+    "empty": "Nothing to show yet.",
+    "error": "Something went wrong. Please try again.",
+    "confirmDelete": "Delete this item permanently?",
+    "created": "Created",
+    "updated": "Updated",
+    "status": "Status",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "reference": "Reference",
+    "amount": "Amount",
+    "total": "Total",
+    "date": "Date",
+    "notes": "Notes",
+    "language": "Language",
+    "published": "Published",
+    "unpublished": "Unpublished",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {pages}",
+    "count": "{count} item(s)",
+    "viewAll": "View all",
+    "optional": "optional",
+    "required": "required",
+    "orderStatus": {
+      "PENDING_PAYMENT": "Awaiting payment",
+      "PAYMENT_PROCESSING": "Payment processing",
+      "PAID": "Paid",
+      "DOCUMENTATION_REVIEW": "Documentation review",
+      "PREPARING": "Preparing",
+      "TRANSPORT_SCHEDULED": "Transport scheduled",
+      "IN_TRANSIT": "In transit",
+      "DELIVERED": "Delivered",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "REFUND_PENDING": "Refund pending",
+      "REFUNDED": "Refunded",
+      "DISPUTED": "Disputed"
+    },
+    "animalStatus": {
+      "AVAILABLE": "Available",
+      "HELD": "Reserved",
+      "SOLD": "Sold",
+      "UNAVAILABLE": "Unavailable",
+      "ARCHIVED": "Archived"
+    },
+    "reservationStatus": {
+      "ACTIVE": "Active",
+      "CONVERTED": "Converted to sale",
+      "RELEASED": "Released",
+      "EXPIRED": "Expired"
+    },
+    "refundStatus": {
+      "REQUESTED": "Requested",
+      "PENDING_PROVIDER": "Pending at provider",
+      "COMPLETED": "Completed",
+      "FAILED": "Failed"
+    },
+    "ticketStatus": {
+      "OPEN": "Open",
+      "IN_PROGRESS": "In progress",
+      "WAITING_CUSTOMER": "Waiting for customer",
+      "RESOLVED": "Resolved",
+      "CLOSED": "Closed"
+    },
+    "ticketPriority": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "URGENT": "Urgent"
+    },
+    "ticketCategory": {
+      "GENERAL": "General inquiry",
+      "ORDER": "Order / purchase",
+      "TRANSPORT": "Delivery",
+      "HEALTH": "Health information",
+      "BREEDER": "Breeder",
+      "REFUND": "Refund",
+      "OTHER": "Other"
+    },
+    "species": {
+      "DOG": "Dog",
+      "CAT": "Cat"
+    },
+    "gender": {
+      "MALE": "Male",
+      "FEMALE": "Female"
+    },
+    "size": {
+      "SMALL": "Small",
+      "MEDIUM": "Medium",
+      "LARGE": "Large",
+      "GIANT": "Giant"
+    },
+    "verification": {
+      "UNVERIFIED": "Unverified",
+      "VERIFIED": "Verified",
+      "SUSPENDED": "Suspended"
+    },
+    "reviewStatus": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected"
+    },
+    "newsletterStatus": {
+      "PENDING": "Pending confirmation",
+      "CONFIRMED": "Confirmed",
+      "UNSUBSCRIBED": "Unsubscribed"
+    },
+    "healthDoc": {
+      "NONE": "No documents",
+      "PENDING": "Under review",
+      "VERIFIED": "Verified",
+      "UNVERIFIED": "Declared, not verified"
+    }
+  }
+}

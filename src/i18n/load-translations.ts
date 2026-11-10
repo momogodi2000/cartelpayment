@@ -46,6 +46,7 @@ import enAdminShell from "./locales/en/admin/shell.json";
 import enAdminAccount from "./locales/en/admin/account.json";
 import enAdminAuth from "./locales/en/admin/auth.json";
 
+import enNsAdminCommon from "./locales/en/admin/common.json";
 import enErrorsNotFound from "./locales/en/errors/not-found.json";
 import enErrorsGeneral from "./locales/en/errors/general.json";
 
@@ -85,6 +86,7 @@ import frAdminShell from "./locales/fr/admin/shell.json";
 import frAdminAccount from "./locales/fr/admin/account.json";
 import frAdminAuth from "./locales/fr/admin/auth.json";
 
+import frNsAdminCommon from "./locales/fr/admin/common.json";
 import frErrorsNotFound from "./locales/fr/errors/not-found.json";
 import frErrorsGeneral from "./locales/fr/errors/general.json";
 
@@ -129,6 +131,7 @@ const enMessages = assembleLocale([
   enAdminShell,
   enAdminAccount,
   enAdminAuth,
+  enNsAdminCommon,
   enErrorsNotFound,
   enErrorsGeneral,
 ]);
@@ -164,6 +167,7 @@ const frMessages = assembleLocale([
   frAdminShell,
   frAdminAccount,
   frAdminAuth,
+  frNsAdminCommon,
   frErrorsNotFound,
   frErrorsGeneral,
 ]);

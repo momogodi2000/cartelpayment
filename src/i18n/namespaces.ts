@@ -38,6 +38,7 @@ export const NAMESPACES = [
   'admin/shell',
   'admin/account',
   'admin/auth',
+  'admin/common',
   'errors/not-found',
   'errors/general',
 ] as const;
@@ -167,6 +168,10 @@ export const namespaceLoaders: Record<
   'admin/shell': {
     en: () => import('./locales/en/admin/shell.json'),
     fr: () => import('./locales/fr/admin/shell.json'),
+  },
+  'admin/common': {
+    en: () => import('./locales/en/admin/common.json'),
+    fr: () => import('./locales/fr/admin/common.json'),
   },
   'errors/not-found': {
     en: () => import('./locales/en/errors/not-found.json'),

@@ -156,29 +156,6 @@ export async function actionAnonymizeCustomer(customerId: string) {
   return { success: true };
 }
 
-export async function actionUpdateAnimalStatus(animalId: string, status: AnimalStatus, published: boolean) {
-  const { admin } = await requireSuperAdmin();
-  const reqHeaders = await headers();
-  const ip = reqHeaders.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
-
-  const updated = await prisma.animal.update({
-    where: { id: animalId },
-    data: { status, published },
-  });
-
-  await logAudit({
-    actorType: "ADMIN",
-    adminId: admin.id,
-    action: "UPDATE_ANIMAL_STATUS",
-    entity: "Animal",
-    entityId: animalId,
-    ip,
-    diff: { status, published },
-  });
-
-  revalidatePath("/admin/animals");
-  return { success: true, animal: updated };
-}
 
 export async function actionAdminForgotPassword(formData: FormData) {
   return adminForgotPassword(String(formData.get("email") || ""), await requestIp());
@@ -231,81 +208,7 @@ export async function actionAdminRevokeSession(sessionId: string) {
   return { success: true };
 }
 
-export async function actionSaveAnimal(formData: FormData) {
-  const { admin } = await requireSuperAdmin();
-  const id = formData.get("id") as string | null;
-  const name = formData.get("name") as string;
-  const slug = formData.get("slug") as string;
-  const breedId = formData.get("breedId") as string;
-  const species = (formData.get("species") as Species) || Species.DOG;
-  const gender = (formData.get("gender") as Gender) || Gender.MALE;
-  const priceCents = parseInt((formData.get("priceCents") as string) || "0", 10);
-  const status = (formData.get("status") as AnimalStatus) || AnimalStatus.AVAILABLE;
-  const published = formData.get("published") === "true";
-  const city = (formData.get("city") as string) || "Paris";
-  const country = (formData.get("country") as string) || "France";
-  const descriptionEn = (formData.get("descriptionEn") as string) || "";
-  const descriptionFr = (formData.get("descriptionFr") as string) || "";
-  const imageUrl = formData.get("imageUrl") as string | null;
 
-  const data = {
-    name,
-    slug: slug.toLowerCase().trim(),
-    breedId,
-    species,
-    gender,
-    priceCents,
-    currency: "EUR",
-    status,
-    published,
-    city,
-    country,
-    descriptionEn,
-    descriptionFr,
-    temperamentEn: "[]",
-    temperamentFr: "[]",
-    coat: "Standard",
-    color: "Standard",
-    size: (formData.get("size") as Size) || Size.MEDIUM,
-    dateOfBirth: new Date("2026-01-01"),
-    socializationEn: "European Concierge standard socialization",
-    socializationFr: "Socialisation selon le protocole de conciergerie",
-  };
-
-  let animal;
-  if (id) {
-    animal = await prisma.animal.update({
-      where: { id },
-      data,
-    });
-  } else {
-    animal = await prisma.animal.create({
-      data,
-    });
-  }
-
-  if (imageUrl && animal) {
-    await prisma.animalImage.create({
-      data: {
-        animalId: animal.id,
-        url: imageUrl,
-        sortOrder: 0,
-      },
-    });
-  }
-
-  revalidatePath("/admin/animals");
-  return { success: true, animalId: animal.id };
-}
-
-export async function actionDeleteAnimal(animalId: string) {
-  await requireSuperAdmin();
-  await prisma.animal.delete({
-    where: { id: animalId },
-  });
-  revalidatePath("/admin/animals");
-  return { success: true };
-}
 
 export async function actionSaveBreed(formData: FormData) {
   await requireSuperAdmin();
