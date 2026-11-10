@@ -117,9 +117,10 @@ export async function getFeaturedAnimals(limit = 6) {
   });
 }
 
+/** Public profile lookup: unpublished listings and the internal payment-test animal are never exposed. */
 export async function getAnimalBySlug(slug: string) {
-  const animal = await prisma.animal.findUnique({
-    where: { slug },
+  const animal = await prisma.animal.findFirst({
+    where: { slug, published: true, isPaymentTest: false },
     include: {
       breed: true,
       breeder: true,

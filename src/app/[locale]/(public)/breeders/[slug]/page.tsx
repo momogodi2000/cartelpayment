@@ -51,7 +51,7 @@ export default async function BreederProfilePage({
     where: { slug },
     include: {
       animals: {
-        where: { published: true },
+        where: { published: true, isPaymentTest: false },
         include: { images: true, breed: true },
       },
     },

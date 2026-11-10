@@ -24,9 +24,11 @@
         "db:seed": "tsx scripts/db.ts seed",
         "db:reset": "tsx scripts/db.ts reset",
         "db:studio": "tsx scripts/db.ts studio",
-        "admin:bootstrap": "tsx scripts/admin-bootstrap.ts",
+        "admin:bootstrap": "tsx scripts/generate-super-admin-credentials.ts",
         "cron:run": "tsx scripts/cron-runner.ts",
-        "icons:generate": "node scripts/generate-app-icons.js"
+        "icons:generate": "node scripts/generate-app-icons.js",
+        "admin:credentials": "tsx scripts/generate-super-admin-credentials.ts",
+        "db:purge-fabricated": "tsx scripts/purge-fabricated-records.ts"
     },
     "overrides": {
         "effect": "^3.21.2",
