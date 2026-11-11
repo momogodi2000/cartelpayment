@@ -114,6 +114,7 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
                   src={animal.images[0]?.url || "/images/chien/golden-retriever-1.jpeg"}
                   alt={animal.name}
                   fill
+                  sizes="64px"
                   className="object-cover"
                 />
               </div>

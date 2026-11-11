@@ -54,6 +54,10 @@ export default async function AdminRootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body
+        // Browser extensions (e.g. Grammarly: data-gr-*) add attributes to <body> before React hydrates.
+        // Verified in a clean profile: the app itself renders identical server/client markup.
+        // This flag is shallow: it silences attribute drift on <body> only, never its children.
+        suppressHydrationWarning
         className="min-h-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans selection:bg-[#B69A65]/30"
       >
         {children}

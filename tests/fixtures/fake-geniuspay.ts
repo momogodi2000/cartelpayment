@@ -25,7 +25,7 @@ export class FakeGeniusPay {
   /** Behaviour per requested gateway (key "default" = no gateway field). */
   public createBehavior: Record<string, CreateBehavior> = {};
   /** Payments known to the fake provider, by reference. */
-  public payments = new Map<string, { status: string; amount: number; currency: string; metadata: any; phone: string; checkoutUrl: string; gateway: string | null }>();
+  public payments = new Map<string, { createdAt: string; status: string; amount: number; currency: string; metadata: any; phone: string; checkoutUrl: string; gateway: string | null }>();
   private seq = 0;
   /** When true, the documented search endpoint fails (provider unreachable during reconciliation). */
   public searchFails = false;
@@ -68,12 +68,13 @@ export class FakeGeniusPay {
       }
 
       if (req.method === "POST" && url.pathname === "/api/v1/merchant/payments") {
-        const key = body?.gateway || "default";
+        const key = body?.gateway || (body?.payment_method && body.payment_method !== "card" ? body.payment_method : "default");
         const behavior = this.createBehavior[key] ?? { kind: "http", status: 422, body: { success: false, error: { code: "VALIDATION_ERROR", message: "Une erreur est survenue" } } };
         if (behavior.kind === "hang") return; // client aborts on timeout
         if (behavior.kind === "hangAfterCreate") {
           const reference = `MTX-HIDDEN${String(++this.seq).padStart(5, "0")}`;
           this.payments.set(reference, {
+            createdAt: new Date().toISOString(),
             status: "pending",
             amount: body.amount,
             currency: body.currency,
@@ -92,6 +93,7 @@ export class FakeGeniusPay {
         const checkoutUrl = `https://${host}/c/${reference}`;
         const currency = behavior.currency ?? body.currency;
         this.payments.set(reference, {
+          createdAt: new Date().toISOString(),
           status: "pending",
           amount: body.amount,
           currency,
@@ -111,7 +113,7 @@ export class FakeGeniusPay {
         const search = url.searchParams.get("search") || "";
         const data = [...this.payments.entries()]
           .filter(([, p]) => p.phone === search)
-          .map(([reference, p]) => ({ reference, amount: p.amount, currency: p.currency, status: p.status, created_at: new Date().toISOString() }));
+          .map(([reference, p]) => ({ reference, amount: p.amount, currency: p.currency, status: p.status, created_at: p.createdAt }));
         return this.send(res, 200, { success: true, data, meta: { current_page: 1 } });
       }
 
@@ -132,6 +134,7 @@ export class FakeGeniusPay {
   /** Simulates a session that exists at the provider although the create call timed out. */
   addHiddenSession(reference: string, data: { amount: number; currency: string; phone: string; attemptRef: string; gateway: string | null }) {
     this.payments.set(reference, {
+      createdAt: new Date().toISOString(),
       status: "pending",
       amount: data.amount,
       currency: data.currency,

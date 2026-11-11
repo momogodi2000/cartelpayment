@@ -104,9 +104,11 @@ async function resolveAmbiguousAttempt(params: {
       const from = new Date(params.since.getTime() - 24 * 3600 * 1000).toISOString().slice(0, 10);
       const expectedAmount = formatForGeniusPay(params.amountCents);
       const items = await geniusPay.searchPayments(params.phone, from);
+      // Newest first: the session we are looking for was created moments ago.
       candidates = items
         .filter((i) => Math.abs(i.amount - expectedAmount) < 1e-9)
-        .slice(0, 5)
+        .sort((a, b) => Date.parse(b.createdAt ?? "") - Date.parse(a.createdAt ?? "") || 0)
+        .slice(0, 20)
         .map((i) => i.reference);
     }
 

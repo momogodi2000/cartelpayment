@@ -140,6 +140,10 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body
+        // Browser extensions (e.g. Grammarly: data-gr-*) add attributes to <body> before React hydrates.
+        // Verified in a clean profile: the app itself renders identical server/client markup.
+        // This flag is shallow: it silences attribute drift on <body> only, never its children.
+        suppressHydrationWarning
         className="min-h-full flex flex-col bg-bg-premium text-text-premium font-sans"
       >
         <NextIntlClientProvider locale={locale} messages={messages}>

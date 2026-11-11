@@ -1,76 +1,57 @@
 {
-  "updatedAt": "2026-11-10T00:19:45.701Z",
+  "updatedAt": "2026-11-11T00:00:00.000Z",
   "environment": "production",
+  "method": "Card gateways are selected with `payment_method`; the `gateway` field only accepts mobile-money values (HTTP 422 validation.in). Evidence: docs/GATEWAY_PROBE_REPORT.md.",
   "verifiedGateways": [
     {
-      "id": "default",
-      "accepted": true,
+      "id": "stripe",
+      "identifierAccepted": true,
       "cardCapable": true,
       "currencies": [
         "EUR"
       ],
-      "isStripeTest": false,
-      "isLive": false,
-      "lastStatus": 201,
-      "lastError": null,
-      "echoedGateway": "paystack",
-      "unpaidProbeReference": "MTX-UAF0OUUBYY"
-    },
-    {
-      "id": "stripe",
       "accepted": false,
-      "cardCapable": false,
-      "currencies": [
-        "EUR"
-      ],
-      "isStripeTest": false,
-      "isLive": false,
-      "lastStatus": 422,
-      "lastError": "Une erreur est survenue",
-      "echoedGateway": null,
-      "unpaidProbeReference": null
+      "lastError": "Your account cannot currently make live charges (GeniusPay-side Stripe activation; ticket TKT-AF45C8DA)"
     },
     {
       "id": "paystack",
-      "accepted": false,
+      "identifierAccepted": true,
       "cardCapable": false,
       "currencies": [
-        "EUR"
+        "XOF"
       ],
-      "isStripeTest": false,
-      "isLive": false,
-      "lastStatus": 422,
-      "lastError": "Une erreur est survenue",
-      "echoedGateway": null,
-      "unpaidProbeReference": null
+      "accepted": false,
+      "lastError": "Converts EUR to XOF and rejects non-integer XOF amounts"
     },
     {
       "id": "paiementpro",
-      "accepted": false,
+      "identifierAccepted": true,
       "cardCapable": false,
       "currencies": [
-        "EUR"
+        "XOF"
       ],
-      "isStripeTest": false,
-      "isLive": false,
-      "lastStatus": 422,
-      "lastError": "Une erreur est survenue",
-      "echoedGateway": null,
-      "unpaidProbeReference": null
+      "accepted": true,
+      "lastError": "Session created in XOF, not EUR"
     },
     {
       "id": "cinetpay",
-      "accepted": false,
+      "identifierAccepted": true,
       "cardCapable": false,
       "currencies": [
-        "EUR"
+        "XOF"
       ],
-      "isStripeTest": false,
-      "isLive": false,
-      "lastStatus": 422,
-      "lastError": "Une erreur est survenue",
-      "echoedGateway": null,
-      "unpaidProbeReference": null
+      "accepted": false,
+      "lastError": "Provider cannot resolve api-checkout.cinetpay.com (unavailable)"
+    },
+    {
+      "id": "default",
+      "identifierAccepted": true,
+      "cardCapable": false,
+      "currencies": [
+        "XOF"
+      ],
+      "accepted": true,
+      "lastError": "Default card routing goes to Paystack in XOF"
     }
   ]
 }

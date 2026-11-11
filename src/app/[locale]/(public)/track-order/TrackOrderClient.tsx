@@ -112,6 +112,7 @@ export default function TrackOrderClient({ initialRef, locale, authenticatedOrde
                 src={animal.images?.[0]?.url || "/images/chien/golden-retriever-1.jpeg"}
                 alt={animal.name}
                 fill
+                sizes="80px"
                 className="object-cover"
               />
             </div>

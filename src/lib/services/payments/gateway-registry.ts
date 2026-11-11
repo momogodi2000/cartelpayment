@@ -56,42 +56,44 @@ const BASE_REGISTRY: GatewayConfig[] = [
     id: "stripe",
     label: "Stripe",
     method: "card",
-    selection: { field: "gateway", value: "stripe" },
+    selection: { field: "payment_method", value: "stripe" },
     currencies: ["EUR"],
     minAmountCents: 100,
     maxAmountCents: 5_000_000,
     priority: 1,
     enabled: true,
-    note: "Preferred card processor. GeniusPay ticket TKT-AF45C8DA reports a provider-side malfunction.",
+    note: "Only real EUR card processor. Selected with payment_method=stripe. Live probe 2026-11-11: GeniusPay answers \"Your account cannot currently make live charges\" (ticket TKT-AF45C8DA).",
   },
   {
     id: "paystack",
     label: "Paystack",
     method: "card",
-    selection: { field: "gateway", value: "paystack" },
-    currencies: ["EUR"],
+    selection: { field: "payment_method", value: "paystack" },
+    currencies: ["XOF"],
     minAmountCents: 100,
     maxAmountCents: 5_000_000,
     priority: 2,
     enabled: true,
+    note: "Live probe 2026-11-11: GeniusPay converts EUR to XOF (about 610.7 XOF per €1) and charges XOF. Not used for EUR checkout.",
   },
   {
     id: "paiementpro",
     label: "PaiementPro",
     method: "card",
-    selection: { field: "gateway", value: "paiementpro" },
-    currencies: ["EUR"],
+    selection: { field: "payment_method", value: "paiementpro" },
+    currencies: ["XOF"],
     minAmountCents: 100,
     maxAmountCents: 5_000_000,
     priority: 3,
     enabled: true,
+    note: "Live probe 2026-11-11: the session is created in XOF (about 610.7 XOF per €1). Not used for EUR checkout.",
   },
   {
     id: "cinetpay",
     label: "CinetPay",
     method: "card",
-    selection: { field: "gateway", value: "cinetpay" },
-    currencies: ["EUR"],
+    selection: { field: "payment_method", value: "cinetpay" },
+    currencies: ["XOF"],
     minAmountCents: 100,
     maxAmountCents: 5_000_000,
     priority: 4,
@@ -109,8 +111,8 @@ const BASE_REGISTRY: GatewayConfig[] = [
     minAmountCents: 100,
     maxAmountCents: 5_000_000,
     priority: 10,
-    enabled: true,
-    note: "Verified by probe: routed to Paystack card checkout for EUR.",
+    enabled: false,
+    note: "Disabled: GeniusPay default card routing goes to Paystack and charges XOF, not EUR.",
   },
   // Mobile money — registered, never card-eligible, not offered in the European checkout.
   { id: "pal", label: "PAL", method: "mobile_money", selection: { field: "gateway", value: "pal" }, currencies: [], minAmountCents: 0, maxAmountCents: 0, priority: 100, enabled: false },
@@ -121,10 +123,11 @@ const BASE_REGISTRY: GatewayConfig[] = [
 /** Initial verification evidence shipped with the build (probe output). */
 function staticEvidence(id: string): boolean {
   const key = id === DEFAULT_ROUTE_ID ? "default" : id;
-  const entry = (capabilities.verifiedGateways as Array<{ id: string; accepted: boolean; cardCapable: boolean }>).find(
+  const entry = (capabilities.verifiedGateways as Array<{ id: string; identifierAccepted: boolean; cardCapable: boolean }>).find(
     (g) => g.id === key
   );
-  return Boolean(entry?.accepted && entry?.cardCapable);
+  // Identifier accepted by GeniusPay's validation AND capable of a EUR card session.
+  return Boolean(entry?.identifierAccepted && entry?.cardCapable);
 }
 
 export function getBaseRegistry(): GatewayConfig[] {
