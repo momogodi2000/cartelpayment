@@ -11,14 +11,43 @@
  * e.g. 125000 cents -> 1 250,00 €
  */
 export function formatMoney(cents: number, currency = "EUR", locale = "fr-FR"): string {
-  const major = cents / 100;
+  const cur = currency.toUpperCase();
+  const digits = currencyDecimals(cur);
+  const major = digits === 0 ? cents : cents / 100;
   const normalizedLocale = locale === "fr" || locale === "fr-FR" ? "fr-FR" : "en-GB";
   return new Intl.NumberFormat(normalizedLocale, {
     style: "currency",
-    currency: currency.toUpperCase(),
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    currency: cur,
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
   }).format(major);
+}
+
+/** Currencies without a minor unit: the stored integer IS the whole-unit amount (e.g. XOF). */
+const ZERO_DECIMAL_CURRENCIES = new Set(["XOF", "XAF"]);
+
+/** Decimal places of a currency as used by Pawelium's stored integers (XOF = 0, EUR = 2). */
+export function currencyDecimals(currency: string): 0 | 2 {
+  return ZERO_DECIMAL_CURRENCIES.has(currency.toUpperCase()) ? 0 : 2;
+}
+
+/**
+ * Amount in the form GeniusPay expects for `currency`: zero-decimal currencies are sent as a
+ * plain integer (Paystack rejects non-integer XOF), others follow GENIUSPAY_AMOUNT_UNIT.
+ */
+export function formatAmountForGeniusPay(stored: number, currency: string): number {
+  if (currencyDecimals(currency) === 0) {
+    if (!Number.isInteger(stored)) throw new Error(`Non-integer ${currency} amount: ${stored}`);
+    return stored;
+  }
+  return formatForGeniusPay(stored);
+}
+
+/** Parses a provider amount back to Pawelium's stored integer for `currency`. */
+export function parseAmountFromGeniusPay(amount: number, currency: string): number {
+  // Zero-decimal: a fractional provider amount can never match, so surface it as NaN (mismatch).
+  if (currencyDecimals(currency) === 0) return Number.isInteger(amount) ? amount : NaN;
+  return parseFromGeniusPay(amount);
 }
 
 /**

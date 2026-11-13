@@ -551,6 +551,13 @@ model Payment {
   environment       PaymentEnv          @default(SANDBOX)
   isSeedDemo        Boolean             @default(false)
   isTest            Boolean             @default(false) // Internal payment-integration test payment
+  // `amountCents` / `currency` are the CHARGED amount (gateway currency). For XOF this is whole francs
+  // (XOF has no minor unit). The marketplace (order) amount is preserved in the original* fields.
+  originalAmountCents Int?
+  originalCurrency    String?
+  fxRate              String? // decimal string: XOF per 1 EUR
+  fxSource            String?
+  fxQuotedAt          DateTime?
   rawLast           String? // JSON snapshot of last response
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt

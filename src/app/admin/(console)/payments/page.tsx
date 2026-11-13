@@ -200,6 +200,7 @@ export default async function AdminPaymentsPage({ searchParams }: { searchParams
           <select name="currency" defaultValue={f.currency ?? ""} className="rounded-lg border border-zinc-300 bg-white px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-800">
             <option value="">{t("filters.all")}</option>
             <option value="EUR">EUR</option>
+            <option value="XOF">XOF</option>
             <option value="USD">USD</option>
           </select>
         </label>
@@ -248,7 +249,14 @@ export default async function AdminPaymentsPage({ searchParams }: { searchParams
                           <span className="block">{p.order.customer.name}</span>
                           <span className="block text-xs text-zinc-500">{p.order.customer.email}</span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-2 tabular-nums">{formatMoney(p.amountCents, p.currency, locale)}</td>
+                        <td className="whitespace-nowrap px-3 py-2 tabular-nums">
+                          {formatMoney(p.amountCents, p.currency, locale)}
+                          {p.originalAmountCents != null && p.originalCurrency && p.originalCurrency !== p.currency && (
+                            <span className="block text-[11px] text-zinc-500">
+                              {t("fxLine", { original: formatMoney(p.originalAmountCents, p.originalCurrency, locale), rate: p.fxRate ?? "—", source: p.fxSource ?? "—" })}
+                            </span>
+                          )}
+                        </td>
                         <td className="px-3 py-2">
                           <span className="font-semibold">{t(`states.${label}`)}</span>
                           <span className="block text-[11px] text-zinc-500">{p.status}</span>

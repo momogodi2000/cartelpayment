@@ -32,6 +32,7 @@ export async function probeGateway(
   const gateway = getBaseRegistry().find((g) => g.id === gatewayId && g.method === "card");
   if (!gateway) throw new Error(`Unknown card gateway: ${gatewayId}`);
 
+  const probeCurrency = gateway.currencies[0] ?? "EUR";
   const ref = `PROBE-${generateToken(4).toUpperCase()}`;
   const outcome: ProbeOutcome = {
     gatewayId,
@@ -51,8 +52,9 @@ export async function probeGateway(
       orderRef: ref,
       paymentId: ref,
       attemptRef: ref,
-      amountCents: 100,
-      currency: "EUR",
+      // Probe in the gateway's own currency: XOF as a whole-franc integer, EUR in cents.
+      amountCents: probeCurrency === "XOF" ? 1000 : 100,
+      currency: probeCurrency,
       selection: gateway.selection,
       customer: { ...customer, country: "FR" },
       successUrl: `${siteUrl}/en`,
@@ -71,7 +73,7 @@ export async function probeGateway(
     const echoMatches =
       gateway.id === DEFAULT_ROUTE_ID ? true : !session.gateway || session.gateway === gateway.id;
     outcome.accepted =
-      echoMatches && isAcceptableCardSession(session.gateway, session.checkoutUrl) && (!session.currency || session.currency === "EUR");
+      echoMatches && isAcceptableCardSession(session.gateway, session.checkoutUrl) && (!session.currency || session.currency === probeCurrency);
   } catch (err) {
     if (err instanceof GeniusPayError) {
       outcome.httpStatus = err.httpStatus;

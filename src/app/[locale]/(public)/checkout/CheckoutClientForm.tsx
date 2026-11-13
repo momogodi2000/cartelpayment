@@ -1,24 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { startCheckout } from "@/app/actions/checkout";
+import { startCheckout, quoteCheckout } from "@/app/actions/checkout";
 import { Loader2, Lock, ShieldCheck } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
+import { formatMoney } from "@/lib/domain/money";
+
+interface Quote {
+  eurCents: number;
+  xofAmount: number;
+  rate: string;
+}
 
 interface Props {
   animalId: string;
   locale: string;
+  /** Server-computed EUR -> XOF quote, or null when the rate is unavailable. */
+  initialQuote: Quote | null;
+  /** True while the active card gateway charges XOF: disclosure + authorization are mandatory. */
+  requiresXof: boolean;
 }
 
-export default function CheckoutClientForm({ animalId, locale }: Props) {
+export default function CheckoutClientForm({ animalId, locale, initialQuote, requiresXof }: Props) {
   const t = useTranslations("Checkout");
   const tl = useTranslations("PublicPages.labels");
   const [serverError, setServerError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [quote, setQuote] = useState<Quote | null>(initialQuote);
 
   const formSchema = z.object({
     name: z.string().min(2, t("fullName")),
@@ -32,6 +44,9 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
     termsAccepted: z.boolean().refine((val) => val === true, {
       message: t("termsError"),
     }),
+    xofConsent: z.boolean().refine((val) => !requiresXof || val === true, {
+      message: t("xofConsentError"),
+    }),
   });
 
   type FormValues = z.infer<typeof formSchema>;
@@ -39,6 +54,8 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
   const {
     register,
     handleSubmit,
+    resetField,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -52,10 +69,44 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
       country: "France",
       deliveryMethod: "standard",
       termsAccepted: false,
+      xofConsent: false,
     },
   });
 
+  // The order total depends on the delivery country and method: re-quote whenever either changes so the
+  // amount the customer authorizes is always the one the server will charge.
+  const country = watch("country");
+  const deliveryMethod = watch("deliveryMethod");
+  const [quoting, setQuoting] = useState(false);
+  const firstQuote = useRef(true);
+  useEffect(() => {
+    if (!requiresXof) return;
+    if (firstQuote.current) {
+      firstQuote.current = false;
+      if (country === "France" && deliveryMethod === "standard") return; // server-rendered quote already matches
+    }
+    let cancelled = false;
+    setQuoting(true);
+    quoteCheckout(animalId, country, deliveryMethod)
+      .then((res) => {
+        if (cancelled) return;
+        setQuote(res.status === "ok" ? res.quote : null);
+        resetField("xofConsent", { defaultValue: false });
+        setServerError(null);
+      })
+      .catch(() => {
+        if (!cancelled) setQuote(null);
+      })
+      .finally(() => {
+        if (!cancelled) setQuoting(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [animalId, country, deliveryMethod, requiresXof, resetField]);
+
   const onSubmit = async (data: FormValues) => {
+    if (requiresXof && (!quote || quoting)) return;
     setServerError(null);
     setSubmitting(true);
 
@@ -70,6 +121,10 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
     formData.append("country", data.country);
     formData.append("deliveryMethod", data.deliveryMethod);
     formData.append("termsAccepted", data.termsAccepted ? "true" : "false");
+    if (quote) {
+      formData.append("xofConsent", data.xofConsent ? "true" : "false");
+      formData.append("expectedXofAmount", String(quote.xofAmount));
+    }
     formData.append("locale", locale);
 
     try {
@@ -77,6 +132,11 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
       if (result.success && result.checkoutUrl) {
         window.location.assign(result.checkoutUrl);
       } else {
+        // The server amount differs from what was shown: show the new one and require re-authorization.
+        if (result.errorCode === "QUOTE_CHANGED" && result.quote) {
+          setQuote(result.quote);
+          resetField("xofConsent", { defaultValue: false });
+        }
         setServerError(result.error || t("termsError"));
         setSubmitting(false);
       }
@@ -262,10 +322,51 @@ export default function CheckoutClientForm({ animalId, locale }: Props) {
         )}
       </div>
 
+      {/* Actual charge disclosure: the provider processes this payment in XOF. */}
+      {requiresXof && (
+      <div className="pt-4 space-y-3">
+        <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-white border-b border-black/[0.06] dark:border-zinc-800 pb-2">
+          {t("xofTitle")}
+        </h3>
+        {quote ? (
+          <>
+            <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">{t("xofExplain")}</p>
+            <dl className="rounded-2xl bg-[#F8F6F0] dark:bg-zinc-800 p-4 space-y-2 text-xs">
+              <div className="flex justify-between">
+                <dt className="text-gray-600 dark:text-gray-300">{t("xofOrderAmount")}</dt>
+                <dd className="font-semibold text-gray-900 dark:text-white">{formatMoney(quote.eurCents, "EUR", locale)}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-gray-600 dark:text-gray-300">{t("xofChargedAmount")}</dt>
+                <dd className="font-bold text-gray-900 dark:text-white" data-testid="xof-amount">
+                  {formatMoney(quote.xofAmount, "XOF", locale)}
+                </dd>
+              </div>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400">{t("xofRate", { rate: quote.rate })}</p>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400">{t("xofBankNote")}</p>
+            </dl>
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                {...register("xofConsent")}
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-[#183C32] focus:ring-[#183C32]"
+              />
+              <span className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+                {t("xofConsent", { amount: formatMoney(quote.xofAmount, "XOF", locale) })}
+              </span>
+            </label>
+            {errors.xofConsent && <p className="text-red-600 text-xs">{errors.xofConsent.message}</p>}
+          </>
+        ) : (
+          <p className="text-xs font-semibold text-red-600">{t("xofUnavailable")}</p>
+        )}
+      </div>
+      )}
+
       {/* Submit Button */}
       <button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || quoting || (requiresXof && !quote)}
         className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl bg-[#183C32] hover:bg-[#183C32]/90 text-white font-bold text-base shadow-lg shadow-[#183C32]/10 transition-all disabled:opacity-50 cursor-pointer"
       >
         {submitting ? (

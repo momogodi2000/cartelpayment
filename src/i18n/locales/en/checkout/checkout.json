@@ -48,6 +48,17 @@
     "errorValidation": "Please check the highlighted fields.",
     "errorReview": "Your payment needs a manual check. Our team will contact you by email; please do not pay again.",
     "errorNetwork": "Network error. Please check your connection and try again.",
+    "xofTitle": "Amount that will be charged",
+    "xofExplain": "Our card payment provider processes this transaction in West African CFA francs (XOF). Prices on Pawelium stay in euros; the amount below is converted at the time of payment and shown here before you pay.",
+    "xofOrderAmount": "Order total (EUR)",
+    "xofChargedAmount": "Amount charged (XOF)",
+    "xofRate": "Exchange rate: 1 EUR = {rate} XOF",
+    "xofBankNote": "Your bank may apply its own currency conversion fees.",
+    "xofConsent": "I understand and authorize a card payment of {amount} (XOF) for this order.",
+    "xofConsentError": "Please authorize the amount that will be charged.",
+    "xofUnavailable": "The amount to charge cannot be calculated right now. Please try again in a few minutes.",
+    "errorFxUnavailable": "The exchange rate is temporarily unavailable, so payment cannot start. You have not been charged. Please try again in a few minutes.",
+    "errorQuoteChanged": "The amount to charge was updated. Please review the new amount ({amount}) and confirm again.",
     "backToCatalogue": "Back to the catalogue"
   }
 }

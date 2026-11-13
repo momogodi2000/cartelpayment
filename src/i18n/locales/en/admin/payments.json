@@ -60,6 +60,7 @@
     },
     "testBadge": "TEST",
     "showDetails": "Show attempts and webhooks",
+    "fxLine": "Order {original} · 1 EUR = {rate} XOF ({source})",
     "attemptsTitle": "Gateway attempts",
     "attemptCols": {
       "no": "#",
@@ -121,7 +122,7 @@
       "outagePrompt": "Outage note (for example the provider ticket reference)",
       "trial": "Allow one trial",
       "probe": "Re-verify",
-      "probeConfirm": "This creates one unpaid €1.00 EUR session at GeniusPay (no charge; it expires after 24 hours). Continue?",
+      "probeConfirm": "This creates one unpaid test session at GeniusPay (1,000 XOF for XOF gateways, €1.00 for EUR gateways) (no charge; it expires after 24 hours). Continue?",
       "probeAccepted": "Verified: GeniusPay accepted the session (gateway {gateway}).",
       "probeRejected": "Not verified: {message}",
       "mobileMoney": "Mobile money — registered, never used for card payments",

@@ -1,7 +1,7 @@
 {
   "AdminTestPayment": {
     "title": "Internal card payment test",
-    "subtitle": "One controlled €1.00 EUR transaction with the internal test dog, to verify the complete live payment chain: gateway routing, hosted checkout, card authorisation, webhook, settlement and history.",
+    "subtitle": "One controlled 1,000 XOF (FCFA) card charge on the internal test order (the order itself stays €1.00 and never touches a real animal), to verify the complete live payment chain: gateway routing, hosted checkout, card authorisation, webhook, settlement and history.",
     "isolationTitle": "Isolation safeguards",
     "isolation1": "The test dog is unpublished and excluded from the catalogue, search, breed and breeder pages, sitemap and structured data.",
     "isolation2": "Public checkout rejects it server-side; only an authenticated SUPER_ADMIN can start this payment.",
@@ -19,8 +19,8 @@
     "breakerState": "circuit {state}",
     "startTitle": "Start the live test",
     "phoneLabel": "Mobile phone (used by the payment provider)",
-    "authorizeLabel": "I authorise exactly one live charge of €1.00 EUR to my own card. I understand any non-refundable processing fee may apply.",
-    "startButton": "Create the secure €1.00 card payment",
+    "authorizeLabel": "I authorise exactly one live charge of 1,000 XOF (FCFA) to my own card. I understand any non-refundable processing fee may apply.",
+    "startButton": "Create the secure 1,000 XOF card payment",
     "starting": "Creating the payment session…",
     "sessionReady": "Payment session created. Complete the payment in the provider's secure window.",
     "openCheckout": "Open the secure payment page",

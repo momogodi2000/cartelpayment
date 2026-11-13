@@ -61,20 +61,24 @@ const BASE_REGISTRY: GatewayConfig[] = [
     minAmountCents: 100,
     maxAmountCents: 5_000_000,
     priority: 1,
-    enabled: true,
-    note: "Only real EUR card processor. Selected with payment_method=stripe. Live probe 2026-11-11: GeniusPay answers \"Your account cannot currently make live charges\" (ticket TKT-AF45C8DA).",
+    // Retained for restoration. Disabled while GeniusPay reports Stripe unavailable (GeniusPay support
+    // confirmed a technical malfunction). See docs/GATEWAY_PROBE_REPORT.md for the reactivation steps.
+    enabled: false,
+    note: "Future preferred EUR card gateway (payment_method=stripe). Temporarily unavailable on GeniusPay: \"Your account cannot currently make live charges\" (ticket TKT-AF45C8DA). Do not enable until a probe succeeds.",
   },
   {
     id: "paystack",
     label: "Paystack",
     method: "card",
     selection: { field: "payment_method", value: "paystack" },
+    // Whole-XOF amounts (XOF has no minor unit). Pawelium converts EUR -> XOF itself (fx.ts);
+    // GeniusPay must never convert implicitly (Paystack rejects fractional XOF).
     currencies: ["XOF"],
     minAmountCents: 100,
-    maxAmountCents: 5_000_000,
+    maxAmountCents: 50_000_000,
     priority: 2,
     enabled: true,
-    note: "Live probe 2026-11-11: GeniusPay converts EUR to XOF (about 610.7 XOF per €1) and charges XOF. Not used for EUR checkout.",
+    note: "Temporary active card gateway while Stripe is unavailable. Charged in XOF through the official GeniusPay/Paystack checkout.",
   },
   {
     id: "paiementpro",
@@ -85,8 +89,8 @@ const BASE_REGISTRY: GatewayConfig[] = [
     minAmountCents: 100,
     maxAmountCents: 5_000_000,
     priority: 3,
-    enabled: true,
-    note: "Live probe 2026-11-11: the session is created in XOF (about 610.7 XOF per €1). Not used for EUR checkout.",
+    enabled: false,
+    note: "Not part of the approved routing (Paystack is the only active XOF card gateway). Disabled so a Paystack failure never silently moves the customer to another processor.",
   },
   {
     id: "cinetpay",
@@ -170,6 +174,23 @@ export async function getResolvedRegistry(): Promise<ResolvedGateway[]> {
       };
     })
     .sort((a, b) => a.priority - b.priority);
+}
+
+/**
+ * Currency the customer will be charged in by the highest-priority usable card gateway for an
+ * order of `eurCents` (EUR when Stripe is restored, XOF while Paystack is the active gateway).
+ * Drives whether the checkout must disclose and collect authorization for a XOF charge.
+ */
+export async function getPrimaryCardCurrency(eurCents: number): Promise<"EUR" | "XOF" | null> {
+  for (const g of await getResolvedRegistry()) {
+    if (g.method !== "card" || !g.enabled || !g.verified || g.currencies.length === 0) continue;
+    if (g.currencies.includes("EUR")) {
+      if (eurCents >= g.minAmountCents && eurCents <= g.maxAmountCents) return "EUR";
+      continue;
+    }
+    if (g.currencies.includes("XOF")) return "XOF";
+  }
+  return null;
 }
 
 /** Ordered card gateways that are enabled, verified, and support the amount/currency. */

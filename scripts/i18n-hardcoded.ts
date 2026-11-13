@@ -69,7 +69,7 @@ function brandGuard(): number {
 }
 
 const ATTRS = new Set(["placeholder", "title", "alt", "aria-label", "aria-description", "label"]);
-const ALLOWED_TEXT = new Set(["english", "français", "usd", "pawelium", "whatsapp", "visa", "mastercard", "eur", "en", "fr", "pdf", "faq", "ok", "id", "ids", "x", "p"]);
+const ALLOWED_TEXT = new Set(["english", "français", "usd", "xof", "pawelium", "whatsapp", "visa", "mastercard", "eur", "en", "fr", "pdf", "faq", "ok", "id", "ids", "x", "p"]);
 
 function isTranslatable(text: string): boolean {
   const t = text.trim().replace(/[.,;:!?]+$/, "");

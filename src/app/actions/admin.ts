@@ -25,7 +25,7 @@ import { adminReplyTicket } from "@/lib/services/support";
 import { reconcileUnresolvedPayments } from "@/lib/services/payments/reconciliation";
 import { releaseHold, acquireHold, AnimalUnavailableError } from "@/lib/services/inventory";
 import { createPaymentSessionForOrder } from "@/lib/services/payments/checkout-session";
-import { CardPaymentUnavailableError } from "@/lib/services/payments/payment-initialization";
+import { CardPaymentUnavailableError, TEST_PAYMENT_XOF_AMOUNT } from "@/lib/services/payments/payment-initialization";
 import { applyProviderStatus } from "@/lib/services/payments/settlement";
 import {
   AnimalStatus,
@@ -337,14 +337,16 @@ export async function actionStartTestPayment(
   }
 
   try {
-    const session = await createPaymentSessionForOrder(hold.orderId);
+    // Controlled test: the internal order stays €1.00 (never a real animal), the card charge is
+    // exactly 1,000 XOF through the official GeniusPay/Paystack checkout (no FX conversion).
+    const session = await createPaymentSessionForOrder(hold.orderId, { fixedXofAmount: TEST_PAYMENT_XOF_AMOUNT });
     await logAudit({
       actorType: "ADMIN",
       adminId: admin.id,
       action: "START_TEST_PAYMENT",
       entity: "Order",
       entityId: hold.orderId,
-      diff: { orderRef: hold.orderReference, amountCents: 100, currency: "EUR" },
+      diff: { orderRef: hold.orderReference, orderAmountCents: 100, orderCurrency: "EUR", chargeAmount: TEST_PAYMENT_XOF_AMOUNT, chargeCurrency: "XOF" },
     });
     revalidatePath("/admin/test-payment");
     return { success: true, checkoutUrl: session.checkoutUrl, orderRef: hold.orderReference };

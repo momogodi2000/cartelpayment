@@ -35,7 +35,14 @@ const envSchema = z
     GENIUSPAY_AMOUNT_UNIT: z.enum(["major", "minor"]).default("major"),
     GENIUSPAY_PAYMENT_METHOD: z.string().default("card"),
     GENIUSPAY_TIMEOUT_MS: z.coerce.number().int().min(2000).max(30000).default(10000),
-    
+
+    // EUR -> XOF conversion for the GeniusPay/Paystack checkout (server only).
+    // Default source: ExchangeRate-API open endpoint (the ECB/Frankfurter feed does not publish XOF).
+    FX_RATE_API_URL: z.string().url().default("https://open.er-api.com/v6/latest/EUR"),
+    FX_RATE_TTL_SECONDS: z.coerce.number().int().min(0).max(3600).default(300),
+    FX_QUOTE_MAX_AGE_SECONDS: z.coerce.number().int().min(60).max(86400).default(1800),
+    FX_MARKUP_BPS: z.coerce.number().int().min(0).max(1000).default(0),
+
     // Inventory Rules
     HOLD_MINUTES: z.coerce.number().int().positive().default(30),
     
@@ -116,6 +123,10 @@ export function getEnv(): Env {
       GENIUSPAY_AMOUNT_UNIT: "major",
       GENIUSPAY_PAYMENT_METHOD: "card",
       GENIUSPAY_TIMEOUT_MS: 10000,
+      FX_RATE_API_URL: "https://open.er-api.com/v6/latest/EUR",
+      FX_RATE_TTL_SECONDS: 300,
+      FX_QUOTE_MAX_AGE_SECONDS: 1800,
+      FX_MARKUP_BPS: 0,
       HOLD_MINUTES: 30,
       ENCRYPTION_KEY: "",
       CRON_SECRET: "",

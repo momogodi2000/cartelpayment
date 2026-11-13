@@ -9,6 +9,7 @@ import { NextRequest } from "next/server";
 import { AnimalStatus, OrderStatus, PaymentStatus, ReservationStatus } from "@prisma/client";
 import { prisma } from "@/lib/db/client";
 import { resetEnvCacheForTests } from "@/lib/env";
+import { resetFxCache } from "@/lib/services/payments/fx";
 import { initializeCardPayment, CardPaymentUnavailableError } from "@/lib/services/payments/payment-initialization";
 import { getEligibleCardGateways } from "@/lib/services/payments/gateway-registry";
 import { recordProbeResult, markGatewayOutage } from "@/lib/services/payments/gateway-health";
@@ -24,6 +25,9 @@ const fake = new FakeGeniusPay();
 beforeAll(async () => {
   process.env.GENIUSPAY_BASE_URL = await fake.start();
   process.env.GENIUSPAY_TIMEOUT_MS = "2000";
+  process.env.FX_RATE_API_URL = fake.fxUrl;
+  process.env.FX_RATE_TTL_SECONDS = "0"; // every initialization asks the (fake) rate source
+  process.env.FX_MARKUP_BPS = "0";
   resetEnvCacheForTests();
 });
 
@@ -36,6 +40,9 @@ beforeEach(async () => {
   fake.requests = [];
   fake.createBehavior = {};
   fake.searchFails = false;
+  fake.fxRate = 655.957;
+  fake.fxFails = false;
+  resetFxCache();
   await prisma.gatewayHealth.deleteMany();
   await prisma.siteSetting.deleteMany({ where: { key: "payments.gateways" } });
 });
@@ -48,6 +55,12 @@ async function verify(...ids: string[]) {
 async function enableDefaultRoute(opts: { stripe?: boolean } = {}) {
   await verify("geniuspay_default_card");
   const value = JSON.stringify({ geniuspay_default_card: { enabled: true }, stripe: { enabled: opts.stripe ?? true } });
+  await prisma.siteSetting.upsert({ where: { key: "payments.gateways" }, create: { key: "payments.gateways", value }, update: { value } });
+}
+
+/** Stripe is retained but disabled while GeniusPay reports it unavailable; tests that need it opt in. */
+async function enableStripe() {
+  const value = JSON.stringify({ stripe: { enabled: true } });
   await prisma.siteSetting.upsert({ where: { key: "payments.gateways" }, create: { key: "payments.gateways", value }, update: { value } });
 }
 
@@ -71,10 +84,16 @@ function initInput(order: { id: string; reference: string; totalCents: number; c
 }
 
 describe("Gateway registry", () => {
-  it("routes EUR card payments only to Stripe by default; XOF gateways and mobile money are never eligible", async () => {
+  it("routes card payments only to Paystack (XOF) by default; Stripe is retained but disabled, mobile money never eligible", async () => {
     await verify("paystack", "paiementpro", "wave", "pawapay", "pal", "cinetpay");
-    const ids = (await getEligibleCardGateways("EUR", 120000)).map((g) => g.id);
-    expect(ids).toEqual(["stripe"]);
+    expect((await getEligibleCardGateways("XOF", 786000)).map((g) => g.id)).toEqual(["paystack"]);
+    expect(await getEligibleCardGateways("EUR", 120000)).toEqual([]);
+  });
+
+  it("Stripe is restored by configuration alone: EUR becomes eligible again and Paystack stays the XOF fallback", async () => {
+    await enableStripe();
+    expect((await getEligibleCardGateways("EUR", 120000)).map((g) => g.id)).toEqual(["stripe"]);
+    expect((await getEligibleCardGateways("XOF", 786000)).map((g) => g.id)).toEqual(["paystack"]);
   });
 
   it("adds the default route only when explicitly enabled and verified", async () => {
@@ -92,6 +111,7 @@ describe("Gateway registry", () => {
 
 describe("Card routing & safe fallback", () => {
   it("uses Stripe first when it is verified and healthy", async () => {
+    await enableStripe();
     fake.createBehavior = { stripe: { kind: "success", gateway: "stripe" } };
     const { order } = await newHeldOrder();
     const res = await initializeCardPayment(initInput(order));
@@ -194,6 +214,7 @@ describe("Card routing & safe fallback", () => {
   });
 
   it("resumes the open session instead of creating a second one for the same order", async () => {
+    await enableStripe();
     fake.createBehavior = { stripe: { kind: "success", gateway: "stripe" } };
     const { order } = await newHeldOrder();
     const first = await initializeCardPayment(initInput(order));
@@ -309,6 +330,7 @@ describe("Webhook route", () => {
   }
 
   async function paidScenario() {
+    await enableStripe();
     const { order } = await newHeldOrder();
     fake.createBehavior = { stripe: { kind: "success", gateway: "stripe" } };
     const init = await initializeCardPayment(initInput(order));
@@ -350,6 +372,7 @@ describe("Webhook route", () => {
 
 describe("Reservation expiry", () => {
   async function expiredHoldWithStatus(status: string | null) {
+    await enableStripe();
     const { animal, hold, order } = await newHeldOrder();
     fake.createBehavior = { stripe: { kind: "success", gateway: "stripe" } };
     const init = await initializeCardPayment(initInput(order));
@@ -394,7 +417,7 @@ describe("Internal €1 test dog", () => {
     await expect(holdAnimal(dog.id)).rejects.toBeInstanceOf(AnimalUnavailableError);
   });
 
-  it("admin flow charges exactly €1.00 EUR (no transport, fees or extra VAT) and flags the order as a test", async () => {
+  it("admin flow keeps the order at €1.00 EUR (no transport, fees or extra VAT) and charges exactly 1,000 XOF", async () => {
     const dog = await createAnimal({ priceCents: 100, isPaymentTest: true, published: false });
     const hold = await holdAnimal(dog.id, { allowPaymentTest: true });
     expect(hold.isTest).toBe(true);
@@ -403,11 +426,22 @@ describe("Internal €1 test dog", () => {
     expect(order.isTest).toBe(true);
     expect(order.totalCents).toBe(100);
 
-    fake.createBehavior = { stripe: { kind: "success", gateway: "stripe" } };
+    fake.createBehavior = { paystack: { kind: "success", gateway: "paystack" } };
     const c = fixtureCustomer();
-    const res = await initializeCardPayment({ ...initInput({ ...order, customer: c }), isTest: true });
-    expect(fake.createRequests()[0].body.amount).toBe(1);
-    expect(fake.createRequests()[0].body.currency).toBe("EUR");
-    expect((await prisma.payment.findUniqueOrThrow({ where: { id: res.paymentId } })).isTest).toBe(true);
+    const res = await initializeCardPayment({ ...initInput({ ...order, customer: c }), isTest: true, fixedXofAmount: 1000 });
+    const body = fake.createRequests()[0].body;
+    expect(body).toMatchObject({ amount: 1000, currency: "XOF", payment_method: "paystack" });
+    expect(Number.isInteger(body.amount)).toBe(true);
+    expect(res.chargedAmount).toBe(1000);
+    const payment = await prisma.payment.findUniqueOrThrow({ where: { id: res.paymentId } });
+    expect(payment).toMatchObject({ isTest: true, amountCents: 1000, currency: "XOF", originalAmountCents: 100, originalCurrency: "EUR", fxSource: "TEST_FIXED_XOF" });
+    expect(fake.fxRequests).toBe(0); // the fixed test amount never goes through FX
+    expect((await prisma.order.findUniqueOrThrow({ where: { id: order.id } })).totalCents).toBe(100);
+  });
+
+  it("refuses a fixed XOF amount on a non-test order", async () => {
+    const { order } = await newHeldOrder();
+    await expect(initializeCardPayment({ ...initInput(order), fixedXofAmount: 1000 })).rejects.toMatchObject({ reason: "CURRENCY_NOT_SUPPORTED" });
+    expect(fake.createRequests()).toHaveLength(0);
   });
 });

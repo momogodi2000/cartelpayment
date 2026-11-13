@@ -6,6 +6,8 @@ import { prisma } from "@/lib/db/client";
 import { calculatePricing } from "@/lib/domain/pricing";
 import { formatMoney } from "@/lib/domain/money";
 import { getEnv } from "@/lib/env";
+import { getEurXofQuote } from "@/lib/services/payments/fx";
+import { getPrimaryCardCurrency } from "@/lib/services/payments/gateway-registry";
 import { ShieldCheck, Lock, AlertCircle, ArrowLeft } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import CheckoutClientForm from "./CheckoutClientForm";
@@ -73,6 +75,16 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
   const breedName = locale === "fr" ? animal.breed.nameFr : animal.breed.nameEn;
   const initialPricing = calculatePricing(animal.priceCents, { deliveryCountry: "France" });
 
+  // Server-side EUR -> XOF quote disclosed to the customer. null = rate unavailable: payment is blocked.
+  // Only needed while the active card gateway charges XOF; not once a EUR gateway is active again.
+  const chargesXof = (await getPrimaryCardCurrency(initialPricing.totalCents)) === "XOF";
+  const xofQuote = chargesXof
+    ? await getEurXofQuote(initialPricing.totalCents).then(
+        (q) => ({ eurCents: q.eurCents, xofAmount: q.xofAmount, rate: q.rate }),
+        () => null
+      )
+    : null;
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
       <div>
@@ -97,6 +109,8 @@ export default async function CheckoutPage({ params, searchParams }: PageProps) 
           <CheckoutClientForm
             animalId={animal.id}
             locale={locale}
+            initialQuote={xofQuote}
+            requiresXof={chargesXof}
           />
         </div>
 

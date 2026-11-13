@@ -27,7 +27,7 @@ import {
 import { prisma } from "../../db/client";
 import { geniusPay, GeniusPayStatusResponse } from "./geniuspay";
 import { queueEmail } from "../email/outbox";
-import { parseFromGeniusPay, formatMoney } from "../../domain/money";
+import { parseAmountFromGeniusPay, formatMoney } from "../../domain/money";
 import { getEnv } from "../../env";
 
 export interface SettlementResult {
@@ -193,7 +193,7 @@ export async function settlePaymentAuthoritative(
     if (!animalId) throw new Error(`Order ${order.id} has no associated animal item.`);
 
     const providerCurrency = (providerData.currency || "").toUpperCase();
-    const providerMinor = Number.isFinite(providerData.amount) ? parseFromGeniusPay(providerData.amount) : NaN;
+    const providerMinor = Number.isFinite(providerData.amount) ? parseAmountFromGeniusPay(providerData.amount, payment.currency) : NaN;
     const currencyMismatch = !providerCurrency || providerCurrency !== payment.currency.toUpperCase();
     const amountMismatch = !Number.isFinite(providerMinor) || providerMinor !== payment.amountCents;
 

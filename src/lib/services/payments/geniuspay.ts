@@ -11,7 +11,7 @@
 
 import crypto from "node:crypto";
 import { getEnv } from "../../env";
-import { formatForGeniusPay } from "../../domain/money";
+import { formatAmountForGeniusPay } from "../../domain/money";
 
 /** How a specific gateway is requested from GeniusPay. `null` = GeniusPay default routing. */
 export type GatewaySelectionParam = { field: "gateway" | "payment_method"; value: string } | null;
@@ -173,7 +173,8 @@ export class GeniusPayProvider {
    */
   async createPayment(input: CreateGeniusPayPaymentInput): Promise<GeniusPayPaymentResponse> {
     const payload: Record<string, any> = {
-      amount: formatForGeniusPay(input.amountCents),
+      // XOF is sent as a whole-franc integer (Paystack rejects fractional XOF).
+      amount: formatAmountForGeniusPay(input.amountCents, input.currency),
       currency: input.currency.toUpperCase(),
       payment_method: getEnv().GENIUSPAY_PAYMENT_METHOD,
       description: input.description || `Pawelium order ${input.orderRef}`,

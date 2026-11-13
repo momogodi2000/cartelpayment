@@ -30,7 +30,8 @@
         "admin:credentials": "tsx scripts/generate-super-admin-credentials.ts",
         "db:purge-fabricated": "tsx scripts/purge-fabricated-records.ts",
         "prebuild": "npm run i18n:check",
-        "probe:gateways": "tsx scripts/geniuspay-probe.ts"
+        "probe:gateways": "tsx scripts/geniuspay-probe.ts",
+        "test:xof-payment": "tsx scripts/xof-test-payment.ts"
     },
     "overrides": {
         "effect": "^3.21.2",

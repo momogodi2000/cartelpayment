@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db/client";
 import { formatMoney } from "@/lib/domain/money";
 import { formatDateTime } from "@/lib/format";
 import { getEligibleCardGateways } from "@/lib/services/payments/gateway-registry";
+import { GATEWAY_CURRENCY, TEST_PAYMENT_XOF_AMOUNT } from "@/lib/services/payments/payment-initialization";
 import { getGatewayCircuitState } from "@/lib/services/payments/gateway-health";
 import TestPaymentClient, { RefreshTestPayment } from "./TestPaymentClient";
 import ScopedIntl from "@/i18n/ScopedIntl";
@@ -23,7 +24,7 @@ export default async function AdminTestPaymentPage() {
     include: { breed: true, images: { take: 1, orderBy: { sortOrder: "asc" } } },
   });
 
-  const eligible = await getEligibleCardGateways("EUR", 100);
+  const eligible = await getEligibleCardGateways(GATEWAY_CURRENCY, TEST_PAYMENT_XOF_AMOUNT);
   const routing = await Promise.all(
     eligible.map(async (g) => ({ id: g.id, label: g.label, verified: g.verified, state: await getGatewayCircuitState(g.id) }))
   );
@@ -83,7 +84,7 @@ export default async function AdminTestPaymentPage() {
             </div>
             <dl className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm">
               <dt className="text-zinc-500">{t("price")}</dt>
-              <dd className="font-bold text-[#183C32] dark:text-emerald-400">{formatMoney(testDog.priceCents, testDog.currency, locale)}</dd>
+              <dd className="font-bold text-[#183C32] dark:text-emerald-400">{formatMoney(TEST_PAYMENT_XOF_AMOUNT, GATEWAY_CURRENCY, locale)}</dd>
               <dt className="text-zinc-500">{t("status")}</dt>
               <dd className="font-semibold">{testDog.status}</dd>
             </dl>

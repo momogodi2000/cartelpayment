@@ -1,0 +1,92 @@
+{
+  "at": "2026-11-13T11:19:34.994Z",
+  "environment": "production",
+  "results": [
+    {
+      "variant": "default routing (payment_method=card)",
+      "http": 201,
+      "gateway": "paystack",
+      "currency": "XOF",
+      "amount": 1000,
+      "host": "checkout.paystack.com",
+      "reference": "MTX-BWXEIXANW2",
+      "usable": true
+    },
+    {
+      "variant": "gateway=stripe",
+      "http": 422,
+      "phase": "http_error",
+      "code": null,
+      "message": "validation.in"
+    },
+    {
+      "variant": "payment_method=stripe",
+      "http": 400,
+      "phase": "http_error",
+      "code": "PAYMENT_INIT_FAILED",
+      "message": "Failed to create checkout session: Your account cannot currently make live charges."
+    },
+    {
+      "variant": "gateway=paystack",
+      "http": 422,
+      "phase": "http_error",
+      "code": null,
+      "message": "validation.in"
+    },
+    {
+      "variant": "payment_method=paystack",
+      "http": 201,
+      "gateway": "paystack",
+      "currency": "XOF",
+      "amount": 1000,
+      "host": "checkout.paystack.com",
+      "reference": "MTX-MG96OTUFTB",
+      "usable": true
+    },
+    {
+      "variant": "gateway=paiementpro",
+      "http": 422,
+      "phase": "http_error",
+      "code": null,
+      "message": "validation.in"
+    },
+    {
+      "variant": "payment_method=paiementpro",
+      "http": 201,
+      "gateway": "paiementpro",
+      "currency": "XOF",
+      "amount": 1000,
+      "host": "www.paiementpro.net",
+      "reference": "MTX-FCBNBYDIPA",
+      "usable": true
+    },
+    {
+      "variant": "gateway=paiement_pro",
+      "http": 422,
+      "phase": "http_error",
+      "code": null,
+      "message": "validation.in"
+    },
+    {
+      "variant": "payment_method=paiement_pro",
+      "http": 422,
+      "phase": "http_error",
+      "code": null,
+      "message": "validation.in"
+    },
+    {
+      "variant": "gateway=cinetpay",
+      "http": 422,
+      "phase": "http_error",
+      "code": null,
+      "message": "validation.in"
+    },
+    {
+      "variant": "payment_method=cinetpay",
+      "http": 400,
+      "phase": "http_error",
+      "code": "PAYMENT_INIT_FAILED",
+      "message": "cURL error 6: Could not resolve host: api-checkout.cinetpay.com (see https://curl.se/libcurl/c/libcurl-errors.html) for https://api-checkout.cinetpay.com/v2/pay"
+    }
+  ]
+}

@@ -60,6 +60,7 @@
     },
     "testBadge": "TEST",
     "showDetails": "Afficher les tentatives et webhooks",
+    "fxLine": "Commande {original} · 1 EUR = {rate} XOF ({source})",
     "attemptsTitle": "Tentatives de passerelle",
     "attemptCols": {
       "no": "N°",
@@ -121,7 +122,7 @@
       "outagePrompt": "Note de panne (par exemple la référence du ticket prestataire)",
       "trial": "Autoriser un essai",
       "probe": "Revérifier",
-      "probeConfirm": "Cette action crée une session impayée de 1,00 € EUR chez GeniusPay (aucun débit ; elle expire après 24 heures). Continuer ?",
+      "probeConfirm": "Cette action crée une session de test impayée chez GeniusPay (1 000 XOF pour les passerelles XOF, 1,00 € pour les passerelles EUR) (aucun débit ; elle expire après 24 heures). Continuer ?",
       "probeAccepted": "Vérifiée : GeniusPay a accepté la session (passerelle {gateway}).",
       "probeRejected": "Non vérifiée : {message}",
       "mobileMoney": "Mobile money — enregistrée, jamais utilisée pour les paiements par carte",

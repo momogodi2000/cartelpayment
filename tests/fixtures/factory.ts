@@ -68,20 +68,27 @@ export async function holdAnimal(animalId: string, opts: { allowPaymentTest?: bo
 }
 
 /** A PENDING payment session as created by initialization (provider reference known). */
-export async function createPendingPayment(orderId: string, amountCents: number, providerReference = `MTX-${uid().toUpperCase()}`) {
+export async function createPendingPayment(
+  orderId: string,
+  amountCents: number,
+  providerReference = `MTX-${uid().toUpperCase()}`,
+  currency = "EUR"
+) {
   return prisma.payment.create({
     data: {
       orderId,
       provider: PaymentProviderType.GENIUSPAY,
       providerReference,
       amountCents,
-      currency: "EUR",
+      currency,
       status: PaymentStatus.PENDING,
       checkoutUrl: `https://checkout.paystack.com/${providerReference}`,
     },
   });
 }
 
+/** `amountCents` is the stored integer: cents for EUR, whole francs for XOF (no minor unit). */
 export function providerStatus(reference: string, status: string, amountCents: number, currency = "EUR") {
-  return { id: reference, reference, status, amount: amountCents / 100, currency, metadata: {} };
+  const amount = currency === "XOF" ? amountCents : amountCents / 100;
+  return { id: reference, reference, status, amount, currency, metadata: {} };
 }

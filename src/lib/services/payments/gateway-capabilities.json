@@ -16,12 +16,12 @@
     {
       "id": "paystack",
       "identifierAccepted": true,
-      "cardCapable": false,
+      "cardCapable": true,
       "currencies": [
         "XOF"
       ],
       "accepted": false,
-      "lastError": "Converts EUR to XOF and rejects non-integer XOF amounts"
+      "lastError": "2026-11-11: EUR 1.00 was converted by GeniusPay to a fractional XOF amount and rejected (\"amount must be an integer\"). Pawelium now sends whole-franc XOF itself; confirm with `npm run probe:gateways` before relying on it."
     },
     {
       "id": "paiementpro",

@@ -48,6 +48,17 @@
     "errorValidation": "Merci de vérifier les champs signalés.",
     "errorReview": "Votre paiement nécessite une vérification manuelle. Notre équipe vous contactera par e-mail ; merci de ne pas payer à nouveau.",
     "errorNetwork": "Erreur réseau. Vérifiez votre connexion puis réessayez.",
+    "xofTitle": "Montant qui sera débité",
+    "xofExplain": "Notre prestataire de paiement par carte traite cette transaction en francs CFA d'Afrique de l'Ouest (XOF). Les prix Pawelium restent en euros ; le montant ci-dessous est converti au moment du paiement et affiché ici avant que vous ne payiez.",
+    "xofOrderAmount": "Total de la commande (EUR)",
+    "xofChargedAmount": "Montant débité (XOF)",
+    "xofRate": "Taux de change : 1 EUR = {rate} XOF",
+    "xofBankNote": "Votre banque peut appliquer ses propres frais de conversion.",
+    "xofConsent": "Je comprends et j'autorise un paiement par carte de {amount} (XOF) pour cette commande.",
+    "xofConsentError": "Merci d'autoriser le montant qui sera débité.",
+    "xofUnavailable": "Le montant à débiter ne peut pas être calculé pour le moment. Merci de réessayer dans quelques minutes.",
+    "errorFxUnavailable": "Le taux de change est momentanément indisponible, le paiement ne peut pas démarrer. Aucun montant n'a été débité. Merci de réessayer dans quelques minutes.",
+    "errorQuoteChanged": "Le montant à débiter a été mis à jour. Merci de vérifier le nouveau montant ({amount}) et de confirmer à nouveau.",
     "backToCatalogue": "Retour au catalogue"
   }
 }

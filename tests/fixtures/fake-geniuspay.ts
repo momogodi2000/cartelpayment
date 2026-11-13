@@ -29,10 +29,16 @@ export class FakeGeniusPay {
   private seq = 0;
   /** When true, the documented search endpoint fails (provider unreachable during reconciliation). */
   public searchFails = false;
+  /** FX endpoint (GET /fx), shaped like the ExchangeRate-API open endpoint. */
+  public fxRate: string | number | null = 655.957;
+  public fxFails = false;
+  public fxRequests = 0;
+  public fxUrl = "";
 
   async start(): Promise<string> {
     await new Promise<void>((resolve) => this.server.listen(0, "127.0.0.1", resolve));
     const { port } = this.server.address() as AddressInfo;
+    this.fxUrl = `http://127.0.0.1:${port}/fx`;
     return `http://127.0.0.1:${port}/api/v1/merchant`;
   }
 
@@ -55,6 +61,11 @@ export class FakeGeniusPay {
     req.on("data", (c) => (raw += c));
     req.on("end", () => {
       const url = new URL(req.url || "/", "http://localhost");
+      if (req.method === "GET" && url.pathname === "/fx") {
+        this.fxRequests += 1;
+        if (this.fxFails) return this.send(res, 503, { result: "error" });
+        return this.send(res, 200, { result: "success", base_code: "EUR", rates: this.fxRate === null ? { USD: 1.1 } : { XOF: this.fxRate } });
+      }
       let body: any = null;
       try {
         body = raw ? JSON.parse(raw) : null;

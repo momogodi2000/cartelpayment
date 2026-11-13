@@ -1,7 +1,7 @@
 {
   "AdminTestPayment": {
     "title": "Test interne de paiement par carte",
-    "subtitle": "Une transaction contrôlée de 1,00 € EUR avec le chien de test interne, pour vérifier toute la chaîne de paiement réel : routage de la passerelle, page de paiement hébergée, autorisation de la carte, webhook, règlement et historique.",
+    "subtitle": "Un débit par carte contrôlé de 1 000 XOF (FCFA) sur la commande de test interne (la commande reste à 1,00 € et ne touche jamais un vrai animal), pour vérifier toute la chaîne de paiement réel : routage de la passerelle, page de paiement hébergée, autorisation de la carte, webhook, règlement et historique.",
     "isolationTitle": "Garanties d'isolement",
     "isolation1": "Le chien de test n'est pas publié ; il est exclu du catalogue, de la recherche, des pages races et éleveurs, du plan du site et des données structurées.",
     "isolation2": "Le paiement public le refuse côté serveur ; seul un SUPER_ADMIN authentifié peut lancer ce paiement.",
@@ -19,8 +19,8 @@
     "breakerState": "disjoncteur {state}",
     "startTitle": "Lancer le test réel",
     "phoneLabel": "Téléphone mobile (utilisé par le prestataire de paiement)",
-    "authorizeLabel": "J'autorise exactement un débit réel de 1,00 € EUR sur ma propre carte. Je comprends que des frais de traitement non remboursables peuvent s'appliquer.",
-    "startButton": "Créer le paiement par carte sécurisé de 1,00 €",
+    "authorizeLabel": "J'autorise exactement un débit réel de 1 000 XOF (FCFA) sur ma propre carte. Je comprends que des frais de traitement non remboursables peuvent s'appliquer.",
+    "startButton": "Créer le paiement par carte sécurisé de 1 000 XOF",
     "starting": "Création de la session de paiement…",
     "sessionReady": "Session de paiement créée. Finalisez le paiement dans la fenêtre sécurisée du prestataire.",
     "openCheckout": "Ouvrir la page de paiement sécurisée",
